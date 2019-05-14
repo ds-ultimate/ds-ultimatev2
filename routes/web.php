@@ -35,6 +35,10 @@ Route::get('/php', function () {
 
 Route::get('/test', 'Controller@test')->name('test');
 
+Route::get('/serverDB', function (){
+    \App\Server::getServer();
+});
+
 Route::get('/{server}', 'Controller@server')->name('server');
 
 Route::get('/{server}/{world}', 'Controller@world')->name('world');

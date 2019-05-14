@@ -10,7 +10,7 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 _ide_helper.php
-.htpasswd
 
 /.idea
 /stats
+.htpasswd
