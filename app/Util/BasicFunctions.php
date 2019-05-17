@@ -11,7 +11,9 @@ namespace App\Util;
 
 use App;
 use App\Village;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BasicFunctions
 {
@@ -45,6 +47,15 @@ class BasicFunctions
 
     public static function linkAlly(Collection $world, $allyID, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world'), $allyID]).'">'.$text.'</a>';
+    }
+
+    public static function existTable($dbName, $table){
+        try{
+            $result = DB::statement("SELECT 1 FROM `$dbName`.`$table` LIMIT 1");
+        } catch (\Exception $e){
+            return false;
+        }
+        return $result !== false;
     }
 
     public static function bonusIDtoHTML($bonus_id) {
@@ -116,6 +127,14 @@ class BasicFunctions
 
     public static function outputName($name){
         return addslashes(urldecode($name));
+    }
+
+    public static function createLog($type, $msg){
+        $log = new App\Log();
+        $log->setTable(env('DB_DATABASE_MAIN').'.log');
+        $log->type = $type;
+        $log->msg = $msg;
+        $log->save();
     }
 
 }

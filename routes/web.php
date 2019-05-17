@@ -34,9 +34,25 @@ Route::get('/php', function () {
 });
 
 Route::get('/test', 'Controller@test')->name('test');
+Route::get('/server', 'DBController@getWorld');
 
 Route::get('/serverDB', function (){
-    \App\Server::getServer();
+    $time = time();
+    $world = new \App\World();
+    $world->setTable(env('DB_DATABASE_MAIN').'.world');
+    $worlds = $world->get();
+    $db = new \App\Http\Controllers\DBController();
+    foreach ($worlds as $world){
+        $db->latestPlayer($world->name);
+        echo'<br>';
+        $db->latestAlly($world->name);
+        echo'<br>';
+        $db->latestVillages($world->name);
+    }
+    echo'<br>';
+    echo'<br>';
+    echo'<br>';
+    echo time()-$time;
 });
 
 Route::get('/{server}', 'Controller@server')->name('server');
