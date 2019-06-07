@@ -69,6 +69,7 @@ class World extends Model
         if(strpos($worldData->name, $server.'p') !== false){
             $casual->put('type', __('main.Casual'));
             $casual->put('name', $worldData->name);
+            $casual->put('server', BasicFunctions::getServer($worldData->name));
             $casual->put('world', BasicFunctions::getWorldID($worldData->name));
             $casual->put('ally_count', $worldData->ally_count);
             $casual->put('player_count', $worldData->player_count);
@@ -87,6 +88,7 @@ class World extends Model
         }elseif(strpos($worldData->name, $server.'c') !== false){
             $classic->put('type', __('main.Classic'));
             $classic->put('name', $worldData->name);
+            $classic->put('server', BasicFunctions::getServer($worldData->name));
             $classic->put('world', BasicFunctions::getWorldID($worldData->name));
             $classic->put('ally_count', $worldData->ally_count);
             $classic->put('player_count', $worldData->player_count);
@@ -96,6 +98,7 @@ class World extends Model
         }else{
             $world->put('type', trans_choice('main.Welten', 2));
             $world->put('name', $worldData->name);
+            $world->put('server', BasicFunctions::getServer($worldData->name));
             $world->put('world', BasicFunctions::getWorldID($worldData->name));
             $world->put('ally_count', $worldData->ally_count);
             $world->put('player_count', $worldData->player_count);

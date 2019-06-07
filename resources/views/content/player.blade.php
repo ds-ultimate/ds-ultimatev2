@@ -30,7 +30,7 @@
                         <td>{!! ($playerData->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count) }}</td>
+                        <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>
                         <td>{{ __('In Arbeit') }}</td>
                         <td>{{ $conquer->get('total') }}(<i class="text-success">{{ $conquer->get('new') }}</i>-<i class="text-danger">{{ $conquer->get('old') }}</i>)</td>
                     </tr>
@@ -58,7 +58,7 @@
                     <tr>
                         <th>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBashRank) }}</th>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBash) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100) }}%</td>
+                        <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): $playerData->gesBash }}%</td>
                         <th>{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</th>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->offBash) }}</td>
                         <th>{{ \App\Util\BasicFunctions::numberConv($playerData->deffBashRank) }}</th>

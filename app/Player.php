@@ -62,7 +62,7 @@ class Player extends Model
         );
     }
 
-    public static function getAllyPlayer($server, $world){
+    public static function getAllPlayer($server, $world){
         $playerModel = new Player();
         $replaceArray = array(
             '{server}' => $server,
@@ -73,7 +73,7 @@ class Player extends Model
         return $playerModel->orderBy('rank')->get();
     }
 
-    public static function getAllyPlayer20($server, $world, $order, $page){
+    public static function getAllPlayer20($server, $world, $order, $page){
         $playerModel = new Player();
         $replaceArray = array(
             '{server}' => $server,

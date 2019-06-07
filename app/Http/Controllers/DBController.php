@@ -47,6 +47,56 @@ class DBController extends Controller
         });
     }
 
+    public function playerTable($dbName, $tableName){
+        Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
+            $table->integer('playerID');
+            $table->string('name');
+            $table->integer('ally_id');
+            $table->integer('village_count');
+            $table->integer('points');
+            $table->integer('rank');
+            $table->bigInteger('offBash')->nullable();
+            $table->integer('offBashRank')->nullable();
+            $table->bigInteger('defBash')->nullable();
+            $table->integer('defBashRank')->nullable();
+            $table->bigInteger('gesBash')->nullable();
+            $table->integer('gesBashRank')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function allyTable($dbName, $tableName){
+        Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
+            $table->integer('allyID');
+            $table->string('name');
+            $table->string('tag');
+            $table->integer('member_count');
+            $table->integer('points');
+            $table->integer('village_count');
+            $table->integer('rank');
+            $table->bigInteger('offBash')->nullable();
+            $table->integer('offBashRank')->nullable();
+            $table->bigInteger('defBash')->nullable();
+            $table->integer('defBashRank')->nullable();
+            $table->bigInteger('gesBash')->nullable();
+            $table->integer('gesBashRank')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function villageTable($dbName, $tableName){
+        Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
+            $table->integer('villageID');
+            $table->string('name');
+            $table->integer('x');
+            $table->integer('y');
+            $table->integer('points');
+            $table->integer('owner');
+            $table->integer('bonus_id');
+            $table->timestamps();
+        });
+    }
+
     public function getWorld(){
         $serverArray = Server::getServer();
 
@@ -80,31 +130,25 @@ class DBController extends Controller
     public function latestPlayer($worldName){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
-        ini_set('max_execution_time', 1800);
+        ini_set('max_execution_time', 0);
         ini_set('max_input_time', 1800);
-        ini_set('memory_limit', '300M');
+        ini_set('memory_limit', '400M');
+        date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
+
         if (BasicFunctions::existTable($dbName, 'player_latest') === false){
-            Schema::create($dbName.'.player_latest', function (Blueprint $table) {
-                $table->integer('playerID');
-                $table->string('name');
-                $table->integer('ally_id');
-                $table->integer('village_count');
-                $table->integer('points');
-                $table->integer('rank');
-                $table->bigInteger('offBash')->nullable();
-                $table->integer('offBashRank')->nullable();
-                $table->bigInteger('defBash')->nullable();
-                $table->integer('defBashRank')->nullable();
-                $table->bigInteger('gesBash')->nullable();
-                $table->integer('gesBashRank')->nullable();
-                $table->timestamps();
-            });
+            $this->playerTable($dbName, 'latest');
         }
+
         $time = time();
         $lines = gzfile("https://$worldName.die-staemme.de/map/player.txt.gz");
         if(!is_array($lines)) die("Datei player konnte nicht ge&ouml;ffnet werden");
+
         $players = collect();
+        $playerOffs = collect();
+        $playerDefs = collect();
+        $playerTots = collect();
+
         foreach ($lines as $line){
             list($id, $name, $ally, $villages, $points, $rank) = explode(',', $line);
             $player = collect();
@@ -114,12 +158,6 @@ class DBController extends Controller
             $player->put('villages', (int)$villages);
             $player->put('points', (int)$points);
             $player->put('rank', (int)$rank);
-            $player->put('off', (int)null);
-            $player->put('offRank', (int)null);
-            $player->put('def', (int)null);
-            $player->put('defRank', (int)null);
-            $player->put('tot', (int)null);
-            $player->put('totRank', (int)null);
             $players->put($player->get('id'),$player);
         }
 
@@ -127,68 +165,85 @@ class DBController extends Controller
         if(!is_array($offs)) die("Datei kill_off konnte nicht ge&ouml;ffnet werden");
         foreach ($offs as $off){
             list($rank, $id, $kills) = explode(',', $off);
-            $player = $players->firstWhere('id', '=', $id);
-            if($player == null) {
-                $player->put('offRank', (int)$rank);
-                $player->put('off', (int)$kills);
-                $players->put($player->get('id'), $player);
-            }
+            $playerOff = collect();
+            $playerOff->put('offRank', (int)$rank);
+            $playerOff->put('off', (int)$kills);
+            $playerOffs->put($id, $playerOff);
         }
 
         $defs = gzfile("https://$worldName.die-staemme.de/map/kill_def.txt.gz");
         if(!is_array($defs)) die("Datei kill_def konnte nicht ge&ouml;ffnet werden");
         foreach ($defs as $def){
             list($rank, $id, $kills) = explode(',', $def);
-            $player = $players->firstWhere('id', '=', $id);
-            if($player == null) {
-                $player->put('defRank', (int)$rank);
-                $player->put('def', (int)$kills);
-                $players->put($player->get('id'), $player);
-            }
+            $playerDef = collect();
+            $playerDef->put('defRank', (int)$rank);
+            $playerDef->put('def', (int)$kills);
+            $playerDefs->put($id, $playerDef);
         }
 
         $tots = gzfile("https://$worldName.die-staemme.de/map/kill_all.txt.gz");
         if(!is_array($tots)) die("Datei kill_all konnte nicht ge&ouml;ffnet werden");
         foreach ($tots as $tot){
             list($rank, $id, $kills) = explode(',', $tot);
-            $player = $players->firstWhere('id', '=', $id);
-            if($player == null) {
-                $player->put('totRank', (int)$rank);
-                $player->put('tot', (int)$kills);
-                $players->put($player->get('id'), $player);
-            }
+            $playerTot = collect();
+            $playerTot->put('totRank', (int)$rank);
+            $playerTot->put('tot', (int)$kills);
+            $playerTots->put($id, $playerTot);
         }
 
         $insert = new Player();
         $insert->setTable($dbName.'.player_latest');
-        $array = array();
         foreach ($players as $player) {
-            $data = [
+            $id = $player->get('id');
+            $dataPlayer = [
                 'playerID' => $player->get('id'),
                 'name' => $player->get('name'),
                 'ally_id' => $player->get('ally'),
                 'village_count' => $player->get('villages'),
                 'points' => $player->get('points'),
                 'rank' => $player->get('rank'),
-                'offBash' => $player->get('off'),
-                'offBashRank' => $player->get('offRank'),
-                'defBash' => $player->get('def'),
-                'defBashRank' => $player->get('defRank'),
-                'gesBash' => $player->get('tot'),
-                'gesBashRank' => $player->get('totRank'),
+                'offBash' => (is_null($playerOffs->get($id)))? null :$playerOffs->get($id)->get('off'),
+                'offBashRank' => (is_null($playerOffs->get($id)))? null : $playerOffs->get($id)->get('off'),
+                'defBash' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('def'),
+                'defBashRank' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('defRank'),
+                'gesBash' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('tot'),
+                'gesBashRank' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('totRank'),
                 'created_at' => Carbon::createFromTimestamp(time()),
                 'updated_at' => Carbon::createFromTimestamp(time()),
             ];
-            $array []= $data;
+            $arrayPlayer []= $dataPlayer;
         }
-        foreach (array_chunk($array,3000) as $t){
+
+        foreach (array_chunk($arrayPlayer,3000) as $t){
             $insert->insert($t);
+        }
+
+        $hashPlayer = $this->hashTablePlayer($players, $playerOffs, $playerDefs, $playerTots, 'p');
+
+        for ($i = 0; $i < env('HASH_PLAYER'); $i++){
+            if (array_key_exists($i ,$hashPlayer)) {
+                if (BasicFunctions::existTable($dbName, 'player_' . $i) === false) {
+                    $this->playerTable($dbName, $i);
+                }
+                $insert->setTable($dbName . '.player_' . $i);
+                foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
+                    $insert->insert($t);
+                }
+
+                if (BasicFunctions::existTable($dbName, 'player_' . $i) === true) {
+                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
+
+                    $delete->delete();
+                    echo 'test';
+                }
+                echo '<br>';
+            }
         }
 
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.world');
         $worldUpdate = $world->where('name', $worldName)->first();
-        $worldUpdate->player_count = count($array);
+        $worldUpdate->player_count = count($arrayPlayer);
         $worldUpdate->save();
 
         echo time()-$time;
@@ -197,27 +252,19 @@ class DBController extends Controller
     public function latestVillages($worldName){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
-        ini_set('max_execution_time', 1800);
+        ini_set('max_execution_time', 0);
         ini_set('max_input_time', 1800);
         ini_set('memory_limit', '500M');
-        $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
-        if (BasicFunctions::existTable($dbName, 'village_latest') === false){
-            Schema::create($dbName.'.village_latest', function (Blueprint $table) {
-                $table->integer('villageID');
-                $table->string('name');
-                $table->integer('x');
-                $table->integer('y');
-                $table->integer('points');
-                $table->integer('owner');
-                $table->integer('bonus_id');
-                $table->timestamps();
-            });
+        date_default_timezone_set("Europe/Berlin");
+        $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
+        if (BasicFunctions::existTable($dbName, 'village_latest') === false) {
+            $this->villageTable($dbName, 'latest');
         }
         $time = time();
         $lines = gzfile("https://$worldName.die-staemme.de/map/village.txt.gz");
-        if(!is_array($lines)) die("Datei village konnte nicht ge&ouml;ffnet werden");
+        if (!is_array($lines)) die("Datei village konnte nicht ge&ouml;ffnet werden");
         $villages = collect();
-        foreach ($lines as $line){
+        foreach ($lines as $line) {
             list($id, $name, $x, $y, $points, $owner, $bonus_id) = explode(',', $line);
             $village = collect();
             $village->put('id', (int)$id);
@@ -227,11 +274,11 @@ class DBController extends Controller
             $village->put('points', (int)$points);
             $village->put('owner', (int)$owner);
             $village->put('bonus_id', (int)$bonus_id);
-            $villages->put($village->get('id'),$village);
+            $villages->put($village->get('id'), $village);
         }
 
         $insert = new Village();
-        $insert->setTable($dbName.'.village_latest');
+        $insert->setTable($dbName . '.village_latest');
         $array = array();
         foreach ($villages as $village) {
             $data = [
@@ -245,19 +292,33 @@ class DBController extends Controller
                 'created_at' => Carbon::createFromTimestamp(time()),
                 'updated_at' => Carbon::createFromTimestamp(time()),
             ];
-            $array []= $data;
+            $array [] = $data;
         }
-        foreach (array_chunk($array,3000) as $t){
+        foreach (array_chunk($array, 3000) as $t) {
             $insert->insert($t);
         }
 
+        $hashVillage = $this->hashTableVillage($villages);
+
+        for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
+            if (array_key_exists($i, $hashVillage)) {
+                if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
+                    $this->villageTable($dbName, $i);
+                }
+                $insert->setTable($dbName . '.village_' . $i);
+                foreach (array_chunk($hashVillage[$i], 3000) as $t) {
+                    $insert->insert($t);
+                }
+            }
+        }
+
         $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.world');
+        $world->setTable(env('DB_DATABASE_MAIN') . '.world');
         $worldUpdate = $world->where('name', $worldName)->first();
         $worldUpdate->village_count = count($array);
         $worldUpdate->save();
 
-        echo time()-$time;
+        echo time() - $time;
     }
 
     public function latestAlly($worldName){
@@ -266,29 +327,20 @@ class DBController extends Controller
         ini_set('max_execution_time', 1800);
         ini_set('max_input_time', 1800);
         ini_set('memory_limit', '200M');
+        date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
         if (BasicFunctions::existTable($dbName, 'ally_latest') === false){
-            Schema::create($dbName.'.ally_latest', function (Blueprint $table) {
-                $table->integer('allyID');
-                $table->string('name');
-                $table->string('tag');
-                $table->integer('member_count');
-                $table->integer('points');
-                $table->integer('village_count');
-                $table->integer('rank');
-                $table->bigInteger('offBash')->nullable();
-                $table->integer('offBashRank')->nullable();
-                $table->bigInteger('defBash')->nullable();
-                $table->integer('defBashRank')->nullable();
-                $table->bigInteger('gesBash')->nullable();
-                $table->integer('gesBashRank')->nullable();
-                $table->timestamps();
-            });
+            $this->allyTable($dbName, 'latest');
         }
         $time = time();
         $lines = gzfile("https://$worldName.die-staemme.de/map/ally.txt.gz");
         if(!is_array($lines)) die("Datei ally konnte nicht ge&ouml;ffnet werden");
+
         $allys = collect();
+        $allyOffs = collect();
+        $allyDefs = collect();
+        $allyTots = collect();
+
         foreach ($lines as $line){
             list($id, $name, $tag, $members, $points, $villages, $rank) = explode(',', $line);
             $ally = collect();
@@ -299,12 +351,6 @@ class DBController extends Controller
             $ally->put('points', (int)$points);
             $ally->put('village_count', (int)$villages);
             $ally->put('rank', (int)$rank);
-            $ally->put('off', (int)null);
-            $ally->put('offRank', (int)null);
-            $ally->put('def', (int)null);
-            $ally->put('defRank', (int)null);
-            $ally->put('tot', (int)null);
-            $ally->put('totRank', (int)null);
             $allys->put($ally->get('id'),$ally);
         }
 
@@ -312,36 +358,31 @@ class DBController extends Controller
         if(!is_array($offs)) die("Datei kill_off konnte nicht ge&ouml;ffnet werden");
         foreach ($offs as $off){
             list($rank, $id, $kills) = explode(',', $off);
-            $ally = $allys->firstWhere('id', '=', $id);
-            if($ally == null) {
-                $ally->put('offRank', (int)$rank);
-                $ally->put('off', (int)$kills);
-                $allys->put($ally->get('id'), $ally);
-            }
+            $allyOff = collect();
+            $allyOff->put('offRank', (int)$rank);
+            $allyOff->put('off', (int)$kills);
+            $allyOffs->put($id, $allyOff);
+
         }
 
         $defs = gzfile("https://$worldName.die-staemme.de/map/kill_def_tribe.txt.gz");
         if(!is_array($defs)) die("Datei kill_def konnte nicht ge&ouml;ffnet werden");
         foreach ($defs as $def){
             list($rank, $id, $kills) = explode(',', $def);
-            $ally = $allys->firstWhere('id', '=', $id);
-            if($ally == null) {
-                $ally->put('defRank', (int)$rank);
-                $ally->put('def', (int)$kills);
-                $allys->put($ally->get('id'), $ally);
-            }
+            $allyDef = collect();
+            $allyDef->put('defRank', (int)$rank);
+            $allyDef->put('def', (int)$kills);
+            $allyDefs->put($id, $allyDef);
         }
 
         $tots = gzfile("https://$worldName.die-staemme.de/map/kill_all_tribe.txt.gz");
         if(!is_array($tots)) die("Datei kill_all konnte nicht ge&ouml;ffnet werden");
         foreach ($tots as $tot){
             list($rank, $id, $kills) = explode(',', $tot);
-            $ally = $allys->firstWhere('id', '=', $id);
-            if($ally == null) {
-                $ally->put('totRank', (int)$rank);
-                $ally->put('tot', (int)$kills);
-                $allys->put($ally->get('id'), $ally);
-            }
+            $allyTot = collect();
+            $allyTot->put('totRank', (int)$rank);
+            $allyTot->put('tot', (int)$kills);
+            $allyTots->put($id, $allyTot);
         }
 
         $insert = new Ally();
@@ -356,12 +397,12 @@ class DBController extends Controller
                 'points' => $ally->get('points'),
                 'village_count' => $ally->get('village_count'),
                 'rank' => $ally->get('rank'),
-                'offBash' => $ally->get('off'),
-                'offBashRank' => $ally->get('offRank'),
-                'defBash' => $ally->get('def'),
-                'defBashRank' => $ally->get('defRank'),
-                'gesBash' => $ally->get('tot'),
-                'gesBashRank' => $ally->get('totRank'),
+                'offBash' => (is_null($allyOffs->get($id)))? null :$allyOffs->get($id)->get('off'),
+                'offBashRank' => (is_null($allyOffs->get($id)))? null : $allyOffs->get($id)->get('off'),
+                'defBash' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('def'),
+                'defBashRank' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('defRank'),
+                'gesBash' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('tot'),
+                'gesBashRank' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('totRank'),
                 'created_at' => Carbon::createFromTimestamp(time()),
                 'updated_at' => Carbon::createFromTimestamp(time()),
             ];
@@ -369,6 +410,20 @@ class DBController extends Controller
         }
         foreach (array_chunk($array,3000) as $t){
             $insert->insert($t);
+        }
+
+        $hashAlly = $this->hashTableAlly($allys, $allyOffs, $allyDefs, $allyTots);
+
+        for ($i = 0; $i < env('HASH_ALLY'); $i++){
+            if (array_key_exists($i ,$hashAlly)) {
+                if (BasicFunctions::existTable($dbName, 'ally_' . $i) === false) {
+                    $this->allyTable($dbName, $i);
+                }
+                $insert->setTable($dbName . '.ally_' . $i);
+                foreach (array_chunk($hashAlly[$i], 3000) as $t) {
+                    $insert->insert($t);
+                }
+            }
         }
 
         $world = new World();
@@ -380,17 +435,75 @@ class DBController extends Controller
         echo time()-$time;
     }
 
-    public function hash($Array, $type){
-        switch($type) {
-            case 'player':
-                $hash = env('HASH_PLAYER');
-                break;
-            case 'ally':
-                $hash = env('HASH_ALLY');
-                break;
-            case 'village':
-                $hash = env('HASH_VILLAGE');
-                break;
+    public function hashTablePlayer($mainArrays, $offArray, $defArray, $totArray){
+        date_default_timezone_set("Europe/Berlin");
+        foreach ($mainArrays as $main){
+            $id = $main->get('id');
+            $hashArray[BasicFunctions::hash($main->get('id'), 'p')][$id] = [
+                'playerID' => $main->get('id'),
+                'name' => $main->get('name'),
+                'ally_id' => $main->get('ally'),
+                'village_count' => $main->get('villages'),
+                'points' => $main->get('points'),
+                'rank' => $main->get('rank'),
+                'offBash' => (is_null($offArray->get($id)))? null :$offArray->get($id)->get('off'),
+                'offBashRank' => (is_null($offArray->get($id)))? null : $offArray->get($id)->get('off'),
+                'defBash' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('def'),
+                'defBashRank' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('defRank'),
+                'gesBash' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('tot'),
+                'gesBashRank' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('totRank'),
+                'created_at' => Carbon::createFromTimestamp(time()),
+                'updated_at' => Carbon::createFromTimestamp(time()),
+            ];
         }
+
+        return $hashArray;
     }
+
+    public function hashTableAlly($mainArrays, $offArray, $defArray, $totArray){
+        date_default_timezone_set("Europe/Berlin");
+        foreach ($mainArrays as $main){
+            $id = $main->get('id');
+            $hashArray[BasicFunctions::hash($main->get('id'), 'a')][$id] = [
+                'allyID' => $main->get('id'),
+                'name' => $main->get('name'),
+                'tag' => $main->get('tag'),
+                'member_count' => $main->get('member_count'),
+                'points' => $main->get('points'),
+                'village_count' => $main->get('village_count'),
+                'rank' => $main->get('rank'),
+                'offBash' => (is_null($offArray->get($id)))? null :$offArray->get($id)->get('off'),
+                'offBashRank' => (is_null($offArray->get($id)))? null : $offArray->get($id)->get('offRank'),
+                'defBash' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('def'),
+                'defBashRank' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('defRank'),
+                'gesBash' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('tot'),
+                'gesBashRank' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('totRank'),
+                'created_at' => Carbon::createFromTimestamp(time()),
+                'updated_at' => Carbon::createFromTimestamp(time()),
+            ];
+        }
+
+        return $hashArray;
+    }
+
+    public function hashTableVillage($mainArrays){
+        date_default_timezone_set("Europe/Berlin");
+        foreach ($mainArrays as $main){
+            $id = $main->get('id');
+            $hashArray[BasicFunctions::hash($main->get('id'), 'v')][$id] = [
+                'villageID' => $main->get('id'),
+                'name' => $main->get('name'),
+                'x' => $main->get('x'),
+                'y' => $main->get('y'),
+                'points' => $main->get('points'),
+                'owner' => $main->get('owner'),
+                'bonus_id' => $main->get('bonus_id'),
+                'created_at' => Carbon::createFromTimestamp(time()),
+                'updated_at' => Carbon::createFromTimestamp(time()),
+            ];
+        }
+
+        return $hashArray;
+    }
+
 }

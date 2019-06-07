@@ -38,7 +38,7 @@ class BasicFunctions
     }
 
     public static function linkWorldPlayer(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world'), 1]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world')]).'">'.$text.'</a>';
     }
 
     public static function linkPlayer(Collection $world, $playerID, $text, $class = null, $id = null){
@@ -81,6 +81,7 @@ class BasicFunctions
             case 9:
                 return "+50% H&auml;ndler &amp; Speicher";
         }
+        return false;
     }
 
     public static function getContinentString(Village $village) {
@@ -119,6 +120,18 @@ class BasicFunctions
         }
 
         return "img/skins/{$skins[$index]}/$bonus$lv$left.png";
+    }
+
+    public static function hash($input ,$type){
+        switch($type) {
+            case 'p': //Player
+                return $input % env('HASH_PLAYER');
+            case 'a': //Ally
+                return $input % env('HASH_ALLY');
+            case 'v': //Village
+                return $input % env('HASH_VILLAGE');
+        }
+        return false;
     }
 
     public static function local(){

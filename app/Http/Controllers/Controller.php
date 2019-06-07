@@ -54,7 +54,6 @@ class Controller extends BaseController
         World::existServer($server);
         World::existWorld($server, $world);
 
-        $allyArray = Ally::getAllyAll($server, $world);
         $worldData = World::getWorldCollection($server, $world);
 
         return view('content.worldAlly', compact('allyArray', 'worldData'));
@@ -63,15 +62,14 @@ class Controller extends BaseController
     /*
      * https://ds-ultimate.de/de/164/players
      * */
-    public function players($server, $world, $page){
+    public function players($server, $world){
         BasicFunctions::local();
         World::existServer($server);
         World::existWorld($server, $world);
 
-        $playerArray = Player::getAllyPlayer($server, $world, 'rank', $page);
         $worldData = World::getWorldCollection($server, $world);
 
-        return view('content.worldPlayer', compact('playerArray', 'worldData', 'page'));
+        return view('content.worldPlayer', compact('playerArray', 'worldData'));
     }
 
 }

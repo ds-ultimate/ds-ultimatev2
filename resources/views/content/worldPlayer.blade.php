@@ -1,6 +1,8 @@
 @extends('layouts.temp')
 
 @section('content')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css"/>
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" rel="stylesheet">
     <div class="row justify-content-center">
         <div class="col-10">
             <div class="col-12">
@@ -9,114 +11,67 @@
                     <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
                 </ul>
             </div>
-                <table id="table_id">
-                    <thead>
-                    <tr>
-                        <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
-                        <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
-                    </tr>
-                    <tr>
-                        <th>{{ ucfirst(__('Rang')) }}</th>
-                        <th>{{ ucfirst(__('Name')) }}</th>
-                        <th>{{ ucfirst(__('Stamm')) }}</th>
-                        <th>{{ ucfirst(__('Punkte')) }}</th>
-                        <th>{{ ucfirst(__('Dörfer')) }}</th>
-                        <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
-                        <th>{{ ucfirst(__('Insgesamt')) }}</th>
-                        <th>{{ ucfirst(__('Angreifer')) }}</th>
-                        <th>{{ ucfirst(__('Verteidiger')) }}</th>
-                        <th>{{ ucfirst(__('Unterstützer')) }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($playerArray as $player)
-                        <tr>
-                            <th>{{ $player->rank }}</th>
-                            <td>{!! \App\Util\BasicFunctions::linkPlayer($worldData, $player->playerID, \App\Util\BasicFunctions::outputName($player->name)) !!}</td>
-                            <td>{!! ($player->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $player->ally_id, \App\Util\BasicFunctions::outputName($player->allyLatest->tag)) : '-' !!}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->points) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->village_count) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv(($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count)) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->gesBash) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->offBash) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->deffBash) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($player->gesBash - $player->offBash - $player->deffBash) }}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            @if ($page > 1)
-                <a href="{{ route('worldPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world'), $page-1]) }}">{!! __('pagination.Zurück') !!}</a>
-                <br>
-            @endif
-            <a href="{{ route('worldPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world'), $page+1]) }}">{!!  __('pagination.Weiter') !!}</a>
+            <table id="table_id" class="table table-hover table-sm w-100">
+                <thead>
+                <tr class="d-none d-md-table-row">
+                    <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
+                    <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
+                </tr>
+                <tr>
+                    <th>{{ ucfirst(__('Rang')) }}</th>
+                    <th>{{ ucfirst(__('Name')) }}</th>
+                    <th>{{ ucfirst(__('Stamm')) }}</th>
+                    <th>{{ ucfirst(__('Punkte')) }}</th>
+                    <th>{{ ucfirst(__('Dörfer')) }}</th>
+                    <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
+                    <th>{{ ucfirst(__('Insgesamt')) }}</th>
+                    <th>{{ ucfirst(__('Angreifer')) }}</th>
+                    <th>{{ ucfirst(__('Verteidiger')) }}</th>
+                    <th>{{ ucfirst(__('Unterstützer')) }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
-<script>
-    $(document).ready( function () {
-        $('#table_id').DataTable({
-            language:{
-                "decimal": ",",
-                "thousands": ".",
-                "sEmptyTable":   	"{!! __('datatable.sEmptyTable') !!}",
-                "sInfo":         	"{!! __('datatable.sInfo') !!}",
-                "sInfoEmpty":    	"{!! __('datatable.sInfoEmpty') !!}",
-                "sInfoFiltered": 	"{!! __('datatable.sInfoFiltered') !!}",
-                "sInfoPostFix":  	"",
-                "sInfoThousands":  	"{!! __('datatable.sInfoThousands') !!}",
-                "sLengthMenu":   	"{!! __('datatable.sLengthMenu') !!}",
-                "sLoadingRecords": 	"{!! __('datatable.sLoadingRecords') !!}",
-                "sProcessing":   	"{!! __('datatable.sProcessing') !!}",
-                "sSearch":       	"{!! __('datatable.sSearch') !!}",
-                "sZeroRecords":  	"{!! __('datatable.sZeroRecords') !!}",
-                "oPaginate": {
-                    "sFirst":    	"{!! __('datatable.oPaginate_sFirst') !!}",
-                    "sPrevious": 	"{!! __('datatable.oPaginate_sPrevious') !!}",
-                    "sNext":     	"{!! __('datatable.oPaginate_sNext') !!}",
-                    "sLast":     	"{!! __('datatable.oPaginate_sLast') !!}"
-                },
-                "oAria": {
-                    "sSortAscending":  "{!! __('datatable.oAria_sSortAscending') !!}",
-                    "sSortDescending": "{!! __('datatable.oAria_sSortDescending') !!}"
-                },
-                "select": {
-                    "rows": {
-                        "_": "{!! __('datatable.select_rows__') !!}",
-                        "0": "",
-                        "1": "{!! __('datatable.select_rows_1') !!}"
-                    }
-                },
-                "buttons": {
-                    "print":	"{!! __('datatable.buttons_print') !!}",
-                    "colvis":	"{!! __('datatable.buttons_colvis') !!}",
-                    "copy":		"{!! __('datatable.buttons_copy') !!}",
-                    "copyTitle":	"{!! __('datatable.buttons_copyTitle') !!}",
-                    "copyKeys":	"{!! __('datatable.buttons_copyKeys') !!}",
-                    "copySuccess": {
-                        "_": "{!! __('datatable.buttons_copySuccess__') !!}",
-                        "1": "{!! __('datatable.buttons_copySuccess_1') !!}"
-                    },
-                    "pageLength": {
-                        "-1": "{!! __('datatable.buttons_pageLength_-1') !!}",
-                        "_":  "{!! __('datatable.buttons_pageLength__') !!}"
-                    }
-                }
-            }
-        });
-        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-            "numeric-comma-pre": function (a) {
-                // prepare number
-                a = +(a.replace(",", "."));
-                a = (isNaN(a)) ? Number.MAX_VALUE : a;
-                return a;
-            },
-            "numeric-comma-asc": function (a, b) {
-                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-            },
-            "numeric-comma-desc": function (a, b) {
-                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-            }
-        });
-    } );
-</script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <script>
+
+        $(document).ready( function () {
+            $.extend( $.fn.dataTable.defaults, {
+                responsive: true
+            } );
+
+            $('#table_id').DataTable({
+                "columnDefs": [
+                    {"targets": 3, "className": 'text-right'},
+                    {"targets": 4, "className": 'text-right'},
+                    {"targets": 5, "className": 'text-right'},
+                    {"targets": 6, "className": 'text-right'},
+                    {"targets": 7, "className": 'text-right'},
+                    {"targets": 8, "className": 'text-right'},
+                    {"targets": 9, "className": 'text-right'},
+                ],
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('api.worldPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world')]) }}",
+                "columns": [
+                    { "data": "rank" },
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
+                    { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
+                    { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},
+                    { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
+                    { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
+                    { "data": "deffBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
+                    { "data": "utBash", "render": function (value) {return numeral(value).format('0.[00] a')}, "orderable": false},
+                ],
+                responsive: true,
+                {!! \App\Util\Datatable::language() !!}
+            });
+        } );
+    </script>
 @endsection

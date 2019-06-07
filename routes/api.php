@@ -16,3 +16,6 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/api/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
+Route::get('/api/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');
