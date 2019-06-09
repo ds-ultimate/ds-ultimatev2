@@ -66,7 +66,7 @@
                 { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},
                 { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
                 { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
-                { "data": "deffBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
+                { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                 { "data": "utBash", "render": function (value) {return numeral(value).format('0.[00] a')}, "orderable": false},
             ],
             responsive: true,

@@ -32,8 +32,8 @@
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count) }}</td>
+                        <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
+                        <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
                         <td>{{ __('In Arbeit') }}</td>
                     </tr>
                     </tbody>
@@ -63,8 +63,8 @@
                         <td>{{ \App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100) }}%</td>
                         <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
-                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->deffBashRank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->deffBash) }}</td>
+                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
+                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->defBash) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -117,7 +117,6 @@
             $("#{{ $statsBash[0] }}").css('visibility', 'visible');
             $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
             $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
         });
 
         $("#statsGeneral").change(function () {
@@ -145,25 +144,16 @@
                 $("#{{ $statsBash[0] }}").css('visibility', 'visible');
                 $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
                 $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
             }
             if (option1 == '{{ $statsBash[1] }}') {
                 $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
                 $("#{{ $statsBash[1] }}").css('visibility', 'visible');
                 $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
             }
             if (option1 == '{{ $statsBash[2] }}') {
                 $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
                 $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
                 $("#{{ $statsBash[2] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[3] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'visible');
             }
         });
 

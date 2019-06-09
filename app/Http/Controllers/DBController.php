@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class DBController extends Controller
@@ -36,7 +37,7 @@ class DBController extends Controller
     }
 
     public function worldTable(){
-        Schema::create(env('DB_DATABASE_MAIN').'.world', function (Blueprint $table){
+        Schema::create(env('DB_DATABASE_MAIN').'.worlds', function (Blueprint $table){
             $table->integer('id')->autoIncrement();
             $table->text('name');
             $table->integer('ally_count')->nullable();
@@ -98,17 +99,22 @@ class DBController extends Controller
     }
 
     public function getWorld(){
+
+        if (BasicFunctions::existTable(env('DB_DATABASE_MAIN'), 'worlds') === false){
+            $this->worldTable();
+        }
+
         $serverArray = Server::getServer();
 
         foreach ($serverArray as $serverUrl){
             $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
             $worldTable = new World();
-            $worldTable->setTable(env('DB_DATABASE_MAIN').'.world');
+            $worldTable->setTable(env('DB_DATABASE_MAIN').'.worlds');
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
                 if ($worldTable->where('name', $world)->count() < 1){
                     $worldNew = new World();
-                    $worldNew->setTable(env('DB_DATABASE_MAIN').'.world');
+                    $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
                     $worldNew->name = $world;
                     $worldNew->url = $link;
                     if($worldNew->save() === true){
@@ -120,7 +126,7 @@ class DBController extends Controller
                             BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
                         }
                     }else{
-                        BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'world' hinzugefügt werden.");
+                        BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
                     }
                 }
             }
@@ -136,11 +142,10 @@ class DBController extends Controller
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
 
-        if (BasicFunctions::existTable($dbName, 'player_latest') === false){
-            $this->playerTable($dbName, 'latest');
+        if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
+            $this->playerTable($dbName, 'latest_temp');
         }
 
-        $time = time();
         $lines = gzfile("https://$worldName.die-staemme.de/map/player.txt.gz");
         if(!is_array($lines)) die("Datei player konnte nicht ge&ouml;ffnet werden");
 
@@ -192,7 +197,7 @@ class DBController extends Controller
         }
 
         $insert = new Player();
-        $insert->setTable($dbName.'.player_latest');
+        $insert->setTable($dbName.'.player_latest_temp');
         foreach ($players as $player) {
             $id = $player->get('id');
             $dataPlayer = [
@@ -203,7 +208,7 @@ class DBController extends Controller
                 'points' => $player->get('points'),
                 'rank' => $player->get('rank'),
                 'offBash' => (is_null($playerOffs->get($id)))? null :$playerOffs->get($id)->get('off'),
-                'offBashRank' => (is_null($playerOffs->get($id)))? null : $playerOffs->get($id)->get('off'),
+                'offBashRank' => (is_null($playerOffs->get($id)))? null : $playerOffs->get($id)->get('offRank'),
                 'defBash' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('def'),
                 'defBashRank' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('defRank'),
                 'gesBash' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('tot'),
@@ -218,6 +223,11 @@ class DBController extends Controller
             $insert->insert($t);
         }
 
+        if (BasicFunctions::existTable($dbName, 'player_latest') === true){
+            DB::statement("DROP TABLE $dbName.player_latest");
+        }
+        DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
+
         $hashPlayer = $this->hashTablePlayer($players, $playerOffs, $playerDefs, $playerTots, 'p');
 
         for ($i = 0; $i < env('HASH_PLAYER'); $i++){
@@ -229,24 +239,26 @@ class DBController extends Controller
                 foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
-
                 if (BasicFunctions::existTable($dbName, 'player_' . $i) === true) {
                     $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
-
                     $delete->delete();
-                    echo 'test';
                 }
-                echo '<br>';
             }
         }
 
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.world');
-        $worldUpdate = $world->where('name', $worldName)->first();
-        $worldUpdate->player_count = count($arrayPlayer);
-        $worldUpdate->save();
+        $count = count($arrayPlayer);
 
-        echo time()-$time;
+        $world = new World();
+        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
+        $worldUpdate = $world->where('name', $worldName)->first();
+        if ($worldUpdate->player_count != $count) {
+            $worldUpdate->player_count = $count;
+            $worldUpdate->save();
+        }else{
+            $worldUpdate->touch();
+        }
+
+        //Log::debug($worldName.'-> Player: '.$count);
     }
 
     public function latestVillages($worldName){
@@ -257,10 +269,10 @@ class DBController extends Controller
         ini_set('memory_limit', '500M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
-        if (BasicFunctions::existTable($dbName, 'village_latest') === false) {
-            $this->villageTable($dbName, 'latest');
+        if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
+            $this->villageTable($dbName, 'latest_temp');
         }
-        $time = time();
+
         $lines = gzfile("https://$worldName.die-staemme.de/map/village.txt.gz");
         if (!is_array($lines)) die("Datei village konnte nicht ge&ouml;ffnet werden");
         $villages = collect();
@@ -278,7 +290,7 @@ class DBController extends Controller
         }
 
         $insert = new Village();
-        $insert->setTable($dbName . '.village_latest');
+        $insert->setTable($dbName . '.village_latest_temp');
         $array = array();
         foreach ($villages as $village) {
             $data = [
@@ -298,8 +310,13 @@ class DBController extends Controller
             $insert->insert($t);
         }
 
-        $hashVillage = $this->hashTableVillage($villages);
+        if (BasicFunctions::existTable($dbName, 'village_latest') === true){
+            DB::statement("DROP TABLE $dbName.village_latest");
+        }
 
+        DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
+
+        $hashVillage = $this->hashTableVillage($villages);
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
@@ -309,16 +326,27 @@ class DBController extends Controller
                 foreach (array_chunk($hashVillage[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
+                if (BasicFunctions::existTable($dbName, 'village_' . $i) === true) {
+                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
+                    $delete->delete();
+                }
             }
         }
 
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN') . '.world');
-        $worldUpdate = $world->where('name', $worldName)->first();
-        $worldUpdate->village_count = count($array);
-        $worldUpdate->save();
+        $count = count($array);
 
-        echo time() - $time;
+        $world = new World();
+        $world->setTable(env('DB_DATABASE_MAIN') . '.worlds');
+        $worldUpdate = $world->where('name', $worldName)->first();
+        if ($worldUpdate->village_count != $count) {
+            $worldUpdate->village_count = $count;
+            $worldUpdate->save();
+        }else{
+            $worldUpdate->touch();
+        }
+
+
+        //Log::debug($worldName.'-> Village: '.$count);
     }
 
     public function latestAlly($worldName){
@@ -329,10 +357,10 @@ class DBController extends Controller
         ini_set('memory_limit', '200M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
-        if (BasicFunctions::existTable($dbName, 'ally_latest') === false){
-            $this->allyTable($dbName, 'latest');
+        if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
+            $this->allyTable($dbName, 'latest_temp');
         }
-        $time = time();
+
         $lines = gzfile("https://$worldName.die-staemme.de/map/ally.txt.gz");
         if(!is_array($lines)) die("Datei ally konnte nicht ge&ouml;ffnet werden");
 
@@ -342,13 +370,13 @@ class DBController extends Controller
         $allyTots = collect();
 
         foreach ($lines as $line){
-            list($id, $name, $tag, $members, $points, $villages, $rank) = explode(',', $line);
+            list($id, $name, $tag, $members, $villages, $points, $points_all, $rank) = explode(',', $line);
             $ally = collect();
             $ally->put('id', (int)$id);
             $ally->put('name', $name);
             $ally->put('tag', $tag);
             $ally->put('member_count', (int)$members);
-            $ally->put('points', (int)$points);
+            $ally->put('points', (int)$points_all);
             $ally->put('village_count', (int)$villages);
             $ally->put('rank', (int)$rank);
             $allys->put($ally->get('id'),$ally);
@@ -386,9 +414,10 @@ class DBController extends Controller
         }
 
         $insert = new Ally();
-        $insert->setTable($dbName.'.ally_latest');
+        $insert->setTable($dbName.'.ally_latest_temp');
         $array = array();
         foreach ($allys as $ally) {
+            $id = $ally->get('id');
             $data = [
                 'allyID' => $ally->get('id'),
                 'name' => $ally->get('name'),
@@ -398,7 +427,7 @@ class DBController extends Controller
                 'village_count' => $ally->get('village_count'),
                 'rank' => $ally->get('rank'),
                 'offBash' => (is_null($allyOffs->get($id)))? null :$allyOffs->get($id)->get('off'),
-                'offBashRank' => (is_null($allyOffs->get($id)))? null : $allyOffs->get($id)->get('off'),
+                'offBashRank' => (is_null($allyOffs->get($id)))? null : $allyOffs->get($id)->get('offRank'),
                 'defBash' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('def'),
                 'defBashRank' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('defRank'),
                 'gesBash' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('tot'),
@@ -412,6 +441,12 @@ class DBController extends Controller
             $insert->insert($t);
         }
 
+
+        if (BasicFunctions::existTable($dbName, 'ally_latest') === true){
+            DB::statement("DROP TABLE $dbName.ally_latest");
+        }
+        DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
+
         $hashAlly = $this->hashTableAlly($allys, $allyOffs, $allyDefs, $allyTots);
 
         for ($i = 0; $i < env('HASH_ALLY'); $i++){
@@ -423,16 +458,26 @@ class DBController extends Controller
                 foreach (array_chunk($hashAlly[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
+                if (BasicFunctions::existTable($dbName, 'ally_' . $i) === true) {
+                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
+                    $delete->delete();
+                }
             }
         }
 
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.world');
-        $worldUpdate = $world->where('name', $worldName)->first();
-        $worldUpdate->ally_count = count($array);
-        $worldUpdate->save();
+        $count = count($array);
 
-        echo time()-$time;
+        $world = new World();
+        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
+        $worldUpdate = $world->where('name', $worldName)->first();
+        if ($worldUpdate->ally_count != $count) {
+            $worldUpdate->ally_count = $count;
+            $worldUpdate->save();
+        }else{
+            $worldUpdate->touch();
+        }
+
+        //Log::debug($worldName.'-> Ally: '.$count);
     }
 
     public function hashTablePlayer($mainArrays, $offArray, $defArray, $totArray){

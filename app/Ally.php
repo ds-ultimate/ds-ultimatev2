@@ -94,20 +94,20 @@ class Ally extends Model
         );
         $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_'.$tabelNr));
 
-        $allyDataArray = $allyModel->where('allyID', $allyID)->orderBy('timestamp', 'DESC')->get();
+        $allyDataArray = $allyModel->where('allyID', $allyID)->orderBy('updated_at', 'DESC')->get();
 
         $allyDatas = collect();
 
         foreach ($allyDataArray as $ally){
             $allyData = collect();
-            $allyData->put('timestamp', $ally->timestamp);
+            $allyData->put('timestamp', (int)$ally->updated_at->timestamp);
             $allyData->put('points', $ally->points);
             $allyData->put('rank', $ally->rank);
             $allyData->put('village', $ally->village_count);
             $allyData->put('gesBash', $ally->gesBash);
             $allyData->put('offBash', $ally->offBash);
-            $allyData->put('defBash', $ally->deffBash);
-            $allyData->put('utBash', $ally->gesBash-$ally->offBash-$ally->deffBash);
+            $allyData->put('defBash', $ally->defBash);
+            $allyData->put('utBash', $ally->gesBash-$ally->offBash-$ally->defBash);
             $allyDatas->push($allyData);
         }
 

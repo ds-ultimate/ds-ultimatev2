@@ -121,19 +121,19 @@ class Player extends Model
         );
         $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_'.$tabelNr));
 
-        $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('timestamp', 'DESC')->get();
+        $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('updated_at', 'DESC')->get();
         $playerDatas = collect();
 
         foreach ($playerDataArray as $player){
             $playerData = collect();
-            $playerData->put('timestamp', $player->timestamp);
+            $playerData->put('timestamp', $player->updated_at);
             $playerData->put('points', $player->points);
             $playerData->put('rank', $player->rank);
             $playerData->put('village', $player->village_count);
             $playerData->put('gesBash', $player->gesBash);
             $playerData->put('offBash', $player->offBash);
-            $playerData->put('defBash', $player->deffBash);
-            $playerData->put('utBash', $player->gesBash-$player->offBash-$player->deffBash);
+            $playerData->put('defBash', $player->defBash);
+            $playerData->put('utBash', $player->gesBash-$player->offBash-$player->defBash);
             $playerDatas->push($playerData);
         }
 

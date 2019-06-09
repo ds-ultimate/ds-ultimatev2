@@ -22,7 +22,7 @@ class AllyController extends Controller
         $allyData = Ally::ally($server, $world, $ally);
 
         $statsGeneral = ['points', 'rank', 'village'];
-        $statsBash = ['gesBash', 'offBash', 'defBash', 'utBash'];
+        $statsBash = ['gesBash', 'offBash', 'defBash'];
 
         $datas = Ally::allyDataChart($server, $world, $ally);
 
@@ -45,11 +45,17 @@ class AllyController extends Controller
             ->addNumberColumn(Chart::chartLabel($data));
 
         $oldTimestamp = 0;
+        $i = 0;
         foreach ($allyData as $aData){
             if (date('Y-m-d', $aData->get('timestamp')) != $oldTimestamp){
                 $population->addRow([date('Y-m-d', $aData->get('timestamp')), $aData->get($data)]);
                 $oldTimestamp =date('Y-m-d', $aData->get('timestamp'));
+                $i++;
             }
+        }
+
+        if ($i == 1){
+            $population->addRow([date('Y-m-d', $aData->get('timestamp')-60*60*24), 0]);
         }
 
         if ($data == 'rank'){
@@ -69,7 +75,10 @@ class AllyController extends Controller
                 'legend' => 'none',
                 'hAxis' => [
                     'format' => 'dd/MM'
-                ]
+                ],
+                'vAxis' => [
+                    'format' => 'short'
+            ]
             ]);
         }
 

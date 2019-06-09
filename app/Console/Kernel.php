@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,7 +27,45 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('update:village')->everyMinute();
+
+        /*
+         * Update Village
+         */
+        $schedule->command('update:village')
+            ->hourlyAt(1)
+            ->runInBackground()
+            ->onSuccess(function (){
+                Log::debug('Village -> Erfolgreich');
+            })
+            ->onFailure(function (){
+                Log::debug('Village -> Fehlgeschlagen');
+            });
+
+        /*
+         * Update Ally
+         */
+        $schedule->command('update:ally')
+            ->hourlyAt(1)
+            ->runInBackground()
+            ->onSuccess(function (){
+                Log::debug('Ally -> Erfolgreich');
+            })
+            ->onFailure(function (){
+                Log::debug('Ally -> Fehlgeschlagen');
+            });
+
+        /*
+         * Update Player
+         */
+        $schedule->command('update:player')
+            ->hourlyAt(1)
+            ->runInBackground()
+            ->onSuccess(function (){
+                Log::debug('Player -> Erfolgreich');
+            })
+            ->onFailure(function (){
+                Log::debug('Player -> Fehlgeschlagen');
+            });
     }
 
     /**

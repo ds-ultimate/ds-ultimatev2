@@ -34,7 +34,7 @@ class APIController extends Controller
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
             })
             ->addColumn('utBash', function ($player){
-                return $player->gesBash - $player->offBash - $player->deffBash;
+                return $player->gesBash - $player->offBash - $player->defBash;
             })
             ->toJson();
     }

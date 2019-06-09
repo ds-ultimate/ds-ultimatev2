@@ -8,21 +8,21 @@ use App\World;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class UpdateVillage extends Command
+class UpdateAlly extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update:village';
+    protected $signature = 'update:ally';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Aktualisiert die Dörfer in der Datenbank';
+    protected $description = 'Aktualisiert die Stämme in der Datenbank';
 
     /**
      * Create a new command instance.
@@ -50,7 +50,7 @@ class UpdateVillage extends Command
 
         $db = new \App\Http\Controllers\DBController();
         foreach ($worlds as $world){
-            $db->latestVillages($world->name);
+            $db->latestAlly($world->name);
             $bar->advance();
         }
         $bar->finish();
