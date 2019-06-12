@@ -40,7 +40,7 @@ class PlayerController extends Controller
             $this->chart($datas, $statsBash[$i]);
         }
 
-        $conquer = Conquer::playerConquerCounts($server, $world, $player);
+        //$conquer = Conquer::playerConquerCounts($server, $world, $player);
 
         return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData'));
 
