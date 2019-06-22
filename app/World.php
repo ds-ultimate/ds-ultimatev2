@@ -170,10 +170,10 @@ class World extends Model
 
         }
 
-        ($casuals->count() > 0)? $worldsArray->put('world', $worlds) : null;
+        ($worlds->count() > 0)? $worldsArray->put('world', $worlds) : null;
         ($casuals->count() > 0)? $worldsArray->put('casual', $casuals) : null;
         ($speeds->count() > 0)? $worldsArray->put('speed', $speeds) :  null;
-        ($casuals->count() > 0)? $worldsArray->put('classic', $classics) : null;
+        ($classics->count() > 0)? $worldsArray->put('classic', $classics) : null;
         return $worldsArray;
     }
 

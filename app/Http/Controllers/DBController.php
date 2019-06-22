@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
+use App\Conquer;
 use App\Player;
 use App\Server;
 use App\Util\BasicFunctions;
@@ -94,6 +95,16 @@ class DBController extends Controller
             $table->integer('points');
             $table->integer('owner');
             $table->integer('bonus_id');
+            $table->timestamps();
+        });
+    }
+
+    public function conquerTable($dbName){
+        Schema::create($dbName.'.conquer', function (Blueprint $table) {
+            $table->integer('villageID');
+            $table->string('timestamp');
+            $table->integer('new_owner');
+            $table->integer('old_owner');
             $table->timestamps();
         });
     }
@@ -478,6 +489,37 @@ class DBController extends Controller
         }
 
         //Log::debug($worldName.'-> Ally: '.$count);
+    }
+
+    public function conquer($worldName){
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('max_execution_time', 0);
+        ini_set('max_input_time', 1800);
+        ini_set('memory_limit', '500M');
+        date_default_timezone_set("Europe/Berlin");
+        $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
+        if (BasicFunctions::existTable($dbName, 'conquer') === false) {
+            $this->conquerTable($dbName);
+        }
+
+        $lines = gzfile("https://$worldName.die-staemme.de/map/conquer.txt.gz");
+        if (!is_array($lines)) die("Datei conquer konnte nicht ge&ouml;ffnet werden");
+        $i = 0;
+        foreach ($lines as $line) {
+            list($array[$i]['villageID'], $array[$i]['timestamp'], $array[$i]['new_owner'], $array[$i]['old_owner']) = explode(',', $line);
+            $array[$i]['created_at'] = Carbon::createFromTimestamp(time());
+            $array[$i]['updated_at'] = Carbon::createFromTimestamp(time());
+            $i ++;
+        }
+
+        $insert = new Conquer();
+        $insert->setTable($dbName . '.conquer');
+
+        foreach (array_chunk($array, 3000) as $t) {
+            $insert->insert($t);
+        }
+
     }
 
     public function hashTablePlayer($mainArrays, $offArray, $defArray, $totArray){

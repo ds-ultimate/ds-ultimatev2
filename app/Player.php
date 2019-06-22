@@ -126,7 +126,7 @@ class Player extends Model
 
         foreach ($playerDataArray as $player){
             $playerData = collect();
-            $playerData->put('timestamp', $player->updated_at);
+            $playerData->put('timestamp', (int)$player->updated_at->timestamp);
             $playerData->put('points', $player->points);
             $playerData->put('rank', $player->rank);
             $playerData->put('village', $player->village_count);
