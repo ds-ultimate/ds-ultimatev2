@@ -502,14 +502,19 @@ class DBController extends Controller
         if (BasicFunctions::existTable($dbName, 'conquer') === false) {
             $this->conquerTable($dbName);
         }
+        $conquer = new Conquer();
+        $conquer->setTable($dbName.'.conquer');
+        $count = $conquer->get()->count();
 
         $lines = gzfile("https://$worldName.die-staemme.de/map/conquer.txt.gz");
         if (!is_array($lines)) die("Datei conquer konnte nicht ge&ouml;ffnet werden");
         $i = 0;
         foreach ($lines as $line) {
-            list($array[$i]['villageID'], $array[$i]['timestamp'], $array[$i]['new_owner'], $array[$i]['old_owner']) = explode(',', $line);
-            $array[$i]['created_at'] = Carbon::createFromTimestamp(time());
-            $array[$i]['updated_at'] = Carbon::createFromTimestamp(time());
+            if ($i >= $count){
+                list($array[$i]['villageID'], $array[$i]['timestamp'], $array[$i]['new_owner'], $array[$i]['old_owner']) = explode(',', $line);
+                $array[$i]['created_at'] = Carbon::createFromTimestamp(time());
+                $array[$i]['updated_at'] = Carbon::createFromTimestamp(time());
+            }
             $i ++;
         }
 
