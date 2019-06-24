@@ -40,7 +40,7 @@ Route::get('/php', function () {
 
 Route::get('/test', function (){
 $t = new \App\Http\Controllers\DBController();
-$t->conquer('dep9');
+$t->conquer('de167');
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 

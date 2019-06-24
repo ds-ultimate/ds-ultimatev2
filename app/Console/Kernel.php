@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -65,6 +66,18 @@ class Kernel extends ConsoleKernel
             })
             ->onFailure(function (){
                 Log::debug('Player -> Fehlgeschlagen');
+            });
+        /*
+         * Update Player
+         */
+        $schedule->command('update:conquer')
+            ->everyThirtyMinutes()
+            ->runInBackground()
+            ->onSuccess(function (){
+                Log::debug('Conquer -> Erfolgreich');
+            })
+            ->onFailure(function (){
+                Log::debug('Conquer -> Fehlgeschlagen');
             });
     }
 

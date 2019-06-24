@@ -15,7 +15,7 @@ class UpdateConquer extends Command
      *
      * @var string
      */
-    protected $signature = 'update:ally';
+    protected $signature = 'update:conquer';
 
     /**
      * The console command description.
@@ -50,7 +50,7 @@ class UpdateConquer extends Command
 
         $db = new \App\Http\Controllers\DBController();
         foreach ($worlds as $world){
-            $db->latestAlly($world->name);
+            $db->conquer($world->name);
             $bar->advance();
         }
         $bar->finish();

@@ -40,7 +40,7 @@ class PlayerController extends Controller
             $this->chart($datas, $statsBash[$i]);
         }
 
-        //$conquer = Conquer::playerConquerCounts($server, $world, $player);
+        $conquer = Conquer::playerConquerCounts($server, $world, $player);
 
         return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData'));
 
@@ -69,7 +69,8 @@ class PlayerController extends Controller
                     'format' => 'dd/MM'
                 ],
                 'vAxis' => [
-                    'direction' => -1
+                    'direction' => -1,
+                    'format' => '0',
                 ]
             ]);
         }else{
@@ -78,6 +79,9 @@ class PlayerController extends Controller
                 'legend' => 'none',
                 'hAxis' => [
                     'format' => 'dd/MM'
+                ],
+                'vAxis' => [
+                    'format' => 'short'
                 ]
             ]);
         }

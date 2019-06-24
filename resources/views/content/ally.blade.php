@@ -1,6 +1,8 @@
 @extends('layouts.temp')
 
 @section('content')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css"/>
+    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" rel="stylesheet">
     <div class="row">
         <div class="col-12">
             <ul id="lang_menu">
@@ -32,8 +34,8 @@
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
-                        <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
                         <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
+                        <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
                         <td>{{ __('In Arbeit') }}</td>
                     </tr>
                     </tbody>
@@ -70,6 +72,33 @@
                 </table>
             </div>
         </div>
+        <div class="col-12"><h2>{{ ucfirst(__('Spieler')) }}</h2></div>
+        <div class="col-1"></div>
+        <div class="col-10">
+            <table id="table_id" class="table table-hover table-sm w-100">
+                <thead>
+                <tr class="d-none d-md-table-row">
+                    <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
+                    <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
+                </tr>
+                <tr>
+                    <th>{{ ucfirst(__('Rang')) }}</th>
+                    <th>{{ ucfirst(__('Name')) }}</th>
+                    <th>{{ ucfirst(__('Stamm')) }}</th>
+                    <th>{{ ucfirst(__('Punkte')) }}</th>
+                    <th>{{ ucfirst(__('Dörfer')) }}</th>
+                    <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
+                    <th>{{ ucfirst(__('Insgesamt')) }}</th>
+                    <th>{{ ucfirst(__('Angreifer')) }}</th>
+                    <th>{{ ucfirst(__('Verteidiger')) }}</th>
+                    <th>{{ ucfirst(__('Unterstützer')) }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-1"></div>
         <div class="col-6">
             <div class="col-12">
                 Diagramm:
@@ -109,6 +138,8 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
@@ -157,5 +188,42 @@
             }
         });
 
+    </script>
+    <script>
+
+        $(document).ready( function () {
+            $.extend( $.fn.dataTable.defaults, {
+                responsive: true
+            } );
+
+            $('#table_id').DataTable({
+                "columnDefs": [
+                    {"targets": 3, "className": 'text-right'},
+                    {"targets": 4, "className": 'text-right'},
+                    {"targets": 5, "className": 'text-right'},
+                    {"targets": 6, "className": 'text-right'},
+                    {"targets": 7, "className": 'text-right'},
+                    {"targets": 8, "className": 'text-right'},
+                    {"targets": 9, "className": 'text-right'},
+                ],
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('api.allyPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world'), $allyData->allyID]) }}",
+                "columns": [
+                    { "data": "rank" },
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
+                    { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
+                    { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},
+                    { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
+                    { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
+                    { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
+                    { "data": "utBash", "render": function (value) {return numeral(value).format('0.[00] a')}, "orderable": false},
+                ],
+                responsive: true,
+                {!! \App\Util\Datatable::language() !!}
+            });
+        } );
     </script>
 @endsection

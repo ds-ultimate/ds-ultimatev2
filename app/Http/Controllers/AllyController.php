@@ -66,7 +66,8 @@ class AllyController extends Controller
                     'format' => 'dd/MM'
                 ],
                 'vAxis' => [
-                    'direction' => -1
+                    'direction' => -1,
+                    'format' => '0',
                 ]
             ]);
         }else{

@@ -63,4 +63,33 @@ class APIController extends Controller
             })
             ->toJson();
     }
+
+    public function getAllyPlayer($server, $world, $ally)
+    {
+        $playerModel = new Player();
+        $replaceArray = array(
+            '{server}' => $server,
+            '{world}' => $world
+        );
+
+        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+
+        $querry = $playerModel->newQuery();
+        $querry->where('ally_id', $ally);
+
+        return DataTables::eloquent($querry)
+            ->editColumn('name', function ($player){
+                return BasicFunctions::outputName($player->name);
+            })
+            ->addColumn('ally', function ($player){
+                return ($player->ally_id != 0)? BasicFunctions::outputName($player->allyLatest->tag) : '-';
+            })
+            ->addColumn('village_points', function ($player){
+                return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
+            })
+            ->addColumn('utBash', function ($player){
+                return $player->gesBash - $player->offBash - $player->defBash;
+            })
+            ->toJson();
+    }
 }

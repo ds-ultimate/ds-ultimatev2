@@ -17,5 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/api/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
-Route::get('/api/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');
+Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
+Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');
+Route::get('/{server}/{world}/ally/{ally}', 'APIController@getAllyPlayer')->name('api.allyPlayer');
