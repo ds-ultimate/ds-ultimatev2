@@ -13,8 +13,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Yajra\DataTables\Facades\DataTables;
 
 class Controller extends BaseController
 {
@@ -70,6 +72,29 @@ class Controller extends BaseController
         $worldData = World::getWorldCollection($server, $world);
 
         return view('content.worldPlayer', compact('playerArray', 'worldData'));
+    }
+
+    public function search($search){
+        //return view('content.search', compact('search'));
+        $world = new World();
+        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
+        $worlds = $world->get();
+        $player = new Player();
+        $playerCollect = new Collection();
+
+        foreach ($worlds as $world){
+            $replaceArray = array(
+                '{server}' => BasicFunctions::getServer($world->name),
+                '{world}' => BasicFunctions::getWorldID($world->name)
+            );
+            $player->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+            foreach ($player->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
+                $playerCollect = $playerCollect->merge($data);
+            }
+        }
+        var_dump($playerCollect);
+        exit;
+        return DataTables::Eloquent($playerCollect);
     }
 
 }

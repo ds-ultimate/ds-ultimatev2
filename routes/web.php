@@ -39,10 +39,23 @@ Route::get('/php', function () {
 });
 
 Route::get('/test', function (){
-$t = new \App\Http\Controllers\DBController();
-$t->conquer('de167');
+    $server = 'de';
+    $world = '164';
+
+    $playerModel = new Player();
+    $replaceArray = array(
+        '{server}' => $server,
+        '{world}' => $world
+    );
+
+    $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+
+    $datas = $playerModel->newQuery();
+
+    var_dump($datas);
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
+Route::get('/search/{search}', 'Controller@search');
 
 Route::get('/{server}', 'Controller@server')->name('server');
 
