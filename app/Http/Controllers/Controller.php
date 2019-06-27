@@ -75,26 +75,9 @@ class Controller extends BaseController
     }
 
     public function search($search){
-        //return view('content.search', compact('search'));
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
-        $worlds = $world->get();
-        $player = new Player();
-        $playerCollect = new Collection();
-
-        foreach ($worlds as $world){
-            $replaceArray = array(
-                '{server}' => BasicFunctions::getServer($world->name),
-                '{world}' => BasicFunctions::getWorldID($world->name)
-            );
-            $player->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
-            foreach ($player->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
-                $playerCollect = $playerCollect->merge($data);
-            }
-        }
-        var_dump($playerCollect);
-        exit;
-        return DataTables::Eloquent($playerCollect);
+        $players = SearchController::searchPlayer($search);
+        $allys = SearchController::searchAlly($search);
+        return view('content.search', compact('search', 'players', 'allys'));
     }
 
 }

@@ -6,6 +6,7 @@ use App\Ally;
 use App\Player;
 use App\Util\BasicFunctions;
 use App\World;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -93,29 +94,4 @@ class APIController extends Controller
             ->toJson();
     }
 
-    public function searchPlayer($search){
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
-        $worlds = $world->get();
-        $player = new Player();
-        $playerCollect = collect();
-
-        foreach ($worlds as $world){
-            $replaceArray = array(
-                '{server}' => BasicFunctions::getServer($world->name),
-                '{world}' => BasicFunctions::getWorldID($world->name)
-            );
-            $player->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
-            foreach ($player->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
-                $p = collect();
-                $p->put('world', $world);
-                $p->put('id', $data->playerID);
-                $p->put('name', $data->name);
-                $p->put('points', $data->points);
-                $playerCollect->push($p);
-            }
-        }
-
-        return DataTables::collection($playerCollect);
-    }
 }

@@ -11,52 +11,46 @@
                     <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
                 </ul>
             </div>
+            <h2>{{__('Spieler')}}</h2>
             <table id="table_id" class="table table-hover table-sm w-100">
-                <thead>
-                <tr class="d-none d-md-table-row">
-                    <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
-                    <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
-                </tr>
-                <tr>
-                    <th>{{ ucfirst(__('Rang')) }}</th>
+                <thead><tr>
+                    <th>{{ ucfirst(__('Welt')) }}</th>
                     <th>{{ ucfirst(__('Name')) }}</th>
-                    <th>{{ ucfirst(__('Stamm')) }}</th>
                     <th>{{ ucfirst(__('Punkte')) }}</th>
                     <th>{{ ucfirst(__('Dörfer')) }}</th>
-                    <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
-                    <th>{{ ucfirst(__('Insgesamt')) }}</th>
-                    <th>{{ ucfirst(__('Angreifer')) }}</th>
-                    <th>{{ ucfirst(__('Verteidiger')) }}</th>
-                    <th>{{ ucfirst(__('Unterstützer')) }}</th>
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($players as $player)
+                <tr>
+                    <th>{{$player->get('world')->name}}</th>
+                    <th>{!! \App\Util\BasicFunctions::outputName($player->get('player')->name) !!}</th>
+                    <th>{{$player->get('player')->points}}</th>
+                    <th>{{$player->get('player')->village_count}}</th>
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+            <h2>{{__('Stamm')}}</h2>
+            <table id="table_id" class="table table-hover table-sm w-100">
+                <thead><tr>
+                    <th>{{ ucfirst(__('Welt')) }}</th>
+                    <th>{{ ucfirst(__('Stamm')) }}</th>
+                    <th>{{ ucfirst(__('Punkte')) }}</th>
+                    <th>{{ ucfirst(__('Dörfer')) }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($allys as $ally)
+                    <tr>
+                        <th>{{$ally->get('world')->name}}</th>
+                        <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->name) !!}</th>
+                        <th>{{$ally->get('ally')->points}}</th>
+                        <th>{{$ally->get('ally')->village_count}}</th>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
-    <script>
-
-        $(document).ready( function () {
-            $.extend( $.fn.dataTable.defaults, {
-                responsive: true
-            } );
-
-            $('#table_id').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": "{{ route('api.searchPlayer', [$search]) }}",
-                "columns": [
-                    { "data": "world" },
-                    { "data": "id"},
-                    { "data": "name"},
-                    { "data": "points"},
-                ],
-                responsive: true,
-                {!! \App\Util\Datatable::language() !!}
-            });
-        } );
-    </script>
 @endsection
