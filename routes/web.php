@@ -20,7 +20,7 @@ Route::get('/', function () {
 //    $flags = explode('|', env('DS_SERVER'));
 //    return view('content.index', compact('flags'));
     return view('welcome');
-});
+})->name('index');
 
 Auth::routes(['verify' => true]);
 

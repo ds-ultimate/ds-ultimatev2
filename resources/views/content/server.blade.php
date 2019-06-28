@@ -3,12 +3,6 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-10">
-            <div class="col-12">
-                <ul id = "lang_menu">
-                    <li class = "language{{ App::isLocale('de') ? ' active' : '' }}"><a href="{{ route('locale', 'de') }}">Deutsch</a></li>
-                    <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
-                </ul>
-            </div>
             <div class="row">
             @if(count($worldsArray->get('world')) > 0)
                 <div class="col">
