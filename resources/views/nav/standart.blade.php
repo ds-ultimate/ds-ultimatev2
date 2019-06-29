@@ -22,8 +22,8 @@
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-dark my-2 my-sm-0 mr-sm-2" type="submit">Search</button>
+            <input class="form-control mr-sm-2" type="search" placeholder="{{ __('Suche') }}" aria-label="Search">
+            <button class="btn btn-outline-dark my-2 my-sm-0 mr-sm-2" type="submit">{{ __('Suche') }}</button>
         </form>
         <div class="dropdown">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

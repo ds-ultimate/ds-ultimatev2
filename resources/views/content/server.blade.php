@@ -1,7 +1,12 @@
 @extends('layouts.temp')
 
+@section('titel', __('Übersicht Welten'))
+
 @section('content')
     <div class="row justify-content-center">
+        <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
+            <h1 class="font-weight-normal">{{ __('Übersicht Welten') }}</h1>
+        </div>
         <div class="col-10">
             <div class="row">
             @if(count($worldsArray->get('world')) > 0)
@@ -19,7 +24,7 @@
                         <tbody>
                         @foreach($worldsArray->get('world') as $world)
                             <tr>
-                                <td>{!! \App\Util\BasicFunctions::linkWorld($world, ucfirst(__('Welt')).' '.$world->get('world')) !!}</td>
+                                <td><span class="flag-icon flag-icon-de"></span> {!! \App\Util\BasicFunctions::linkWorld($world, ucfirst(__('Welt')).' '.$world->get('world')) !!}</td>
                                 <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->get('player_count'))) !!}</td>
                                 <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->get('ally_count'))) !!}</td>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($world->get('village_count')) }}</td>
