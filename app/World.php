@@ -45,7 +45,7 @@ class World extends Model
      * Sucht alle Welten mit dem entsprechendem ISO.
      * */
     public static function worldsByServer($server){
-        return World::where('name', 'LIKE', $server.'%')->get();
+        return World::where('name', 'LIKE', $server.'%')->orderBy('name')->get();
     }
 
     /*
@@ -131,7 +131,7 @@ class World extends Model
              * de => Welt
              */
             if(strpos($worldData->name, $server.'p') !== false){
-                $casual->put('type', __('main.Casual'));
+                $casual->put('type', __('Casual'));
                 $casual->put('name', $worldData->name);
                 $casual->put('world', BasicFunctions::getWorldID($worldData->name));
                 $casual->put('ally_count', $worldData->ally_count);
@@ -140,7 +140,7 @@ class World extends Model
 
                 $casuals->push($casual);
             }elseif(strpos($worldData->name, $server.'s') !== false){
-                $speed->put('type', __('main.Speed'));
+                $speed->put('type', __('Speed'));
                 $speed->put('name', $worldData->name);
                 $speed->put('world', BasicFunctions::getWorldID($worldData->name));
                 $speed->put('ally_count', $worldData->ally_count);
@@ -149,7 +149,7 @@ class World extends Model
 
                 $speeds->push($speed);
             }elseif(strpos($worldData->name, $server.'c') !== false){
-                $classic->put('type', __('main.Classic'));
+                $classic->put('type', __('Classic'));
                 $classic->put('name', $worldData->name);
                 $classic->put('world', BasicFunctions::getWorldID($worldData->name));
                 $classic->put('ally_count', $worldData->ally_count);
@@ -158,7 +158,7 @@ class World extends Model
 
                 $classics->push($classic);
             }else{
-                $world->put('type', trans_choice('main.Welten', 2));
+                $world->put('type', __('Normale Welten'));
                 $world->put('name', $worldData->name);
                 $world->put('world', BasicFunctions::getWorldID($worldData->name));
                 $world->put('ally_count', $worldData->ally_count);

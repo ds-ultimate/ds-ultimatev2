@@ -45,6 +45,7 @@ class DBController extends Controller
             $table->integer('player_count')->nullable();
             $table->integer('village_count')->nullable();
             $table->text('url');
+            $table->text('config');
             $table->timestamps();
         });
     }
@@ -128,13 +129,20 @@ class DBController extends Controller
                     $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
                     $worldNew->name = $world;
                     $worldNew->url = $link;
+                    $txt = file_get_contents("$link/interface.php?func=get_config");
+                    $worldNew->config = $txt;
+
                     if($worldNew->save() === true){
                         BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                         $name = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$world;
-                        if (DB::statement('CREATE DATABASE '.$name) === true){
-                            BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
+                        if (BasicFunctions::existTable($name, 'player_latest') === false) {
+                            if (DB::statement('CREATE DATABASE ' . $name) === true) {
+                                BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
+                            } else {
+                                BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
+                            }
                         }else{
-                            BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
+                            BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
                         }
                     }else{
                         BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");

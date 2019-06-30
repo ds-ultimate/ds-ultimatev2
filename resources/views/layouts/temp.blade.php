@@ -10,7 +10,8 @@
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.18/datatables.min.js"></script>
+    <link href="{{ asset('plugin/Datatables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugin/Datatables/Responsive-2.2.2/css/responsive.bootstrap4.css') }}" rel="stylesheet">
 </head>
 <body style="padding-right: 0px">
 <div class="flex-center position-ref full-height">
@@ -19,5 +20,14 @@
         @yield('content')
     </div>
 </div>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/dataTables.bootstrap4.js') }}"></script>
+<script src="{{ asset('plugin/Datatables/Responsive-2.2.2/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('js/numeral.min.js') }}"></script>
+@yield('js')
 </body>
 </html>

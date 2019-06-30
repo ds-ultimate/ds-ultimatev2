@@ -11,6 +11,7 @@ namespace App\Util;
 
 use App;
 use App\Village;
+use App\World;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -148,6 +149,15 @@ class BasicFunctions
         $log->type = $type;
         $log->msg = $msg;
         $log->save();
+    }
+
+    public static function getWorld(){
+        $world = new World();
+        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
+        // FIXME: für den Testserver
+        return $world->where('name', '!=', 'dep9')->where('name', '!=', 'dep10')->where('name', '!=', 'dep11')->get();
+        // FIXME: nur für den live Server
+        return $world->get();
     }
 
 }

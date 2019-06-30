@@ -74,10 +74,19 @@ class Controller extends BaseController
         return view('content.worldPlayer', compact('playerArray', 'worldData'));
     }
 
-    public function search($search){
-        $players = SearchController::searchPlayer($search);
-        $allys = SearchController::searchAlly($search);
-        return view('content.search', compact('search', 'players', 'allys'));
+    public function search($type, $search){
+        BasicFunctions::local();
+        switch ($type){
+            case 'player':
+                $result = SearchController::searchPlayer($search);
+                return view('content.search', compact('search', 'type', 'result'));
+            case 'ally':
+                $result = SearchController::searchAlly($search);
+                return view('content.search', compact('search', 'type', 'result'));
+            case 'village':
+                $result = SearchController::searchPlayer($search);
+                return view('content.search', compact('search', 'type', 'result'));
+        }
     }
 
 }

@@ -7,9 +7,20 @@ use App\Player;
 use App\Util\BasicFunctions;
 use App\World;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class SearchController extends Controller
 {
+
+    public function searchForm(Request $request)
+    {
+        if ($request->search != null) {
+            return redirect()->route('search', [$request->submit, $request->search]);
+        }else{
+            return redirect()->back();
+        }
+    }
+
     public static function searchPlayer($search){
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.worlds');

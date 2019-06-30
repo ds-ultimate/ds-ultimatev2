@@ -1,17 +1,14 @@
 @extends('layouts.temp')
 
+@section('titel', __('Suche'))
+
 @section('content')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css"/>
-    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" rel="stylesheet">
     <div class="row justify-content-center">
+        <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
+            <h1 class="font-weight-normal">{{ __('Suche') }}: {!! ucfirst(($type == 'player')? __('Spieler'): (($type == 'ally')? __('Stämme'): __('Dörfer'))) !!}</h1>
+        </div>
         <div class="col-10">
-            <div class="col-12">
-                <ul id = "lang_menu">
-                    <li class = "language{{ App::isLocale('de') ? ' active' : '' }}"><a href="{{ route('locale', 'de') }}">Deutsch</a></li>
-                    <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
-                </ul>
-            </div>
-            <h2>{{__('Spieler')}}</h2>
+            @if ($type == 'player')
             <table id="table_id" class="table table-hover table-sm w-100">
                 <thead><tr>
                     <th>{{ ucfirst(__('Welt')) }}</th>
@@ -21,17 +18,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($players as $player)
+                @foreach($result as $player)
                 <tr>
-                    <th>{{$player->get('world')->name}}</th>
-                    <th>{!! \App\Util\BasicFunctions::outputName($player->get('player')->name) !!}</th>
-                    <th>{{$player->get('player')->points}}</th>
-                    <th>{{$player->get('player')->village_count}}</th>
+                    <td>{{$player->get('world')->name}}</td>
+                    <td>{!! \App\Util\BasicFunctions::linkPlayer(\App\World::getWorldCollection(\App\Util\BasicFunctions::getServer($player->get('world')->name), \App\Util\BasicFunctions::getWorldID($player->get('world')->name)), $player->get('player')->playerID,\App\Util\BasicFunctions::outputName($player->get('player')->name)) !!}</td>
+                    <td>{{$player->get('player')->points}}</td>
+                    <td>{{$player->get('player')->village_count}}</td>
                 </tr>
                 @endforeach
                 </tbody>
             </table>
-            <h2>{{__('Stamm')}}</h2>
+            @elseif ($type == 'ally')
             <table id="table_id" class="table table-hover table-sm w-100">
                 <thead><tr>
                     <th>{{ ucfirst(__('Welt')) }}</th>
@@ -41,7 +38,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($allys as $ally)
+                @foreach($result as $ally)
                     <tr>
                         <th>{{$ally->get('world')->name}}</th>
                         <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->name) !!}</th>
@@ -51,6 +48,13 @@
                 @endforeach
                 </tbody>
             </table>
+            @else
+            Dörfer
+            @endif
         </div>
     </div>
+@endsection
+
+@section('js')
+
 @endsection

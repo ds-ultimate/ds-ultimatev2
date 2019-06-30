@@ -9,10 +9,26 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">{{__('Startseite')}} <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ route('server', ['de']) }}">{{__('Startseite')}} <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{__('Welten')}}
+                </a>
+                <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                    @foreach(\App\World::worldsCollection('de') as $worlds)
+                    <li class="dropdown-submenu">
+                        <a  class="dropdown-item" tabindex="-1" href="#">{!! $worlds->get(0)->get('type') !!}</a>
+                        <ul class="dropdown-menu">
+                            @foreach($worlds as $world)
+                            <li class="dropdown-item">
+                                {!! \App\Util\BasicFunctions::linkWorld($world, (($world->get('type') == __('Normale Welten'))? ucfirst(__('Welt')): $world->get('type')).' '.$world->get('world')) !!}
+                            </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                    @endforeach
+                </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Pricing</a>
@@ -21,9 +37,19 @@
                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="{{ __('Suche') }}" aria-label="Search">
-            <button class="btn btn-outline-dark my-2 my-sm-0 mr-sm-2" type="submit">{{ __('Suche') }}</button>
+        <form class="form-inline my-2 my-lg-0" action="{{ route('searchForm') }}" method="POST" role="search">
+            @csrf
+            <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('Suche') }}" aria-label="Search">
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ __('Suche') }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                    <button class="dropdown-item" name="submit" type="submit"  value="player">{{ __('Spieler') }}</button>
+                    <button class="dropdown-item" name="submit" type="submit" value="ally">{{ __('Stamm') }}</button>
+                    <button class="dropdown-item" name="submit" type="submit" value="village">{{ __('Dorf') }}</button>
+                </div>
+            </div>
         </form>
         <div class="dropdown">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

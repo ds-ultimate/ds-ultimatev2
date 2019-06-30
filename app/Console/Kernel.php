@@ -67,6 +67,7 @@ class Kernel extends ConsoleKernel
             ->onFailure(function (){
                 Log::debug('Player -> Fehlgeschlagen');
             });
+
         /*
          * Update Player
          */
@@ -79,6 +80,10 @@ class Kernel extends ConsoleKernel
             ->onFailure(function (){
                 Log::debug('Conquer -> Fehlgeschlagen');
             });
+
+        $schedule->command('update:world')
+            ->dailyAt('23:55')
+            ->runInBackground();
     }
 
     /**

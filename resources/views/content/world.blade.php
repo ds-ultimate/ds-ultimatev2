@@ -1,18 +1,17 @@
 @extends('layouts.temp')
 
+@section('titel', ucfirst(__('Welt')).':'.$worldData->get('name'))
+
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-10">
-            <div class="col-12">
-                <ul id = "lang_menu">
-                    <li class = "language{{ App::isLocale('de') ? ' active' : '' }}"><a href="{{ route('locale', 'de') }}">Deutsch</a></li>
-                    <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
-                </ul>
-            </div>
+        <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
+            <h1 class="font-weight-normal">{{ ucfirst(__('Welt')).' '.$worldData->get('world') }}</h1>
+        </div>
+        <div class="col-12">
             <div class="row">
-                <div class="col">
+                <div class="col-12 col-md-6">
                     <h2>{{ __('Top 10 Spieler') }}:</h2>
-                    <table class="table table-striped no-wrap">
+                    <table class="table table-striped"  id="t10Player">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('Rang')) }}</th>
@@ -24,7 +23,7 @@
                         <tbody>
                         @foreach($playerArray as $player)
                             <tr>
-                                <td>{{ $player->rank }}</td>
+                                <th>{{ $player->rank }}</th>
                                 <td>{!! \App\Util\BasicFunctions::linkPlayer($worldData, $player->playerID, \App\Util\BasicFunctions::outputName($player->name)) !!}</td>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($player->points) }}</td>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($player->village_count) }}</td>
@@ -33,9 +32,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col">
+                <div class="col-12 col-md-6">
                     <h2>{{ __('Top 10 Stämme') }}:</h2>
-                    <table class="table table-striped no-wrap">
+                    <table class="table table-striped" id="t10Ally">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('Rang')) }}</th>
@@ -49,12 +48,12 @@
                         <tbody>
                         @foreach($allyArray as $ally)
                             <tr>
-                                <td>{{ $ally->rank }}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkAlly($worldData, $ally->allyID, \App\Util\BasicFunctions::outputName($ally->name))!!}</td>
+                                <th>{{ $ally->rank }}</th>
+                                <td class="text-truncate">{!! \App\Util\BasicFunctions::linkAlly($worldData, $ally->allyID, \App\Util\BasicFunctions::outputName($ally->name))!!}</td>
                                 <td>{{ \App\Util\BasicFunctions::outputName($ally->tag) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($ally->points) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($ally->member_count) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($ally->village_count) }}</td>
+                                <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->points) }}</td>
+                                <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->member_count) }}</td>
+                                <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->village_count) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -63,4 +62,28 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $(document).ready( function () {
+            $('#t10Player').DataTable({
+                "responsive": true,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                {!! \App\Util\Datatable::language() !!}
+            });
+
+            $('#t10Ally').DataTable({
+                "responsive": true,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+                "info": false,
+                {!! \App\Util\Datatable::language() !!}
+            });
+        } );
+    </script>
 @endsection

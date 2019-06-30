@@ -41,9 +41,8 @@ class UpdateAlly extends Command
      */
     public function handle()
     {
-        $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
-        $worlds = $world->get();
+
+        $worlds = BasicFunctions::getWorld();
 
         $bar = $this->output->createProgressBar(count($worlds));
         $bar->start();
