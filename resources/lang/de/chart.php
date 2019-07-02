@@ -15,4 +15,10 @@ return array (
   'label_utBash' => 'Unterstützer Punkte',
   'titel_village' => 'Dörfer',
   'label_village' => 'Dörfer',
+  'who' => 
+  array (
+    'ally' => 'Stamm',
+    'player' => 'Spieler',
+    'village' => 'Dorf',
+  ),
 );

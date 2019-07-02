@@ -38,7 +38,10 @@ class AllyController extends Controller
     }
 
     public function chart($allyData, $data){
-
+        if (!Chart::validType($data)) {
+            return;
+        }
+        
         $population = \Lava::DataTable();
 
         $population->addDateColumn('Tag')

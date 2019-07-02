@@ -53,7 +53,7 @@
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "ally", "render": function (value, type, row) {if (value != "-"){return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}else{return value}}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},

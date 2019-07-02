@@ -155,6 +155,7 @@ class BasicFunctions
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
         // FIXME: für den Testserver
+        return $world->where('name', '==', 'de164');
         return $world->where('name', '!=', 'dep9')->where('name', '!=', 'dep10')->where('name', '!=', 'dep11')->get();
         // FIXME: nur für den live Server
         return $world->get();

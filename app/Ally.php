@@ -73,7 +73,7 @@ class Ally extends Model
     }
 
     public static function ally($server, $world, $ally){
-        $allyModel = new ally();
+        $allyModel = new Ally();
         $replaceArray = array(
             '{server}' => $server,
             '{world}' => $world

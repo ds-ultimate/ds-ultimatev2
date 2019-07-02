@@ -15,7 +15,7 @@ class UpdateAlly extends Command
      *
      * @var string
      */
-    protected $signature = 'update:ally';
+    protected $signature = 'update:ally {world=null}';
 
     /**
      * The console command description.
@@ -41,18 +41,21 @@ class UpdateAlly extends Command
      */
     public function handle()
     {
-
-        $worlds = BasicFunctions::getWorld();
-
-        $bar = $this->output->createProgressBar(count($worlds));
-        $bar->start();
-
         $db = new \App\Http\Controllers\DBController();
-        foreach ($worlds as $world){
-            $db->latestAlly($world->name);
-            $bar->advance();
+        
+        if ($this->argument('world') != "null") {
+            $db->latestAlly($this->argument('world'));
+        } else {
+            $worlds = BasicFunctions::getWorld();
+            
+            $bar = $this->output->createProgressBar(count($worlds));
+            $bar->start();
+            
+            foreach ($worlds as $world){
+                $db->latestAlly($world->name);
+                $bar->advance();
+            }
+            $bar->finish();
         }
-        $bar->finish();
-        $this->error('Something went wrong!');
     }
 }

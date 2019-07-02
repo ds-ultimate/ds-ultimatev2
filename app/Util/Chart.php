@@ -48,4 +48,37 @@ class Chart
                 return __('chart.label_utBash');
         }
     }
+
+    public static function displayInvers($data){
+        switch($data) {
+            case 'points':
+            case 'village':
+            case 'gesBash':
+            case 'offBash':
+            case 'offBash':
+            case 'defBash':
+            case 'utBash':
+                return false;
+            case 'rank':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static function validType($data){
+        switch($data) {
+            case 'points':
+            case 'rank':
+            case 'village':
+            case 'gesBash':
+            case 'offBash':
+            case 'offBash':
+            case 'defBash':
+            case 'utBash':
+                return true;
+            default:
+                return false;
+        }
+    }
 }

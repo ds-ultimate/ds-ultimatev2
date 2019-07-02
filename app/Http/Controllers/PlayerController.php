@@ -47,6 +47,9 @@ class PlayerController extends Controller
     }
 
     public function chart($playerData, $data){
+        if (!Chart::validType($data)) {
+            return;
+        }
 
         $population = \Lava::DataTable();
 
