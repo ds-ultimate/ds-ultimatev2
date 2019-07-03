@@ -58,7 +58,7 @@ class Controller extends BaseController
 
         $worldData = World::getWorldCollection($server, $world);
 
-        return view('content.worldAlly', compact('allyArray', 'worldData'));
+        return view('content.worldAlly', compact('worldData'));
     }
 
     /*
@@ -71,7 +71,7 @@ class Controller extends BaseController
 
         $worldData = World::getWorldCollection($server, $world);
 
-        return view('content.worldPlayer', compact('playerArray', 'worldData'));
+        return view('content.worldPlayer', compact('worldData'));
     }
 
     public function search($type, $search){

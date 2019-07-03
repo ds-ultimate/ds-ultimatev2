@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Ally;
 use App\Player;
 use App\Util\BasicFunctions;
-use App\World;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class APIController extends Controller
@@ -42,15 +39,15 @@ class APIController extends Controller
 
     public function getAllys($server, $world)
     {
-        $allyrModel = new Ally();
+        $allyModel = new Ally();
         $replaceArray = array(
             '{server}' => $server,
             '{world}' => $world
         );
 
-        $allyrModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
 
-        $datas = $allyrModel->newQuery();
+        $datas = $allyModel->newQuery();
 
         return DataTables::eloquent($datas)
             ->editColumn('name', function ($ally){
@@ -61,6 +58,9 @@ class APIController extends Controller
             })
             ->addColumn('player_points', function ($ally){
                 return ($ally->points == 0 || $ally->member_count == 0)? 0 : ($ally->points/$ally->member_count);
+            })
+            ->addColumn('village_points', function ($ally){
+                return ($ally->points == 0 || $ally->village_count == 0)? 0 : ($ally->points/$ally->village_count);
             })
             ->toJson();
     }

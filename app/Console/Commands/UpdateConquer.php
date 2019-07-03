@@ -3,9 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Util\BasicFunctions;
-use App\Village;
-use App\World;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class UpdateConquer extends Command

@@ -7,7 +7,6 @@ use App\Player;
 use App\Util\BasicFunctions;
 use App\World;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 
 class SearchController extends Controller
 {

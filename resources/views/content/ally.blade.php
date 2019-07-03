@@ -1,15 +1,7 @@
 @extends('layouts.temp')
 
 @section('content')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css"/>
-    <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" rel="stylesheet">
     <div class="row">
-        <div class="col-12">
-            <ul id="lang_menu">
-                <li class = "language{{ App::isLocale('de') ? ' active' : '' }}"><a href="{{ route('locale', 'de') }}">Deutsch</a></li>
-                <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
-            </ul>
-        </div>
         <div class="col-12 mx-2">
             <div class="card">
                 <table class="table table-bordered no-wrap">
@@ -138,8 +130,9 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+@endsection
+
+@section('js')
     <script>
         $(document).ready(function () {
             $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');

@@ -38,8 +38,10 @@ Route::get('/php', function () {
     phpinfo();
 });
 
+
+
 Route::get('/test', function (){
-    var_dump(BasicFunctions::getWorld());
+    echo (null === 0)? 'ja': 'nein';
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search', 'SearchController@searchForm')->name('searchForm');

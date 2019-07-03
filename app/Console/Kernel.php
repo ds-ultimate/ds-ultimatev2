@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +33,7 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('update:village')
             ->hourlyAt(1)
-            ->runInBackground()
+            //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Village -> Erfolgreich');
             })
@@ -47,7 +46,7 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('update:ally')
             ->hourlyAt(1)
-            ->runInBackground()
+            //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Ally -> Erfolgreich');
             })
@@ -60,7 +59,7 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('update:player')
             ->hourlyAt(1)
-            ->runInBackground()
+            //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Player -> Erfolgreich');
             })
@@ -73,7 +72,7 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('update:conquer')
             ->everyThirtyMinutes()
-            ->runInBackground()
+            //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Conquer -> Erfolgreich');
             })

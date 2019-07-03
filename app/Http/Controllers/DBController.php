@@ -11,14 +11,11 @@ use App\Village;
 use App\World;
 use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class DBController extends Controller
 {
-
     public function serverTable(){
         DB::statement('CREATE DATABASE '.env('DB_DATABASE_MAIN'));
         Schema::create(env('DB_DATABASE_MAIN').'.server', function (Blueprint $table){
@@ -124,39 +121,44 @@ class DBController extends Controller
             $worldTable->setTable(env('DB_DATABASE_MAIN').'.worlds');
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
-                if ($worldTable->where('name', $world)->count() < 1){
-                    $worldNew = new World();
-                    $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
-                    $worldNew->name = $world;
-                    $worldNew->url = $link;
-                    $txt = file_get_contents("$link/interface.php?func=get_config");
-                    $worldNew->config = $txt;
-
-                    if($worldNew->save() === true){
-                        BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
-                        $name = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$world;
-                        if (BasicFunctions::existTable($name, 'player_latest') === false) {
-                            if (DB::statement('CREATE DATABASE ' . $name) === true) {
-                                BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
-                            } else {
-                                BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
-                            }
-                        }else{
-                            BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
-                        }
-                    }else{
-                        BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
-                    }
+                if ($worldTable->where('name', $world)->count() >= 1){
+                    //world exists already -> ignore
+                    // FIXME: Update saved world data with new data
+                    continue;
                 }
+                
+                $worldNew = new World();
+                $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
+                $worldNew->name = $world;
+                $worldNew->url = $link;
+                $txt = file_get_contents("$link/interface.php?func=get_config");
+                $worldNew->config = $txt;
+
+                if ($worldNew->save() !== true){
+                    BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
+                    continue;
+                }
+
+                BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
+                $name = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$world;
+                if (BasicFunctions::existTable($name, 'player_latest') !== false) {
+                    BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
+                    continue;
+                }
+                if (DB::statement('CREATE DATABASE ' . $name) !== true) {
+                    BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
+                    continue;
+                }
+                BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
             }
         }
     }
-
+    
+    // FIXME: use server Url from servers table (to enable support for other languages
     public function latestPlayer($worldName){
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
-        ini_set('max_input_time', 1800);
         ini_set('memory_limit', '400M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
@@ -166,7 +168,10 @@ class DBController extends Controller
         }
 
         $lines = gzfile("https://$worldName.die-staemme.de/map/player.txt.gz");
-        if(!is_array($lines)) die("Datei player konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($lines)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
 
         $players = collect();
         $playerOffs = collect();
@@ -186,7 +191,10 @@ class DBController extends Controller
         }
 
         $offs = gzfile("https://$worldName.die-staemme.de/map/kill_att.txt.gz");
-        if(!is_array($offs)) die("Datei kill_off konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($offs)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_att.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($offs as $off){
             list($rank, $id, $kills) = explode(',', $off);
             $playerOff = collect();
@@ -196,7 +204,10 @@ class DBController extends Controller
         }
 
         $defs = gzfile("https://$worldName.die-staemme.de/map/kill_def.txt.gz");
-        if(!is_array($defs)) die("Datei kill_def konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($defs)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_def.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($defs as $def){
             list($rank, $id, $kills) = explode(',', $def);
             $playerDef = collect();
@@ -206,7 +217,10 @@ class DBController extends Controller
         }
 
         $tots = gzfile("https://$worldName.die-staemme.de/map/kill_all.txt.gz");
-        if(!is_array($tots)) die("Datei kill_all konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($tots)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_all.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($tots as $tot){
             list($rank, $id, $kills) = explode(',', $tot);
             $playerTot = collect();
@@ -246,8 +260,8 @@ class DBController extends Controller
             DB::statement("DROP TABLE $dbName.player_latest");
         }
         DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
-
-        $hashPlayer = $this->hashTablePlayer($players, $playerOffs, $playerDefs, $playerTots, 'p');
+        
+        $hashPlayer = $this->hashTable($players, 'p', 'playerID');
 
         for ($i = 0; $i < env('HASH_PLAYER'); $i++){
             if (array_key_exists($i ,$hashPlayer)) {
@@ -284,7 +298,6 @@ class DBController extends Controller
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
-        ini_set('max_input_time', 1800);
         ini_set('memory_limit', '500M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
@@ -293,7 +306,10 @@ class DBController extends Controller
         }
 
         $lines = gzfile("https://$worldName.die-staemme.de/map/village.txt.gz");
-        if (!is_array($lines)) die("Datei village konnte nicht ge&ouml;ffnet werden");
+        if (!is_array($lines)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "village.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         $villages = collect();
         foreach ($lines as $line) {
             list($id, $name, $x, $y, $points, $owner, $bonus_id) = explode(',', $line);
@@ -335,7 +351,7 @@ class DBController extends Controller
 
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
 
-        $hashVillage = $this->hashTableVillage($villages);
+        $hashVillage = $this->hashTable($villages, 'v', 'villageID');
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
@@ -372,7 +388,6 @@ class DBController extends Controller
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 1800);
-        ini_set('max_input_time', 1800);
         ini_set('memory_limit', '200M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
@@ -381,7 +396,10 @@ class DBController extends Controller
         }
 
         $lines = gzfile("https://$worldName.die-staemme.de/map/ally.txt.gz");
-        if(!is_array($lines)) die("Datei ally konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($lines)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "ally.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
 
         $allys = collect();
         $allyOffs = collect();
@@ -402,7 +420,10 @@ class DBController extends Controller
         }
 
         $offs = gzfile("https://$worldName.die-staemme.de/map/kill_att_tribe.txt.gz");
-        if(!is_array($offs)) die("Datei kill_off konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($offs)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_att_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($offs as $off){
             list($rank, $id, $kills) = explode(',', $off);
             $allyOff = collect();
@@ -413,7 +434,10 @@ class DBController extends Controller
         }
 
         $defs = gzfile("https://$worldName.die-staemme.de/map/kill_def_tribe.txt.gz");
-        if(!is_array($defs)) die("Datei kill_def konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($defs)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_def_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($defs as $def){
             list($rank, $id, $kills) = explode(',', $def);
             $allyDef = collect();
@@ -423,7 +447,10 @@ class DBController extends Controller
         }
 
         $tots = gzfile("https://$worldName.die-staemme.de/map/kill_all_tribe.txt.gz");
-        if(!is_array($tots)) die("Datei kill_all konnte nicht ge&ouml;ffnet werden");
+        if(!is_array($tots)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "kill_all_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         foreach ($tots as $tot){
             list($rank, $id, $kills) = explode(',', $tot);
             $allyTot = collect();
@@ -466,7 +493,7 @@ class DBController extends Controller
         }
         DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
 
-        $hashAlly = $this->hashTableAlly($allys, $allyOffs, $allyDefs, $allyTots);
+        $hashAlly = $this->hashTable($allys, 'a', 'allyID');
 
         for ($i = 0; $i < env('HASH_ALLY'); $i++){
             if (array_key_exists($i ,$hashAlly)) {
@@ -500,10 +527,10 @@ class DBController extends Controller
     }
 
     public function conquer($worldName){
+        // FIXME: use $server_URL/interface.php?func=get_conquer&since=$last_timestamp
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
-        ini_set('max_input_time', 1800);
         ini_set('memory_limit', '500M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
@@ -515,7 +542,10 @@ class DBController extends Controller
         $count = $conquer->get()->count();
 
         $lines = gzfile("https://$worldName.die-staemme.de/map/conquer.txt.gz");
-        if (!is_array($lines)) die("Datei conquer konnte nicht ge&ouml;ffnet werden");
+        if (!is_array($lines)) {
+            BasicFunctions::createLog("ERROR_update[$worldName]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
+            return;
+        }
         $i = 0;
         foreach ($lines as $line) {
             if ($i >= $count){
@@ -535,75 +565,16 @@ class DBController extends Controller
 
     }
 
-    public function hashTablePlayer($mainArrays, $offArray, $defArray, $totArray){
-        date_default_timezone_set("Europe/Berlin");
-        foreach ($mainArrays as $main){
-            $id = $main->get('id');
-            $hashArray[BasicFunctions::hash($main->get('id'), 'p')][$id] = [
-                'playerID' => $main->get('id'),
-                'name' => $main->get('name'),
-                'ally_id' => $main->get('ally'),
-                'village_count' => $main->get('villages'),
-                'points' => $main->get('points'),
-                'rank' => $main->get('rank'),
-                'offBash' => (is_null($offArray->get($id)))? null :$offArray->get($id)->get('off'),
-                'offBashRank' => (is_null($offArray->get($id)))? null : $offArray->get($id)->get('off'),
-                'defBash' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('def'),
-                'defBashRank' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('defRank'),
-                'gesBash' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('tot'),
-                'gesBashRank' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('totRank'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
-            ];
+    public function hashTable($mainArray, $type, $index){
+        $hashArray = collect();
+        foreach ($mainArray as $main){
+            $id = $main->get($index);
+            if (! array_key_exists(BasicFunctions::hash($id, $type), $hashArray)) {
+                $hashArray[BasicFunctions::hash($id, $type)] = collect();
+            }
+            $hashArray[BasicFunctions::hash($id, $type)][$id] = $main;
         }
 
         return $hashArray;
     }
-
-    public function hashTableAlly($mainArrays, $offArray, $defArray, $totArray){
-        date_default_timezone_set("Europe/Berlin");
-        foreach ($mainArrays as $main){
-            $id = $main->get('id');
-            $hashArray[BasicFunctions::hash($main->get('id'), 'a')][$id] = [
-                'allyID' => $main->get('id'),
-                'name' => $main->get('name'),
-                'tag' => $main->get('tag'),
-                'member_count' => $main->get('member_count'),
-                'points' => $main->get('points'),
-                'village_count' => $main->get('village_count'),
-                'rank' => $main->get('rank'),
-                'offBash' => (is_null($offArray->get($id)))? null :$offArray->get($id)->get('off'),
-                'offBashRank' => (is_null($offArray->get($id)))? null : $offArray->get($id)->get('offRank'),
-                'defBash' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('def'),
-                'defBashRank' => (is_null($defArray->get($id)))? null : $defArray->get($id)->get('defRank'),
-                'gesBash' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('tot'),
-                'gesBashRank' => (is_null($totArray->get($id)))? null : $totArray->get($id)->get('totRank'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
-            ];
-        }
-
-        return $hashArray;
-    }
-
-    public function hashTableVillage($mainArrays){
-        date_default_timezone_set("Europe/Berlin");
-        foreach ($mainArrays as $main){
-            $id = $main->get('id');
-            $hashArray[BasicFunctions::hash($main->get('id'), 'v')][$id] = [
-                'villageID' => $main->get('id'),
-                'name' => $main->get('name'),
-                'x' => $main->get('x'),
-                'y' => $main->get('y'),
-                'points' => $main->get('points'),
-                'owner' => $main->get('owner'),
-                'bonus_id' => $main->get('bonus_id'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
-            ];
-        }
-
-        return $hashArray;
-    }
-
 }

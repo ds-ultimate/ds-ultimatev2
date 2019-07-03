@@ -13,9 +13,9 @@ class PictureController extends Controller
 {
     private $debug = false;
     
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
-        $debug = env('APP_DEBUG', 'false');
+        $this->debug = env('APP_DEBUG', 'false');
     }
     
     public function getAllySizedPic($server, $world, $allyID, $type, $width, $height, $ext)
@@ -38,7 +38,7 @@ class PictureController extends Controller
         $tag = \App\Util\BasicFunctions::outputName($allyData->tag);
         $allyString = __('chart.who.ally') . ": $name [$tag]";
         
-        $chart = new ImageChart("../fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
         $chart -> render($statData, $allyString, Chart::chartTitel($type), Chart::displayInvers($type));
         return $chart -> output($ext);
     }
@@ -62,7 +62,7 @@ class PictureController extends Controller
         $name = \App\Util\BasicFunctions::outputName($playerData->name);
         $playerString = __('chart.who.player') . ": $name";
         
-        $chart = new ImageChart("../fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
         $chart -> render($statData, $playerString, Chart::chartTitel($type), Chart::displayInvers($type));
         return $chart -> output($ext);
     }
@@ -88,7 +88,7 @@ class PictureController extends Controller
         $y = $villageData->y;
         $villageString = __('chart.who.village') . ": $name ($x|$y)";
         
-        $chart = new ImageChart("../fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
         $chart -> render($statData, $villageString, Chart::chartTitel($type), Chart::displayInvers($type));
         return $chart -> output($ext);
     }

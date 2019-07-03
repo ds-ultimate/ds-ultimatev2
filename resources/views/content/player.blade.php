@@ -1,13 +1,9 @@
 @extends('layouts.temp')
 
+@section('titel', ucfirst(__('Spieler')).': '.\App\Util\BasicFunctions::outputName($playerData->name))
+
 @section('content')
     <div class="row">
-        <div class="col-12">
-            <ul id="lang_menu">
-                <li class = "language{{ App::isLocale('de') ? ' active' : '' }}"><a href="{{ route('locale', 'de') }}">Deutsch</a></li>
-                <li class = "language{{ App::isLocale('en') ? ' active' : '' }}"><a href="{{ route('locale', 'en') }}">English</a></li>
-            </ul>
-        </div>
         <div class="col-12 mx-2">
             <div class="card">
                 <table class="table table-bordered no-wrap">
@@ -107,6 +103,9 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
     <script>
         $(document).ready(function () {
             $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');

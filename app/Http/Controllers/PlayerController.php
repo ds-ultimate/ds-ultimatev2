@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Ally;
 use App\Conquer;
 use App\Player;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;
-use Illuminate\Http\Request;
-use Khill\Lavacharts\DataTables\Formats\DateFormat;
-use Khill\Lavacharts\Lavacharts;
 
 class PlayerController extends Controller
 {

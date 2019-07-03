@@ -18,7 +18,7 @@
     RewriteRule ^(stats/.*) $1 [L]
     RewriteRule ^(css/.*) /public/$1 [L]
     RewriteRule ^(js/.*) /public/$1 [L]
-    RewriteRule ^(js/.*) /public/$1 [L]
+    RewriteRule ^(fonts/.*) /public/$1 [L]
     RewriteRule ^(plugin/.*) /public/$1 [L]
     RewriteRule ^(images/.*) /public/$1 [L]
 
