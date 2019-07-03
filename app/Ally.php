@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 
 class Ally extends Model
@@ -47,11 +48,7 @@ class Ally extends Model
 
     public static function getAllyAll($server, $world){
         $allyModel = new Ally();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
         return $allyModel->orderBy('rank')->get();
     }
@@ -62,11 +59,7 @@ class Ally extends Model
 
     public static function top10Ally($server, $world){
         $allyModel = new Ally();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
         return $allyModel->orderBy('rank')->limit(10)->get();
 
@@ -74,11 +67,7 @@ class Ally extends Model
 
     public static function ally($server, $world, $ally){
         $allyModel = new Ally();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
         return $allyModel->find($ally);
 
@@ -88,11 +77,7 @@ class Ally extends Model
         $tabelNr = $allyID % env('HASH_ALLY');
 
         $allyModel = new Ally();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_'.$tabelNr));
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_'.$tabelNr);
 
         $allyDataArray = $allyModel->where('allyID', $allyID)->orderBy('updated_at', 'DESC')->get();
 
@@ -107,6 +92,7 @@ class Ally extends Model
             $allyData->put('gesBash', $ally->gesBash);
             $allyData->put('offBash', $ally->offBash);
             $allyData->put('defBash', $ally->defBash);
+            // FIXME: no ut bash for ally?
             $allyData->put('utBash', $ally->gesBash-$ally->offBash-$ally->defBash);
             $allyDatas->push($allyData);
         }

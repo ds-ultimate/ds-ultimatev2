@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 
 class Conquer extends Model
@@ -11,11 +12,7 @@ class Conquer extends Model
 
     public static function playerConquerCounts($server, $world, $playerID){
         $conquerModel = new Conquer();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $conquerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.conquer'));
+        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
         $conquer = collect();
         $conquer->put('old', $conquerModel->where('old_owner', $playerID)->count());

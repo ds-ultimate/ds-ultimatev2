@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -64,22 +65,14 @@ class Player extends Model
 
     public static function getAllPlayer($server, $world){
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->orderBy('rank')->get();
     }
 
     public static function getAllPlayer20($server, $world, $order, $page){
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->where($order, '>', $page*20-20)->orderBy($order)->limit(20)->get();
     }
@@ -89,11 +82,7 @@ class Player extends Model
      * */
     public static function top10Player($server, $world){
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->orderBy('rank')->limit(10)->get();
 
@@ -101,11 +90,7 @@ class Player extends Model
 
     public static function player($server, $world, $player){
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->find($player);
 
@@ -115,11 +100,7 @@ class Player extends Model
         $tabelNr = $playerID % env('HASH_PLAYER');
 
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_'.$tabelNr));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
 
         $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('updated_at', 'DESC')->get();
         $playerDatas = collect();

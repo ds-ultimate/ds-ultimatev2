@@ -12,7 +12,6 @@ namespace App\Util;
 use App;
 use App\Village;
 use App\World;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -82,13 +81,15 @@ class BasicFunctions
             case 9:
                 return "+50% H&auml;ndler &amp; Speicher";
         }
-        return false;
+        return null;
     }
 
+    // FIXME: check accouracy since we are now using Laravel
     public static function getContinentString(Village $village) {
         return "K" . intval($village->x % 10) . intval($village->y % 10);
     }
 
+    // FIXME: check accouracy since we are now using Laravel
     function getVillageSkinImage($village, $skin) {
         $skins = array("dark", "default", "old", "symbol", "winter");
         $index = array_search($skin, $skins);
@@ -139,11 +140,13 @@ class BasicFunctions
         App::setLocale(\Session::get('locale', 'de'));
     }
 
+    // FIXME: really addslashes?  would think of nl2br + htmlentities
     public static function outputName($name){
         return addslashes(urldecode($name));
     }
 
     public static function createLog($type, $msg){
+        // FIXME: would like to get E-Mails from log messages
         $log = new App\Log();
         $log->setTable(env('DB_DATABASE_MAIN').'.log');
         $log->type = $type;
@@ -155,10 +158,29 @@ class BasicFunctions
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
         // FIXME: für den Testserver
-        return $world->where('name', '=', 'de164')->orWhere('name', '=', 'de165')->get();
-        return $world->where('name', '!=', 'dep9')->where('name', '!=', 'dep10')->where('name', '!=', 'dep11')->get();
+        return $world->where('name', '=', 'de164')
+                ->orWhere('name', '=', 'de165')
+                ->orWhere('name', '=', 'de166')
+                ->orWhere('name', '=', 'de167')
+                ->orWhere('name', '=', 'de163')
+                ->orWhere('name', '=', 'de162')
+                ->orWhere('name', '=', 'de161')
+                ->orWhere('name', '=', 'de160')
+                ->orWhere('name', '=', 'de159')
+                ->orWhere('name', '=', 'de158')
+                ->get();
         // FIXME: nur für den live Server
         return $world->get();
     }
-
+    
+    public static function getDatabaseName($server, $world) {
+        // FIXME: Default value really necessary since DB_DATABASE_MAIN don't has one in most cases
+        $replaceArray = array(
+            '{server}' => $server,
+            '{world}' => $world
+        );
+        return str_replace(array_keys($replaceArray),
+                array_values($replaceArray),
+                env('DB_DATABASE_WORLD', 'c1welt_{server}{world}'));
+    }
 }

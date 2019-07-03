@@ -52,13 +52,14 @@ class World extends Model
      * Welteninformationen als Collection-Objekt
      * */
     public static function getWorldCollection($server, $world){
-
+        // FIXME: 90% of code useless in this function without for loop
+        // FIXME: worldsCollection does almost exactly the same can't this be merged?
         $worldData = World::getWorld($server, $world);
 
         $casual = collect();
         $speed = collect();
         $classic = collect();
-        $world = collect();
+        $other = collect();
         /*
          * Setzt den Welten Type:
          * dep => Casual
@@ -96,15 +97,15 @@ class World extends Model
 
             return $classic;
         }else{
-            $world->put('type', trans_choice('main.Welten', 2));
-            $world->put('name', $worldData->name);
-            $world->put('server', BasicFunctions::getServer($worldData->name));
-            $world->put('world', BasicFunctions::getWorldID($worldData->name));
-            $world->put('ally_count', $worldData->ally_count);
-            $world->put('player_count', $worldData->player_count);
-            $world->put('village_count', $worldData->village_count);
+            $other->put('type', trans_choice('main.Welten', 2));
+            $other->put('name', $worldData->name);
+            $other->put('server', BasicFunctions::getServer($worldData->name));
+            $other->put('world', BasicFunctions::getWorldID($worldData->name));
+            $other->put('ally_count', $worldData->ally_count);
+            $other->put('player_count', $worldData->player_count);
+            $other->put('village_count', $worldData->village_count);
 
-            return $world;
+            return $other;
         }
     }
 
@@ -119,6 +120,7 @@ class World extends Model
         $worldsArray = collect();
 
         foreach (World::worldsByServer($server) as $worldData){
+            // FIXME: big amount of redundant code
             $casual = collect();
             $speed = collect();
             $classic = collect();

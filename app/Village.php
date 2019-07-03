@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 
 class Village extends Model
@@ -29,27 +30,16 @@ class Village extends Model
 
     public static function village($server, $world, $village){
         $villageModel = new Village();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $villageModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray),
-                env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.village_latest'));
+        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
 
         return $villageModel->find($village);
-
     }
 
     public static function villageDataChart($server, $world, $villageID){
         $tabelNr = $villageID % env('HASH_ALLY');
 
         $villageModel = new Village();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-        $villageModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray),
-                env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.village_'.$tabelNr));
+        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'DESC')->get();
 

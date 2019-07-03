@@ -12,12 +12,7 @@ class APIController extends Controller
     public function getPlayers($server, $world)
     {
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         $datas = $playerModel->newQuery();
 
@@ -40,12 +35,7 @@ class APIController extends Controller
     public function getAllys($server, $world)
     {
         $allyModel = new Ally();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-
-        $allyModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
         $datas = $allyModel->newQuery();
 
@@ -68,12 +58,7 @@ class APIController extends Controller
     public function getAllyPlayer($server, $world, $ally)
     {
         $playerModel = new Player();
-        $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
-        );
-
-        $playerModel->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         $querry = $playerModel->newQuery();
         $querry->where('ally_id', $ally);

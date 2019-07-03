@@ -140,7 +140,7 @@ class DBController extends Controller
                 }
 
                 BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
-                $name = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$world;
+                $name = BasicFunctions::getDatabaseName('', '').$world;
                 if (BasicFunctions::existTable($name, 'player_latest') !== false) {
                     BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
                     continue;
@@ -161,7 +161,7 @@ class DBController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '400M');
         date_default_timezone_set("Europe/Berlin");
-        $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
+        $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
             $this->playerTable($dbName, 'latest_temp');
@@ -300,7 +300,7 @@ class DBController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '500M');
         date_default_timezone_set("Europe/Berlin");
-        $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
+        $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
             $this->villageTable($dbName, 'latest_temp');
         }
@@ -390,7 +390,7 @@ class DBController extends Controller
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '200M');
         date_default_timezone_set("Europe/Berlin");
-        $dbName = str_replace('{server}{world}', '',env('DB_DATABASE_WORLD')).$worldName;
+        $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
             $this->allyTable($dbName, 'latest_temp');
         }
@@ -533,7 +533,7 @@ class DBController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '500M');
         date_default_timezone_set("Europe/Berlin");
-        $dbName = str_replace('{server}{world}', '', env('DB_DATABASE_WORLD')) . $worldName;
+        $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
         if (BasicFunctions::existTable($dbName, 'conquer') === false) {
             $this->conquerTable($dbName);
         }

@@ -28,11 +28,10 @@ class SearchController extends Controller
         $playerCollect = collect();
 
         foreach ($worlds as $world){
-            $replaceArray = array(
-                '{server}' => BasicFunctions::getServer($world->name),
-                '{world}' => BasicFunctions::getWorldID($world->name)
-            );
-            $player->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.player_latest'));
+            $player->setTable(BasicFunctions::getDatabaseName(
+                    BasicFunctions::getServer($world->name),
+                    BasicFunctions::getWorldID($world->name)
+                    ).'.player_latest');
             foreach ($player->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
                 $players = collect();
                 $players->put('world', $world);
@@ -55,7 +54,10 @@ class SearchController extends Controller
                 '{server}' => BasicFunctions::getServer($world->name),
                 '{world}' => BasicFunctions::getWorldID($world->name)
             );
-            $ally->setTable(str_replace(array_keys($replaceArray), array_values($replaceArray), env('DB_DATABASE_WORLD', 'c1welt_{server}{world}').'.ally_latest'));
+            $ally->setTable(BasicFunctions::getDatabaseName(
+                    BasicFunctions::getServer($world->name),
+                    BasicFunctions::getWorldID($world->name)
+                    ).'.ally_latest');
             foreach ($ally->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
                 $allys = collect();
                 $allys->put('world', $world);

@@ -10,6 +10,7 @@ return [
     | The default group settings for the elFinder routes.
     |
     */
+    // FIXME: use some middleware to allow acces only for specific groups (e.g. admin / translators)
     'route' => [
         'prefix' => 'translations',
         'middleware' => [
