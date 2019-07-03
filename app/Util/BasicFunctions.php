@@ -21,8 +21,12 @@ class BasicFunctions
         return number_format($num, $round_to, ',', '.');
     }
 
-    public static function getWorldID($world) {
+    public static function getWorldNum($world) {
         return (int)preg_replace("/[^0-9]+/", '', $world);
+    }
+
+    public static function getWorldID($world, $server) {
+        return str_replace($server, '', $world);
     }
 
     public static function getServer($world) {
@@ -30,23 +34,23 @@ class BasicFunctions
     }
 
     public static function linkWorld(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world')]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
     }
 
     public static function linkWorldAlly(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world'), 1]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
     }
 
     public static function linkWorldPlayer(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world')]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
     }
 
     public static function linkPlayer(Collection $world, $playerID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world'), $playerID]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[$world->get('server'), $world->get('worldID'), $playerID]).'">'.$text.'</a>';
     }
 
     public static function linkAlly(Collection $world, $allyID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[\App\Util\BasicFunctions::getServer($world->get('name')), $world->get('world'), $allyID]).'">'.$text.'</a>';
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->get('server'), $world->get('worldID'), $allyID]).'">'.$text.'</a>';
     }
 
     public static function existTable($dbName, $table){
@@ -84,12 +88,10 @@ class BasicFunctions
         return null;
     }
 
-    // FIXME: check accouracy since we are now using Laravel
     public static function getContinentString(Village $village) {
         return "K" . intval($village->x % 10) . intval($village->y % 10);
     }
 
-    // FIXME: check accouracy since we are now using Laravel
     function getVillageSkinImage($village, $skin) {
         $skins = array("dark", "default", "old", "symbol", "winter");
         $index = array_search($skin, $skins);
@@ -98,26 +100,26 @@ class BasicFunctions
         }
 
         $left = "";
-        if($village['player_id'] == 0) {
+        if($village->owner == 0) {
             $left = "_left";
         }
 
-        if($village['points'] < 300) {
+        if($village->points < 300) {
             $lv = 1;
-        } else if($village['points'] < 1000) {
+        } else if($village->points < 1000) {
             $lv = 2;
-        } else if($village['points'] < 3000) {
+        } else if($village->points < 3000) {
             $lv = 3;
-        } else if($village['points'] < 9000) {
+        } else if($village->points < 9000) {
             $lv = 4;
-        } else if($village['points'] < 11000) {
+        } else if($village->points < 11000) {
             $lv = 5;
         } else {
             $lv = 6;
         }
 
         $bonus = "v";
-        if($village['bonus_id'] != 0) {
+        if($village->bonus_id != 0) {
             $bonus = "b";
         }
 
@@ -140,9 +142,8 @@ class BasicFunctions
         App::setLocale(\Session::get('locale', 'de'));
     }
 
-    // FIXME: really addslashes?  would think of nl2br + htmlentities
-    public static function outputName($name){
-        return addslashes(urldecode($name));
+    public static function outputName($name) {
+        return nl2br(htmlentities(urldecode($name)));
     }
 
     public static function createLog($type, $msg){
@@ -174,13 +175,12 @@ class BasicFunctions
     }
     
     public static function getDatabaseName($server, $world) {
-        // FIXME: Default value really necessary since DB_DATABASE_MAIN don't has one in most cases
         $replaceArray = array(
             '{server}' => $server,
             '{world}' => $world
         );
         return str_replace(array_keys($replaceArray),
                 array_values($replaceArray),
-                env('DB_DATABASE_WORLD', 'c1welt_{server}{world}'));
+                env('DB_DATABASE_WORLD'));
     }
 }

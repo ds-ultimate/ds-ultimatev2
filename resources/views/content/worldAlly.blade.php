@@ -43,8 +43,8 @@
             "ajax": "{{ route('api.worldAlly', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world')]) }}",
             "columns": [
                 { "data": "rank" },
-                { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
-                { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
                 { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                 { "data": "member_count", "render": function (value) {return numeral(value).format('0,0')}},
                 { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},

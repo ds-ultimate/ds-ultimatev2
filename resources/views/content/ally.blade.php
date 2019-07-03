@@ -1,5 +1,7 @@
 @extends('layouts.temp')
 
+@section('titel', ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::outputName($allyData->name))
+
 @section('content')
     <div class="row">
         <div class="col-12 mx-2">
@@ -35,11 +37,11 @@
                 <br>
                 <table class="table table-bordered no-wrap">
                     <thead>
-                    <th colspan="3">{{ __('Besiegte Gegner') }}-{{ __('Insgesamt') }}</th>
-                    <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Angreifer') }}</th>
-                    <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Verteidiger') }}</th>
-                    </thead>
-                    <thead>
+                    <tr>
+                        <th colspan="3">{{ __('Besiegte Gegner') }}-{{ __('Insgesamt') }}</th>
+                        <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Angreifer') }}</th>
+                        <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Verteidiger') }}</th>
+                    </tr>
                     <tr>
                         <th>{{ ucfirst(__('Rang')) }}</th>
                         <th>{{ ucfirst(__('Punkte')) }}</th>
@@ -52,7 +54,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</th>
+                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBash) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100) }}%</td>
                         <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
@@ -204,8 +206,8 @@
                 "ajax": "{{ route('api.allyPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world'), $allyData->allyID]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('world')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},
@@ -219,4 +221,5 @@
             });
         } );
     </script>
+    {!! $chartJS !!}
 @endsection

@@ -1,7 +1,6 @@
 {
     "Top 10 Spieler": "Top 10 Spieler",
     "Top 10 Stämme": "Top 10 Stämme",
-    "Normale Welten": "Normale Welten",
     "Spezial Welten": "Spezial Welten",
     "Register": "Registrieren",
     "Name": "Name",
@@ -79,5 +78,6 @@
     "Startseite": "Startseite",
     "Sprache": "Sprache",
     "Übersicht Welten": "Übersicht Welten",
-    "Übersicht Spieler": "Übersicht Spieler"
+    "Übersicht Spieler": "Übersicht Spieler",
+    "Normale Welten": "Normale Welten"
 }

@@ -28,17 +28,18 @@ class PlayerController extends Controller
         $statsBash = ['gesBash', 'offBash', 'defBash', 'utBash'];
 
         $datas = Player::playerDataChart($server, $world, $player);
-
+        
+        $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
-            $this->chart($datas, $statsGeneral[$i]);
+            $chartJS .= $this->chart($datas, $statsGeneral[$i]);
         }
         for ($i = 0; $i < count($statsBash); $i++){
-            $this->chart($datas, $statsBash[$i]);
+            $chartJS .= $this->chart($datas, $statsBash[$i]);
         }
 
         $conquer = Conquer::playerConquerCounts($server, $world, $player);
 
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData'));
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS'));
 
     }
 
@@ -85,8 +86,6 @@ class PlayerController extends Controller
             ]);
         }
 
-        //echo "<div id=\"chart-$data\"></div>";
-        echo \Lava::render('LineChart', $data, 'chart-'.$data);
-
+        return \Lava::render('LineChart', $data, 'chart-'.$data);
     }
 }

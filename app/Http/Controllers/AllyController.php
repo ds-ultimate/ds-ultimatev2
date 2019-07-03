@@ -6,9 +6,6 @@ use App\Ally;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;
-use Illuminate\Http\Request;
-use Khill\Lavacharts\DataTables\Formats\DateFormat;
-use Khill\Lavacharts\Lavacharts;
 
 class AllyController extends Controller
 {
@@ -25,16 +22,16 @@ class AllyController extends Controller
         $statsBash = ['gesBash', 'offBash', 'defBash'];
 
         $datas = Ally::allyDataChart($server, $world, $ally);
-
+        
+        $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
-            $this->chart($datas, $statsGeneral[$i]);
+            $chartJS .= $this->chart($datas, $statsGeneral[$i]);
         }
         for ($i = 0; $i < count($statsBash); $i++){
-            $this->chart($datas, $statsBash[$i]);
+            $chartJS .= $this->chart($datas, $statsBash[$i]);
         }
 
-        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'worldData'));
-
+        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'worldData', 'chartJS'));
     }
 
     public function chart($allyData, $data){
@@ -86,9 +83,6 @@ class AllyController extends Controller
             ]);
         }
 
-        //echo "<div id=\"chart-$data\"></div>";
-        echo \Lava::render('LineChart', $data, 'chart-'.$data);
-
+        return \Lava::render('LineChart', $data, 'chart-'.$data);
     }
-
 }

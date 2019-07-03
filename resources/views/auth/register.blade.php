@@ -9,6 +9,7 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
+                        {{-- // FIXME: use google captcha against spam  https://github.com/thinhbuzz/laravel-google-captcha --}}
                         @csrf
 
                         <div class="form-group row">

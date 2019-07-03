@@ -9,8 +9,9 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
+                        {{-- // FIXME: use google captcha against spam  https://github.com/thinhbuzz/laravel-google-captcha --}}
                         @csrf
-
+                        
                         <input type="hidden" name="token" value="{{ $token }}">
 
                         <div class="form-group row">

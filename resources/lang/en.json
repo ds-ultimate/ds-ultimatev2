@@ -1,5 +1,4 @@
 {
-    "Normale Welten": "Normal worlds",
     "Spezial Welten": "Special worlds",
     "Top 10 Spieler": "Top 10 player",
     "Top 10 Stämme": "Top 10 allys",
@@ -36,5 +35,6 @@
     "Startseite": "Start page",
     "Sprache": "Language",
     "Übersicht Welten": "Overview worlds",
-    "Übersicht Spieler": "Overview player"
+    "Übersicht Spieler": "Overview player",
+    "Normale Welten": "normal worlds"
 }

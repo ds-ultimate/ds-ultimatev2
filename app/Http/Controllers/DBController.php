@@ -160,7 +160,6 @@ class DBController extends Controller
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '400M');
-        date_default_timezone_set("Europe/Berlin");
         $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
@@ -299,7 +298,6 @@ class DBController extends Controller
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '500M');
-        date_default_timezone_set("Europe/Berlin");
         $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
             $this->villageTable($dbName, 'latest_temp');
@@ -389,7 +387,6 @@ class DBController extends Controller
         ini_set('display_errors', 1);
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '200M');
-        date_default_timezone_set("Europe/Berlin");
         $dbName = BasicFunctions::getDatabaseName('', '') . $worldName;
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
             $this->allyTable($dbName, 'latest_temp');
@@ -569,7 +566,7 @@ class DBController extends Controller
         $hashArray = collect();
         foreach ($mainArray as $main){
             $id = $main->get($index);
-            if (! array_key_exists(BasicFunctions::hash($id, $type), $hashArray)) {
+            if (! $hashArray->has(BasicFunctions::hash($id, $type))) {
                 $hashArray[BasicFunctions::hash($id, $type)] = collect();
             }
             $hashArray[BasicFunctions::hash($id, $type)][$id] = $main;

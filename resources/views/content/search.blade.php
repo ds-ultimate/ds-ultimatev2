@@ -32,7 +32,8 @@
             <table id="table_id" class="table table-hover table-sm w-100">
                 <thead><tr>
                     <th>{{ ucfirst(__('Welt')) }}</th>
-                    <th>{{ ucfirst(__('Stamm')) }}</th>
+                    <th>{{ ucfirst(__('Name')) }}</th>
+                    <th>{{ ucfirst(__('Tag')) }}</th>
                     <th>{{ ucfirst(__('Punkte')) }}</th>
                     <th>{{ ucfirst(__('Dörfer')) }}</th>
                 </tr>
@@ -42,6 +43,7 @@
                     <tr>
                         <th>{{$ally->get('world')->name}}</th>
                         <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->name) !!}</th>
+                        <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->tag) !!}</th>
                         <th>{{$ally->get('ally')->points}}</th>
                         <th>{{$ally->get('ally')->village_count}}</th>
                     </tr>
@@ -50,6 +52,7 @@
             </table>
             @else
             Dörfer
+            {{-- // FIXME: implement village search --}}
             @endif
         </div>
     </div>

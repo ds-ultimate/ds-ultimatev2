@@ -35,11 +35,11 @@
                 <br>
                 <table class="table table-bordered no-wrap">
                     <thead>
+                    <tr>
                         <th colspan="3">{{ __('Besiegte Gegner') }}-{{ __('Insgesamt') }}</th>
                         <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Angreifer') }}</th>
                         <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Verteidiger') }}</th>
-                    </thead>
-                    <thead>
+                    </tr>
                     <tr>
                         <th>{{ ucfirst(__('Rang')) }}</th>
                         <th>{{ ucfirst(__('Punkte')) }}</th>
@@ -166,4 +166,5 @@
         });
 
     </script>
+    {!! $chartJS !!}
 @endsection

@@ -83,6 +83,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:world')
             ->dailyAt('23:55')
             ->runInBackground();
+        
+        $schedule->command('session:gc')
+            ->everyFifteenMinutes()
+            ->runInBackground();
     }
 
     /**

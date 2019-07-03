@@ -17,7 +17,7 @@ return [
     |            "memcached", "redis", "dynamodb", "array"
     |
     */
-
+    
     'driver' => env('SESSION_DRIVER', 'file'),
 
     /*
@@ -33,7 +33,7 @@ return [
 
     'lifetime' => env('SESSION_LIFETIME', 120),
 
-    'expire_on_close' => false,
+    'expire_on_close' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -110,8 +110,10 @@ return [
     | happen on a given request. By default, the odds are 2 out of 100.
     |
     */
-
-    'lottery' => [2, 100],
+    
+    //we can use cron --> don't do this with requests!
+    //https://tideways.com/profiler/blog/php-session-garbage-collection-the-unknown-performance-bottleneck
+    'lottery' => [0, 100],
 
     /*
     |--------------------------------------------------------------------------
@@ -166,7 +168,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', false),
+    'secure' => env('SESSION_SECURE_COOKIE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -194,6 +196,5 @@ return [
     |
     */
 
-    'same_site' => null,
-
+    'same_site' => "strict",
 ];

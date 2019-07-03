@@ -92,8 +92,6 @@ class Ally extends Model
             $allyData->put('gesBash', $ally->gesBash);
             $allyData->put('offBash', $ally->offBash);
             $allyData->put('defBash', $ally->defBash);
-            // FIXME: no ut bash for ally?
-            $allyData->put('utBash', $ally->gesBash-$ally->offBash-$ally->defBash);
             $allyDatas->push($allyData);
         }
 
