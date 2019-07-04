@@ -18,10 +18,10 @@ class APIController extends Controller
 
         return DataTables::eloquent($datas)
             ->editColumn('name', function ($player){
-                return BasicFunctions::outputName($player->name);
+                return BasicFunctions::decodeName($player->name);
             })
             ->addColumn('ally', function ($player){
-                return ($player->ally_id != 0)? BasicFunctions::outputName($player->allyLatest->tag) : '-';
+                return ($player->ally_id != 0)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
@@ -41,10 +41,10 @@ class APIController extends Controller
 
         return DataTables::eloquent($datas)
             ->editColumn('name', function ($ally){
-                return BasicFunctions::outputName($ally->name);
+                return BasicFunctions::decodeName($ally->name);
             })
             ->editColumn('tag', function ($ally){
-                return BasicFunctions::outputName($ally->tag);
+                return BasicFunctions::decodeName($ally->tag);
             })
             ->addColumn('player_points', function ($ally){
                 return ($ally->points == 0 || $ally->member_count == 0)? 0 : ($ally->points/$ally->member_count);
@@ -65,10 +65,10 @@ class APIController extends Controller
 
         return DataTables::eloquent($querry)
             ->editColumn('name', function ($player){
-                return BasicFunctions::outputName($player->name);
+                return BasicFunctions::decodeName($player->name);
             })
             ->addColumn('ally', function ($player){
-                return ($player->ally_id != 0)? BasicFunctions::outputName($player->allyLatest->tag) : '-';
+                return ($player->ally_id != 0)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);

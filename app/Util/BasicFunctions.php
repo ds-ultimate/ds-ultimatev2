@@ -12,6 +12,7 @@ namespace App\Util;
 use App;
 use App\Village;
 use App\World;
+use App\Server;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +31,12 @@ class BasicFunctions
     }
 
     public static function getServer($world) {
-        return preg_replace('/[0-9]+/', '', $world);
+        foreach(Server::getServer() as $server) {
+            if(BasicFunctions::startsWith($world, $server->code)) {
+                return $server->code;
+            }
+        }
+        return '';
     }
 
     public static function linkWorld(Collection $world, $text, $class = null, $id = null){
@@ -142,6 +148,14 @@ class BasicFunctions
         App::setLocale(\Session::get('locale', 'de'));
     }
 
+    /*
+     * This function only decodes the Data
+     * the output must be escaped properly afterwards
+     */
+    public static function decodeName($name) {
+        return urldecode($name);
+    }
+
     public static function outputName($name) {
         return nl2br(htmlentities(urldecode($name)));
     }
@@ -182,5 +196,13 @@ class BasicFunctions
         return str_replace(array_keys($replaceArray),
                 array_values($replaceArray),
                 env('DB_DATABASE_WORLD'));
+    }
+    
+    public static function startsWith($haystack, $needle) {
+        return $needle === "" || strpos($haystack, $needle) === 0;
+    }
+    
+    public static function endsWith($haystack, $needle) {
+        return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
     }
 }

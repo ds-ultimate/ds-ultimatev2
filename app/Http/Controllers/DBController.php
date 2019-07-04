@@ -260,7 +260,7 @@ class DBController extends Controller
         }
         DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
         
-        $hashPlayer = $this->hashTable($players, 'p', 'playerID');
+        $hashPlayer = $this->hashTable($arrayPlayer, 'p', 'playerID');
 
         for ($i = 0; $i < env('HASH_PLAYER'); $i++){
             if (array_key_exists($i ,$hashPlayer)) {
@@ -349,7 +349,7 @@ class DBController extends Controller
 
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
 
-        $hashVillage = $this->hashTable($villages, 'v', 'villageID');
+        $hashVillage = $this->hashTable($array, 'v', 'villageID');
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
@@ -490,7 +490,7 @@ class DBController extends Controller
         }
         DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
 
-        $hashAlly = $this->hashTable($allys, 'a', 'allyID');
+        $hashAlly = $this->hashTable($array, 'a', 'allyID');
 
         for ($i = 0; $i < env('HASH_ALLY'); $i++){
             if (array_key_exists($i ,$hashAlly)) {
@@ -563,13 +563,13 @@ class DBController extends Controller
     }
 
     public function hashTable($mainArray, $type, $index){
-        $hashArray = collect();
+        $hashArray = array();
         foreach ($mainArray as $main){
-            $id = $main->get($index);
-            if (! $hashArray->has(BasicFunctions::hash($id, $type))) {
-                $hashArray[BasicFunctions::hash($id, $type)] = collect();
+            $id = $main[$index];
+            if (! array_key_exists(BasicFunctions::hash($id, $type), $hashArray)) {
+                $hashArray[BasicFunctions::hash($id, $type)] = array();
             }
-            $hashArray[BasicFunctions::hash($id, $type)][$id] = $main;
+            $hashArray[BasicFunctions::hash($id, $type)][] = $main;
         }
 
         return $hashArray;

@@ -21,7 +21,7 @@
                 @foreach($result as $player)
                 <tr>
                     <td>{{$player->get('world')->name}}</td>
-                    <td>{!! \App\Util\BasicFunctions::linkPlayer(\App\World::getWorldCollection(\App\Util\BasicFunctions::getServer($player->get('world')->name), \App\Util\BasicFunctions::getWorldID($player->get('world')->name)), $player->get('player')->playerID,\App\Util\BasicFunctions::outputName($player->get('player')->name)) !!}</td>
+                    <td>{!! \App\Util\BasicFunctions::linkPlayer(\App\World::getWorldCollectionByName($player->get('world')->name),$player->get('player')->playerID,\App\Util\BasicFunctions::outputName($player->get('player')->name)) !!}</td>
                     <td>{{$player->get('player')->points}}</td>
                     <td>{{$player->get('player')->village_count}}</td>
                 </tr>
@@ -42,8 +42,8 @@
                 @foreach($result as $ally)
                     <tr>
                         <th>{{$ally->get('world')->name}}</th>
-                        <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->name) !!}</th>
-                        <th>{!! \App\Util\BasicFunctions::outputName($ally->get('ally')->tag) !!}</th>
+                        <th>{!! \App\Util\BasicFunctions::linkAlly(\App\World::getWorldCollectionByName($ally->get('world')->name),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->name)) !!}</th>
+                        <th>{!! \App\Util\BasicFunctions::linkAlly(\App\World::getWorldCollectionByName($ally->get('world')->name),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->tag)) !!}</th>
                         <th>{{$ally->get('ally')->points}}</th>
                         <th>{{$ally->get('ally')->village_count}}</th>
                     </tr>

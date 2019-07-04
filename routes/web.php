@@ -11,11 +11,6 @@
 |
 */
 
-use App\Ally;
-use App\Player;
-use App\Util\BasicFunctions;
-use Illuminate\Support\Carbon;
-
 Route::get('/', function () {
 //    $flags = explode('|', env('DS_SERVER'));
 //    return view('content.index', compact('flags'));

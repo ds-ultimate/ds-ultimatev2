@@ -34,8 +34,8 @@ class PictureController extends Controller
         }
         
         $allyData = Ally::ally($server, $world, $allyID);
-        $name = \App\Util\BasicFunctions::outputName($allyData->name);
-        $tag = \App\Util\BasicFunctions::outputName($allyData->tag);
+        $name = \App\Util\BasicFunctions::decodeName($allyData->name);
+        $tag = \App\Util\BasicFunctions::decodeName($allyData->tag);
         $allyString = __('chart.who.ally') . ": $name [$tag]";
         
         $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
@@ -59,7 +59,7 @@ class PictureController extends Controller
         }
         
         $playerData = Player::player($server, $world, $playerID);
-        $name = \App\Util\BasicFunctions::outputName($playerData->name);
+        $name = \App\Util\BasicFunctions::decodeName($playerData->name);
         $playerString = __('chart.who.player') . ": $name";
         
         $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
@@ -83,7 +83,7 @@ class PictureController extends Controller
         }
         
         $villageData = Village::village($server, $world, $villageID);
-        $name = \App\Util\BasicFunctions::outputName($villageData->name);
+        $name = \App\Util\BasicFunctions::decodeName($villageData->name);
         $x = $villageData->x;
         $y = $villageData->y;
         $villageString = __('chart.who.village') . ": $name ($x|$y)";

@@ -29,9 +29,7 @@ class SearchController extends Controller
 
         foreach ($worlds as $world){
             $player->setTable(BasicFunctions::getDatabaseName(
-                    BasicFunctions::getServer($world->name),
-                    BasicFunctions::getWorldID($world->name)
-                    ).'.player_latest');
+                    $world->name,'').'.player_latest');
             foreach ($player->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
                 $players = collect();
                 $players->put('world', $world);
@@ -50,14 +48,8 @@ class SearchController extends Controller
         $allyCollect = collect();
 
         foreach ($worlds as $world){
-            $replaceArray = array(
-                '{server}' => BasicFunctions::getServer($world->name),
-                '{world}' => BasicFunctions::getWorldID($world->name)
-            );
             $ally->setTable(BasicFunctions::getDatabaseName(
-                    BasicFunctions::getServer($world->name),
-                    BasicFunctions::getWorldID($world->name)
-                    ).'.ally_latest');
+                    $world->name,'').'.ally_latest');
             foreach ($ally->where('name', 'LIKE', '%'.$search.'%')->get() as $data){
                 $allys = collect();
                 $allys->put('world', $world);

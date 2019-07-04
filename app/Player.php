@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Util\BasicFunctions;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 

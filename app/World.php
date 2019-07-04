@@ -51,6 +51,15 @@ class World extends Model
     /*
      * Welteninformationen als Collection-Objekt
      * */
+    public static function getWorldCollectionByName($worldName){
+        $server = BasicFunctions::getServer($worldName);
+        $world = BasicFunctions::getWorldID($worldName, $server);
+        return World::getWorldCollection($server, $world);
+    }
+
+    /*
+     * Welteninformationen als Collection-Objekt
+     * */
     public static function getWorldCollection($server, $world){
         $worldData = World::getWorld($server, $world);
         return World::buildWorldCollect($worldData, $server)[1];
