@@ -49,7 +49,7 @@ class UpdatePlayer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->latestPlayer($world->name);
+                $db->latestPlayer($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

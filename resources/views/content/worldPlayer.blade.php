@@ -49,7 +49,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world')]) }}",
+                "ajax": "{{ route('api.worldPlayer', [$worldData->get('server'), $worldData->get('worldID')]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},

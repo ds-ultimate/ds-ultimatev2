@@ -8,20 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class World extends Model
 {
     public $connection = 'main';
+    protected $table = 'worlds';
+
+    /*
+     * Verbindet die world Tabelle mit der server Tabelle
+     */
+    public function server()
+    {
+        return $this->belongsTo('App\Server','server_id');
+    }
 
     /*
      * Prüft ob der Server 'de' vorhanden ist, in dem er die Tabelle worlds durchsucht.
      * Falls er keine Welt mit 'de' am Anfang findet gibt er eine Fehlermeldung zurück.
      */
     public static function existServer($server){
-        if(World::where('name', 'LIKE', $server.'%')->get()->count() > 0){
+        if(Server::getQuery()->where("code", "=", $server)->get()->count() > 0){
             return true;
         }
 
         //TODO: View ergänzen für Fehlermeldungen
         echo "Keine Daten über diesen Server '$server' vorhanden.";
         exit;
-
     }
 
     /*
@@ -29,7 +37,7 @@ class World extends Model
      * Falls er keine Welt mit 'de164' findet gibt er eine Fehlermeldung zurück.
      */
     public static function existWorld($server, $world){
-        if(World::where('name', $server.$world)->get()->count() > 0){
+        if(World::where('name', $world)->get()->count() > 0){
             return true;
         }
         //TODO: View ergänzen für Fehlermeldungen
@@ -38,14 +46,15 @@ class World extends Model
     }
 
     public static function getWorld($server, $world){
-        return World::where('name', $server.$world)->first();
+        $serverData = Server::getServerByCode($server);
+        return World::where('name', $world)->where('server_id', $serverData->id)->first();
     }
 
     /*
      * Sucht alle Welten mit dem entsprechendem ISO.
      * */
     public static function worldsByServer($server){
-        return World::where('name', 'LIKE', $server.'%')->orderBy('name')->get();
+        return Server::getWorldsByCode($server);
     }
 
     /*
@@ -71,7 +80,7 @@ class World extends Model
     public static function worldsCollection($server){
         $worldsArray = collect();
 
-        foreach (World::worldsByServer($server) as $worldData){
+        foreach (Server::getWorldsByCode($server) as $worldData){
             $worldCollect = World::buildWorldCollect($worldData, $server);
             
             if (! $worldsArray->has($worldCollect[0])) {
@@ -98,7 +107,7 @@ class World extends Model
         return [$typeArray[0], $world];
     }
      
-    private static function determineType($worldName, $server) {
+    private static function determineType($worldName) {
         /*
          * Setzt den Welten Type:
          * dep => Casual
@@ -106,11 +115,11 @@ class World extends Model
          * dec => Classic
          * de => Welt
          */
-        if(strpos($worldName, $server.'p') !== false){
+        if(strpos($worldName, 'p') !== false){
             return ["casual", __('main.Casual')];
-        }elseif(strpos($worldName, $server.'s') !== false){
+        }elseif(strpos($worldName, 's') !== false){
             return ["speed", __('main.Speed')];
-        }elseif(strpos($worldName, $server.'c') !== false){
+        }elseif(strpos($worldName, 'c') !== false){
             return ["classic", __('main.Classic')];
         }else{
             return ["world", __('main.Welt')];

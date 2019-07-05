@@ -17,16 +17,16 @@
                 </a>
                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                     @foreach(\App\World::worldsCollection('de') as $worlds)
-                    <li class="dropdown-submenu">
-                        <a  class="dropdown-item" tabindex="-1" href="#">{!! $worlds->get(0)->get('type') !!}</a>
-                        <ul class="dropdown-menu">
-                            @foreach($worlds as $world)
-                            <li class="dropdown-item">
-                                {!! \App\Util\BasicFunctions::linkWorld($world, (($world->get('type') == __('Normale Welten'))? ucfirst(__('Welt')): $world->get('type')).' '.$world->get('world')) !!}
-                            </li>
-                            @endforeach
-                        </ul>
-                    </li>
+                        <li class="dropdown-submenu">
+                            <a  class="dropdown-item" tabindex="-1" href="#">{!! $worlds->get(0)->get('type') !!}</a>
+                            <ul class="dropdown-menu">
+                                @foreach($worlds as $world)
+                                    <li class="dropdown-item">
+                                        {!! \App\Util\BasicFunctions::linkWorld($world, (($world->get('type') == __('Normale Welten'))? ucfirst(__('Welt')): $world->get('type')).' '.$world->get('world')) !!}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
                     @endforeach
                 </ul>
             </li>

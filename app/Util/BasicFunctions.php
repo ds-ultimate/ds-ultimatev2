@@ -173,16 +173,16 @@ class BasicFunctions
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
         // FIXME: für den Testserver
-        return $world->where('name', '=', 'de164')
-                ->orWhere('name', '=', 'de165')
-                ->orWhere('name', '=', 'de166')
-                ->orWhere('name', '=', 'de167')
-                ->orWhere('name', '=', 'de163')
-                ->orWhere('name', '=', 'de162')
-                ->orWhere('name', '=', 'de161')
-                ->orWhere('name', '=', 'de160')
-                ->orWhere('name', '=', 'de159')
-                ->orWhere('name', '=', 'de158')
+        return $world->where('name', '=', '164')
+                ->orWhere('name', '=', '165')
+                ->orWhere('name', '=', '166')
+                ->orWhere('name', '=', '167')
+                ->orWhere('name', '=', '163')
+                ->orWhere('name', '=', '162')
+                ->orWhere('name', '=', '161')
+                ->orWhere('name', '=', '160')
+                ->orWhere('name', '=', '159')
+                ->orWhere('name', '=', '158')
                 ->get();
         // FIXME: nur für den live Server
         return $world->get();

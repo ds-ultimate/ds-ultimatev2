@@ -36,7 +36,7 @@ Route::get('/php', function () {
 
 
 Route::get('/test', function (){
-    echo (null === 0)? 'ja': 'nein';
+    var_dump(\App\World::getWorld('de', '164'));
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search', 'SearchController@searchForm')->name('searchForm');
@@ -51,3 +51,4 @@ Route::get('/{server}/{world}/players', 'Controller@players')->name('worldPlayer
 Route::get('/{server}/{world}/playersTest', 'Controller@playersTest')->name('worldPlayerTest');
 Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');
 Route::get('/{server}/{world}/ally/{ally}', 'AllyController@ally')->name('ally');
+Route::get('/{server}/{world}/village/{village}', 'VillageController@village')->name('village');

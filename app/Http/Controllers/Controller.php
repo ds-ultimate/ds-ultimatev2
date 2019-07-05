@@ -51,7 +51,7 @@ class Controller extends BaseController
         World::existWorld($server, $world);
 
         $worldData = World::getWorldCollection($server, $world);
-
+        
         return view('content.worldAlly', compact('worldData'));
     }
 

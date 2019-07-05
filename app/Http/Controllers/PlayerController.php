@@ -20,7 +20,7 @@ class PlayerController extends Controller
         $playerData = Player::player($server, $world, $player);
         if ($playerData == null){
             //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Spieler mir der ID '$player' aud der Welt '$server$world' vorhanden.";
+            echo "Keine Daten über den Spieler mit der ID '$player' auf der Welt '$server$world' vorhanden.";
             exit;
         }
 
@@ -61,30 +61,17 @@ class PlayerController extends Controller
             }
         }
 
-        if ($data == 'rank'){
-            \Lava::LineChart($data, $population, [
-                'title' => Chart::chartTitel($data),
-                'legend' => 'none',
-                'hAxis' => [
-                    'format' => 'dd/MM'
-                ],
-                'vAxis' => [
-                    'direction' => -1,
-                    'format' => '0',
-                ]
-            ]);
-        }else{
-            \Lava::LineChart($data, $population, [
-                'title' => Chart::chartTitel($data),
-                'legend' => 'none',
-                'hAxis' => [
-                    'format' => 'dd/MM'
-                ],
-                'vAxis' => [
-                    'format' => 'short'
-                ]
-            ]);
-        }
+        \Lava::LineChart($data, $population, [
+            'title' => Chart::chartTitel($data),
+            'legend' => 'none',
+            'hAxis' => [
+                'format' => 'dd/MM'
+            ],
+            'vAxis' => [
+                'direction' => (Chart::displayInvers($data)?(-1):(1)),
+                'format' => '0',
+            ]
+        ]);
 
         return \Lava::render('LineChart', $data, 'chart-'.$data);
     }

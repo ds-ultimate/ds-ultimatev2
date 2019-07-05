@@ -4,6 +4,9 @@
 
 @section('content')
     <div class="row">
+        <div class="p-lg-5 mx-auto my-1 text-center">
+            <h1 class="font-weight-normal">{{ ucfirst(__('Spieler')).': '.\App\Util\BasicFunctions::outputName($playerData->name) }}</h1>
+        </div>
         <div class="col-12 mx-2">
             <div class="card">
                 <table class="table table-bordered no-wrap">

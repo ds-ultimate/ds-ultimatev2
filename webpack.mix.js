@@ -12,4 +12,8 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false)
+    .options({
+        processCssUrls: false
+    });

@@ -49,7 +49,7 @@ class UpdateVillage extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->latestVillages($world->name);
+                $db->latestVillages($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

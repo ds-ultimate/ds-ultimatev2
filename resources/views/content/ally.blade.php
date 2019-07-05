@@ -4,6 +4,9 @@
 
 @section('content')
     <div class="row">
+        <div class="p-lg-5 mx-auto my-1 text-center">
+            <h1 class="font-weight-normal">{{ ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::outputName($allyData->name).' ['.\App\Util\BasicFunctions::outputName($allyData->tag).']' }}</h1>
+        </div>
         <div class="col-12 mx-2">
             <div class="card">
                 <table class="table table-bordered no-wrap">
@@ -30,7 +33,7 @@
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
                         <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
                         <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
-                        <td>{{ __('In Arbeit') }}</td>
+                        <td>{{ $conquer->get('total') }}(<i class="text-success">{{ $conquer->get('new') }}</i>-<i class="text-danger">{{ $conquer->get('old') }}</i>)</td>
                     </tr>
                     </tbody>
                 </table>
@@ -203,7 +206,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyPlayer', [\App\Util\BasicFunctions::getServer($worldData->get('name')), $worldData->get('world'), $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyPlayer', [$worldData->get('server'), $worldData->get('world'), $allyData->allyID]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},

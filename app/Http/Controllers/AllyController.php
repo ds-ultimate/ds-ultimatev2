@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conquer;
 use App\Ally;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
@@ -17,6 +18,12 @@ class AllyController extends Controller
         $worldData = World::getWorldCollection($server, $world);
 
         $allyData = Ally::ally($server, $world, $ally);
+        if ($allyData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
+
 
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash'];
@@ -30,8 +37,10 @@ class AllyController extends Controller
         for ($i = 0; $i < count($statsBash); $i++){
             $chartJS .= $this->chart($datas, $statsBash[$i]);
         }
-
-        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'worldData', 'chartJS'));
+        
+        $conquer = Conquer::allyConquerCounts($server, $world, $ally);
+        
+        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS'));
     }
 
     public function chart($allyData, $data){
@@ -58,30 +67,17 @@ class AllyController extends Controller
             $population->addRow([date('Y-m-d', $aData->get('timestamp')-60*60*24), 0]);
         }
 
-        if ($data == 'rank'){
-            \Lava::LineChart($data, $population, [
-                'title' => Chart::chartTitel($data),
-                'legend' => 'none',
-                'hAxis' => [
-                    'format' => 'dd/MM'
-                ],
-                'vAxis' => [
-                    'direction' => -1,
-                    'format' => '0',
-                ]
-            ]);
-        }else{
-            \Lava::LineChart($data, $population, [
-                'title' => Chart::chartTitel($data),
-                'legend' => 'none',
-                'hAxis' => [
-                    'format' => 'dd/MM'
-                ],
-                'vAxis' => [
-                    'format' => 'short'
+        \Lava::LineChart($data, $population, [
+            'title' => Chart::chartTitel($data),
+            'legend' => 'none',
+            'hAxis' => [
+                'format' => 'dd/MM'
+            ],
+            'vAxis' => [
+                'direction' => (Chart::displayInvers($data)?(-1):(1)),
+                'format' => '0',
             ]
-            ]);
-        }
+        ]);
 
         return \Lava::render('LineChart', $data, 'chart-'.$data);
     }

@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-
+        // FIXME: uncomment ->runInBackground() for live server
         /*
          * Update Village
          */

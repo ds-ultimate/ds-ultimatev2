@@ -49,7 +49,7 @@ class UpdateAlly extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->latestAlly($world->name);
+                $db->latestAlly($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();
