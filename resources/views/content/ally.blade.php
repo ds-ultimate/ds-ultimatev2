@@ -5,11 +5,11 @@
 @section('content')
     <div class="row">
         <div class="p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{ ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::outputName($allyData->name).' ['.\App\Util\BasicFunctions::outputName($allyData->tag).']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::decodeName($allyData->name).' ['.\App\Util\BasicFunctions::decodeName($allyData->tag).']' }}</h1>
         </div>
         <div class="col-12 mx-2">
             <div class="card">
-                <table class="table table-bordered no-wrap">
+                <table id="data1" class="table table-bordered no-wrap">
                     <thead>
                     <tr>
                         <th>{{ ucfirst(__('Rang')) }}</th>
@@ -26,8 +26,8 @@
                     <tbody>
                     <tr>
                         <th>{{ \App\Util\BasicFunctions::numberConv($allyData->rank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::outputName($allyData->name) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::outputName($allyData->tag) }}</td>
+                        <td>{{ \App\Util\BasicFunctions::decodeName($allyData->name) }}</td>
+                        <td>{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
@@ -38,21 +38,16 @@
                     </tbody>
                 </table>
                 <br>
-                <table class="table table-bordered no-wrap">
+                <table id="data2" class="table table-bordered no-wrap">
                     <thead>
                     <tr>
-                        <th colspan="3">{{ __('Besiegte Gegner') }}-{{ __('Insgesamt') }}</th>
-                        <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Angreifer') }}</th>
-                        <th colspan="2">{{ __('Besiegte Gegner') }}-{{ __('Verteidiger') }}</th>
-                    </tr>
-                    <tr>
-                        <th>{{ ucfirst(__('Rang')) }}</th>
-                        <th>{{ ucfirst(__('Punkte')) }}</th>
+                        <th>{{ ucfirst(__('Rang')) }} ({{__('Insgesamt') }})</th>
+                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Insgesamt') }})</th>
                         <th>{{ ucfirst(__('KP-Rate')) }}</th>
-                        <th>{{ ucfirst(__('Rang')) }}</th>
-                        <th>{{ ucfirst(__('Punkte')) }}</th>
-                        <th>{{ ucfirst(__('Rang')) }}</th>
-                        <th>{{ ucfirst(__('Punkte')) }}</th>
+                        <th>{{ ucfirst(__('Rang')) }} ({{__('Angreifer') }})</th>
+                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Angreifer') }})</th>
+                        <th>{{ ucfirst(__('Rang')) }} ({{__('Verteidiger') }})</th>
+                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Verteidiger') }})</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,7 +102,7 @@
             </div>
             <div class="col-12">
                 @for($i = 0; $i < count($statsGeneral); $i++)
-                    <div id="{{ $statsGeneral[$i] }}" class="col-12 position-absolute px-0">
+                    <div id="{{ $statsGeneral[$i] }}" class="col-12 {{ (count($statsBash) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
                         <div class="card">
                             <div id="chart-{{ $statsGeneral[$i] }}"></div>
                         </div>
@@ -126,7 +121,7 @@
             </div>
             <div class="col-12">
                 @for($i = 0; $i < count($statsBash); $i++)
-                    <div id="{{ $statsBash[$i] }}" class="col-12 position-absolute px-0">
+                    <div id="{{ $statsBash[$i] }}" class="col-12 {{ (count($statsBash) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
                         <div class="card">
                             <div id="chart-{{ $statsBash[$i] }}"></div>
                         </div>
@@ -194,6 +189,24 @@
                 responsive: true
             } );
 
+            $('#data1').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+
+            $('#data2').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+
             $('#table_id').DataTable({
                 "columnDefs": [
                     {"targets": 3, "className": 'text-right'},
@@ -206,11 +219,11 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyPlayer', [$worldData->get('server'), $worldData->get('world'), $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyPlayer', [$worldData->server->code, $worldData->num(), $allyData->allyID]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},

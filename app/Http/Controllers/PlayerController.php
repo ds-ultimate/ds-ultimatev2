@@ -12,10 +12,9 @@ class PlayerController extends Controller
 {
     public function player($server, $world, $player){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
 
         $playerData = Player::player($server, $world, $player);
         if ($playerData == null){
@@ -39,7 +38,7 @@ class PlayerController extends Controller
 
         $conquer = Conquer::playerConquerCounts($server, $world, $player);
 
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS'));
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS', 'server'));
 
     }
 

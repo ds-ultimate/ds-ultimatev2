@@ -49,7 +49,12 @@ class UpdateConquer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->conquer($world->server->code, $world->name);
+                try {
+                    $db->conquer($world->server->code, $world->name);
+                }
+                catch(Exception $e){
+                    echo "got a error";
+                }
                 $bar->advance();
             }
             $bar->finish();

@@ -36,11 +36,22 @@ Route::get('/php', function () {
 
 
 Route::get('/test', function (){
-    var_dump(\App\World::getWorld('de', '164'));
+    Schema::create(env('DB_DATABASE_MAIN').'.worlds1', function (\Illuminate\Database\Schema\Blueprint $table){
+        $table->integer('id')->autoIncrement();
+        $table->integer('server_id');
+        $table->text('name');
+        $table->integer('ally_count')->nullable();
+        $table->integer('player_count')->nullable();
+        $table->integer('village_count')->nullable();
+        $table->text('url');
+        $table->text('config');
+        $table->boolean('premium');
+        $table->timestamps();
+    });
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
-Route::post('/search', 'SearchController@searchForm')->name('searchForm');
-Route::get('/search/{type}/{search}', 'Controller@search')->name('search');
+Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
+Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');
 
 Route::get('/{server}', 'Controller@server')->name('server');
 

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 
-class SessionGcCommand extends Command
+class SessionGc extends Command
 {
     protected $signature = 'session:gc';
 

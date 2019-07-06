@@ -49,7 +49,12 @@ class UpdatePlayer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->latestPlayer($world->server->code, $world->name);
+                try {
+                    $db->latestPlayer($world->server->code, $world->name);
+                }
+                catch(Exception $e){
+                    echo "got a error";
+                }
                 $bar->advance();
             }
             $bar->finish();

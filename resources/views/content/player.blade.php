@@ -5,7 +5,7 @@
 @section('content')
     <div class="row">
         <div class="p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{ ucfirst(__('Spieler')).': '.\App\Util\BasicFunctions::outputName($playerData->name) }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('Spieler')).': '.\App\Util\BasicFunctions::decodeName($playerData->name) }}</h1>
         </div>
         <div class="col-12 mx-2">
             <div class="card">
@@ -25,7 +25,7 @@
                     <tbody>
                     <tr>
                         <th>{{ \App\Util\BasicFunctions::numberConv($playerData->rank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::outputName($playerData->name) }}</td>
+                        <td>{{ \App\Util\BasicFunctions::decodeName($playerData->name) }}</td>
                         <td>{!! ($playerData->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
@@ -78,7 +78,7 @@
             </div>
             <div class="col-12">
                 @for($i = 0; $i < count($statsGeneral); $i++)
-                    <div id="{{ $statsGeneral[$i] }}" class="col-12 position-absolute px-0">
+                    <div id="{{ $statsGeneral[$i] }}" class="col-12 {{ (count($statsGeneral) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
                         <div class="card">
                             <div id="chart-{{ $statsGeneral[$i] }}"></div>
                         </div>
@@ -97,13 +97,31 @@
             </div>
             <div class="col-12">
                 @for($i = 0; $i < count($statsBash); $i++)
-                    <div id="{{ $statsBash[$i] }}" class="col-12 position-absolute px-0">
+                    <div id="{{ $statsBash[$i] }}" class="col-12 {{ (count($statsBash) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
                         <div class="card">
                             <div id="chart-{{ $statsBash[$i] }}"></div>
                         </div>
                     </div>
                 @endfor
             </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-12"><h2>{{ ucfirst(__('Dörfer')) }}</h2></div>
+        <div class="col-1"></div>
+        <div class="col-10">
+            <table id="table_id" class="table table-hover table-sm w-100">
+                <thead>
+                <tr>
+                    <th>{{ ucfirst(__('Name')) }}</th>
+                    <th>{{ ucfirst(__('Punkte')) }}</th>
+                    <th>{{ ucfirst(__('Kontinent')) }}</th>
+                    <th>{{ ucfirst(__('Koordinaten')) }}</th>
+                    <th>{{ ucfirst(__('Bonus')) }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
@@ -168,6 +186,36 @@
             }
         });
 
+    </script>
+    <script>
+
+        $(document).ready( function () {
+            $.extend( $.fn.dataTable.defaults, {
+                responsive: true
+            } );
+
+            $('#table_id').DataTable({
+                "columnDefs": [
+                    {"targets": 0, "className": 'text-right'},
+                    {"targets": 1, "className": 'text-right'},
+                    {"targets": 2, "className": 'text-right'},
+                    {"targets": 3, "className": 'text-right'},
+                    {"targets": 4, "className": 'text-right'},
+                ],
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('api.playerVillage', [$worldData->server->code, $worldData->num(), $playerData->playerID]) }}",
+                "columns": [
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/village/"+ row.villageID +"'>"+ value +'</a>'}},
+                    { "data": "points", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/village/"+ row.villageID +"'>"+ numeral(value).format('0.[00]') +'</a>'}},
+                    { "data": "continent", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/village/"+ row.villageID +"'>"+ value +'</a>'}},
+                    { "data": "coordinates" , "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/village/"+ row.villageID +"'>"+ value +'</a>'}},
+                    { "data": "bonus", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/village/"+ row.villageID +"'>"+ value +'</a>'}},
+                ],
+                responsive: true,
+                {!! \App\Util\Datatable::language() !!}
+            });
+        } );
     </script>
     {!! $chartJS !!}
 @endsection

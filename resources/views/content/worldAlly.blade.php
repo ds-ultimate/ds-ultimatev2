@@ -1,11 +1,11 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->get('display_name').': '.__('Übersicht Stämme'))
+@section('titel', $worldData->displayName().': '.__('Übersicht Stämme'))
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{$worldData->get('display_name') }}<br>{{ __('Übersicht Stämme') }}</h1>
+            <h1 class="font-weight-normal">{{$worldData->displayName() }}<br>{{ __('Übersicht Stämme') }}</h1>
         </div>
         <div class="col-12">
             <table id="table_id" class="table table-striped table-hover table-sm w-100">
@@ -49,11 +49,11 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldAlly', [$worldData->get('server'), $worldData->get('worldID')]) }}",
+                "ajax": "{{ route('api.worldAlly', [$worldData->server->code, $worldData->name]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
-                    { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                    { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "member_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},

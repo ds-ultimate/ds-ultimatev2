@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ally;
 use App\Player;
+use App\Village;
 use App\Util\BasicFunctions;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -79,4 +80,30 @@ class APIController extends Controller
             ->toJson();
     }
 
+    public function getPlayerVillage($server, $world, $player)
+    {
+        $villageModel = new Village();
+        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
+
+        $query = $villageModel->newQuery();
+        $query->where('owner', $player);
+
+        return DataTables::eloquent($query)
+            ->editColumn('name', function ($village){
+                return BasicFunctions::decodeName($village->name);
+            })
+            ->addColumn('player', function ($village){
+                return ($village->owner != 0)? BasicFunctions::decodeName($village->playerLatest->name) : '-';
+            })
+            ->addColumn('continent', function ($village){
+                return BasicFunctions::getContinentString($village);
+            })
+            ->addColumn('coordinates', function ($village){
+                return $village->x."|".$village->y;
+            })
+            ->addColumn('bonus', function ($village){
+                return ($village->bonus_id != 0)? BasicFunctions::bonusIDtoHTML($village->bonus_id) : '-';
+            })
+            ->toJson();
+    }
 }

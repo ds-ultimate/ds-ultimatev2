@@ -1,11 +1,11 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('Welt')).':'.$worldData->get('name'))
+@section('titel', $worldData->displayName())
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{ ucfirst(__('Welt')).' '.$worldData->get('world') }}</h1>
+            <h1 class="font-weight-normal">{{ $worldData->displayName() }}</h1>
         </div>
         <div class="col-12">
             <div class="row">

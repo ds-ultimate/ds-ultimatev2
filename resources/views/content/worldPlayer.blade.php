@@ -1,11 +1,11 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->get('display_name').': '.__('Übersicht Spieler'))
+@section('titel', $worldData->displayName().': '.__('Übersicht Spieler'))
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{$worldData->get('display_name') }}<br>{{ __('Übersicht Spieler') }}</h1>
+            <h1 class="font-weight-normal">{{ $worldData->displayName() }}<br>{{ __('Übersicht Spieler') }}</h1>
         </div>
         <div class="col-12">
             <table id="table_id" class="table table-striped table-hover table-sm w-100">
@@ -49,11 +49,11 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldPlayer', [$worldData->get('server'), $worldData->get('worldID')]) }}",
+                "ajax": "{{ route('api.worldPlayer', [$worldData->server->code, $worldData->num()]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {if (value != "-"){return "<a href='{{ route('world', [$worldData->get('server'), $worldData->get('worldID')]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}else{return value}}, "orderable": false},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {if (value != "-"){return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}else{return value}}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},

@@ -39,24 +39,24 @@ class BasicFunctions
         return '';
     }
 
-    public static function linkWorld(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
+    public static function linkWorld(World $world, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
-    public static function linkWorldAlly(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
+    public static function linkWorldAlly(World $world, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
-    public static function linkWorldPlayer(Collection $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[$world->get('server'), $world->get('worldID')]).'">'.$text.'</a>';
+    public static function linkWorldPlayer(World $world, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
-    public static function linkPlayer(Collection $world, $playerID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[$world->get('server'), $world->get('worldID'), $playerID]).'">'.$text.'</a>';
+    public static function linkPlayer(World $world, $playerID, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[$world->server->code, $world->name, $playerID]).'">'.$text.'</a>';
     }
 
-    public static function linkAlly(Collection $world, $allyID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->get('server'), $world->get('worldID'), $allyID]).'">'.$text.'</a>';
+    public static function linkAlly(World $world, $allyID, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
     }
 
     public static function existTable($dbName, $table){
@@ -95,7 +95,7 @@ class BasicFunctions
     }
 
     public static function getContinentString(Village $village) {
-        return "K" . intval($village->x % 10) . intval($village->y % 10);
+        return "K" . intval($village->x / 100) . intval($village->y / 100);
     }
 
     function getVillageSkinImage($village, $skin) {
@@ -204,5 +204,18 @@ class BasicFunctions
     
     public static function endsWith($haystack, $needle) {
         return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+    }
+    
+    public static function ignoreErrs() {
+        set_error_handler(function($severity, $message, $file, $line) {
+            echo "We got an errror[$severity] at $file:$line:\n$message\nBut we are ignoring it\n";
+            return;
+        });
+    }
+    
+    public static function likeSaveEscape($toEscape) {
+        $search = array( "\\"  , "%"  , "_"  , "["  , "]"  , "'"  , "\""  );
+        $replace = array("\\\\", "\\%", "\\_", "[[]", "[]]", "\\'", "\\\"");
+        return str_replace($search, $replace, $toEscape);
     }
 }

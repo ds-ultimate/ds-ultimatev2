@@ -27,7 +27,7 @@
                         <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
                         <th>{{ \App\Util\BasicFunctions::getContinentString($villageData) }}</th>
                         <td>{{ $villageData->x.'|'.$villageData->y }}</td>
-                        <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->owner)) : ucfirst(__('Barbaren')) !!}</td>
+                        <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('Barbaren')) !!}</td>
                         <td>{{ $conquer->get('total') }}</td>
                         <th>{{ \App\Util\BasicFunctions::bonusIDtoHTML($villageData->bonus_id) }}</th>
                     </tr>

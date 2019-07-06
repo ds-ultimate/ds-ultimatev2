@@ -12,10 +12,9 @@ class VillageController extends Controller
 {
     public function village($server, $world, $village){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
 
         $villageData = Village::village($server, $world, $village);
         if ($villageData == null){
@@ -29,8 +28,7 @@ class VillageController extends Controller
 
         $conquer = Conquer::villageConquerCounts($server, $world, $village);
 
-        return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS'));
-
+        return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS', 'server'));
     }
 
     public function chart($villageData, $data){

@@ -31,7 +31,6 @@ class Player extends Model
         return $this->hash;
     }
 
-
     public function allyLatest()
     {
         $table = explode('.', $this->table);

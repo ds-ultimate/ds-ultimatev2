@@ -25,10 +25,10 @@
                         <tbody>
                         @foreach($worldsArray->get('world') as $world)
                             <tr>
-                                <td><span class="flag-icon flag-icon-de"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->get('display_name')) !!}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->get('player_count'))) !!}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->get('ally_count'))) !!}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($world->get('village_count')) }}</td>
+                                <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->ally_count)) !!}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($world->village_count) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -51,30 +51,30 @@
                         @if(count($worldsArray->get('speed')) > 0)
                             @foreach($worldsArray->get('speed') as $world)
                                 <tr>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorld($world, $world->get('display_name')) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->get('player_count'))) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->get('ally_count'))) !!}</td>
-                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->get('village_count')) }}</td>
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->ally_count)) !!}</td>
+                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->village_count) }}</td>
                                 </tr>
                             @endforeach
                         @endif
                         @if(count($worldsArray->get('casual')) > 0)
                             @foreach($worldsArray->get('casual') as $world)
                                 <tr>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorld($world, $world->get('display_name')) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->get('player_count'))) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->get('ally_count'))) !!}</td>
-                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->get('village_count')) }}</td>
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->ally_count)) !!}</td>
+                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->village_count) }}</td>
                                 </tr>
                             @endforeach
                         @endif
                         @if(count($worldsArray->get('classic')) > 0)
                             @foreach($worldsArray->get('classic') as $world)
                                 <tr>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorld($world, $world->get('display_name')) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->get('player_count'))) !!}</td>
-                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->get('ally_count'))) !!}</td>
-                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->get('village_count')) }}</td>
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
+                                    <td>{!! \App\Util\BasicFunctions::linkWorldAlly($world, \App\Util\BasicFunctions::numberConv($world->ally_count)) !!}</td>
+                                    <td>{{ \App\Util\BasicFunctions::numberConv($world->village_count) }}</td>
                                 </tr>
                             @endforeach
                         @endif

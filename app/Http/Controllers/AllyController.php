@@ -12,10 +12,9 @@ class AllyController extends Controller
 {
     public function ally($server, $world, $ally){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
 
         $allyData = Ally::ally($server, $world, $ally);
         if ($allyData == null){
@@ -40,7 +39,7 @@ class AllyController extends Controller
         
         $conquer = Conquer::allyConquerCounts($server, $world, $ally);
         
-        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS'));
+        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server'));
     }
 
     public function chart($allyData, $data){

@@ -21,6 +21,7 @@ class DBController extends Controller
         Schema::create(env('DB_DATABASE_MAIN').'.server', function (Blueprint $table){
             $table->integer('id')->autoIncrement();
             $table->char('code');
+            $table->char('flag');
             $table->text('url');
         });
     }
@@ -125,7 +126,7 @@ class DBController extends Controller
 
                 $worldName = substr($world, 2);
 
-                if ($worldTable->where('server_id', $serverUrl->code)->where('name', $worldName)->count() >= 1){
+                if ($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->count() >= 1){
                     //world exists already -> ignore
                     // FIXME: Update saved world data with new data
                     continue;
@@ -161,17 +162,16 @@ class DBController extends Controller
     
     // FIXME: use server Url from servers table (to enable support for other languages
     public function latestPlayer($server, $world){
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '400M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
+        $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
             $this->playerTable($dbName, 'latest_temp');
         }
 
-        $lines = gzfile("https://$server$world.die-staemme.de/map/player.txt.gz");
+        $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -194,7 +194,7 @@ class DBController extends Controller
             $players->put($player->get('id'),$player);
         }
 
-        $offs = gzfile("https://$server$world.die-staemme.de/map/kill_att.txt.gz");
+        $offs = gzfile("$worldUpdate->url/map/kill_att.txt.gz");
         if(!is_array($offs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_att.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -207,7 +207,7 @@ class DBController extends Controller
             $playerOffs->put($id, $playerOff);
         }
 
-        $defs = gzfile("https://$server$world.die-staemme.de/map/kill_def.txt.gz");
+        $defs = gzfile("$worldUpdate->url/map/kill_def.txt.gz");
         if(!is_array($defs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_def.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -220,7 +220,7 @@ class DBController extends Controller
             $playerDefs->put($id, $playerDef);
         }
 
-        $tots = gzfile("https://$server$world.die-staemme.de/map/kill_all.txt.gz");
+        $tots = gzfile("$worldUpdate->url/map/kill_all.txt.gz");
         if(!is_array($tots)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -285,7 +285,6 @@ class DBController extends Controller
 
         $count = count($arrayPlayer);
 
-        $worldUpdate = World::getWorld($server, $world);
         $worldUpdate->player_count = $count;
         $worldUpdate->save();
 
@@ -293,23 +292,23 @@ class DBController extends Controller
     }
 
     public function latestVillages($server, $world){
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '500M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
+        $worldUpdate = World::getWorld($server, $world);
+
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
             $this->villageTable($dbName, 'latest_temp');
         }
 
-        $lines = gzfile("https://$server$world.die-staemme.de/map/village.txt.gz");
+        $lines = gzfile("$worldUpdate->url/map/village.txt.gz");
         if (!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "village.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
         }
         $villages = collect();
         foreach ($lines as $line) {
-            list($id, $name, $x, $y, $points, $owner, $bonus_id) = explode(',', $line);
+            list($id, $name, $x, $y, $owner, $points, $bonus_id) = explode(',', $line);
             $village = collect();
             $village->put('id', (int)$id);
             $village->put('name', $name);
@@ -367,7 +366,6 @@ class DBController extends Controller
 
         $count = count($array);
 
-        $worldUpdate = World::getWorld($server, $world);
         $worldUpdate->village_count = $count;
         $worldUpdate->save();
 
@@ -376,16 +374,16 @@ class DBController extends Controller
     }
 
     public function latestAlly($server, $world){
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '200M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
+        $worldUpdate = World::getWorld($server, $world);
+
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
             $this->allyTable($dbName, 'latest_temp');
         }
 
-        $lines = gzfile("https://$server$world.die-staemme.de/map/ally.txt.gz");
+        $lines = gzfile("$worldUpdate->url/map/ally.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "ally.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -409,7 +407,7 @@ class DBController extends Controller
             $allys->put($ally->get('id'),$ally);
         }
 
-        $offs = gzfile("https://$server$world.die-staemme.de/map/kill_att_tribe.txt.gz");
+        $offs = gzfile("$worldUpdate->url/map/kill_att_tribe.txt.gz");
         if(!is_array($offs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_att_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -423,7 +421,7 @@ class DBController extends Controller
 
         }
 
-        $defs = gzfile("https://$server$world.die-staemme.de/map/kill_def_tribe.txt.gz");
+        $defs = gzfile("$worldUpdate->url/map/kill_def_tribe.txt.gz");
         if(!is_array($defs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_def_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -436,7 +434,7 @@ class DBController extends Controller
             $allyDefs->put($id, $allyDef);
         }
 
-        $tots = gzfile("https://$server$world.die-staemme.de/map/kill_all_tribe.txt.gz");
+        $tots = gzfile("$worldUpdate->url/map/kill_all_tribe.txt.gz");
         if(!is_array($tots)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;
@@ -503,7 +501,6 @@ class DBController extends Controller
 
         $count = count($array);
 
-        $worldUpdate = World::getWorld($server, $world);
         $worldUpdate->ally_count = $count;
         $worldUpdate->save();
 
@@ -512,12 +509,12 @@ class DBController extends Controller
 
     public function conquer($server, $world){
         // FIXME: use $server_URL/interface.php?func=get_conquer&since=$last_timestamp
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '500M');
+        ini_set('memory_limit', '700M');
         date_default_timezone_set("Europe/Berlin");
         $dbName = BasicFunctions::getDatabaseName($server, $world);
+        $worldUpdate = World::getWorld($server, $world);
+
         if (BasicFunctions::existTable($dbName, 'conquer') === false) {
             $this->conquerTable($dbName);
         }
@@ -525,7 +522,7 @@ class DBController extends Controller
         $conquer->setTable($dbName.'.conquer');
         $count = $conquer->get()->count();
 
-        $lines = gzfile("https://$server$world.die-staemme.de/map/conquer.txt.gz");
+        $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
         if (!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
             return;

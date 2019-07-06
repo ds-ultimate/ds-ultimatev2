@@ -37,6 +37,7 @@ class World extends Model
      * Falls er keine Welt mit 'de164' findet gibt er eine Fehlermeldung zurück.
      */
     public static function existWorld($server, $world){
+        World::existServer($server);
         if(World::where('name', $world)->get()->count() > 0){
             return true;
         }
@@ -58,56 +59,22 @@ class World extends Model
     }
 
     /*
-     * Welteninformationen als Collection-Objekt
-     * */
-    public static function getWorldCollectionByName($worldName){
-        $server = BasicFunctions::getServer($worldName);
-        $world = BasicFunctions::getWorldID($worldName, $server);
-        return World::getWorldCollection($server, $world);
-    }
-
-    /*
-     * Welteninformationen als Collection-Objekt
-     * */
-    public static function getWorldCollection($server, $world){
-        $worldData = World::getWorld($server, $world);
-        return World::buildWorldCollect($worldData, $server)[1];
-    }
-
-    /*
      * Gibt ein Collection-Objekt zurück.
      * */
     public static function worldsCollection($server){
         $worldsArray = collect();
 
         foreach (Server::getWorldsByCode($server) as $worldData){
-            $worldCollect = World::buildWorldCollect($worldData, $server);
-            
-            if (! $worldsArray->has($worldCollect[0])) {
-                $worldsArray[$worldCollect[0]] = collect();
+            if (! $worldsArray->has($worldData->sortType())) {
+                $worldsArray[$worldData->sortType()] = collect();
             }
-            $worldsArray[$worldCollect[0]]->push($worldCollect[1]);
+            $worldsArray[$worldData->sortType()]->push($worldData);
         }
         return $worldsArray;
     }
-     
-    private static function buildWorldCollect($worldRaw, $server) {
-        $typeArray = World::determineType($worldRaw->name, $server);
-        $world = collect();
-        $world->put('type', $typeArray[1]);
-        $world->put('name', $worldRaw->name);
-        $world->put('server', $server);
-        $world->put('worldID', BasicFunctions::getWorldID($worldRaw->name, $server));
-        $world->put('world', BasicFunctions::getWorldNum($worldRaw->name));
-        $world->put('display_name', $world->get('type').' '.$world->get('world'));
-        $world->put('ally_count', $worldRaw->ally_count);
-        $world->put('player_count', $worldRaw->player_count);
-        $world->put('village_count', $worldRaw->village_count);
-        
-        return [$typeArray[0], $world];
-    }
-     
-    private static function determineType($worldName) {
+    
+    public function sortType()
+    {
         /*
          * Setzt den Welten Type:
          * dep => Casual
@@ -115,14 +82,44 @@ class World extends Model
          * dec => Classic
          * de => Welt
          */
-        if(strpos($worldName, 'p') !== false){
-            return ["casual", __('main.Casual')];
-        }elseif(strpos($worldName, 's') !== false){
-            return ["speed", __('main.Speed')];
-        }elseif(strpos($worldName, 'c') !== false){
-            return ["classic", __('main.Classic')];
+        if(strpos($this->name, 'p') !== false){
+            return "casual";
+        }elseif(strpos($this->name, 's') !== false){
+            return "speed";
+        }elseif(strpos($this->name, 'c') !== false){
+            return "classic";
         }else{
-            return ["world", __('main.Welt')];
+            return "world";
+        }
+    }
+    
+    public function displayName()
+    {
+        return $this->type() . " " . $this->num();
+    }
+    
+    public function num()
+    {
+        return BasicFunctions::getWorldNum($this->name);
+    }
+    
+    public function type()
+    {
+        /*
+         * Setzt den Welten Type:
+         * dep => Casual
+         * des => Speed
+         * dec => Classic
+         * de => Welt
+         */
+        if(strpos($this->name, 'p') !== false){
+            return ucfirst(__('main.Casual'));
+        }elseif(strpos($this->name, 's') !== false){
+            return ucfirst(__('main.Speed'));
+        }elseif(strpos($this->name, 'c') !== false){
+            return ucfirst(__('main.Classic'));
+        }else{
+            return ucfirst(__('main.Welt'));
         }
     }
 }

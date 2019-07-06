@@ -23,7 +23,7 @@ class Controller extends BaseController
         BasicFunctions::local();
         World::existServer($server);
         $worldsArray = World::worldsCollection($server);
-        return view('content.server', compact('worldsArray'));
+        return view('content.server', compact('worldsArray', 'server'));
     }
 
     /*
@@ -36,9 +36,9 @@ class Controller extends BaseController
 
         $playerArray = Player::top10Player($server, $world);
         $allyArray = Ally::top10Ally($server, $world);
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
 
-        return view('content.world', compact('playerArray', 'allyArray', 'worldData'));
+        return view('content.world', compact('playerArray', 'allyArray', 'worldData', 'server'));
 
     }
 
@@ -50,9 +50,9 @@ class Controller extends BaseController
         World::existServer($server);
         World::existWorld($server, $world);
 
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
         
-        return view('content.worldAlly', compact('worldData'));
+        return view('content.worldAlly', compact('worldData', 'server'));
     }
 
     /*
@@ -63,23 +63,23 @@ class Controller extends BaseController
         World::existServer($server);
         World::existWorld($server, $world);
 
-        $worldData = World::getWorldCollection($server, $world);
+        $worldData = World::getWorld($server, $world);
 
-        return view('content.worldPlayer', compact('worldData'));
+        return view('content.worldPlayer', compact('worldData', 'server'));
     }
 
-    public function search($type, $search){
+    public function search($server, $type, $search){
         BasicFunctions::local();
         switch ($type){
             case 'player':
-                $result = SearchController::searchPlayer($search);
-                return view('content.search', compact('search', 'type', 'result'));
+                $result = SearchController::searchPlayer($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
             case 'ally':
-                $result = SearchController::searchAlly($search);
-                return view('content.search', compact('search', 'type', 'result'));
+                $result = SearchController::searchAlly($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
             case 'village':
-                $result = SearchController::searchPlayer($search);
-                return view('content.search', compact('search', 'type', 'result'));
+                $result = SearchController::searchPlayer($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
         }
     }
 
