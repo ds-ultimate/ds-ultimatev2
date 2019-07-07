@@ -4,13 +4,15 @@
 
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{ $worldData->displayName() }}</h1>
-        </div>
         <div class="col-12">
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <h2>{{ __('Top 10 Spieler') }}:</h2>
+            <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
+                <h1 class="font-weight-normal">{{ $worldData->displayName() }}</h1>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ __('Top 10 Spieler') }}</h2>
                     <table class="table table-striped"  id="t10Player">
                         <thead>
                         <tr>
@@ -24,7 +26,7 @@
                         @foreach($playerArray as $player)
                             <tr>
                                 <th>{{ $player->rank }}</th>
-                                <td>{!! \App\Util\BasicFunctions::linkPlayer($worldData, $player->playerID, \App\Util\BasicFunctions::outputName($player->name)) !!}</td>
+                                <td class="text-truncate" style="max-width: 200px">{!! \App\Util\BasicFunctions::linkPlayer($worldData, $player->playerID, \App\Util\BasicFunctions::outputName($player->name)) !!}</td>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($player->points) }}</td>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($player->village_count) }}</td>
                             </tr>
@@ -32,8 +34,12 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-12 col-md-6">
-                    <h2>{{ __('Top 10 Stämme') }}:</h2>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ __('Top 10 Stämme') }}</h2>
                     <table class="table table-striped" id="t10Ally">
                         <thead>
                         <tr>
@@ -49,7 +55,7 @@
                         @foreach($allyArray as $ally)
                             <tr>
                                 <th>{{ $ally->rank }}</th>
-                                <td class="text-truncate">{!! \App\Util\BasicFunctions::linkAlly($worldData, $ally->allyID, \App\Util\BasicFunctions::outputName($ally->name))!!}</td>
+                                <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkAlly($worldData, $ally->allyID, \App\Util\BasicFunctions::outputName($ally->name))!!}</td>
                                 <td>{{ \App\Util\BasicFunctions::outputName($ally->tag) }}</td>
                                 <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->points) }}</td>
                                 <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->member_count) }}</td>

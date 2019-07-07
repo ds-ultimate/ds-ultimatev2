@@ -58,3 +58,15 @@
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+.truncate {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.discord{
+    height: 400px;
+    width: 280px;
+}

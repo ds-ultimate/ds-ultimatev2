@@ -12,7 +12,7 @@ class UpdatePlayer extends Command
      *
      * @var string
      */
-    protected $signature = 'update:player {world=null}';
+    protected $signature = 'update:player {server=null} {world=null}';
 
     /**
      * The console command description.
@@ -38,10 +38,11 @@ class UpdatePlayer extends Command
      */
     public function handle()
     {
+        \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
         if ($this->argument('world') != "null") {
-            $db->latestPlayer($this->argument('world'));
+            $db->latestPlayer($this->argument('server'), $this->argument('world'));
         } else {
             $worlds = BasicFunctions::getWorld();
             
@@ -49,12 +50,7 @@ class UpdatePlayer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                try {
-                    $db->latestPlayer($world->server->code, $world->name);
-                }
-                catch(Exception $e){
-                    echo "got a error";
-                }
+                $db->latestPlayer($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

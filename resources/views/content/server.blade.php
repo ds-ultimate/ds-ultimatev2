@@ -1,19 +1,21 @@
 @extends('layouts.temp')
 
-@section('titel', __('Übersicht Welten'))
+@section('titel', __('Weltenübersicht'))
 
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-            <h1 class="font-weight-normal">{{ __('Übersicht Welten') }}</h1>
+        <div class="col-12">
+            <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
+                <h1 class="font-weight-normal">{{ ucfirst(__('Weltenübersicht')) }}</h1>
+            </div>
         </div>
-        <div class="col-10">
-            <div class="row">
-            {{-- FIXME much redundant code --}}
-            @if(count($worldsArray->get('world')) > 0)
-                <div class="col">
-                    <h2>{{ __('Normale Welten') }}:</h2>
-                    <table class="table table-hover no-wrap">
+        <!-- Normale Welten -->
+        @if(count($worldsArray->get('world')) > 0)
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ __('Normale Welten') }}:</h2>
+                    <table class="table table-hover table-striped no-wrap">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('Welt')) }}</th>
@@ -34,11 +36,17 @@
                         </tbody>
                     </table>
                 </div>
-            @endif
-            @if (count($worldsArray->get('casual')) > 0 || count($worldsArray->get('speed')) > 0)
-                <div class="col">
-                    <h2>{{ __('Spezial Welten') }}:</h2>
-                    <table class="table table-hover no-wrap">
+            </div>
+        </div>
+        @endif
+        <!-- ENDE Normale Welten -->
+        <!-- Spezial Welten -->
+        @if (count($worldsArray->get('casual')) > 0 || count($worldsArray->get('speed')) > 0 || count($worldsArray->get('classic')) > 0)
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ __('Spezial Welten') }}:</h2>
+                    <table class="table table-hover table-striped no-wrap">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('Welt')) }}</th>
@@ -81,8 +89,9 @@
                         </tbody>
                     </table>
                 </div>
-            @endif
             </div>
         </div>
+        @endif
+        <!-- ENDE Spezial Welten -->
     </div>
 @endsection

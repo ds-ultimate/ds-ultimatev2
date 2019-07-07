@@ -3,132 +3,161 @@
 @section('titel', ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::outputName($allyData->name))
 
 @section('content')
-    <div class="row">
-        <div class="p-lg-5 mx-auto my-1 text-center">
+    <div class="row justify-content-center">
+        <!-- Titel für Tablet | PC -->
+        <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::decodeName($allyData->name).' ['.\App\Util\BasicFunctions::decodeName($allyData->tag).']' }}</h1>
         </div>
-        <div class="col-12 mx-2">
-            <div class="card">
-                <table id="data1" class="table table-bordered no-wrap">
-                    <thead>
-                    <tr>
-                        <th>{{ ucfirst(__('Rang')) }}</th>
-                        <th>{{ ucfirst(__('Name')) }}</th>
-                        <th>{{ ucfirst(__('Tag')) }}</th>
-                        <th>{{ ucfirst(__('Punkte')) }}</th>
-                        <th>{{ ucfirst(__('Dörfer')) }}</th>
-                        <th>{{ ucfirst(__('Mitglieder')) }}</th>
-                        <th>{{ ucfirst(__('Punkte pro Spieler')) }}</th>
-                        <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
-                        <th>{{ ucfirst(__('Eroberungen')) }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->rank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::decodeName($allyData->name) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
-                        <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
-                        <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
-                        <td>{{ $conquer->get('total') }}(<i class="text-success">{{ $conquer->get('new') }}</i>-<i class="text-danger">{{ $conquer->get('old') }}</i>)</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <!-- ENDE Titel für Tablet | PC -->
+        <!-- Titel für Mobile Geräte -->
+        <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
+            <h1 class="font-weight-normal">
+                {{ ucfirst(__('Stamm')).': ' }}
+            </h1>
+            <h4>
+                {{ \App\Util\BasicFunctions::decodeName($allyData->name) }}
                 <br>
-                <table id="data2" class="table table-bordered no-wrap">
-                    <thead>
-                    <tr>
-                        <th>{{ ucfirst(__('Rang')) }} ({{__('Insgesamt') }})</th>
-                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Insgesamt') }})</th>
-                        <th>{{ ucfirst(__('KP-Rate')) }}</th>
-                        <th>{{ ucfirst(__('Rang')) }} ({{__('Angreifer') }})</th>
-                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Angreifer') }})</th>
-                        <th>{{ ucfirst(__('Rang')) }} ({{__('Verteidiger') }})</th>
-                        <th>{{ ucfirst(__('Punkte')) }} ({{__('Verteidiger') }})</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBash) }}</td>
-                        <td>{{ \App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100) }}%</td>
-                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
-                        <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
-                        <td>{{ \App\Util\BasicFunctions::numberConv($allyData->defBash) }}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                [{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}]
+            </h4>
+        </div>
+        <!-- ENDE Titel für Tablet | PC -->
+        <!-- Informationen -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ucfirst(__('Informationen'))}}</h4>
+                    <h5 class="card-subtitle">{{__('Allgemein')}}</h5>
+                    <table id="data1" class="table table-bordered no-wrap">
+                        <thead>
+                        <tr>
+                            <th>{{ ucfirst(__('Rang')) }}</th>
+                            <th>{{ ucfirst(__('Name')) }}</th>
+                            <th>{{ ucfirst(__('Tag')) }}</th>
+                            <th>{{ ucfirst(__('Punkte')) }}</th>
+                            <th>{{ ucfirst(__('Dörfer')) }}</th>
+                            <th>{{ ucfirst(__('Mitglieder')) }}</th>
+                            <th>{{ ucfirst(__('Punkte pro Spieler')) }}</th>
+                            <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
+                            <th>{{ ucfirst(__('Eroberungen')) }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>{{ \App\Util\BasicFunctions::numberConv($allyData->rank) }}</th>
+                            <td>{{ \App\Util\BasicFunctions::decodeName($allyData->name) }}</td>
+                            <td>{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}</td>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
+                            <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
+                            <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($conquer->get('total')) }}(<i class="text-success">{{ \App\Util\BasicFunctions::numberConv($conquer->get('new')) }}</i>-<i class="text-danger">{{ \App\Util\BasicFunctions::numberConv($conquer->get('old')) }}</i>)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <h5 class="card-subtitle">{{__('Besiegte Gegner')}}</h5>
+                    <table id="data2" class="table table-bordered no-wrap">
+                        <thead>
+                        <tr>
+                            <th>{{ ucfirst(__('Rang')) }} ({{__('Insgesamt') }})</th>
+                            <th>{{ ucfirst(__('Punkte')) }} ({{__('Insgesamt') }})</th>
+                            <th>{{ ucfirst(__('KP-Rate')) }}</th>
+                            <th>{{ ucfirst(__('Rang')) }} ({{__('Angreifer') }})</th>
+                            <th>{{ ucfirst(__('Punkte')) }} ({{__('Angreifer') }})</th>
+                            <th>{{ ucfirst(__('Rang')) }} ({{__('Verteidiger') }})</th>
+                            <th>{{ ucfirst(__('Punkte')) }} ({{__('Verteidiger') }})</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</th>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBash) }}</td>
+                            <td>{{ \App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100) }}%</td>
+                            <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
+                            <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
+                            <td>{{ \App\Util\BasicFunctions::numberConv($allyData->defBash) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="col-12"><h2>{{ ucfirst(__('Spieler')) }}</h2></div>
-        <div class="col-1"></div>
-        <div class="col-10">
-            <table id="table_id" class="table table-hover table-sm w-100">
-                <thead>
-                <tr class="d-none d-md-table-row">
-                    <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
-                    <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
-                </tr>
-                <tr>
-                    <th>{{ ucfirst(__('Rang')) }}</th>
-                    <th>{{ ucfirst(__('Name')) }}</th>
-                    <th>{{ ucfirst(__('Stamm')) }}</th>
-                    <th>{{ ucfirst(__('Punkte')) }}</th>
-                    <th>{{ ucfirst(__('Dörfer')) }}</th>
-                    <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
-                    <th>{{ ucfirst(__('Insgesamt')) }}</th>
-                    <th>{{ ucfirst(__('Angreifer')) }}</th>
-                    <th>{{ ucfirst(__('Verteidiger')) }}</th>
-                    <th>{{ ucfirst(__('Unterstützer')) }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-1"></div>
-        <div class="col-6">
-            <div class="col-12">
-                Diagramm:
-                <select id="statsGeneral" class="form-control">
+        <!-- ENDE Informationen -->
+        <!-- Allgemein Chart -->
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card" style=" height: 320px">
+                <div class="card-body">
+                    <h4 class="card-title">{{ __('Allgemein') }}:</h4>
+                    <select id="statsGeneral" class="form-control form-control-sm">
+                        @for($i = 0; $i < count($statsGeneral); $i++)
+                            <option value="{{ $statsGeneral[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel_'.$statsGeneral[$i]) }}</option>
+                        @endfor
+                    </select>
                     @for($i = 0; $i < count($statsGeneral); $i++)
-                        <option value="{{ $statsGeneral[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel_'.$statsGeneral[$i]) }}</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="col-12">
-                @for($i = 0; $i < count($statsGeneral); $i++)
-                    <div id="{{ $statsGeneral[$i] }}" class="col-12 {{ (count($statsBash) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
-                        <div class="card">
-                            <div id="chart-{{ $statsGeneral[$i] }}"></div>
+                        <div id="{{ $statsGeneral[$i] }}" class="col-12 position-absolute pl-0 mt-2">
+                            <div class="card mr-4">
+                                <div id="chart-{{ $statsGeneral[$i] }}"></div>
+                            </div>
                         </div>
-                    </div>
-                @endfor
+                    @endfor
+                </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="col-12">
-                Diagramm:
-                <select id="statsBash" class="form-control">
+        <!-- ENDE Allgemein Chart -->
+        <!-- Besiegte Gegner Chart -->
+        <div class="col-12 col-md-6 mt-2">
+            <div class="card" style="height: 320px">
+                <div class="card-body">
+                    <h4 class="card-title">{{ __('Besiegte Gegner') }}:</h4>
+                    <select id="statsBash" class="form-control form-control-sm">
+                        @for($i = 0; $i < count($statsBash); $i++)
+                            <option value="{{ $statsBash[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel_'.$statsBash[$i]) }}</option>
+                        @endfor
+                    </select>
                     @for($i = 0; $i < count($statsBash); $i++)
-                        <option value="{{ $statsBash[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel_'.$statsBash[$i]) }}</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="col-12">
-                @for($i = 0; $i < count($statsBash); $i++)
-                    <div id="{{ $statsBash[$i] }}" class="col-12 {{ (count($statsBash) - 1 == $i)?'position-relative':'position-absolute'}} px-0">
-                        <div class="card">
-                            <div id="chart-{{ $statsBash[$i] }}"></div>
+                        <div id="{{ $statsBash[$i] }}" class="col-12 position-absolute pl-0 mt-2">
+                            <div class="card mr-4">
+                                <div id="chart-{{ $statsBash[$i] }}"></div>
+                            </div>
                         </div>
-                    </div>
-                @endfor
+                    @endfor
+                </div>
             </div>
         </div>
+        <!-- ENDE Besiegte Gegner Chart -->
+        <!-- Datachart Spieler -->
+        <div class="col-12 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ ucfirst(__('Spieler')) }}</h2>
+                    <table id="table_id" class="table table-hover table-sm w-100">
+                        <thead>
+                        <tr class="d-none d-md-table-row">
+                            <th colspan="6">{{ ucfirst(__('Allgemein')) }}</th>
+                            <th colspan="4">{{ ucfirst(__('Besiegte Gegner')) }}</th>
+                        </tr>
+                        <tr>
+                            <th>{{ ucfirst(__('Rang')) }}</th>
+                            <th>{{ ucfirst(__('Name')) }}</th>
+                            <th>{{ ucfirst(__('Stamm')) }}</th>
+                            <th>{{ ucfirst(__('Punkte')) }}</th>
+                            <th>{{ ucfirst(__('Dörfer')) }}</th>
+                            <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
+                            <th>{{ ucfirst(__('Insgesamt')) }}</th>
+                            <th>{{ ucfirst(__('Angreifer')) }}</th>
+                            <th>{{ ucfirst(__('Verteidiger')) }}</th>
+                            <th>{{ ucfirst(__('Unterstützer')) }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- ENDE Datachart Spieler -->
     </div>
 @endsection
 
@@ -219,11 +248,11 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyPlayer', [$worldData->server->code, $worldData->num(), $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyPlayer', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->num()]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
+                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},

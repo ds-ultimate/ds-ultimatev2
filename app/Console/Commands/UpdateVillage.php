@@ -12,7 +12,7 @@ class UpdateVillage extends Command
      *
      * @var string
      */
-    protected $signature = 'update:village {world=null}';
+    protected $signature = 'update:village {server=null} {world=null}';
 
     /**
      * The console command description.
@@ -38,10 +38,11 @@ class UpdateVillage extends Command
      */
     public function handle()
     {
+        \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
         if ($this->argument('world') != "null") {
-            $db->latestVillages($this->argument('world'));
+            $db->latestVillages($this->argument('server'), $this->argument('world'));
         } else {
             $worlds = BasicFunctions::getWorld();
             
@@ -49,12 +50,7 @@ class UpdateVillage extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                try {
-                    $db->latestVillages($world->server->code, $world->name);
-                }
-                catch(Exception $e){
-                    echo "got a error";
-                }
+                $db->latestVillages($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

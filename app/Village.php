@@ -87,4 +87,72 @@ class Village extends Model
 
         return $villageDatas;
     }
+
+    public function bonusText() {
+        switch($this->bonus_id) {
+            case 0:
+                return "-";
+            case 1:
+                return "+100% Holz";
+            case 2:
+                return "+100% Lehm";
+            case 3:
+                return "+100% Eisen";
+            case 4:
+                return "+10% Bev&ouml;lkerung";
+            case 5:
+                return "+33% schnellere Kaserne";
+            case 6:
+                return "+33% schnellerer Stall";
+            case 7:
+                return "+50% schnellere Werkstatt";
+            case 8:
+                return "+30% auf alle Rohstoffe";
+            case 9:
+                return "+50% H&auml;ndler &amp; Speicher";
+        }
+        return '-';
+    }
+
+    public function continentString() {
+        return "K" . intval($this->x / 100) . intval($this->y / 100);
+    }
+
+    public function coordinates() {
+        return $this->x."|".$this->y;
+    }
+
+    public function getVillageSkinImage($skin) {
+        $skins = array("dark", "default", "old", "symbol", "winter");
+        $index = array_search($skin, $skins);
+        if($index === false){
+            return null;
+        }
+
+        $left = "";
+        if($this->owner == 0) {
+            $left = "_left";
+        }
+
+        if($this->points < 300) {
+            $lv = 1;
+        } else if($this->points < 1000) {
+            $lv = 2;
+        } else if($this->points < 3000) {
+            $lv = 3;
+        } else if($this->points < 9000) {
+            $lv = 4;
+        } else if($this->points < 11000) {
+            $lv = 5;
+        } else {
+            $lv = 6;
+        }
+
+        $bonus = "v";
+        if($this->bonus_id != 0) {
+            $bonus = "b";
+        }
+
+        return "img/skins/{$skins[$index]}/$bonus$lv$left.png";
+    }
 }

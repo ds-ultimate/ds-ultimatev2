@@ -12,7 +12,7 @@ class UpdateAlly extends Command
      *
      * @var string
      */
-    protected $signature = 'update:ally {world=null}';
+    protected $signature = 'update:ally {server=null} {world=null}';
 
     /**
      * The console command description.
@@ -38,10 +38,11 @@ class UpdateAlly extends Command
      */
     public function handle()
     {
+        \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
         if ($this->argument('world') != "null") {
-            $db->latestAlly($this->argument('world'));
+            $db->latestAlly($this->argument('server'), $this->argument('world'));
         } else {
             $worlds = BasicFunctions::getWorld();
             
@@ -49,12 +50,7 @@ class UpdateAlly extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                try {
-                    $db->latestAlly($world->server->code, $world->name);
-                }
-                catch(Exception $e){
-                    echo "got a error";
-                }
+                $db->latestAlly($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

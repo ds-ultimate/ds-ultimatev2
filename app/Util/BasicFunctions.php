@@ -13,7 +13,6 @@ use App;
 use App\Village;
 use App\World;
 use App\Server;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class BasicFunctions
@@ -59,6 +58,10 @@ class BasicFunctions
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
     }
 
+    public static function linkVillage(World $world, $villageID, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
+    }
+
     public static function existTable($dbName, $table){
         try{
             $result = DB::statement("SELECT 1 FROM `$dbName`.`$table` LIMIT 1");
@@ -66,70 +69,6 @@ class BasicFunctions
             return false;
         }
         return $result !== false;
-    }
-
-    public static function bonusIDtoHTML($bonus_id) {
-        switch($bonus_id) {
-            case 0:
-                return "-";
-            case 1:
-                return "+100% Holz";
-            case 2:
-                return "+100% Lehm";
-            case 3:
-                return "+100% Eisen";
-            case 4:
-                return "+10% Bev&ouml;lkerung";
-            case 5:
-                return "+33% schnellere Kaserne";
-            case 6:
-                return "+33% schnellerer Stall";
-            case 7:
-                return "+50% schnellere Werkstatt";
-            case 8:
-                return "+30% auf alle Rohstoffe";
-            case 9:
-                return "+50% H&auml;ndler &amp; Speicher";
-        }
-        return null;
-    }
-
-    public static function getContinentString(Village $village) {
-        return "K" . intval($village->x / 100) . intval($village->y / 100);
-    }
-
-    function getVillageSkinImage($village, $skin) {
-        $skins = array("dark", "default", "old", "symbol", "winter");
-        $index = array_search($skin, $skins);
-        if($index === false){
-            return null;
-        }
-
-        $left = "";
-        if($village->owner == 0) {
-            $left = "_left";
-        }
-
-        if($village->points < 300) {
-            $lv = 1;
-        } else if($village->points < 1000) {
-            $lv = 2;
-        } else if($village->points < 3000) {
-            $lv = 3;
-        } else if($village->points < 9000) {
-            $lv = 4;
-        } else if($village->points < 11000) {
-            $lv = 5;
-        } else {
-            $lv = 6;
-        }
-
-        $bonus = "v";
-        if($village->bonus_id != 0) {
-            $bonus = "b";
-        }
-
-        return "img/skins/{$skins[$index]}/$bonus$lv$left.png";
     }
 
     public static function hash($input ,$type){
@@ -173,6 +112,7 @@ class BasicFunctions
         $world = new World();
         $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
         // FIXME: für den Testserver
+        //return $world->get();
         return $world->where('name', '=', '164')
                 ->orWhere('name', '=', '165')
                 ->orWhere('name', '=', '166')

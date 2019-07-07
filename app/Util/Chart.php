@@ -55,7 +55,6 @@ class Chart
             case 'village':
             case 'gesBash':
             case 'offBash':
-            case 'offBash':
             case 'defBash':
             case 'utBash':
                 return false;
@@ -66,13 +65,28 @@ class Chart
         }
     }
 
+    public static function vAxisFormat($data){
+        switch($data) {
+            case 'points':
+            case 'village':
+            case 'gesBash':
+            case 'offBash':
+            case 'defBash':
+            case 'utBash':
+                return 'short';
+            case 'rank':
+                return '';
+            default:
+                return 'short';
+        }
+    }
+
     public static function validType($data){
         switch($data) {
             case 'points':
             case 'rank':
             case 'village':
             case 'gesBash':
-            case 'offBash':
             case 'offBash':
             case 'defBash':
             case 'utBash':

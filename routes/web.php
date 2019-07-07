@@ -11,11 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-//    $flags = explode('|', env('DS_SERVER'));
-//    return view('content.index', compact('flags'));
-    return view('welcome');
-})->name('index');
+Route::get('/', 'Controller@index')->name('index');
 
 Auth::routes(['verify' => true]);
 
@@ -36,18 +32,7 @@ Route::get('/php', function () {
 
 
 Route::get('/test', function (){
-    Schema::create(env('DB_DATABASE_MAIN').'.worlds1', function (\Illuminate\Database\Schema\Blueprint $table){
-        $table->integer('id')->autoIncrement();
-        $table->integer('server_id');
-        $table->text('name');
-        $table->integer('ally_count')->nullable();
-        $table->integer('player_count')->nullable();
-        $table->integer('village_count')->nullable();
-        $table->text('url');
-        $table->text('config');
-        $table->boolean('premium');
-        $table->timestamps();
-    });
+
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');

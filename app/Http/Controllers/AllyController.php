@@ -74,7 +74,7 @@ class AllyController extends Controller
             ],
             'vAxis' => [
                 'direction' => (Chart::displayInvers($data)?(-1):(1)),
-                'format' => '0',
+                'format' => (Chart::vAxisFormat($data)),
             ]
         ]);
 

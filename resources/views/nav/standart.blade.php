@@ -8,8 +8,9 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('server', ['de']) }}">{{__('Startseite')}} <span class="sr-only">(current)</span></a>
+            @if (isset($server))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('server', [$server]) }}">{{ucfirst(__('Weltenübersicht'))}} <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -30,13 +31,9 @@
                     @endforeach
                 </ul>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
+            @endif
         </ul>
+        @if (isset($server))
         <form class="form-inline my-2 my-lg-0" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
             @csrf
             <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('Suche') }}" aria-label="Search">
@@ -51,6 +48,7 @@
                 </div>
             </div>
         </form>
+        @endif
         <div class="dropdown">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ __('Sprache') }}

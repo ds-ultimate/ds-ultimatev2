@@ -16,9 +16,10 @@
 <body style="padding-right: 0px">
 <div class="flex-center position-ref full-height">
     @include('nav.standart')
-    <div class="container">
+    <div class="container mb-5 pb-3">
         @yield('content')
     </div>
+    @include('footer.standart')
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

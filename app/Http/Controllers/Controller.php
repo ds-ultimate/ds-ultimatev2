@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ally;
 use App\Player;
+use App\Server;
 use App\Util\BasicFunctions;
 use App\World;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -15,6 +16,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function index(){
+        $serverArray = Server::getServer();
+        return view('content.index', compact('serverArray'));
+    }
 
     /*
      * https://ds-ultimate.de/de
@@ -31,7 +37,6 @@ class Controller extends BaseController
      * */
     public function world($server, $world){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
         $playerArray = Player::top10Player($server, $world);
@@ -47,7 +52,6 @@ class Controller extends BaseController
      * */
     public function allys($server, $world){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
@@ -60,7 +64,6 @@ class Controller extends BaseController
      * */
     public function players($server, $world){
         BasicFunctions::local();
-        World::existServer($server);
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
@@ -78,7 +81,7 @@ class Controller extends BaseController
                 $result = SearchController::searchAlly($server, $search);
                 return view('content.search', compact('search', 'type', 'result', 'server'));
             case 'village':
-                $result = SearchController::searchPlayer($server, $search);
+                $result = SearchController::searchVillage($server, $search);
                 return view('content.search', compact('search', 'type', 'result', 'server'));
         }
     }

@@ -6,6 +6,7 @@ use App\Ally;
 use App\Conquer;
 use App\Player;
 use App\Server;
+use App\AllyChanges;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
@@ -99,10 +100,19 @@ class DBController extends Controller
         });
     }
 
+    public function allyChangeTable($dbName){
+        Schema::create($dbName.'.ally_changes', function (Blueprint $table) {
+            $table->integer('player_id');
+            $table->integer('old_ally_id');
+            $table->integer('new_ally_id');
+            $table->timestamps();
+        });
+    }
+
     public function conquerTable($dbName){
         Schema::create($dbName.'.conquer', function (Blueprint $table) {
             $table->integer('villageID');
-            $table->string('timestamp');
+            $table->bigInteger('timestamp');
             $table->integer('new_owner');
             $table->integer('old_owner');
             $table->timestamps();
@@ -127,13 +137,23 @@ class DBController extends Controller
                 $worldName = substr($world, 2);
 
                 if ($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->count() >= 1){
-                    //world exists already -> ignore
-                    // FIXME: Update saved world data with new data
-                    continue;
+                    //world exists already -> update
+                    $create = false;
+                    $worldNew = null;
+                    foreach($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->get() as $world) {
+                        if($worldNew == null) {
+                            $worldNew = $world;
+                        } else {
+                            $world->delete();
+                        }
+                    }
+                } else {
+                    //create new entry
+                    $create = true;
+                    $worldNew = new World();
+                    $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
                 }
                 
-                $worldNew = new World();
-                $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
                 $worldNew->server_id = $serverUrl->id;
                 $worldNew->name = $worldName;
                 $worldNew->url = $link;
@@ -144,7 +164,9 @@ class DBController extends Controller
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
                     continue;
                 }
-
+                
+                if(!$create) continue;
+                
                 BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                 $name = BasicFunctions::getDatabaseName('', '').$world;
                 if (BasicFunctions::existTable($name, 'player_latest') !== false) {
@@ -160,15 +182,18 @@ class DBController extends Controller
         }
     }
     
-    // FIXME: use server Url from servers table (to enable support for other languages
     public function latestPlayer($server, $world){
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '400M');
+        ini_set('memory_limit', '600M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
             $this->playerTable($dbName, 'latest_temp');
+        }
+        
+        if (BasicFunctions::existTable($dbName, 'ally_changes') === false){
+            $this->allyChangeTable($dbName);
         }
 
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
@@ -232,9 +257,18 @@ class DBController extends Controller
             $playerTot->put('tot', (int)$kills);
             $playerTots->put($id, $playerTot);
         }
+        
+        
+        $playerChange = new Player();
+        $playerChange->setTable($dbName . '.player_latest');
+        $databasePlayer = array();
+        foreach ($playerChange->get() as $player) {
+            $databasePlayer[$player->playerID] = $player->ally_id;
+        }
 
         $insert = new Player();
         $insert->setTable($dbName.'.player_latest_temp');
+        $arrayAllyChange = array();
         foreach ($players as $player) {
             $id = $player->get('id');
             $dataPlayer = [
@@ -254,10 +288,28 @@ class DBController extends Controller
                 'updated_at' => Carbon::createFromTimestamp(time()),
             ];
             $arrayPlayer []= $dataPlayer;
+            
+            if(isset($databasePlayer[$player->get('id')]) &&
+                    $databasePlayer[$player->get('id')] != $player->get('ally')) {
+                    $arrayAllyChange[] = [
+                        'timestamp' => time(),
+                        'player_id' => $player->get('id'),
+                        'old_ally_id' => $databasePlayer[$player->get('id')],
+                        'new_ally_id' => $player->get('ally'),
+                        'created_at' => Carbon::createFromTimestamp(time()),
+                        'updated_at' => Carbon::createFromTimestamp(time()),
+                    ];
+            }
         }
 
         foreach (array_chunk($arrayPlayer,3000) as $t){
             $insert->insert($t);
+        }
+        
+        $allyChangeModel = new AllyChanges();
+        $allyChangeModel->setTable($dbName.'.ally_changes');
+        foreach (array_chunk($arrayAllyChange,3000) as $t){
+            $allyChangeModel->insert($t);
         }
 
         if (BasicFunctions::existTable($dbName, 'player_latest') === true){
@@ -287,8 +339,6 @@ class DBController extends Controller
 
         $worldUpdate->player_count = $count;
         $worldUpdate->save();
-
-        //Log::debug($worldName.'-> Player: '.$count);
     }
 
     public function latestVillages($server, $world){
@@ -344,9 +394,9 @@ class DBController extends Controller
         if (BasicFunctions::existTable($dbName, 'village_latest') === true){
             DB::statement("DROP TABLE $dbName.village_latest");
         }
-
+        
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
-
+        
         $hashVillage = $this->hashTable($array, 'v', 'villageID');
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
@@ -368,9 +418,6 @@ class DBController extends Controller
 
         $worldUpdate->village_count = $count;
         $worldUpdate->save();
-
-
-        //Log::debug($worldName.'-> Village: '.$count);
     }
 
     public function latestAlly($server, $world){
@@ -503,15 +550,12 @@ class DBController extends Controller
 
         $worldUpdate->ally_count = $count;
         $worldUpdate->save();
-
-        //Log::debug($worldName.'-> Ally: '.$count);
     }
 
     public function conquer($server, $world){
-        // FIXME: use $server_URL/interface.php?func=get_conquer&since=$last_timestamp
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '700M');
-        date_default_timezone_set("Europe/Berlin");
+        ini_set('memory_limit', '1500M');
+        
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
@@ -520,23 +564,38 @@ class DBController extends Controller
         }
         $conquer = new Conquer();
         $conquer->setTable($dbName.'.conquer');
-        $count = $conquer->get()->count();
-
-        $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
-        if (!is_array($lines)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
-            return;
-        }
-        $i = 0;
-        $array = array();
-        foreach ($lines as $line) {
-            if ($i >= $count){
-                $array[$i] = array();
-                list($array[$i]['villageID'], $array[$i]['timestamp'], $array[$i]['new_owner'], $array[$i]['old_owner']) = explode(',', $line);
-                $array[$i]['created_at'] = Carbon::createFromTimestamp(time());
-                $array[$i]['updated_at'] = Carbon::createFromTimestamp(time());
+        $first = $conquer->orderBy('timestamp', 'DESC')->first();
+        if($first == null)
+            $latest = 0;
+        else
+            $latest = $first->timestamp;
+        
+        if(time() - $latest > 60 * 60 * 23) {
+            $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
+            if (!is_array($lines)) {
+                BasicFunctions::createLog("ERROR_update[$server$world]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
+                return;
             }
-            $i ++;
+        } else {
+            $lines = gzfile("$worldUpdate->url/interface.php?func=get_conquer&since=" . ($latest - 1));
+            if (!is_array($lines)) {
+                BasicFunctions::createLog("ERROR_update[$server$world]", "interface.php?func=get_conquer konnte nicht ge&ouml;ffnet werden");
+                return;
+            }
+        }
+        
+        $array = array();
+        $databaseConquer = $this->prepareConquerDupCheck($dbName);
+        
+        foreach ($lines as $line) {
+            $exploded = explode(',', trim($line));
+            if($this->conquerInsideDB($databaseConquer, $exploded)) continue;
+            
+            $tempArr = array();
+            list($tempArr['villageID'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
+            $tempArr['created_at'] = Carbon::createFromTimestamp(time());
+            $tempArr['updated_at'] = Carbon::createFromTimestamp(time());
+            $array[] = $tempArr;
         }
 
         $insert = new Conquer();
@@ -545,7 +604,36 @@ class DBController extends Controller
         foreach (array_chunk($array, 3000) as $t) {
             $insert->insert($t);
         }
+    }
+    
+    private function prepareConquerDupCheck($dbName) {
+        $conquerModel = new Conquer();
+        $conquerModel->setTable($dbName . '.conquer');
+        
+        $arrCon = array();
+        foreach ($conquerModel->get() as $conquer) {
+            if(!isset($arrCon[$conquer->timestamp]))
+                $arrCon[$conquer->timestamp] = array();
+            
+            $arrCon[$conquer->timestamp][] = array($conquer->villageID, $conquer->old_owner, $conquer->new_owner);
+        }
+        return $arrCon;
+    }
 
+    private function conquerInsideDB($arrCon, $data) {
+        if(!isset($arrCon[$data[1]])) return false;
+        //echo "Fount in DB\n";
+        $possible_dups = $arrCon[$data[1]];
+
+        foreach($possible_dups as $possible_dup) {
+            if($possible_dup[0] == $data[0] &&
+                    $possible_dup[1] == $data[3] &&
+                    $possible_dup[2] == $data[2]) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public function hashTable($mainArray, $type, $index){

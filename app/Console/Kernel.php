@@ -31,58 +31,58 @@ class Kernel extends ConsoleKernel
         /*
          * Update Village
          */
-        $schedule->command('update:village')
-            ->hourlyAt(1)
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Village -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Village -> Fehlgeschlagen');
-            });
-
-        /*
-         * Update Ally
-         */
-        $schedule->command('update:ally')
-            ->hourlyAt(1)
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Ally -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Ally -> Fehlgeschlagen');
-            });
-
-        /*
-         * Update Player
-         */
-        $schedule->command('update:player')
-            ->hourlyAt(1)
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Player -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Player -> Fehlgeschlagen');
-            });
-
-        /*
-         * Update Player
-         */
-        $schedule->command('update:conquer')
-            ->everyThirtyMinutes()
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Conquer -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Conquer -> Fehlgeschlagen');
-            });
-
-        $schedule->command('update:world')
-            ->dailyAt('23:55')
-            ->runInBackground();
+//        $schedule->command('update:village')
+//            ->hourlyAt(1)
+//            //->runInBackground()
+//            ->onSuccess(function (){
+//                Log::debug('Village -> Erfolgreich');
+//            })
+//            ->onFailure(function (){
+//                Log::debug('Village -> Fehlgeschlagen');
+//            });
+//
+//        /*
+//         * Update Ally
+//         */
+//        $schedule->command('update:ally')
+//            ->hourlyAt(1)
+//            //->runInBackground()
+//            ->onSuccess(function (){
+//                Log::debug('Ally -> Erfolgreich');
+//            })
+//            ->onFailure(function (){
+//                Log::debug('Ally -> Fehlgeschlagen');
+//            });
+//
+//        /*
+//         * Update Player
+//         */
+//        $schedule->command('update:player')
+//            ->hourlyAt(1)
+//            //->runInBackground()
+//            ->onSuccess(function (){
+//                Log::debug('Player -> Erfolgreich');
+//            })
+//            ->onFailure(function (){
+//                Log::debug('Player -> Fehlgeschlagen');
+//            });
+//
+//        /*
+//         * Update Player
+//         */
+//        $schedule->command('update:conquer')
+//            ->everyThirtyMinutes()
+//            //->runInBackground()
+//            ->onSuccess(function (){
+//                Log::debug('Conquer -> Erfolgreich');
+//            })
+//            ->onFailure(function (){
+//                Log::debug('Conquer -> Fehlgeschlagen');
+//            });
+//
+//        $schedule->command('update:world')
+//            ->dailyAt('23:55')
+//            ->runInBackground();
         
         $schedule->command('session:gc')
             ->everyFifteenMinutes()

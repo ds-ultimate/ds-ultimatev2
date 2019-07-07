@@ -96,13 +96,13 @@ class APIController extends Controller
                 return ($village->owner != 0)? BasicFunctions::decodeName($village->playerLatest->name) : '-';
             })
             ->addColumn('continent', function ($village){
-                return BasicFunctions::getContinentString($village);
+                return $village->continentString();
             })
             ->addColumn('coordinates', function ($village){
-                return $village->x."|".$village->y;
+                return $village->coordinates();
             })
             ->addColumn('bonus', function ($village){
-                return ($village->bonus_id != 0)? BasicFunctions::bonusIDtoHTML($village->bonus_id) : '-';
+                return $village->bonusText();
             })
             ->toJson();
     }

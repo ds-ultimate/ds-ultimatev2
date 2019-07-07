@@ -12,7 +12,7 @@ class UpdateConquer extends Command
      *
      * @var string
      */
-    protected $signature = 'update:conquer {world=null}';
+    protected $signature = 'update:conquer {server=null} {world=null}';
 
     /**
      * The console command description.
@@ -38,10 +38,11 @@ class UpdateConquer extends Command
      */
     public function handle()
     {
+        \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
         if ($this->argument('world') != "null") {
-            $db->conquer($this->argument('world'));
+            $db->conquer($this->argument('server'), $this->argument('world'));
         } else {
             $worlds = BasicFunctions::getWorld();
             
@@ -49,12 +50,7 @@ class UpdateConquer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                try {
-                    $db->conquer($world->server->code, $world->name);
-                }
-                catch(Exception $e){
-                    echo "got a error";
-                }
+                $db->conquer($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

@@ -38,6 +38,7 @@ class UpdateWorld extends Command
      */
     public function handle()
     {
+        \App\Util\BasicFunctions::ignoreErrs();
         $world = new DBController();
         $world->getWorld();
     }
