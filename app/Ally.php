@@ -5,7 +5,7 @@ namespace App;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 
-class Ally extends Model
+class Ally extends CustomModel
 {
     private $hash = 29;
     protected $primaryKey = 'allyID';
@@ -15,7 +15,6 @@ class Ally extends Model
         parent::__construct($attributes);
 
         $this->hash = env('HASH_ALLY', 29);
-
     }
 
     /**
@@ -28,22 +27,19 @@ class Ally extends Model
     public function playerLatest()
     {
         $table = explode('.', $this->table);
-        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $table[0].'.player_latest');
+        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $table[0].'.ally_changes');
     }
 
-    public function myhasMany($related, $foreignKey = null, $localKey = null, $table)
+    public function allyChangesOld()
     {
-        $instance = $this->newRelatedInstance($related);
+        $table = explode('.', $this->table);
+        return $this->myhasMany('App\AllyChanges', 'old_ally_id', 'allyID', $table[0].'.ally_changes');
+    }
 
-        $instance->setTable($table);
-
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
-
-        $localKey = $localKey ?: $this->getKeyName();
-
-        return $this->newHasMany(
-            $instance->newQuery(), $this, $instance->getTable().'.'.$foreignKey, $localKey
-        );
+    public function allyChangesNew()
+    {
+        $table = explode('.', $this->table);
+        return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $table[0].'.ally_changes');
     }
 
     public static function getAllyAll($server, $world){

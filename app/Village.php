@@ -3,10 +3,8 @@
 namespace App;
 
 use App\Util\BasicFunctions;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
-class Village extends Model
+class Village extends CustomModel
 {
     private $hash = 109;
     protected $primaryKey = 'villageID';
@@ -35,30 +33,6 @@ class Village extends Model
     {
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Player', 'owner', 'playerID', $table[0].'.player_latest');
-    }
-
-    /*
-     * Angepasste Funktion für die Ablageart der DB
-     * */
-    public function mybelongsTo($related, $foreignKey = null, $ownerKey = null, $table, $relation = null)
-    {
-        if (is_null($relation)) {
-            $relation = $this->guessBelongsToRelation();
-        }
-
-        $instance = $this->newRelatedInstance($related);
-
-        if (is_null($foreignKey)) {
-            $foreignKey = Str::snake($relation).'_'.$instance->getKeyName();
-        }
-
-        $ownerKey = $ownerKey ?: $instance->getKeyName();
-
-        $instance->setTable($table);
-
-        return $this->newBelongsTo(
-            $instance->newQuery(), $this, $foreignKey, $ownerKey, $relation
-        );
     }
 
     public static function village($server, $world, $village){
@@ -153,6 +127,6 @@ class Village extends Model
             $bonus = "b";
         }
 
-        return "img/skins/{$skins[$index]}/$bonus$lv$left.png";
+        return "ds_images/skins/{$skins[$index]}/$bonus$lv$left.png";
     }
 }

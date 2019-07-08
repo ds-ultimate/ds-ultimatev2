@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Ally;
 use App\Player;
 use App\Village;
+use App\Conquer;
+use App\AllyChanges;
 use App\Util\BasicFunctions;
+use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
 class APIController extends Controller
@@ -103,6 +106,149 @@ class APIController extends Controller
             })
             ->addColumn('bonus', function ($village){
                 return $village->bonusText();
+            })
+            ->toJson();
+    }
+
+    public function getAllyAllyChanges($server, $world, $type, $allyID)
+    {
+        $allyChangesModel = new AllyChanges();
+        $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
+
+        $query = $allyChangesModel->newQuery();
+        
+        switch($type) {
+            case "all":
+                $query->where('new_ally_id', $allyID)->orWhere('old_ally_id', $allyID);
+                break;
+            case "old":
+                $query->where('old_ally_id', $allyID);
+                break;
+            case "new":
+                $query->where('new_ally_id', $allyID);
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+
+        return $this->doAllyChangeReturn($query);
+    }
+
+    public function getPlayerAllyChanges($server, $world, $type, $playerID)
+    {
+        $allyChangesModel = new AllyChanges();
+        $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
+
+        $query = $allyChangesModel->newQuery();
+
+        switch($type) {
+            case "all":
+                $query->where('player_id', $playerID);
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        
+        return $this->doAllyChangeReturn($query);
+    }
+    
+    private function doAllyChangeReturn($query) {
+        return DataTables::eloquent($query)
+            ->addColumn('player_name', function ($allyChange){
+                return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->player->name) : '-';
+            })
+            ->addColumn('old_ally_name', function ($allyChange){
+                return ($allyChange->old_ally_id != 0)? BasicFunctions::decodeName($allyChange->oldAlly->name) : ucfirst(__('Stammeslos'));
+            })
+            ->addColumn('new_ally_name', function ($allyChange){
+                return ($allyChange->new_ally_id != 0)? BasicFunctions::decodeName($allyChange->newAlly->name) : ucfirst(__('Stammeslos'));
+            })
+            ->toJson();
+    }
+
+    public function getAllyConquer($server, $world, $type, $allyID)
+    {
+        $conquerModel = new Conquer();
+        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+
+        $allyPlayers = array();
+        foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
+            $allyPlayers[] = $player->playerID;
+        }
+        
+        $query = $conquerModel->newQuery();
+        
+        switch($type) {
+            case "all":
+                $query->whereIn('new_owner', $allyPlayers)->orWhereIn('old_owner', $allyPlayers);
+                break;
+            case "old":
+                $query->whereIn('old_owner', $allyPlayers);
+                break;
+            case "new":
+                $query->whereIn('new_owner', $allyPlayers);
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+
+        return $this->doConquerReturn($query);
+    }
+
+    public function getPlayerConquer($server, $world, $type, $playerID)
+    {
+        $conquerModel = new Conquer();
+        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+
+        $query = $conquerModel->newQuery();
+
+        switch($type) {
+            case "all":
+                $query->where('new_owner', $playerID)->orWhere('old_owner', $playerID);
+                break;
+            case "old":
+                $query->where('old_owner', $playerID);
+                break;
+            case "new":
+                $query->where('new_owner', $playerID);
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        
+        return $this->doConquerReturn($query);
+    }
+    
+    private function doConquerReturn($query) {
+        return DataTables::eloquent($query)
+            ->editColumn('timestamp', function ($conquer){
+                return Carbon::createFromTimestamp($conquer->timestamp);
+            })
+            ->addColumn('village_name', function ($conquer){
+                return BasicFunctions::decodeName($conquer->village->name);
+            })
+            ->addColumn('old_owner_name', function ($conquer){
+                if($conquer->old_owner == 0) return ucfirst(__('Barbaren'));
+                if($conquer->oldPlayer == null) return ucfirst(__('Gelöscht'));
+                return BasicFunctions::decodeName($conquer->oldPlayer->nameWithAlly());
+            })
+            ->addColumn('new_owner_name', function ($conquer){
+                if($conquer->new_owner == 0) return ucfirst(__('Barbaren'));
+                if($conquer->newPlayer == null) return ucfirst(__('Gelöscht'));
+                return BasicFunctions::decodeName($conquer->newPlayer->nameWithAlly());
+            })
+            ->addColumn('old_owner_exists', function ($conquer){
+                return $conquer->oldPlayer != null;
+            })
+            ->addColumn('new_owner_exists', function ($conquer){
+                return $conquer->newPlayer != null;
             })
             ->toJson();
     }

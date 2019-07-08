@@ -7,6 +7,7 @@ use App\Player;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;
+use App\AllyChanges;
 
 class PlayerController extends Controller
 {
@@ -37,9 +38,52 @@ class PlayerController extends Controller
         }
 
         $conquer = Conquer::playerConquerCounts($server, $world, $player);
+        $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
 
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS', 'server'));
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
 
+    }
+    
+    public function allyChanges($server, $world, $type, $playerID){
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+        $playerData = Player::player($server, $world, $playerID);
+
+        switch($type) {
+            case "all":
+                $typeName = ucfirst(__('Stammeswechsel'));
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        return view('content.playerAllyChange', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
+    }
+    
+    public function conquer($server, $world, $type, $playerID){
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+        $playerData = Player::player($server, $world, $playerID);
+
+        switch($type) {
+            case "all":
+                $typeName = ucfirst(__('Eroberungen'));
+                break;
+            case "old":
+                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Verluste'));
+                break;
+            case "new":
+                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Gewinne'));
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        return view('content.playerConquer', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
     }
 
     public function chart($playerData, $data){

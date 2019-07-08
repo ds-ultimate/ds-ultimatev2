@@ -39,6 +39,7 @@
                             <th>{{ ucfirst(__('Punkte pro Spieler')) }}</th>
                             <th>{{ ucfirst(__('Punkte pro Dorf')) }}</th>
                             <th>{{ ucfirst(__('Eroberungen')) }}</th>
+                            <th>{{ ucfirst(__('Stammeswechsel')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,7 +52,8 @@
                             <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
                             <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
                             <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($conquer->get('total')) }}(<i class="text-success">{{ \App\Util\BasicFunctions::numberConv($conquer->get('new')) }}</i>-<i class="text-danger">{{ \App\Util\BasicFunctions::numberConv($conquer->get('old')) }}</i>)</td>
+                            <td>{!! \App\Util\BasicFunctions::linkAllyConquer($worldData, $allyData->allyID, $conquer) !!}</td>
+                            <td>{!! \App\Util\BasicFunctions::linkAllyAllyChanges($worldData, $allyData->allyID, $allyChanges) !!}</td>
                         </tr>
                         </tbody>
                     </table>

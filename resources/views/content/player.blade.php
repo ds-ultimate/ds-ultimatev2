@@ -46,8 +46,8 @@
                             <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
                             <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
                             <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>
-                            <td>{{ __('In Arbeit') }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($conquer->get('total')) }}(<i class="text-success">{{ \App\Util\BasicFunctions::numberConv($conquer->get('new')) }}</i>-<i class="text-danger">{{ \App\Util\BasicFunctions::numberConv($conquer->get('old')) }}</i>)</td>
+                            <td>{!! \App\Util\BasicFunctions::linkPlayerAllyChanges($worldData, $playerData->playerID, $allyChanges) !!}</td>
+                            <td>{!! \App\Util\BasicFunctions::linkPlayerConquer($worldData, $playerData->playerID, $conquer) !!}</td>
                         </tr>
                         </tbody>
                     </table>

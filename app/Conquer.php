@@ -2,14 +2,30 @@
 
 namespace App;
 
-use App\Ally;
 use App\Util\BasicFunctions;
-use Illuminate\Database\Eloquent\Model;
 
-class Conquer extends Model
+class Conquer extends CustomModel
 {
     protected $table = 'conquer';
 
+    public function oldPlayer()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\Player', 'old_owner', 'playerID', $table[0].'.player_latest');
+    }
+
+    public function newPlayer()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table[0].'.player_latest');
+    }
+
+    public function village()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\Village', 'villageID', 'villageID', $table[0].'.village_latest');
+    }
+    
     public static function playerConquerCounts($server, $world, $playerID){
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');

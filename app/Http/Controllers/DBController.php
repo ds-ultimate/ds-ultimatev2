@@ -105,6 +105,7 @@ class DBController extends Controller
             $table->integer('player_id');
             $table->integer('old_ally_id');
             $table->integer('new_ally_id');
+            $table->integer('points');
             $table->timestamps();
         });
     }
@@ -169,7 +170,7 @@ class DBController extends Controller
                 
                 BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                 $name = BasicFunctions::getDatabaseName('', '').$world;
-                if (BasicFunctions::existTable($name, 'player_latest') !== false) {
+                if (BasicFunctions::existDatabase($name) !== false) {
                     BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
                     continue;
                 }
@@ -196,6 +197,10 @@ class DBController extends Controller
             $this->allyChangeTable($dbName);
         }
 
+        if (BasicFunctions::existTable($dbName, 'player_latest') === false){
+            $this->playerTable($dbName, 'latest');
+        }
+        
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
@@ -292,10 +297,10 @@ class DBController extends Controller
             if(isset($databasePlayer[$player->get('id')]) &&
                     $databasePlayer[$player->get('id')] != $player->get('ally')) {
                     $arrayAllyChange[] = [
-                        'timestamp' => time(),
                         'player_id' => $player->get('id'),
                         'old_ally_id' => $databasePlayer[$player->get('id')],
                         'new_ally_id' => $player->get('ally'),
+                        'points' => $player->get('points'),
                         'created_at' => Carbon::createFromTimestamp(time()),
                         'updated_at' => Carbon::createFromTimestamp(time()),
                     ];
@@ -312,9 +317,7 @@ class DBController extends Controller
             $allyChangeModel->insert($t);
         }
 
-        if (BasicFunctions::existTable($dbName, 'player_latest') === true){
-            DB::statement("DROP TABLE $dbName.player_latest");
-        }
+        Schema::dropIfExists("$dbName.player_latest");
         DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
         
         $hashPlayer = $this->hashTable($arrayPlayer, 'p', 'playerID');
@@ -390,11 +393,8 @@ class DBController extends Controller
         foreach (array_chunk($array, 3000) as $t) {
             $insert->insert($t);
         }
-
-        if (BasicFunctions::existTable($dbName, 'village_latest') === true){
-            DB::statement("DROP TABLE $dbName.village_latest");
-        }
         
+        Schema::dropIfExists("$dbName.village_latest");
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
         
         $hashVillage = $this->hashTable($array, 'v', 'villageID');
@@ -523,9 +523,7 @@ class DBController extends Controller
         }
 
 
-        if (BasicFunctions::existTable($dbName, 'ally_latest') === true){
-            DB::statement("DROP TABLE $dbName.ally_latest");
-        }
+        Schema::dropIfExists("$dbName.ally_latest");
         DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
 
         $hashAlly = $this->hashTable($array, 'a', 'allyID');

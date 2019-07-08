@@ -34,6 +34,7 @@
                             <th>{{ ucfirst(__('Besitzer')) }}</th>
                             <th>{{ ucfirst(__('Eroberungen')) }}</th>
                             <th>{{ ucfirst(__('Bonus')) }}</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,6 +46,7 @@
                             <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('Barbaren')) !!}</td>
                             <td>{{ $conquer->get('total') }}</td>
                             <th>{{ $villageData->bonusText() }}</th>
+                            <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>
                         </tr>
                         </tbody>
                     </table>

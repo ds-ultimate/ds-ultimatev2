@@ -40,7 +40,6 @@ class DeleteTable extends Command
     public function handle()
     {
         \App\Util\BasicFunctions::ignoreErrs();
-        $db = new \App\Http\Controllers\DBController();
         
         $worlds = BasicFunctions::getWorld();
 
@@ -48,7 +47,7 @@ class DeleteTable extends Command
         $bar->start();
 
         foreach ($worlds as $world){
-            Schema::drop(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.' . $this->argument('tableName'));
+            Schema::dropIfExists(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.' . $this->argument('tableName'));
             $bar->advance();
         }
         $bar->finish();

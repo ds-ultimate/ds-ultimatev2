@@ -10,7 +10,6 @@ namespace App\Util;
 
 
 use App;
-use App\Village;
 use App\World;
 use App\Server;
 use Illuminate\Support\Facades\DB;
@@ -62,6 +61,58 @@ class BasicFunctions
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
     }
 
+    public static function linkPlayerAllyChanges(World $world, $playerID, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('playerAllyChanges',[$world->server->code, $world->name, 'all', $playerID]).'">'.$text.'</a>';
+    }
+
+    public static function linkAllyAllyChanges(World $world, $allyID, $allyChanges, $class = null){
+        return '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'all', $allyID]).'">'.
+                    BasicFunctions::numberConv($allyChanges->get('total')).
+                '</a>'.
+                '(<i class="text-success">'.
+                    '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                        BasicFunctions::numberConv($allyChanges->get('new')).
+                    '</a>'.
+                '</i>-'.
+                '<i class="text-danger">'.
+                    '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                        BasicFunctions::numberConv($allyChanges->get('old')).
+                    '</a>'.
+                '</i>)';
+    }
+
+    public static function linkPlayerConquer (World $world, $playerID, $conquer, $class = null){
+        return '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'all', $playerID]).'">'.
+                    BasicFunctions::numberConv($conquer->get('total')).
+                '</a>'.
+                '(<i class="text-success">'.
+                    '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'new', $playerID]).'">'.
+                        BasicFunctions::numberConv($conquer->get('new')).
+                    '</a>'.
+                '</i>-'.
+                '<i class="text-danger">'.
+                    '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'old', $playerID]).'">'.
+                        BasicFunctions::numberConv($conquer->get('old')).
+                    '</a>'.
+                '</i>)';
+    }
+
+    public static function linkAllyConquer (World $world, $allyID, $conquer, $class = null){
+        return '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'all', $allyID]).'">'.
+                    BasicFunctions::numberConv($conquer->get('total')).
+                '</a>'.
+                '(<i class="text-success">'.
+                    '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                        BasicFunctions::numberConv($conquer->get('new')).
+                    '</a>'.
+                '</i>-'.
+                '<i class="text-danger">'.
+                    '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                        BasicFunctions::numberConv($conquer->get('old')).
+                    '</a>'.
+                '</i>)';
+    }
+
     public static function existTable($dbName, $table){
         try{
             $result = DB::statement("SELECT 1 FROM `$dbName`.`$table` LIMIT 1");
@@ -69,6 +120,15 @@ class BasicFunctions
             return false;
         }
         return $result !== false;
+    }
+
+    public static function existDatabase($dbName){
+        try{
+            $result = DB::select("SHOW DATABASES LIKE '".BasicFunctions::likeSaveEscape($dbName)."'");
+        } catch (\Exception $e){
+            return false;
+        }
+        return $result !== false && count($result) > 0;
     }
 
     public static function hash($input ,$type){
@@ -121,8 +181,8 @@ class BasicFunctions
                 ->orWhere('name', '=', '162')
                 ->orWhere('name', '=', '161')
                 ->orWhere('name', '=', '160')
-                ->orWhere('name', '=', '159')
-                ->orWhere('name', '=', '158')
+                ->orWhere('name', '=', '169')
+                ->orWhere('name', '=', '168')
                 ->get();
         // FIXME: nur für den live Server
         return $world->get();

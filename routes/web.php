@@ -29,10 +29,29 @@ Route::get('/php', function () {
     phpinfo();
 });
 
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+    Route::get('/', 'HomeController@index')->name('home');
+
+    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
+
+    Route::resource('permissions', 'PermissionsController');
+
+    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
+
+    Route::resource('roles', 'RolesController');
+
+    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
+
+    Route::resource('users', 'UsersController');
+
+    Route::delete('server/destroy', 'ServerController@massDestroy')->name('server.massDestroy');
+
+    Route::resource('server', 'ServerController');
+});
 
 
 Route::get('/test', function (){
-
+    echo env("REDIS_PASSWORD");
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
@@ -48,3 +67,9 @@ Route::get('/{server}/{world}/playersTest', 'Controller@playersTest')->name('wor
 Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');
 Route::get('/{server}/{world}/ally/{ally}', 'AllyController@ally')->name('ally');
 Route::get('/{server}/{world}/village/{village}', 'VillageController@village')->name('village');
+
+Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', 'AllyController@allyChanges')->name('allyAllyChanges');
+Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerController@allyChanges')->name('playerAllyChanges');
+
+Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
+Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');

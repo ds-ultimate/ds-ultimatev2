@@ -3,10 +3,8 @@
 namespace App;
 
 use App\Util\BasicFunctions;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
-class Player extends Model
+class Player extends CustomModel
 {
     private $hash = 59;
     protected $primaryKey = 'playerID';
@@ -37,28 +35,10 @@ class Player extends Model
         return $this->mybelongsTo('App\Ally', 'ally_id', 'allyID', $table[0].'.ally_latest');
     }
 
-    /*
-     * Angepasste Funktion für die Ablageart der DB
-     * */
-    public function mybelongsTo($related, $foreignKey = null, $ownerKey = null, $table, $relation = null)
+    public function allyChanges()
     {
-        if (is_null($relation)) {
-            $relation = $this->guessBelongsToRelation();
-        }
-
-        $instance = $this->newRelatedInstance($related);
-
-        if (is_null($foreignKey)) {
-            $foreignKey = Str::snake($relation).'_'.$instance->getKeyName();
-        }
-
-        $ownerKey = $ownerKey ?: $instance->getKeyName();
-
-        $instance->setTable($table);
-
-        return $this->newBelongsTo(
-            $instance->newQuery(), $this, $foreignKey, $ownerKey, $relation
-        );
+        $table = explode('.', $this->table);
+        return $this->myhasMany('App\AllyChanges', 'player_id', 'playerID', $table[0].'.ally_changes');
     }
 
     public static function getAllPlayer($server, $world){
@@ -119,5 +99,13 @@ class Player extends Model
         return $playerDatas;
 
     }
-
+    
+    public function nameWithAlly() {
+        if ($this->ally_id != 0) {
+            return $this->name . " [" . $this->allyLatest->tag . "]";
+        }
+        else {
+            return $this->name . " [-]";
+        }
+    }
 }
