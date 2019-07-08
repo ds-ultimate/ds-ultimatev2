@@ -9,6 +9,13 @@ class Server extends Model
     protected $table = 'server';
     protected $connection = 'main';
 
+    protected $fillable = [
+        'id',
+        'code',
+        'flag',
+        'url',
+    ];
+
     /*
      * Verbindet die server Tabelle mit der world Tabelle
      */

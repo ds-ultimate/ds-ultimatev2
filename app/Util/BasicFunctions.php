@@ -68,49 +68,49 @@ class BasicFunctions
     public static function linkAllyAllyChanges(World $world, $allyID, $allyChanges, $class = null){
         return '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'all', $allyID]).'">'.
                     BasicFunctions::numberConv($allyChanges->get('total')).
-                '</a>'.
-                '(<i class="text-success">'.
-                    '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                    '<i class="text-success">'.
                         BasicFunctions::numberConv($allyChanges->get('new')).
-                    '</a>'.
-                '</i>-'.
-                '<i class="text-danger">'.
-                    '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '<i class="text-danger">'.
                         BasicFunctions::numberConv($allyChanges->get('old')).
-                    '</a>'.
-                '</i>)';
+                    '</i>'.
+                '</a> )';
     }
 
     public static function linkPlayerConquer (World $world, $playerID, $conquer, $class = null){
         return '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'all', $playerID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).
-                '</a>'.
-                '(<i class="text-success">'.
-                    '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'new', $playerID]).'">'.
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'new', $playerID]).'">'.
+                    '<i class="text-success">'.
                         BasicFunctions::numberConv($conquer->get('new')).
-                    '</a>'.
-                '</i>-'.
-                '<i class="text-danger">'.
-                    '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'old', $playerID]).'">'.
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'old', $playerID]).'">'.
+                    '<i class="text-danger">'.
                         BasicFunctions::numberConv($conquer->get('old')).
-                    '</a>'.
-                '</i>)';
+                    '</i>'.
+                '</a> )';
     }
 
     public static function linkAllyConquer (World $world, $allyID, $conquer, $class = null){
         return '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'all', $allyID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).
-                '</a>'.
-                '(<i class="text-success">'.
-                    '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                    '<i class="text-success">'.
                         BasicFunctions::numberConv($conquer->get('new')).
-                    '</a>'.
-                '</i>-'.
-                '<i class="text-danger">'.
-                    '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '<i class="text-danger">'.
                         BasicFunctions::numberConv($conquer->get('old')).
-                    '</a>'.
-                '</i>)';
+                    '</i>'.
+                '</a> )';
     }
 
     public static function existTable($dbName, $table){

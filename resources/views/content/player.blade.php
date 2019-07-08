@@ -69,7 +69,7 @@
                         <tr>
                             <th>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBashRank) }}</th>
                             <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBash) }}</td>
-                            <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): $playerData->gesBash }}%</td>
+                            <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): ('-') }}%</td>
                             <th>{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</th>
                             <td>{{ \App\Util\BasicFunctions::numberConv($playerData->offBash) }}</td>
                             <th>{{ \App\Util\BasicFunctions::numberConv($playerData->defBashRank) }}</th>

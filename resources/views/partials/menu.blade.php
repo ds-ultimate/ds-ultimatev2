@@ -61,7 +61,7 @@
                         {{ trans('cruds.serverManagement.title') }}
                     </a>
                     <ul class="nav-dropdown-items">
-                        @can('permission_access')
+                        @can('server_access')
                             <li class="nav-item">
                                 <a href="{{ route("admin.server.index") }}" class="nav-link {{ request()->is('admin/server') || request()->is('admin/server/*') ? 'active' : '' }}">
                                     <i class="fa-server fas fa-unlock-alt nav-icon">

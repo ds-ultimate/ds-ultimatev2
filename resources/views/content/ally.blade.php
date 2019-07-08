@@ -75,7 +75,7 @@
                         <tr>
                             <th>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</th>
                             <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBash) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100) }}%</td>
+                            <td>{{ ($allyData->points != 0)?(\App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100)):('-') }}%</td>
                             <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
                             <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
                             <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
