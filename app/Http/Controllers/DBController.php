@@ -51,7 +51,9 @@ class DBController extends Controller
             $table->integer('village_count')->nullable();
             $table->text('url');
             $table->text('config');
+            $table->boolean('active')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -72,7 +72,7 @@ class ServerController extends Controller
 
     public function massDestroy(MassDestroyServerRequest $request)
     {
-        Server::whereIn('id', request('ids'))->delete();
+        Server::whereIn('id', $request->input('ids'))->delete();
 
         return response(null, 204);
     }

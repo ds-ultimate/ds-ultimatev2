@@ -50,7 +50,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 });
 
 
-Route::get('/test', 'DBController@serverTable')->name('test');
+Route::get('/test', function () {
+	echo \App\Util\BasicFunctions::getDatabaseName("de", "155");
+	echo env('DB_DATABASE_WORLD');
+	echo env('DB_DATABASE_WORLD');
+	echo "Hallo";
+})->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');

@@ -4,11 +4,32 @@ namespace App;
 
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class World extends Model
 {
+    use SoftDeletes;
+
     public $connection = 'main';
     protected $table = 'worlds';
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    protected $fillable = [
+        'id',
+        'server_id',
+        'name',
+        'ally_count',
+        'player_count',
+        'village_count',
+        'url',
+        'config',
+        'active',
+    ];
 
     /*
      * Verbindet die world Tabelle mit der server Tabelle
