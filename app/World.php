@@ -113,13 +113,13 @@ class World extends Model
          * de => Welt
          */
         if(strpos($this->name, 'p') !== false){
-            return ucfirst(__('main.Casual'));
+            return ucfirst(__('ui.world.casual'));
         }elseif(strpos($this->name, 's') !== false){
-            return ucfirst(__('main.Speed'));
+            return ucfirst(__('ui.world.speed'));
         }elseif(strpos($this->name, 'c') !== false){
-            return ucfirst(__('main.Classic'));
+            return ucfirst(__('ui.world.classic'));
         }else{
-            return ucfirst(__('main.Welt'));
+            return ucfirst(__('ui.world.normal'));
         }
     }
 }

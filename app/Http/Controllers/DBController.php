@@ -18,12 +18,17 @@ use Illuminate\Support\Facades\Schema;
 class DBController extends Controller
 {
     public function serverTable(){
-        DB::statement('CREATE DATABASE '.env('DB_DATABASE_MAIN'));
+        if (BasicFunctions::existDatabase(env('DB_DATABASE_MAIN')) === false){
+            DB::statement('CREATE DATABASE '.env('DB_DATABASE_MAIN'));
+        }
         Schema::create(env('DB_DATABASE_MAIN').'.server', function (Blueprint $table){
             $table->integer('id')->autoIncrement();
             $table->char('code');
             $table->char('flag');
             $table->text('url');
+            $table->boolean('active')->default(1);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

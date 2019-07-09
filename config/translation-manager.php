@@ -15,7 +15,7 @@ return [
         'prefix' => 'translations',
         'middleware' => [
             'web',
-            'auth',
+            'translation',
         ],
     ],
 

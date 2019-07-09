@@ -55,6 +55,17 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    @can('dashboard_access')
+                                        <a class="dropdown-item" href="{{ route('admin.home') }}">
+                                            {{ __('Dashboard') }}
+                                        </a>
+                                    @endcan
+                                    @can('translation_access')
+                                        <a class="dropdown-item" href="{{ route('index') }}/translations">
+                                            {{ __('Übersetzungen') }}
+                                        </a>
+                                    @endcan
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

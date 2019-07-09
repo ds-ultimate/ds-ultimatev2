@@ -54,13 +54,13 @@ class AllyController extends Controller
         
         switch($type) {
             case "all":
-                $typeName = ucfirst(__('Stammeswechsel'));
+                $typeName = ucfirst(__('ui.allyChanges.all'));
                 break;
             case "old":
-                $typeName = ucfirst(__('Stammesaustritte'));
+                $typeName = ucfirst(__('ui.allyChanges.old'));
                 break;
             case "new":
-                $typeName = ucfirst(__('Stammesbeitritte'));
+                $typeName = ucfirst(__('ui.allyChanges.new'));
                 break;
             default:
                 // FIXME: create error view
@@ -79,13 +79,13 @@ class AllyController extends Controller
 
         switch($type) {
             case "all":
-                $typeName = ucfirst(__('Eroberungen'));
+                $typeName = ucfirst(__('ui.conquer.all'));
                 break;
             case "old":
-                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Verluste'));
+                $typeName = ucfirst(__('ui.conquer.lost'));
                 break;
             case "new":
-                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Gewinne'));
+                $typeName = ucfirst(__('ui.conquer.won'));
                 break;
             default:
                 // FIXME: create error view

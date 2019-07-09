@@ -12,14 +12,14 @@
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">{{ __('Top 10 Spieler') }}</h2>
+                    <h2 class="card-title">{{ __('ui.tabletitel.top10').' '.__('ui.tabletitel.player') }}</h2>
                     <table class="table table-striped"  id="t10Player">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('Rang')) }}</th>
-                            <th>{{ ucfirst(__('Spieler')) }}</th>
-                            <th>{{ ucfirst(__('Punkte')) }}</th>
-                            <th>{{ ucfirst(__('Dörfer')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -39,16 +39,16 @@
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">{{ __('Top 10 Stämme') }}</h2>
+                    <h2 class="card-title">{{ __('ui.tabletitel.top10').' '.__('ui.tabletitel.ally') }}</h2>
                     <table class="table table-striped" id="t10Ally">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('Rang')) }}</th>
-                            <th>{{ ucfirst(__('Name')) }}</th>
-                            <th>{{ ucfirst(__('Stammes_Tag')) }}</th>
-                            <th>{{ ucfirst(__('Punkte')) }}</th>
-                            <th>{{ ucfirst(__('Mitglieder')) }}</th>
-                            <th>{{ ucfirst(__('Dörfer')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.tag')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.members')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
                         </tr>
                         </thead>
                         <tbody>

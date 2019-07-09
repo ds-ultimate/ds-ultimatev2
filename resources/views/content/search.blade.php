@@ -1,25 +1,25 @@
 @extends('layouts.temp')
 
-@section('titel', __('Suche'))
+@section('titel', __('ui.titel.search'))
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-                <h1 class="font-weight-normal">{{ __('Suche') }}: {!! ucfirst(($type == 'player')? __('Spieler'): (($type == 'ally')? __('Stämme'): __('Dörfer'))) !!}</h1>
+                <h1 class="font-weight-normal">{{ __('ui.titel.search') }}: {!! ucfirst(($type == 'player')? __('Spieler'): (($type == 'ally')? __('Stämme'): __('Dörfer'))) !!}</h1>
             </div>
         </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">{{ucfirst(__('Suchergebnisse'))}}: {!! $result->count() !!}</h4>
+                    <h4 class="card-title">{{ucfirst(__('ui.titel.searchResults'))}}: {!! $result->count() !!}</h4>
                     @if ($type == 'player')
                         <table id="table_id" class="table table-striped table-hover table-sm w-100">
                             <thead><tr>
-                                <th>{{ ucfirst(__('Welt')) }}</th>
-                                <th>{{ ucfirst(__('Name')) }}</th>
-                                <th>{{ ucfirst(__('Punkte')) }}</th>
-                                <th>{{ ucfirst(__('Dörfer')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.world')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.villages')) }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -36,11 +36,11 @@
                     @elseif ($type == 'ally')
                         <table id="table_id" class="table table-hover table-sm w-100">
                             <thead><tr>
-                                <th>{{ ucfirst(__('Welt')) }}</th>
-                                <th>{{ ucfirst(__('Name')) }}</th>
-                                <th>{{ ucfirst(__('Tag')) }}</th>
-                                <th>{{ ucfirst(__('Punkte')) }}</th>
-                                <th>{{ ucfirst(__('Dörfer')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.world')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.tag')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.villages')) }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -58,12 +58,12 @@
                     @else
                         <table id="table_id" class="table table-hover table-sm w-100">
                             <thead><tr>
-                                <th>{{ ucfirst(__('Welt')) }}</th>
-                                <th>{{ ucfirst(__('Name')) }}</th>
-                                <th>{{ ucfirst(__('Punkte')) }}</th>
-                                <th>{{ ucfirst(__('Kontinent')) }}</th>
-                                <th>{{ ucfirst(__('Koordinaten')) }}</th>
-                                <th>{{ ucfirst(__('Bonus')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.world')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.continent')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.coordinates')) }}</th>
+                                <th>{{ ucfirst(__('ui.table.bonusType')) }}</th>
                             </tr>
                             </thead>
                             <tbody>

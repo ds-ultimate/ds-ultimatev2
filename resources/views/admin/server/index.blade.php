@@ -3,15 +3,15 @@
 @can('server_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.permissions.create") }}">
-                {{ trans('global.add') }} {{ trans('cruds.permission.title_singular') }}
+            <a class="btn btn-success" href="{{ route("admin.server.create") }}">
+                {{ trans('global.add') }} {{ trans('cruds.server.title_singular') }}
             </a>
         </div>
     </div>
 @endcan
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.permission.title_singular') }} {{ trans('global.list') }}
+        {{ trans('cruds.server.title_singular') }} {{ trans('global.list') }}
     </div>
 
     <div class="card-body">
@@ -34,6 +34,9 @@
                         <th>
                             {{ trans('cruds.server.fields.url') }}
                         </th>
+                        <th style="max-width: 50px">
+                            {{ trans('cruds.server.fields.active') }}
+                        </th>
                         <th>
                             &nbsp;
                         </th>
@@ -52,10 +55,13 @@
                                 {{ $server->code ?? '' }}
                             </td>
                             <td>
-                                {{ $server->flag ?? '' }}
+                                <span class="flag-icon flag-icon-{{ $server->flag ?? '' }}"></span> [{{ $server->flag }}]
                             </td>
                             <td>
                                 {{ $server->url ?? '' }}
+                            </td>
+                            <td>
+                                {!! ($server->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
                             </td>
                             <td>
                                 @can('server_show')
@@ -92,7 +98,7 @@
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.permissions.massDestroy') }}",
+    url: "{{ route('admin.server.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -116,7 +122,7 @@
     }
   }
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('permission_delete')
+@can('server_delete')
   dtButtons.push(deleteButton)
 @endcan
 

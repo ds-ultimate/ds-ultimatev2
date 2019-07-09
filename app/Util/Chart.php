@@ -14,38 +14,38 @@ class Chart
     public static function chartTitel($data){
         switch($data) {
             case 'points':
-                return __('chart.titel_points');
+                return __('chart.titel.points');
             case 'rank':
-                return __('chart.titel_rank');
+                return __('chart.titel.rank');
             case 'village':
-                return __('chart.titel_village');
+                return __('chart.titel.village');
             case 'gesBash':
-                return __('chart.titel_gesBash');
+                return __('chart.titel.gesBash');
             case 'offBash':
-                return __('chart.titel_offBash');
+                return __('chart.titel.offBash');
             case 'defBash':
-                return __('chart.titel_defBash');
+                return __('chart.titel.defBash');
             case 'utBash':
-                return __('chart.titel_utBash');
+                return __('chart.titel.utBash');
         }
     }
 
     public static function chartLabel($data){
         switch($data) {
             case 'points':
-                return __('chart.label_points');
+                return __('chart.label.points');
             case 'rank':
-                return __('chart.label_rank');
+                return __('chart.label.rank');
             case 'village':
-                return __('chart.label_village');
+                return __('chart.label.village');
             case 'gesBash':
-                return __('chart.label_gesBash');
+                return __('chart.label.gesBash');
             case 'offBash':
-                return __('chart.label_offBash');
+                return __('chart.label.offBash');
             case 'defBash':
-                return __('chart.label_defBash');
+                return __('chart.label.defBash');
             case 'utBash':
-                return __('chart.label_utBash');
+                return __('chart.label.utBash');
         }
     }
 

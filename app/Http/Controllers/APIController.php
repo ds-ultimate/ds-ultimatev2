@@ -160,10 +160,10 @@ class APIController extends Controller
                 return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->player->name) : '-';
             })
             ->addColumn('old_ally_name', function ($allyChange){
-                return ($allyChange->old_ally_id != 0)? BasicFunctions::decodeName($allyChange->oldAlly->name) : ucfirst(__('Stammeslos'));
+                return ($allyChange->old_ally_id != 0)? BasicFunctions::decodeName($allyChange->oldAlly->name) : ucfirst(__('ui.noAlly'));
             })
             ->addColumn('new_ally_name', function ($allyChange){
-                return ($allyChange->new_ally_id != 0)? BasicFunctions::decodeName($allyChange->newAlly->name) : ucfirst(__('Stammeslos'));
+                return ($allyChange->new_ally_id != 0)? BasicFunctions::decodeName($allyChange->newAlly->name) : ucfirst(__('ui.noAlly'));
             })
             ->toJson();
     }
@@ -235,13 +235,13 @@ class APIController extends Controller
                 return BasicFunctions::decodeName($conquer->village->name);
             })
             ->addColumn('old_owner_name', function ($conquer){
-                if($conquer->old_owner == 0) return ucfirst(__('Barbaren'));
-                if($conquer->oldPlayer == null) return ucfirst(__('Gelöscht'));
+                if($conquer->old_owner == 0) return ucfirst(__('ui.player.barbarian'));
+                if($conquer->oldPlayer == null) return ucfirst(__('ui.player.deleted'));
                 return BasicFunctions::decodeName($conquer->oldPlayer->nameWithAlly());
             })
             ->addColumn('new_owner_name', function ($conquer){
-                if($conquer->new_owner == 0) return ucfirst(__('Barbaren'));
-                if($conquer->newPlayer == null) return ucfirst(__('Gelöscht'));
+                if($conquer->new_owner == 0) return ucfirst(__('ui.player.barbarian'));
+                if($conquer->newPlayer == null) return ucfirst(__('ui.player.deleted'));
                 return BasicFunctions::decodeName($conquer->newPlayer->nameWithAlly());
             })
             ->addColumn('old_owner_exists', function ($conquer){

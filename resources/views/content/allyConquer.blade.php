@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('Stamm')).': '.\App\Util\BasicFunctions::outputName($allyData->name))
+@section('titel', ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::outputName($allyData->name))
 
 @section('content')
     <div class="row justify-content-center">
@@ -28,10 +28,10 @@
                     <table id="table_id" class="table table-hover table-sm w-100">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('Datum')) }}</th>
-                            <th>{{ ucfirst(__('Dorfname')) }}</th>
-                            <th>{{ ucfirst(__('alter Besitzer')) }}</th>
-                            <th>{{ ucfirst(__('neuer Besitzer')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.date')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.villageName')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.owner')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.owner')) }}</th>
                         </tr>
                         </thead>
                         <tbody>

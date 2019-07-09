@@ -3,17 +3,28 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Server extends Model
 {
+
+    use SoftDeletes;
+
     protected $table = 'server';
     protected $connection = 'main';
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     protected $fillable = [
         'id',
         'code',
         'flag',
         'url',
+        'active',
     ];
 
     /*

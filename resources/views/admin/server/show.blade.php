@@ -3,7 +3,7 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.permission.title') }}
+        {{ trans('global.show') }} {{ trans('cruds.server.title') }}
     </div>
 
     <div class="card-body">
@@ -12,10 +12,34 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.permission.fields.title') }}
+                            {{ trans('cruds.server.fields.code') }}
                         </th>
                         <td>
-                            {{ $permission->title }}
+                            {{ $server->code }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.server.fields.flag') }}
+                        </th>
+                        <td>
+                            <span class="flag-icon flag-icon-{{ $server->flag ?? '' }}"></span> [{{ $server->flag }}]
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.server.fields.url') }}
+                        </th>
+                        <td>
+                            {{ $server->url }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.server.fields.active') }}
+                        </th>
+                        <td>
+                            {!! ($server->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
                         </td>
                     </tr>
                 </tbody>

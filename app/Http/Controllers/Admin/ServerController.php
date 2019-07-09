@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyPermissionRequest;
-use App\Http\Requests\StorePermissionRequest;
-use App\Http\Requests\UpdatePermissionRequest;
-use App\Permission;
+use App\Http\Requests\MassDestroyServerRequest;
+use App\Http\Requests\StoreServerRequest;
+use App\Http\Requests\UpdateServerRequest;
 use App\Server;
 
 class ServerController extends Controller
@@ -22,55 +21,58 @@ class ServerController extends Controller
 
     public function create()
     {
-        abort_unless(\Gate::allows('permission_create'), 403);
+        abort_unless(\Gate::allows('server_create'), 403);
 
-        return view('admin.permissions.create');
+        return view('admin.server.create');
     }
 
-    public function store(StorePermissionRequest $request)
+    public function store(StoreServerRequest $request)
     {
-        abort_unless(\Gate::allows('permission_create'), 403);
+        abort_unless(\Gate::allows('server_create'), 403);
 
-        $permission = Permission::create($request->all());
+        ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
 
-        return redirect()->route('admin.permissions.index');
+        $server = Server::create($request->all());
+
+        return redirect()->route('admin.server.index');
     }
 
-    public function edit(Permission $permission)
+    public function edit(Server $server)
     {
-        abort_unless(\Gate::allows('permission_edit'), 403);
+        abort_unless(\Gate::allows('server_edit'), 403);
 
-        return view('admin.permissions.edit', compact('permission'));
+        return view('admin.server.edit', compact('server'));
     }
 
-    public function update(UpdatePermissionRequest $request, Permission $permission)
+    public function update(UpdateServerRequest $request, Server $server)
     {
-        abort_unless(\Gate::allows('permission_edit'), 403);
+        abort_unless(\Gate::allows('server_edit'), 403);
+        ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
 
-        $permission->update($request->all());
+        $server->update($request->all());
 
-        return redirect()->route('admin.permissions.index');
+        return redirect()->route('admin.server.index');
     }
 
-    public function show(Permission $permission)
+    public function show(Server $server)
     {
-        abort_unless(\Gate::allows('permission_show'), 403);
+        abort_unless(\Gate::allows('server_show'), 403);
 
-        return view('admin.permissions.show', compact('permission'));
+        return view('admin.server.show', compact('server'));
     }
 
-    public function destroy(Permission $permission)
+    public function destroy(Server $server)
     {
-        abort_unless(\Gate::allows('permission_delete'), 403);
+        abort_unless(\Gate::allows('server_delete'), 403);
 
-        $permission->delete();
+        $server->delete();
 
         return back();
     }
 
-    public function massDestroy(MassDestroyPermissionRequest $request)
+    public function massDestroy(MassDestroyServerRequest $request)
     {
-        Permission::whereIn('id', request('ids'))->delete();
+        Server::whereIn('id', request('ids'))->delete();
 
         return response(null, 204);
     }

@@ -1,18 +1,18 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('Dorf')).': '.\App\Util\BasicFunctions::outputName($villageData->name))
+@section('titel', ucfirst(__('ui.titel.village')).': '.\App\Util\BasicFunctions::outputName($villageData->name))
 
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('Dorf')).': '.\App\Util\BasicFunctions::outputName($villageData->name) }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.village')).': '.\App\Util\BasicFunctions::outputName($villageData->name) }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('Dorf')).': ' }}
+                {{ ucfirst(__('ui.titel.village')).': ' }}
             </h1>
             <h4>
                 {{ \App\Util\BasicFunctions::decodeName($villageData->name) }}
@@ -23,17 +23,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">{{ucfirst(__('Informationen'))}}</h4>
+                    <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
                     <table id="data1" class="table table-bordered no-wrap">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('Name')) }}</th>
-                            <th>{{ ucfirst(__('Punkte')) }}</th>
-                            <th>{{ ucfirst(__('Kontinent')) }}</th>
-                            <th>{{ ucfirst(__('Koordinaten')) }}</th>
-                            <th>{{ ucfirst(__('Besitzer')) }}</th>
-                            <th>{{ ucfirst(__('Eroberungen')) }}</th>
-                            <th>{{ ucfirst(__('Bonus')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.continent')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.coordinates')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.owner')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.conquer')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.bonusType')) }}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -58,7 +58,7 @@
         <div class="col-12 mt-2">
             <div class="card" style="height: 320px">
                 <div class="card-body">
-                    <h4 class="card-title">{{ __('Punkte') }}:</h4>
+                    <h4 class="card-title">{{ __('chart.titel.points') }}:</h4>
                     <div id="chart-points"></div>
                 </div>
             </div>

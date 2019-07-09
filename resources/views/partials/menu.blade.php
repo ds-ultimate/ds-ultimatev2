@@ -74,6 +74,16 @@
                     </ul>
                 </li>
             @endcan
+            @can('translation_access')
+                <li class="nav-item">
+                    <a href="{{ route("index") }}/translations" class="nav-link">
+                        <i class="fa-language fas nav-icon">
+
+                        </i>
+                        {{ __('Übersetzungen') }}
+                    </a>
+                </li>
+            @endcan
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">
                     <i class="nav-icon fas fa-fw fa-sign-out-alt">
