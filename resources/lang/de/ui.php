@@ -90,4 +90,11 @@ return array (
     'show' => 'Welten anzeigen',
     'title' => 'Server',
   ),
+  'footer' => 
+  array (
+    'lastUpdate' => 'Letztes Update',
+    'loadTime' => 'Ladezeit',
+    'loadTimeUnit' => 'Sek.',
+  ),
+  'language' => 'Sprache',
 );

@@ -47,14 +47,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('server/destroy', 'ServerController@massDestroy')->name('server.massDestroy');
 
     Route::resource('server', 'ServerController');
+
+    Route::delete('worlds/destroy', 'WorldsController@massDestroy')->name('worlds.massDestroy');
+
+    Route::resource('worlds', 'WorldsController');
+});
+
+Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {
+    Route::get('/bugreport', 'FormController@bugreport')->name('bugreport');
+    Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
 
 Route::get('/test', function () {
-	echo \App\Util\BasicFunctions::getDatabaseName("de", "155");
-	echo env('DB_DATABASE_WORLD');
-	echo env('DB_DATABASE_WORLD');
-	echo "Hallo";
+	Storage::put('file.txt', 'test');
 })->name('test');
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');

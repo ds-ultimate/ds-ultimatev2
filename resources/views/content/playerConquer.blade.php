@@ -61,7 +61,7 @@
                 "ajax": "{{ route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerData->playerID]) }}",
                 "columns": [
                     { "data": "timestamp" },
-                    { "data": "village_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/village/"+ row.villageID +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "village_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/village/"+ row.village_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "old_owner_name", "render": function (value, type, row) {return (row.old_owner_exists)?("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.old_owner +"'>"+ value +'</a>'):(value)}, "orderable": false},
                     { "data": "new_owner_name", "render": function (value, type, row) {return (row.new_owner_exists)?("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.new_owner +"'>"+ value +'</a>'):(value)}, "orderable": false},
                 ],

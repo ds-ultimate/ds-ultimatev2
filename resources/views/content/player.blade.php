@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('Spieler')).': '.\App\Util\BasicFunctions::decodeName($playerData->name) }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.player')).': '.\App\Util\BasicFunctions::decodeName($playerData->name) }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->

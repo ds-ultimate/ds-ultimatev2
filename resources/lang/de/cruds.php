@@ -50,7 +50,7 @@ return array (
     array (
       'id' => 'ID',
       'code' => 'Code',
-      'flag' => 'Flag',
+      'flag' => 'Flagge',
       'url' => 'URL',
       'id_helper' => '',
       'code_helper' => '',
@@ -94,5 +94,22 @@ return array (
   array (
     'title' => 'Serververwaltung',
     'title_singular' => 'Serververwaltung',
+  ),
+  'world' => 
+  array (
+    'title_singular' => 'Welt',
+    'fields' => 
+    array (
+      'id' => 'ID',
+      'server' => 'Server',
+      'name' => 'Name',
+      'ally' => 'Stämme',
+      'player' => 'Spieler',
+      'village' => 'Dörfer',
+      'url' => 'URL',
+      'config' => 'Konfiguration',
+      'active' => 'Aktiv',
+    ),
+    'title' => 'Welten',
   ),
 );

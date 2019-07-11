@@ -43,7 +43,7 @@
                             <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
                             <th>{{ $villageData->continentString() }}</th>
                             <td>{{ $villageData->coordinates() }}</td>
-                            <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('Barbaren')) !!}</td>
+                            <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('ui.player.barbarian')) !!}</td>
                             <td>{{ $conquer->get('total') }}</td>
                             <th>{{ $villageData->bonusText() }}</th>
                             <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>

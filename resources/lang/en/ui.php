@@ -88,4 +88,11 @@ return array (
     'player' => 'Player',
     'worldOverview' => 'World overview',
   ),
+  'footer' => 
+  array (
+    'loadTimeUnit' => 'sec.',
+    'lastUpdate' => 'Last update',
+    'loadTime' => 'Load time',
+  ),
+  'language' => 'Language',
 );

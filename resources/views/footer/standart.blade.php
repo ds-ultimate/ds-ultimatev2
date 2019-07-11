@@ -26,14 +26,14 @@
         <ul class="list-inline my-0">
             @if (isset($worldData))
                 <li class="list-inline-item">
-                    <small class="text-muted">{{ __('Letztes Update') }}: {{ $worldData->updated_at->diffForHumans() }}</small>
+                    <small class="text-muted">{{ __('ui.footer.lastUpdate') }}: {{ $worldData->updated_at->diffForHumans() }}</small>
                 </li>
                 <li class="list-inline-item">
                     <small class="text-muted">||</small>
                 </li>
             @endif
             <li class="list-inline-item">
-                <small class="text-muted">{{ __('Ladezeit') }} {{ substr((microtime(true) - LARAVEL_START), 0, 7) }} {{ __('Sek.') }}</small>
+                <small class="text-muted">{{ __('ui.footer.loadTime') }} {{ substr((microtime(true) - LARAVEL_START), 0, 7) }} {{ __('ui.footer.loadTimeUnit') }}</small>
             </li>
         </ul>
     </div>

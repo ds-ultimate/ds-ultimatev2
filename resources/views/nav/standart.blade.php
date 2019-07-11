@@ -50,7 +50,7 @@
         </form>
         @endif
         <div class="dropdown">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ __('Sprache') }}
             </button>
             <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
@@ -58,5 +58,35 @@
                 <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
             </div>
         </div>
+        @auth
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle form-control ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ Auth::user()->name }} <span class="caret"></span>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    @can('dashboard_access')
+                        <a class="dropdown-item" href="{{ route('admin.home') }}">
+                            {{ __('Dashboard') }}
+                        </a>
+                    @endcan
+                    @can('translation_access')
+                        <a class="dropdown-item" href="{{ route('index') }}/translations">
+                            {{ __('Übersetzungen') }}
+                        </a>
+                    @endcan
+
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        @endauth
     </div>
 </nav>

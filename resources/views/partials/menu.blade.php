@@ -71,6 +71,16 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('server_access')
+                            <li class="nav-item">
+                                <a href="{{ route("admin.worlds.index") }}" class="nav-link {{ request()->is('admin/worlds') || request()->is('admin/worlds/*') ? 'active' : '' }}">
+                                    <i class="fa-globe fas nav-icon">
+
+                                    </i>
+                                    {{ trans('cruds.world.title') }}
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </li>
             @endcan
@@ -80,7 +90,7 @@
                         <i class="fa-language fas nav-icon">
 
                         </i>
-                        {{ __('Übersetzungen') }}
+                        {{ __('user.translations') }}
                     </a>
                 </li>
             @endcan

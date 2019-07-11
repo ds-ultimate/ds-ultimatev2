@@ -23,7 +23,7 @@ class Conquer extends CustomModel
     public function village()
     {
         $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Village', 'villageID', 'villageID', $table[0].'.village_latest');
+        return $this->mybelongsTo('App\Village', 'village_id', 'villageID', $table[0].'.village_latest');
     }
     
     public static function playerConquerCounts($server, $world, $playerID){
@@ -63,7 +63,7 @@ class Conquer extends CustomModel
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
         $conquer = collect();
-        $conquer->put('total', $conquerModel->where('villageID', $villageID)->count());
+        $conquer->put('total', $conquerModel->where('village_id', $villageID)->count());
 
         return $conquer;
     }

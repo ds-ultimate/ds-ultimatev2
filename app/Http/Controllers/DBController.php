@@ -119,7 +119,7 @@ class DBController extends Controller
 
     public function conquerTable($dbName){
         Schema::create($dbName.'.conquer', function (Blueprint $table) {
-            $table->integer('villageID');
+            $table->integer('village_id');
             $table->bigInteger('timestamp');
             $table->integer('new_owner');
             $table->integer('old_owner');
@@ -597,7 +597,7 @@ class DBController extends Controller
             if($this->conquerInsideDB($databaseConquer, $exploded)) continue;
             
             $tempArr = array();
-            list($tempArr['villageID'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
+            list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
             $tempArr['created_at'] = Carbon::createFromTimestamp(time());
             $tempArr['updated_at'] = Carbon::createFromTimestamp(time());
             $array[] = $tempArr;
@@ -620,7 +620,7 @@ class DBController extends Controller
             if(!isset($arrCon[$conquer->timestamp]))
                 $arrCon[$conquer->timestamp] = array();
             
-            $arrCon[$conquer->timestamp][] = array($conquer->villageID, $conquer->old_owner, $conquer->new_owner);
+            $arrCon[$conquer->timestamp][] = array($conquer->village_id, $conquer->old_owner, $conquer->new_owner);
         }
         return $arrCon;
     }

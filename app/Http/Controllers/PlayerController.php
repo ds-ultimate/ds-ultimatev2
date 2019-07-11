@@ -53,7 +53,7 @@ class PlayerController extends Controller
 
         switch($type) {
             case "all":
-                $typeName = ucfirst(__('Stammeswechsel'));
+                $typeName = ucfirst(__('ui.allyChanges.all'));
                 break;
             default:
                 // FIXME: create error view
@@ -71,13 +71,13 @@ class PlayerController extends Controller
 
         switch($type) {
             case "all":
-                $typeName = ucfirst(__('Eroberungen'));
+                $typeName = ucfirst(__('ui.conquer.all'));
                 break;
             case "old":
-                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Verluste'));
+                $typeName = ucfirst(__('ui.conquer.lost'));
                 break;
             case "new":
-                $typeName = ucfirst(__('Eroberungen') . ' ' . __('Gewinne'));
+                $typeName = ucfirst(__('ui.conquer.won'));
                 break;
             default:
                 // FIXME: create error view

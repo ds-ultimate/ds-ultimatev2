@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 @section('content')
-@can('server_create')
+@can('world_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.server.create") }}">
-                {{ trans('global.add') }} {{ trans('cruds.server.title_singular') }}
+            <a class="btn btn-success" href="{{ route("admin.worlds.create") }}">
+                {{ trans('global.add') }} {{ trans('cruds.world.title_singular') }}
             </a>
         </div>
     </div>
 @endcan
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.server.title_singular') }} {{ trans('global.list') }}
+        {{ trans('cruds.world.title_singular') }} {{ trans('global.list') }}
     </div>
 
     <div class="card-body">
@@ -23,19 +23,31 @@
 
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.id') }}
+                            {{ trans('cruds.world.fields.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.code') }}
+                            {{ trans('cruds.world.fields.server') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.flag') }}
+                            {{ trans('cruds.world.fields.name') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.url') }}
+                            {{ trans('cruds.world.fields.ally') }}
                         </th>
-                        <th style="max-width: 50px">
-                            {{ trans('cruds.server.fields.active') }}
+                        <th>
+                            {{ trans('cruds.world.fields.player') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.world.fields.village') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.world.fields.url') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.world.fields.active') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.world.fields.update') }}
                         </th>
                         <th>
                             &nbsp;
@@ -43,39 +55,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($servers as $key => $server)
-                        <tr data-entry-id="{{ $server->id }}">
+                    @foreach($worlds as $key => $world)
+                        <tr data-entry-id="{{ $world->id }}">
                             <td>
 
                             </td>
                             <td>
-                                {{ $server->id ?? '' }}
+                                {{ $world->id ?? '' }}
                             </td>
                             <td>
-                                {{ $server->code ?? '' }}
+                                <span class="flag-icon flag-icon-{{ $world->server->flag ?? '' }}"></span> {{ $world->server->code ?? '' }}
                             </td>
                             <td>
-                                <span class="flag-icon flag-icon-{{ $server->flag ?? '' }}"></span> [{{ $server->flag }}]
+                                {{ $world->name ?? '' }}
                             </td>
                             <td>
-                                {{ $server->url ?? '' }}
+                                {{ \App\Util\BasicFunctions::numberConv($world->ally_count) ?? '' }}
                             </td>
                             <td>
-                                {!! ($server->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                {{ \App\Util\BasicFunctions::numberConv($world->player_count) ?? '' }}
                             </td>
                             <td>
-                                @can('server_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.server.show', $server->id) }}">
+                                {{ \App\Util\BasicFunctions::numberConv($world->village_count) ?? '' }}
+                            </td>
+                            <td>
+                                <a href="{{ $world->url ?? '' }}" target="_blank">{{ $world->url ?? '' }}</a>
+                            </td>
+                            <td>
+                                {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                            </td>
+                            <td>
+                                {{ $world->	updated_at->diffForHumans() }}
+                            </td>
+                            <td>
+                                @can('world_show')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.worlds.show', $world->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
-                                @can('server_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.server.edit', $server->id) }}">
+                                @can('world_edit')
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.worlds.edit', $world->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
-                                @can('server_delete')
-                                    <form action="{{ route('admin.server.destroy', $server->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                @can('world_delete')
+                                    <form action="{{ route('admin.worlds.destroy', $world->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
@@ -98,7 +122,7 @@
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.server.massDestroy') }}",
+    url: "{{ route('admin.worlds.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -122,7 +146,7 @@
     }
   }
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('server_delete')
+@can('world_delete')
   dtButtons.push(deleteButton)
 @endcan
 
