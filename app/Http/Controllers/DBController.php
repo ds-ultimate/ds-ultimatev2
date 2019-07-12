@@ -18,10 +18,10 @@ use Illuminate\Support\Facades\Schema;
 class DBController extends Controller
 {
     public function serverTable(){
-        if (BasicFunctions::existDatabase(env('DB_DATABASE_MAIN')) === false){
-            DB::statement('CREATE DATABASE '.env('DB_DATABASE_MAIN'));
+        if (BasicFunctions::existDatabase(env('DB_DATABASE')) === false){
+            DB::statement('CREATE DATABASE '.env('DB_DATABASE'));
         }
-        Schema::create(env('DB_DATABASE_MAIN').'.server', function (Blueprint $table){
+        Schema::create(env('DB_DATABASE').'.server', function (Blueprint $table){
             $table->integer('id')->autoIncrement();
             $table->char('code');
             $table->char('flag');
@@ -33,7 +33,7 @@ class DBController extends Controller
     }
 
     public function logTable(){
-        Schema::create(env('DB_DATABASE_MAIN').'.log', function (Blueprint $table){
+        Schema::create(env('DB_DATABASE').'.log', function (Blueprint $table){
             $table->bigIncrements('id')->autoIncrement();
             $table->text('type');
             $table->text('msg');
@@ -42,7 +42,7 @@ class DBController extends Controller
     }
 
     public function worldTable(){
-        Schema::create(env('DB_DATABASE_MAIN').'.worlds', function (Blueprint $table){
+        Schema::create(env('DB_DATABASE').'.worlds', function (Blueprint $table){
             $table->integer('id')->autoIncrement();
             $table->integer('server_id');
             $table->text('name');
@@ -129,7 +129,7 @@ class DBController extends Controller
 
     public function getWorld(){
 
-        if (BasicFunctions::existTable(env('DB_DATABASE_MAIN'), 'worlds') === false){
+        if (BasicFunctions::existTable(env('DB_DATABASE'), 'worlds') === false){
             $this->worldTable();
         }
 
@@ -138,7 +138,7 @@ class DBController extends Controller
         foreach ($serverArray as $serverUrl){
             $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
             $worldTable = new World();
-            $worldTable->setTable(env('DB_DATABASE_MAIN').'.worlds');
+            $worldTable->setTable(env('DB_DATABASE').'.worlds');
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
 
@@ -159,7 +159,7 @@ class DBController extends Controller
                     //create new entry
                     $create = true;
                     $worldNew = new World();
-                    $worldNew->setTable(env('DB_DATABASE_MAIN').'.worlds');
+                    $worldNew->setTable(env('DB_DATABASE').'.worlds');
                 }
                 
                 $worldNew->server_id = $serverUrl->id;
@@ -347,8 +347,12 @@ class DBController extends Controller
 
         $count = count($arrayPlayer);
 
-        $worldUpdate->player_count = $count;
-        $worldUpdate->save();
+        if($worldUpdate->player_count != $count) {
+            $worldUpdate->player_count = $count;
+            $worldUpdate->save();
+        } else {
+            $worldUpdate->touch();
+        }
     }
 
     public function latestVillages($server, $world){
@@ -423,8 +427,12 @@ class DBController extends Controller
 
         $count = count($array);
 
-        $worldUpdate->village_count = $count;
-        $worldUpdate->save();
+        if($worldUpdate->village_count != $count) {
+            $worldUpdate->village_count = $count;
+            $worldUpdate->save();
+        } else {
+            $worldUpdate->touch();
+        }
     }
 
     public function latestAlly($server, $world){
@@ -553,8 +561,12 @@ class DBController extends Controller
 
         $count = count($array);
 
-        $worldUpdate->ally_count = $count;
-        $worldUpdate->save();
+        if($worldUpdate->ally_count != $count) {
+            $worldUpdate->ally_count = $count;
+            $worldUpdate->save();
+        } else {
+            $worldUpdate->touch();
+        }
     }
 
     public function conquer($server, $world){

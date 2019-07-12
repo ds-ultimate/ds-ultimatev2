@@ -51,6 +51,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('worlds/destroy', 'WorldsController@massDestroy')->name('worlds.massDestroy');
 
     Route::resource('worlds', 'WorldsController');
+
+    Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
+
+    Route::resource('bugreports', 'BugreportsController');
 });
 
 Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {

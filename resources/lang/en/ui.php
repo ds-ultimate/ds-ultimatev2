@@ -51,7 +51,6 @@ return array (
     'lost' => 'Loose',
     'won' => 'Gain',
   ),
-  'noAlly' => 'without tribe',
   'player' => 
   array (
     'barbarian' => 'barbarian',
@@ -95,4 +94,9 @@ return array (
     'loadTime' => 'Load time',
   ),
   'language' => 'Language',
+  'ally' => 
+  array (
+    'noAlly' => 'without tribe',
+    'deleted' => 'deleted',
+  ),
 );

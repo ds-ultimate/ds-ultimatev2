@@ -11,7 +11,7 @@ class Server extends Model
     use SoftDeletes;
 
     protected $table = 'server';
-    protected $connection = 'main';
+    protected $connection = 'mysql';
 
     protected $dates = [
         'created_at',

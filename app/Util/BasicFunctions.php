@@ -162,7 +162,7 @@ class BasicFunctions
     public static function createLog($type, $msg){
         // FIXME: would like to get E-Mails from log messages
         $log = new App\Log();
-        $log->setTable(env('DB_DATABASE_MAIN').'.log');
+        $log->setTable(env('DB_DATABASE').'.log');
         $log->type = $type;
         $log->msg = $msg;
         $log->save();
@@ -170,7 +170,7 @@ class BasicFunctions
 
     public static function getWorld(){
         $world = new World();
-        $world->setTable(env('DB_DATABASE_MAIN').'.worlds');
+        $world->setTable(env('DB_DATABASE').'.worlds');
         // FIXME: für den Testserver
         //return $world->get();
         return $world->where('name', '=', '164')

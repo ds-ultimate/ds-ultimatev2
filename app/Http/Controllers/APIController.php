@@ -160,7 +160,9 @@ class APIController extends Controller
                 return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->player->name) : '-';
             })
             ->addColumn('old_ally_name', function ($allyChange){
-                return ($allyChange->old_ally_id != 0)? BasicFunctions::decodeName($allyChange->oldAlly->name) : ucfirst(__('ui.noAlly'));
+                if($allyChange->old_ally_id == 0) return ucfirst(__('ui.ally.noAlly'));
+                if($allyChange->oldAlly == null) return ucfirst(__('ui.ally.deleted'));
+                return BasicFunctions::decodeName($allyChange->oldAlly->name);
             })
             ->addColumn('new_ally_name', function ($allyChange){
                 return ($allyChange->new_ally_id != 0)? BasicFunctions::decodeName($allyChange->newAlly->name) : ucfirst(__('ui.noAlly'));

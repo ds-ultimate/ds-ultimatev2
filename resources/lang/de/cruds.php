@@ -109,7 +109,31 @@ return array (
       'url' => 'URL',
       'config' => 'Konfiguration',
       'active' => 'Aktiv',
+      'update' => 'Letztes Update',
     ),
     'title' => 'Welten',
+  ),
+  'bugreport' => 
+  array (
+    'fields' => 
+    array (
+      'priority' => 'Priorität',
+      'name' => 'Name',
+      'email' => 'E-Mail',
+      'title' => 'Titel',
+      'status' => 'Status',
+      'created' => 'Erstellt',
+      'description' => 'Beschreibung',
+    ),
+    'statusSelect' => 
+    array (
+      'open' => 'Offen',
+      'inprogress' => 'In bearbeitung',
+      'close' => 'Geschlossen',
+      'resolved' => 'Aufgelöst',
+    ),
+    'new' => 'Neu',
+    'title_singular' => 'Fehlermeldung',
+    'title' => 'Fehlermeldungen',
   ),
 );

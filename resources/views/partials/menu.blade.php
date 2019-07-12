@@ -71,13 +71,35 @@
                                 </a>
                             </li>
                         @endcan
-                        @can('server_access')
+                        @can('world_access')
                             <li class="nav-item">
                                 <a href="{{ route("admin.worlds.index") }}" class="nav-link {{ request()->is('admin/worlds') || request()->is('admin/worlds/*') ? 'active' : '' }}">
                                     <i class="fa-globe fas nav-icon">
 
                                     </i>
                                     {{ trans('cruds.world.title') }}
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+            @endcan
+            @can('bugreport_management_access')
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link  nav-dropdown-toggle">
+                        <i class="fa-bug fas nav-icon">
+
+                        </i>
+                        {{ trans('cruds.bugreportManagement.title') }}
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        @can('bugreport_access')
+                            <li class="nav-item">
+                                <a href="{{ route("admin.bugreports.index") }}" class="nav-link {{ request()->is('admin/server') || request()->is('admin/server/*') ? 'active' : '' }}">
+                                    <i class="fa-list fas nav-icon">
+
+                                    </i>
+                                    {{ trans('cruds.bugreport.title') }}
                                 </a>
                             </li>
                         @endcan

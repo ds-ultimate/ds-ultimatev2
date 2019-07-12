@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bugreport;
 use App\Http\Requests\BugReportRequest;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,9 @@ class FormController extends Controller
     }
 
     public function bugreportStore(BugReportRequest $request){
-        return var_dump($request->all());
+
+        $bugreport = Bugreport::create($request->all());
+
+        return redirect()->route('index');
     }
 }

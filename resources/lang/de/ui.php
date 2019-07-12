@@ -1,7 +1,6 @@
 <?php
 
 return array (
-  'noAlly' => 'Stammeslos',
   'player' => 
   array (
     'deleted' => 'Gelöscht',
@@ -97,4 +96,9 @@ return array (
     'loadTimeUnit' => 'Sek.',
   ),
   'language' => 'Sprache',
+  'ally' => 
+  array (
+    'noAlly' => 'Stammeslos',
+    'deleted' => 'Gelöscht',
+  ),
 );

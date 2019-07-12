@@ -10,7 +10,7 @@ class World extends Model
 {
     use SoftDeletes;
 
-    public $connection = 'main';
+    public $connection = 'mysql';
     protected $table = 'worlds';
 
     protected $dates = [
