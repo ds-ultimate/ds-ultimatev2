@@ -7,9 +7,9 @@
     </div>
 
     <div class="card-body">
-        <div>
             <h1>{{ $bugreport->title }}</h1>
-            <input type="hidden" name="name" value="{{ $bugreport->title }}">
+            <form action="{{ route('admin.bugreports.internalUpdate') }}" method="post">
+            <input type="hidden" name="id" value="{{ $bugreport->id }}">
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
@@ -18,7 +18,6 @@
                         </th>
                         <td>
                             {{ $bugreport->name }}
-                            <input type="hidden" name="name" value="{{ $bugreport->name }}">
                         </td>
                     </tr>
                     <tr>
@@ -27,7 +26,6 @@
                         </th>
                         <td>
                             {{ $bugreport->email }}
-                            <input type="hidden" name="email" value="{{ $bugreport->email }}">
                         </td>
                     </tr>
                     <tr>
@@ -37,10 +35,10 @@
                         <td>
                             <h4>{!! $bugreport->getPriorityBadge() !!}</h4>
                             <select class="form-control" name="priority">
-                                <option value="0">{{ __('user.bugreport.prioritySelect.low') }}</option>
-                                <option value="1">{{ __('user.bugreport.prioritySelect.normal') }}</option>
-                                <option value="2">{{ __('user.bugreport.prioritySelect.high') }}</option>
-                                <option value="3">{{ __('user.bugreport.prioritySelect.critical') }}</option>
+                                <option value="0" {{ ($bugreport->priority == 0)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.low') }}</option>
+                                <option value="1" {{ ($bugreport->priority == 1)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.normal') }}</option>
+                                <option value="2" {{ ($bugreport->priority == 2)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.high') }}</option>
+                                <option value="3" {{ ($bugreport->priority == 3)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.critical') }}</option>
                             </select>
                         </td>
                     </tr>
@@ -51,10 +49,10 @@
                         <td>
                             <h4>{!! $bugreport->getStatusBadge() !!}</h4>
                             <select class="form-control" name="status">
-                                <option value="0">{{ __('cruds.bugreport.statusSelect.open') }}</option>
-                                <option value="1">{{ __('cruds.bugreport.statusSelect.inprogress') }}</option>
-                                <option value="2">{{ __('cruds.bugreport.statusSelect.resolved') }}</option>
-                                <option value="3">{{ __('cruds.bugreport.statusSelect.close') }}</option>
+                                <option value="0" {{ ($bugreport->status == 0)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.open') }}</option>
+                                <option value="1" {{ ($bugreport->status == 1)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.inprogress') }}</option>
+                                <option value="2" {{ ($bugreport->status == 2)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.resolved') }}</option>
+                                <option value="3" {{ ($bugreport->status == 3)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.close') }}</option>
                             </select>
                         </td>
                     </tr>
@@ -95,7 +93,11 @@
             <a style="margin-top:20px;" class="btn btn-default" href="{{ url()->previous() }}">
                 Back
             </a>
-        </div>
+                @csrf
+            <div>
+                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+            </div>
+        </form>
     </div>
 </div>
 @endsection

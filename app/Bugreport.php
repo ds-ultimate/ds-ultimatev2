@@ -13,6 +13,7 @@ class Bugreport extends Model
         'priority',
         'description',
         'url',
+        'status',
     ];
 
     public function getPriority(){

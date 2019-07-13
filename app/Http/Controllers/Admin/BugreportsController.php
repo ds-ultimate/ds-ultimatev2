@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BugReportRequest;
 use App\Http\Requests\MassDestroyBugreportRequest;
 use App\Http\Requests\StoreBugreportRequest;
 use App\Http\Requests\UpdateBugreportRequest;
@@ -83,5 +84,13 @@ class BugreportsController extends Controller
         Bugreport::whereIn('id', $request->input('ids'))->delete();
 
         return response(null, 204);
+    }
+
+    public function internalUpdate(BugReportRequest $request){
+        $bugreport = Bugreport::find($request->id);
+
+        $bugreport->update($request->all());
+
+        return redirect()->route('admin.bugreports.index');
     }
 }

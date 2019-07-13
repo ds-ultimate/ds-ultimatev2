@@ -53,7 +53,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('worlds', 'WorldsController');
 
     Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
-
+    Route::post('bugreports/internalUpdate', 'BugreportsController@internalUpdate')->name('bugreports.internalUpdate');
     Route::resource('bugreports', 'BugreportsController');
 });
 
