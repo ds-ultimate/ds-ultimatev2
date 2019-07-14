@@ -100,6 +100,7 @@
 
                                     </i>
                                     {{ trans('cruds.bugreport.title') }}
+                                    <i class="badge badge-light pl-1" style="float: none">{{ \App\Bugreport::countNew() }}</i>
                                 </a>
                             </li>
                         @endcan

@@ -14,32 +14,57 @@
                     <form action="{{ route('form.bugreport.store') }}" method="post">
                         <div class="form-group">
                             <label for="name">{{ __('user.bugreport.name') }}*</label>
-                            <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="{{ __('user.bugreport.name') }}" required>
+                            <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" name="name" aria-describedby="nameHelp" placeholder="{{ __('user.bugreport.name') }}" required>
+                            @if($errors->has('name'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('name') }}
+                                </div>
+                            @endif
                             <small id="nameHelp" class="form-text text-muted">{{ __('user.bugreport.name_help') }}</small>
                         </div>
                         <div class="form-group">
                             <label for="email">{{ __('user.bugreport.email') }}*</label>
-                            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="{{ __('user.bugreport.email') }}" required>
+                            <input type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" name="email" aria-describedby="emailHelp" placeholder="{{ __('user.bugreport.email') }}" required>
+                            @if($errors->has('email'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('email') }}
+                                </div>
+                            @endif
                             <small id="emailHelp" class="form-text text-muted">{{ __('user.bugreport.email_help') }}</small>
                         </div>
                         <div class="form-group">
                             <label for="title">{{ __('user.bugreport.form_title') }}*</label>
-                            <input type="text" class="form-control" id="title" name="title" aria-describedby="titleHelp" placeholder="{{ __('user.bugreport.form_title') }}" required>
+                            <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" name="title" aria-describedby="titleHelp" placeholder="{{ __('user.bugreport.form_title') }}" required>
+                            @if($errors->has('title'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('title') }}
+                                </div>
+                            @endif
                             <small id="titleHelp" class="form-text text-muted">{{ __('user.bugreport.form_title_help') }}</small>
                         </div>
                         <div class="form-group">
                             <label for="priority">{{ __('user.bugreport.priority') }}*</label>
-                            <select class="form-control" name="priority">
-                                <option value="1">{{ __('user.bugreport.prioritySelect.low') }}</option>
-                                <option value="2">{{ __('user.bugreport.prioritySelect.normal') }}</option>
-                                <option value="3">{{ __('user.bugreport.prioritySelect.high') }}</option>
-                                <option value="4">{{ __('user.bugreport.prioritySelect.critical') }}</option>
+                            <select class="form-control {{ $errors->has('priority') ? 'is-invalid' : '' }}" name="priority">
+                                <option value="0">{{ __('user.bugreport.prioritySelect.low') }}</option>
+                                <option value="1">{{ __('user.bugreport.prioritySelect.normal') }}</option>
+                                <option value="2">{{ __('user.bugreport.prioritySelect.high') }}</option>
+                                <option value="3">{{ __('user.bugreport.prioritySelect.critical') }}</option>
                             </select>
+                            @if($errors->has('priority'))
+                                <div class="in valid-feedback">
+                                    {{ $errors->first('priority') }}
+                                </div>
+                            @endif
                             <small id="priorityHelp" class="form-text text-muted">{{ __('user.bugreport.priority_help') }}</small>
                         </div>
                         <div class="form-group">
                             <label for="description">{{ __('user.bugreport.description') }}*</label>
-                            <textarea type="text" class="form-control" id="description" name="description" aria-describedby="descriptionHelp" placeholder="{{ __('user.bugreport.description') }}" required></textarea>
+                            <textarea type="text" class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" name="description" aria-describedby="descriptionHelp" placeholder="{{ __('user.bugreport.description') }}" required></textarea>
+                            @if($errors->has('description'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('description') }}
+                                </div>
+                            @endif
                             <small id="descriptionHelp" class="form-text text-muted">{{ __('user.bugreport.description_help') }}</small>
                         </div>
                         <div class="form-group">
@@ -48,9 +73,13 @@
                             <small id="urlHelp" class="form-text text-muted">{{ __('user.bugreport.url_help') }}</small>
                         </div>
                         @csrf
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        <div class="form-group">
+                            {!! Captcha::display() !!}
+                            @if($errors->has('g-recaptcha-response'))
+                                <div class="text-danger">
+                                    {{ $errors->first('g-recaptcha-response') }}
+                                </div>
+                            @endif
                         </div>
                         <button type="submit" class="btn btn-primary">{{ __('global.submit') }}</button>
                     </form>

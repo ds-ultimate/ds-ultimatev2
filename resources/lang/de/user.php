@@ -37,11 +37,6 @@ return array (
     'description_help' => 'Je ausführlicher um so besser.',
     'url' => 'URL',
     'url_help' => 'Falls es eine bestimmte Seite betrifft können wir uns schneller darum kümmern wenn wir einen Link dazu kriegen. Alternativ ein Bild was den Fehler zeigt.',
-    'fields' => 
-    array (
-      'status' => 'Status',
-      'created' => 'Erstellt',
-    ),
   ),
   'formular' => 'Formular',
 );

@@ -53,11 +53,6 @@
             } );
 
             $('#table_id').DataTable({
-                "columnDefs": [
-                    {"targets": 1, "className": 'text-right'},
-                    {"targets": 2, "className": 'text-right'},
-                    {"targets": 3, "className": 'text-right'},
-                ],
                 "processing": true,
                 "serverSide": true,
                 "ajax": "{{ route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]) }}",

@@ -28,14 +28,14 @@
                     <table id="data1" class="table table-bordered no-wrap">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.ally')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.avgVillage')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.conquer')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.allyChanges')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.ally')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.allyChanges')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,13 +56,13 @@
                     <table id="data2" class="table table-bordered no-wrap">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
-                            <th>{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
-                            <th>{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
+                            <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
+                            <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
                         </tr>
                         </thead>
                         <tbody>

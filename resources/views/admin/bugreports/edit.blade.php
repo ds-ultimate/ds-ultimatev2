@@ -3,66 +3,48 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('global.edit') }} {{ trans('cruds.user.title_singular') }}
+        {{ trans('global.edit') }} {{ trans('cruds.bugreport.title_singular') }}
     </div>
 
     <div class="card-body">
-        <form action="{{ route("admin.users.update", [$user->id]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route("admin.bugreports.update", [$bugreport->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                <label for="name">{{ trans('cruds.user.fields.name') }}*</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', isset($user) ? $user->name : '') }}" required>
-                @if($errors->has('name'))
-                    <em class="invalid-feedback">
-                        {{ $errors->first('name') }}
-                    </em>
-                @endif
-                <p class="helper-block">
-                    {{ trans('cruds.user.fields.name_helper') }}
-                </p>
+            <div class="form-group">
+                <label for="title">{{ trans('cruds.bugreport.fields.title') }}*</label>
+                <input type="text" id="title" name="title" class="form-control-plaintext" value="{{ $bugreport->title }}" readonly>
             </div>
-            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                <label for="email">{{ trans('cruds.user.fields.email') }}*</label>
-                <input type="email" id="email" name="email" class="form-control" value="{{ old('email', isset($user) ? $user->email : '') }}" required>
-                @if($errors->has('email'))
-                    <em class="invalid-feedback">
-                        {{ $errors->first('email') }}
-                    </em>
-                @endif
-                <p class="helper-block">
-                    {{ trans('cruds.user.fields.email_helper') }}
-                </p>
+            <div class="form-group">
+                <label for="description">{{ trans('cruds.bugreport.fields.description') }}*</label>
+                <textarea type="text" id="description" name="description" class="form-control-plaintext" readonly>{{ $bugreport->description }}</textarea>
             </div>
-            <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
-                <label for="password">{{ trans('cruds.user.fields.password') }}</label>
-                <input type="password" id="password" name="password" class="form-control">
-                @if($errors->has('password'))
-                    <em class="invalid-feedback">
-                        {{ $errors->first('password') }}
-                    </em>
-                @endif
-                <p class="helper-block">
-                    {{ trans('cruds.user.fields.password_helper') }}
-                </p>
-            </div>
-            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
-                <label for="roles">{{ trans('cruds.user.fields.roles') }}*
-                    <span class="btn btn-info btn-xs select-all">Select all</span>
-                    <span class="btn btn-info btn-xs deselect-all">Deselect all</span></label>
-                <select name="roles[]" id="roles" class="form-control select2" multiple="multiple" required>
-                    @foreach($roles as $id => $roles)
-                        <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $roles }}</option>
-                    @endforeach
+            <div class="form-group {{ $errors->has('priority') ? 'has-error' : '' }}">
+                <label for="priority">{{ trans('cruds.bugreport.fields.priority') }}*</label>
+                <select class="form-control" name="priority">
+                    <option value="0" {{ ($bugreport->priority == 0)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.low') }}</option>
+                    <option value="1" {{ ($bugreport->priority == 1)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.normal') }}</option>
+                    <option value="2" {{ ($bugreport->priority == 2)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.high') }}</option>
+                    <option value="3" {{ ($bugreport->priority == 3)? 'selected' : '' }}>{{ __('user.bugreport.prioritySelect.critical') }}</option>
                 </select>
-                @if($errors->has('roles'))
+                @if($errors->has('priority'))
                     <em class="invalid-feedback">
-                        {{ $errors->first('roles') }}
+                        {{ $errors->first('priority') }}
                     </em>
                 @endif
-                <p class="helper-block">
-                    {{ trans('cruds.user.fields.roles_helper') }}
-                </p>
+            </div>
+            <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                <label for="status">{{ trans('cruds.bugreport.fields.status') }}*</label>
+                <select class="form-control" name="status">
+                    <option value="0" {{ ($bugreport->status == 0)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.open') }}</option>
+                    <option value="1" {{ ($bugreport->status == 1)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.inprogress') }}</option>
+                    <option value="2" {{ ($bugreport->status == 2)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.resolved') }}</option>
+                    <option value="3" {{ ($bugreport->status == 3)? 'selected' : '' }}>{{ __('cruds.bugreport.statusSelect.close') }}</option>
+                </select>
+                @if($errors->has('status'))
+                    <em class="invalid-feedback">
+                        {{ $errors->first('status') }}
+                    </em>
+                @endif
             </div>
             <div>
                 <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">

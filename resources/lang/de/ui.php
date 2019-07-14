@@ -88,6 +88,7 @@ return array (
     'worlds' => 'Welten',
     'show' => 'Welten anzeigen',
     'title' => 'Server',
+    'ranking' => 'Rangliste',
   ),
   'footer' => 
   array (

@@ -124,6 +124,7 @@ return array (
       'status' => 'Status',
       'created' => 'Erstellt',
       'description' => 'Beschreibung',
+      'url' => 'URL',
     ),
     'statusSelect' => 
     array (

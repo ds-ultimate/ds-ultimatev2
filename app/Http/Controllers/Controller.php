@@ -18,6 +18,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function index(){
+        BasicFunctions::local();
         $serverArray = Server::getServer();
         return view('content.index', compact('serverArray'));
     }

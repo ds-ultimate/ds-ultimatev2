@@ -2,9 +2,43 @@
 @section('content')
 @can('bugreport_create')
     <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
+        <div class="col-3">
             <a class="btn btn-success" href="{{ route("admin.bugreports.create") }}">
                 {{ trans('global.add') }} {{ trans('cruds.bugreport.title_singular') }}
+            </a>
+            <a class="btn btn-danger" href="{{ route("admin.bugreports.index") }}">
+                {{ trans('global.all') }}
+            </a>
+            <a class="btn btn-primary" href="{{ route("admin.bugreports.new") }}">
+                {{ trans('cruds.bugreport.new') }}
+            </a>
+        </div>
+        <div class="col">
+            <a class="btn btn-info" href="{{ route("admin.bugreports.priority",[0]) }}">
+                {{ trans('global.show') }} {{ trans('user.bugreport.prioritySelect.low') }}
+            </a>
+            <a class="btn btn-primary" href="{{ route("admin.bugreports.priority",[1]) }}">
+                {{ trans('global.show') }} {{ trans('user.bugreport.prioritySelect.normal') }}
+            </a>
+            <a class="btn btn-warning" href="{{ route("admin.bugreports.priority",[2]) }}">
+                {{ trans('global.show') }} {{ trans('user.bugreport.prioritySelect.high') }}
+            </a>
+            <a class="btn btn-danger" href="{{ route("admin.bugreports.priority",[3]) }}">
+                {{ trans('global.show') }} {{ trans('user.bugreport.prioritySelect.critical') }}
+            </a>
+        </div>
+        <div class="col">
+            <a class="btn btn-dark" href="{{ route("admin.bugreports.status",[0]) }}">
+                {{ trans('global.show') }} {{ trans('cruds.bugreport.statusSelect.open') }}
+            </a>
+            <a class="btn btn-primary" href="{{ route("admin.bugreports.status",[1]) }}">
+                {{ trans('global.show') }} {{ trans('cruds.bugreport.statusSelect.inprogress') }}
+            </a>
+            <a class="btn btn-light" href="{{ route("admin.bugreports.status",[2]) }}">
+                {{ trans('global.show') }} {{ trans('cruds.bugreport.statusSelect.resolved') }}
+            </a>
+            <a class="btn btn-success" href="{{ route("admin.bugreports.status",[3]) }}">
+                {{ trans('global.show') }} {{ trans('cruds.bugreport.statusSelect.close') }}
             </a>
         </div>
     </div>

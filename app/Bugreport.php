@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bugreport extends Model
 {
+
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'email',
@@ -66,5 +70,9 @@ class Bugreport extends Model
             case 3:
                 return '<span class="badge badge-success">'.$this->getStatus().'</span>';
         }
+    }
+
+    public static function countNew(){
+        return Bugreport::where('firstSeen', null)->get()->count();
     }
 }

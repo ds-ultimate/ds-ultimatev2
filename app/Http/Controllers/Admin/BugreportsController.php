@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BugReportRequest;
+use App\Http\Requests\BugreportRequest;
 use App\Http\Requests\MassDestroyBugreportRequest;
 use App\Http\Requests\StoreBugreportRequest;
 use App\Http\Requests\UpdateBugreportRequest;
@@ -18,6 +18,32 @@ class BugreportsController extends Controller
         abort_unless(\Gate::allows('bugreport_access'), 403);
 
         $bugreports = Bugreport::orderBy('firstSeen')->get();
+
+        return view('admin.bugreports.index', compact('bugreports'));
+    }
+
+    public function indexPriority($priority)
+    {
+        abort_unless(\Gate::allows('bugreport_access'), 403);
+
+        $bugreports = Bugreport::where('priority', $priority)->orderBy('firstSeen')->get();
+
+        return view('admin.bugreports.index', compact('bugreports'));
+    }
+
+    public function indexStatus($status)
+    {
+        abort_unless(\Gate::allows('bugreport_access'), 403);
+
+        $bugreports = Bugreport::where('status', $status)->orderBy('firstSeen')->get();
+
+        return view('admin.bugreports.index', compact('bugreports'));
+    }
+    public function indexNew()
+    {
+        abort_unless(\Gate::allows('bugreport_access'), 403);
+
+        $bugreports = Bugreport::where('firstSeen', null)->orderBy('firstSeen')->get();
 
         return view('admin.bugreports.index', compact('bugreports'));
     }
@@ -50,7 +76,8 @@ class BugreportsController extends Controller
     public function update(UpdateBugreportRequest $request, Bugreport $bugreport)
     {
         abort_unless(\Gate::allows('bugreport_edit'), 403);
-        ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
+
+        ($request->status != $bugreport->status)?(($request->status == 2 || $request->status == 3)? $bugreport->delivery = Carbon::now() : $bugreport->delivery = null) : null;
 
         $bugreport->update($request->all());
 
@@ -86,11 +113,4 @@ class BugreportsController extends Controller
         return response(null, 204);
     }
 
-    public function internalUpdate(BugReportRequest $request){
-        $bugreport = Bugreport::find($request->id);
-
-        $bugreport->update($request->all());
-
-        return redirect()->route('admin.bugreports.index');
-    }
 }

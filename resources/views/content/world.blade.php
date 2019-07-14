@@ -16,10 +16,10 @@
                     <table class="table table-striped"  id="t10Player">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th class="desktop text-right">{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th class="desktop text-right">{{ ucfirst(__('ui.table.villages')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $player->rank }}</th>
                                 <td class="text-truncate" style="max-width: 200px">{!! \App\Util\BasicFunctions::linkPlayer($worldData, $player->playerID, \App\Util\BasicFunctions::outputName($player->name)) !!}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($player->points) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($player->village_count) }}</td>
+                                <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($player->points) }}</td>
+                                <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($player->village_count) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -43,12 +43,12 @@
                     <table class="table table-striped" id="t10Ally">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.tag')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.members')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.tag')) }}</th>
+                            <th class="desktop text-right">{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th class="desktop text-right">{{ ucfirst(__('ui.table.members')) }}</th>
+                            <th class="desktop text-right">{{ ucfirst(__('ui.table.villages')) }}</th>
                         </tr>
                         </thead>
                         <tbody>

@@ -150,4 +150,5 @@ return array (
     'available' => 'verfügbar',
     'size' => 'Größe',
   ),
+  'recaptcha' => 'Bitte bestätigen',
 );

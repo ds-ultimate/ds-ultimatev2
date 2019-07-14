@@ -10,11 +10,11 @@
         <ul class="navbar-nav mr-auto">
             @if (isset($server))
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('server', [$server]) }}">{{ucfirst(__('Weltenübersicht'))}} <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ route('server', [$server]) }}">{{ucfirst(__('ui.titel.worldOverview'))}} <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{__('Welten')}}
+                    {{ ucfirst(__('ui.server.worlds')) }}
                 </a>
                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                     @foreach(\App\World::worldsCollection($server) as $worlds)
@@ -32,26 +32,43 @@
                 </ul>
             </li>
             @endif
+            @if (isset($worldData))
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{__('ui.server.ranking')}}
+                    </a>
+                    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-submenu">
+                            <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.player') }}</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.bashGes')) }}</button>
+                                <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.bashOff')) }}</button>
+                                <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.bashDeff')) }}</button>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            @endif
         </ul>
         @if (isset($server))
-        <form class="form-inline my-2 my-lg-0" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
-            @csrf
-            <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('Suche') }}" aria-label="Search">
-            <div class="dropdown">
-                <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('Suche') }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                    <button class="dropdown-item" name="submit" type="submit"  value="player">{{ __('Spieler') }}</button>
-                    <button class="dropdown-item" name="submit" type="submit" value="ally">{{ __('Stamm') }}</button>
-                    <button class="dropdown-item" name="submit" type="submit" value="village">{{ __('Dorf') }}</button>
+            <form class="form-inline my-2 my-lg-0" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
+                @csrf
+                <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('ui.titel.search') }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                        <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.player')) }}</button>
+                        <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.ally')) }}</button>
+                        <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.village')) }}</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
         @endif
         <div class="dropdown">
             <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ __('Sprache') }}
+                {{ __('ui.language') }}
             </button>
             <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
                 <a class="dropdown-item" href="{{ route('locale', 'de') }}"><span class="flag-icon flag-icon-de"></span> Deutsch</a>

@@ -53,9 +53,7 @@
 
             $('#table_id').DataTable({
                 "columnDefs": [
-                    {"targets": 1, "className": 'text-right'},
-                    {"targets": 2, "className": 'text-right'},
-                    {"targets": 3, "className": 'text-right'},
+                    {"targets": 4, "className": 'text-right'},
                 ],
                 "processing": true,
                 "serverSide": true,
@@ -65,7 +63,7 @@
                     { "data": "player_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.player_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "old_ally_name", "render": function (value, type, row) {return (row.old_ally_id==0)?(value):("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.old_ally_id +"'>"+ value +'</a>')}, "orderable": false},
                     { "data": "new_ally_name", "render": function (value, type, row) {return (row.new_ally_id==0)?(value):("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.new_ally_id +"'>"+ value +'</a>')}, "orderable": false},
-                    { "data": "points" },
+                    { "data": "points", "render": function (value) {return numeral(value).format('0,0')}},
                 ],
                 responsive: true,
                 {!! \App\Util\Datatable::language() !!}

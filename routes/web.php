@@ -53,7 +53,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('worlds', 'WorldsController');
 
     Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
-    Route::post('bugreports/internalUpdate', 'BugreportsController@internalUpdate')->name('bugreports.internalUpdate');
+    Route::get('bugreports/priority/{priority}', 'BugreportsController@indexPriority')->name('bugreports.priority');
+    Route::get('bugreports/status/{status}', 'BugreportsController@indexStatus')->name('bugreports.status');
+    Route::get('bugreports/new', 'BugreportsController@indexNew')->name('bugreports.new');
     Route::resource('bugreports', 'BugreportsController');
 });
 
