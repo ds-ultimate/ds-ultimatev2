@@ -41,9 +41,17 @@
                         <li class="dropdown-submenu">
                             <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.player') }}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.bashGes')) }}</button>
-                                <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.bashOff')) }}</button>
-                                <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.bashDeff')) }}</button>
+                                <a class="dropdown-item" href="player">{{ ucfirst(__('ui.table.bashGes')) }}</a>
+                                <a class="dropdown-item" href="ally">{{ ucfirst(__('ui.table.bashOff')) }}</a>
+                                <a class="dropdown-item" href="village">{{ ucfirst(__('ui.table.bashDeff')) }}</a>
+                            </div>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.ally') }}</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="player">{{ ucfirst(__('ui.table.bashGes')) }}</a>
+                                <a class="dropdown-item" href="ally">{{ ucfirst(__('ui.table.bashOff')) }}</a>
+                                <a class="dropdown-item" href="village">{{ ucfirst(__('ui.table.bashDeff')) }}</a>
                             </div>
                         </li>
                     </ul>
@@ -84,12 +92,12 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     @can('dashboard_access')
                         <a class="dropdown-item" href="{{ route('admin.home') }}">
-                            {{ __('Dashboard') }}
+                            {{ __('user.dashboard') }}
                         </a>
                     @endcan
                     @can('translation_access')
                         <a class="dropdown-item" href="{{ route('index') }}/translations">
-                            {{ __('Übersetzungen') }}
+                            {{ __('user.translations') }}
                         </a>
                     @endcan
 

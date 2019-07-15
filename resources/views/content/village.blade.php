@@ -27,14 +27,14 @@
                     <table id="data1" class="table table-bordered no-wrap">
                         <thead>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.continent')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.coordinates')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.owner')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.conquer')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bonusType')) }}</th>
-                            <th></th>
+                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.continent')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.coordinates')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.owner')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.bonusType')) }}</th>
+                            <th class="desktop"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,7 +43,7 @@
                             <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
                             <th>{{ $villageData->continentString() }}</th>
                             <td>{{ $villageData->coordinates() }}</td>
-                            <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('ui.player.barbarian')) !!}</td>
+                            <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('Barbaren')) !!}</td>
                             <td>{{ $conquer->get('total') }}</td>
                             <th>{{ $villageData->bonusText() }}</th>
                             <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>

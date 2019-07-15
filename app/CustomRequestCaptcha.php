@@ -11,6 +11,9 @@ namespace App;
 
 class CustomRequestCaptcha
 {
+    /**
+     * @return \ReCaptcha\RequestMethod\Post
+     */
     public function custom()
     {
         return new \ReCaptcha\RequestMethod\Post();

@@ -20,6 +20,14 @@ class Bugreport extends Model
         'status',
     ];
 
+    public function firstSeenUser()
+    {
+        return $this->hasOne('App\User', 'id', 'firstSeenUser_id');
+    }
+
+    /**
+     * @return string
+     */
     public function getPriority(){
         switch ($this->priority){
             case 0:
@@ -33,6 +41,11 @@ class Bugreport extends Model
         }
     }
 
+    /**
+     * Erstellt den Badge mit der dazugehörigen Eigenschaften.
+     *
+     * @return string
+     */
     public function getPriorityBadge(){
         switch ($this->priority){
             case 0:
@@ -46,6 +59,9 @@ class Bugreport extends Model
         }
     }
 
+    /**
+     * @return string
+     */
     public function getStatus(){
         switch ($this->status){
             case 0:
@@ -59,6 +75,11 @@ class Bugreport extends Model
         }
     }
 
+    /**
+     * Erstellt den Badge mit der dazugehörigen Eigenschaften.
+     *
+     * @return string
+     */
     public function getStatusBadge(){
         switch ($this->status){
             case 0:
@@ -72,6 +93,9 @@ class Bugreport extends Model
         }
     }
 
+    /**
+     * @return int
+     */
     public static function countNew(){
         return Bugreport::where('firstSeen', null)->get()->count();
     }

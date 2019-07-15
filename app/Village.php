@@ -29,12 +29,21 @@ class Village extends CustomModel
         return $this->hash;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function playerLatest()
     {
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Player', 'owner', 'playerID', $table[0].'.player_latest');
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @param int $village
+     * @return $this
+     */
     public static function village($server, $world, $village){
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
@@ -42,14 +51,18 @@ class Village extends CustomModel
         return $villageModel->find($village);
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @param int $villageID
+     * @return \Illuminate\Support\Collection
+     */
     public static function villageDataChart($server, $world, $villageID){
-        $tabelNr = $villageID % env('HASH_ALLY');
-
+        $tabelNr = $villageID % env('HASH_VILLAGE');
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'DESC')->get();
-
         $villageDatas = collect();
 
         foreach ($villageDataArray as $village){
@@ -62,6 +75,9 @@ class Village extends CustomModel
         return $villageDatas;
     }
 
+    /**
+     * @return string
+     */
     public function bonusText() {
         switch($this->bonus_id) {
             case 0:
@@ -88,14 +104,24 @@ class Village extends CustomModel
         return '-';
     }
 
+    /**
+     * @return string
+     */
     public function continentString() {
         return "K" . intval($this->x / 100) . intval($this->y / 100);
     }
 
+    /**
+     * @return string
+     */
     public function coordinates() {
         return $this->x."|".$this->y;
     }
 
+    /**
+     * @param $skin
+     * @return string|null
+     */
     public function getVillageSkinImage($skin) {
         $skins = array("dark", "default", "old", "symbol", "winter");
         $index = array_search($skin, $skins);

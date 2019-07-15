@@ -25,7 +25,6 @@ class VillageController extends Controller
 
         $datas = Village::villageDataChart($server, $world, $village);
         $chartJS = $this->chart($datas, 'points');
-
         $conquer = Conquer::villageConquerCounts($server, $world, $village);
 
         return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS', 'server'));

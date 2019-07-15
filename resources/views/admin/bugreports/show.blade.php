@@ -72,7 +72,7 @@
                     {{ trans('cruds.bugreport.fields.seen') }}
                 </th>
                 <td>
-                    {{ $bugreport->firstSeenUser }} || {{ $bugreport->firstSeen }} || <small class="text-muted">{{ $bugreport->created_at->diffForHumans() }}</small>
+                    {{ $bugreport->firstSeenUser->name }} || {{ $bugreport->firstSeen }} || <small class="text-muted">{{ $bugreport->created_at->diffForHumans() }}</small>
                 </td>
             </tr>
             </tbody>

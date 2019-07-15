@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Util\BasicFunctions;
+use Illuminate\Database\Eloquent\Collection;
 
 class Player extends CustomModel
 {
@@ -14,6 +15,10 @@ class Player extends CustomModel
 
     public $timestamps = true;
 
+    /**
+     * Player constructor.
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -29,18 +34,29 @@ class Player extends CustomModel
         return $this->hash;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function allyLatest()
     {
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Ally', 'ally_id', 'allyID', $table[0].'.ally_latest');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function allyChanges()
     {
         $table = explode('.', $this->table);
         return $this->myhasMany('App\AllyChanges', 'player_id', 'playerID', $table[0].'.ally_changes');
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @return Collection
+     */
     public static function getAllPlayer($server, $world){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
@@ -48,6 +64,13 @@ class Player extends CustomModel
         return $playerModel->orderBy('rank')->get();
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @param string $order
+     * @param int $page
+     * @return Collection
+     */
     public static function getAllPlayer20($server, $world, $order, $page){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
@@ -55,17 +78,26 @@ class Player extends CustomModel
         return $playerModel->where($order, '>', $page*20-20)->orderBy($order)->limit(20)->get();
     }
 
-    /*
+    /**
      * Gibt die Top 10 Spieler zurück
-     * */
+     *
+     * @param string $server
+     * @param $world
+     * @return Collection
+     */
     public static function top10Player($server, $world){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->orderBy('rank')->limit(10)->get();
-
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @param int $player
+     * @return $this
+     */
     public static function player($server, $world, $player){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
@@ -74,6 +106,12 @@ class Player extends CustomModel
 
     }
 
+    /**
+     * @param string $server
+     * @param $world
+     * @param int $playerID
+     * @return \Illuminate\Support\Collection
+     */
     public static function playerDataChart($server, $world, $playerID){
         $tabelNr = $playerID % env('HASH_PLAYER');
 
@@ -99,7 +137,10 @@ class Player extends CustomModel
         return $playerDatas;
 
     }
-    
+
+    /**
+     * @return string
+     */
     public function nameWithAlly() {
         if ($this->ally_id != 0) {
             return $this->name . " [" . $this->allyLatest->tag . "]";

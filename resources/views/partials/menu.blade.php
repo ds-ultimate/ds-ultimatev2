@@ -90,7 +90,7 @@
                         <i class="fa-bug fas nav-icon">
 
                         </i>
-                        {{ trans('cruds.bugreportManagement.title') }}
+                        {{ trans('cruds.bugreport.title') }}
                     </a>
                     <ul class="nav-dropdown-items">
                         @can('bugreport_access')

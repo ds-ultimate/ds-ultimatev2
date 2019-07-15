@@ -12,22 +12,32 @@ namespace App\Util;
 use App;
 use App\World;
 use App\Server;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class BasicFunctions
 {
+    /**
+     * @param int $num
+     * @param int $round_to
+     * @return string
+     */
     public static function numberConv($num, $round_to = 0){
         return number_format($num, $round_to, ',', '.');
     }
 
+    /**
+     * @param $world
+     * @return int
+     */
     public static function getWorldNum($world) {
         return (int)preg_replace("/[^0-9]+/", '', $world);
     }
 
-    public static function getWorldID($world, $server) {
-        return str_replace($server, '', $world);
-    }
-
+    /**
+     * @param $world
+     * @return string
+     */
     public static function getServer($world) {
         foreach(Server::getServer() as $server) {
             if(BasicFunctions::startsWith($world, $server->code)) {
@@ -37,34 +47,94 @@ class BasicFunctions
         return '';
     }
 
+    /**
+     * @param World $world
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkWorld(World $world, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkWorldAlly(World $world, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkWorldPlayer(World $world, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param int $playerID
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkPlayer(World $world, $playerID, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[$world->server->code, $world->name, $playerID]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param int $allyID
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkAlly(World $world, $allyID, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param int $villageID
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkVillage(World $world, $villageID, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param int $playerID
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
     public static function linkPlayerAllyChanges(World $world, $playerID, $text, $class = null, $id = null){
         return '<a class="'.$class.'" id="'.$id.'" href="'.route('playerAllyChanges',[$world->server->code, $world->name, 'all', $playerID]).'">'.$text.'</a>';
     }
 
+    /**
+     * @param World $world
+     * @param int $allyID
+     * @param $allyChanges
+     * @param string|null $class
+     * @return string
+     */
     public static function linkAllyAllyChanges(World $world, $allyID, $allyChanges, $class = null){
         return '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'all', $allyID]).'">'.
                     BasicFunctions::numberConv($allyChanges->get('total')).
@@ -81,6 +151,13 @@ class BasicFunctions
                 '</a> )';
     }
 
+    /**
+     * @param World $world
+     * @param int $playerID
+     * @param $conquer
+     * @param string|null $class
+     * @return string
+     */
     public static function linkPlayerConquer (World $world, $playerID, $conquer, $class = null){
         return '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'all', $playerID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).
@@ -97,6 +174,13 @@ class BasicFunctions
                 '</a> )';
     }
 
+    /**
+     * @param World $world
+     * @param int $allyID
+     * @param $conquer
+     * @param string|null $class
+     * @return string
+     */
     public static function linkAllyConquer (World $world, $allyID, $conquer, $class = null){
         return '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'all', $allyID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).
@@ -113,6 +197,11 @@ class BasicFunctions
                 '</a> )';
     }
 
+    /**
+     * @param string $dbName
+     * @param string $table
+     * @return bool
+     */
     public static function existTable($dbName, $table){
         try{
             $result = DB::statement("SELECT 1 FROM `$dbName`.`$table` LIMIT 1");
@@ -122,6 +211,10 @@ class BasicFunctions
         return $result !== false;
     }
 
+    /**
+     * @param string $dbName
+     * @return bool
+     */
     public static function existDatabase($dbName){
         try{
             $result = DB::select("SHOW DATABASES LIKE '".BasicFunctions::likeSaveEscape($dbName)."'");
@@ -131,6 +224,11 @@ class BasicFunctions
         return $result !== false && count($result) > 0;
     }
 
+    /**
+     * @param $input
+     * @param $type
+     * @return bool|int
+     */
     public static function hash($input ,$type){
         switch($type) {
             case 'p': //Player
@@ -147,14 +245,21 @@ class BasicFunctions
         App::setLocale(\Session::get('locale', 'de'));
     }
 
-    /*
+    /**
      * This function only decodes the Data
      * the output must be escaped properly afterwards
+     *
+     * @param string $name
+     * @return string
      */
     public static function decodeName($name) {
         return urldecode($name);
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public static function outputName($name) {
         return nl2br(htmlentities(urldecode($name)));
     }
@@ -168,26 +273,20 @@ class BasicFunctions
         $log->save();
     }
 
+    /**
+     * @return Collection
+     */
     public static function getWorld(){
         $world = new World();
         $world->setTable(env('DB_DATABASE').'.worlds');
-        // FIXME: für den Testserver
-        //return $world->get();
-        return $world->where('name', '=', '164')
-                ->orWhere('name', '=', '165')
-                ->orWhere('name', '=', '166')
-                ->orWhere('name', '=', '167')
-                ->orWhere('name', '=', '163')
-                ->orWhere('name', '=', '162')
-                ->orWhere('name', '=', '161')
-                ->orWhere('name', '=', '160')
-                ->orWhere('name', '=', '169')
-                ->orWhere('name', '=', '168')
-                ->get();
-        // FIXME: nur für den live Server
-        return $world->get();
+        return $world->where('active', '=', '1')->get();
     }
-    
+
+    /**
+     * @param string $server
+     * @param $world
+     * @return mixed
+     */
     public static function getDatabaseName($server, $world) {
         $replaceArray = array(
             '{server}' => $server,
@@ -197,28 +296,45 @@ class BasicFunctions
                 array_values($replaceArray),
                 env('DB_DATABASE_WORLD'));
     }
-    
+
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
     public static function startsWith($haystack, $needle) {
         return $needle === "" || strpos($haystack, $needle) === 0;
     }
-    
+
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
     public static function endsWith($haystack, $needle) {
         return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
     }
-    
+
     public static function ignoreErrs() {
         set_error_handler(function($severity, $message, $file, $line) {
             echo "We got an errror[$severity] at $file:$line:\n$message\nBut we are ignoring it\n";
             return;
         });
     }
-    
+
+    /**
+     * @param $toEscape
+     * @return mixed
+     */
     public static function likeSaveEscape($toEscape) {
         $search = array( "\\"  , "%"  , "_"  , "["  , "]"  , "'"  , "\""  );
         $replace = array("\\\\", "\\%", "\\_", "[[]", "[]]", "\\'", "\\\"");
         return str_replace($search, $replace, $toEscape);
     }
 
+    /**
+     * @return array
+     */
     public static function flags(){
         return ['ad','ae','af','ag','ai','al','am','ao','aq','ar','as','at','au','aw','ax','az','ba','bb','bd','be','bf','bg','bh','bi','bj','bl','bm','bn',
             'bo','bq','br','bs','bt','bv','bw','by','bz','ca','cc','cd','cf','cg','ch','ci','ck','cl','cm','cn','co','cr','cu','cv','cw','cx','cy','cz','de',
