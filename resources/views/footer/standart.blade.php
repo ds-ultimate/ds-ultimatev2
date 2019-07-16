@@ -2,7 +2,7 @@
     <div class="col-12 mx-auto text-center">
         <ul class="list-inline my-0">
             <li class="list-inline-item">
-                <small><a href="#">Impressum</a></small>
+                <small><a href="{{ route('legalPage') }}">Impressum</a></small>
             </li>
             <li class="list-inline-item">
                 <small>-</small>

@@ -68,6 +68,11 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
 Route::get('/test', function () {
 	Storage::put('file.txt', 'test');
 })->name('test');
+
+Route::get('/impressum', function () {
+    return view("content.legalPage");
+})->name('legalPage');
+
 Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');
