@@ -21,7 +21,7 @@ return array (
     'name' => 'Name',
     'name_help' => 'Name oder Nickname.',
     'email' => 'E-Mail',
-    'email_help' => 'E-Mail Adresse',
+    'email_help' => 'Ihre E-Mail Adresse für eventuelle Rückfragen',
     'form_title' => 'Titel',
     'form_title_help' => 'Bitte einen treffenden Titel wählen.',
     'priority' => 'Priorität',
@@ -36,7 +36,7 @@ return array (
     'description' => 'Beschreibung',
     'description_help' => 'Je ausführlicher um so besser.',
     'url' => 'URL',
-    'url_help' => 'Falls es eine bestimmte Seite betrifft können wir uns schneller darum kümmern wenn wir einen Link dazu kriegen. Alternativ ein Bild was den Fehler zeigt.',
+    'url_help' => 'Falls es eine bestimmte Seite betrifft können wir uns schneller darum kümmern wenn wir einen Link dazu kriegen.',
   ),
   'formular' => 'Formular',
 );

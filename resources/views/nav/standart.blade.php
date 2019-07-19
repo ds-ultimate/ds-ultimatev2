@@ -19,7 +19,7 @@
                 <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                     @foreach(\App\World::worldsCollection($server) as $worlds)
                         <li class="dropdown-submenu">
-                            <a  class="dropdown-item" tabindex="-1" href="#">{!! (($worlds->get(0)->sortType() == "world")? ucfirst(__('Normale Welten')): ucfirst(__('Spezial Welten'))) !!}</a>
+                            <a  class="dropdown-item" tabindex="-1" href="#">{!! (($worlds->get(0)->sortType() == "world")? ucfirst(__('ui.tabletitel.normalWorlds')): ucfirst(__('ui.tabletitel.specialWorlds'))) !!}</a>
                             <ul class="dropdown-menu">
                                 @foreach($worlds as $world)
                                     <li class="dropdown-item">
@@ -104,7 +104,7 @@
                     <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
+                        {{ __('user.logout') }}
                     </a>
 
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
