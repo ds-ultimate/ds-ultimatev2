@@ -25,10 +25,6 @@ Route::get('/setlocale/{locale}',function($lang){
     return redirect()->back();
 })->name('locale');
 
-Route::get('/php', function () {
-    phpinfo();
-});
-
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['dashboard']], function () {
     Route::get('/', 'HomeController@index')->name('home');
 
@@ -63,11 +59,6 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::get('/bugreport', 'FormController@bugreport')->name('bugreport');
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
-
-
-Route::get('/test', function () {
-	Storage::put('file.txt', 'test');
-})->name('test');
 
 Route::get('/impressum', function () {
     return view("content.legalPage");
