@@ -10,7 +10,7 @@
             </div>
         </div>
         <!-- Normale Welten -->
-        @if(count($worldsArray->get('world')) > 0)
+        @if($worldsArray->get('world') != null && count($worldsArray->get('world')) > 0)
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
@@ -48,7 +48,7 @@
         @endif
         <!-- ENDE Normale Welten -->
         <!-- Spezial Welten -->
-        @if (count($worldsArray->get('casual')) > 0 || count($worldsArray->get('speed')) > 0 || count($worldsArray->get('classic')) > 0)
+        @if (($worldsArray->get('casual') != null && count($worldsArray->get('casual')) > 0) || ($worldsArray->get('speed') != null && count($worldsArray->get('speed')) > 0) || ($worldsArray->get('classic') != null && count($worldsArray->get('classic')) > 0))
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
@@ -63,7 +63,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if(count($worldsArray->get('speed')) > 0)
+                        @if($worldsArray->get('speed') != null && count($worldsArray->get('speed')) > 0)
                             @foreach($worldsArray->get('speed') as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
@@ -80,7 +80,7 @@
                                 </tr>
                             @endforeach
                         @endif
-                        @if(count($worldsArray->get('casual')) > 0)
+                        @if($worldsArray->get('casual') != null && count($worldsArray->get('casual')) > 0)
                             @foreach($worldsArray->get('casual') as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
@@ -97,7 +97,7 @@
                                 </tr>
                             @endforeach
                         @endif
-                        @if(count($worldsArray->get('classic')) > 0)
+                        @if($worldsArray->get('classic') != null && count($worldsArray->get('classic')) > 0)
                             @foreach($worldsArray->get('classic') as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
