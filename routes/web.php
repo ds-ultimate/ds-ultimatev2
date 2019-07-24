@@ -17,6 +17,13 @@ Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
+Route::get('/test', function () {
+    $villagesModel = new \App\Village();
+    $villagesModel->setTable('dsUltimate_welt_de164.village_latest');
+    $villages = $villagesModel->where('x', '<', 500)->where('x', '>', 600)->where('y', '<', 500)->where('y', '>', 600)->get();
+    var_dump($villages);
+});
+
 Route::get('/setlocale/{locale}',function($lang){
     $validLocale = in_array($lang, ['de', 'en']);
     if ($validLocale) {
