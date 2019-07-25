@@ -31,7 +31,7 @@
                 </ul>
             </li>
             @endif
-            @if (isset($worldData))
+            @if (false && isset($worldData))
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{__('ui.server.ranking')}}
