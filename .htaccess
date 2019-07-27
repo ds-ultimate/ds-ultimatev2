@@ -23,9 +23,10 @@
     RewriteRule ^(images/.*) /public/$1 [L]
     RewriteRule ^(vendor/.*) /public/$1 [L]
     RewriteRule ^(storage/.*) /public/$1 [L]
+    RewriteRule ^(robots.txt) /public/robots.txt [L]
 
     #RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*) /public/index.php
+    RewriteRule ^(.*) /public/index.php [L]
 </IfModule>
 
 AuthType Basic
