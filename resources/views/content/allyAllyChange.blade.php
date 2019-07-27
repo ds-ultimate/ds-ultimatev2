@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::outputName($allyData->name))
+@section('titel', ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::decodeName($allyData->name))
 
 @section('content')
     <div class="row justify-content-center">

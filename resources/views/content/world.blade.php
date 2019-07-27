@@ -56,7 +56,7 @@
                             <tr>
                                 <th>{{ $ally->rank }}</th>
                                 <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkAlly($worldData, $ally->allyID, \App\Util\BasicFunctions::outputName($ally->name))!!}</td>
-                                <td>{{ \App\Util\BasicFunctions::outputName($ally->tag) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::decodeName($ally->tag) }}</td>
                                 <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->points) }}</td>
                                 <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->member_count) }}</td>
                                 <td class="text-right">{{ \App\Util\BasicFunctions::numberConv($ally->village_count) }}</td>

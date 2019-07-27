@@ -12,7 +12,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">{{ucfirst(__('ui.titel.searchResults'))}}: {!! $result->count() !!}</h4>
+                    <h4 class="card-title">{{ucfirst(__('ui.titel.searchResults'))}}: {{ $result->count() }}</h4>
+                    @if ($result->count() >= App\Http\Controllers\SearchController::$limit)
+                    {{ str_replace('$limit', App\Http\Controllers\SearchController::$limit, __('ui.titel.searchLimited')) }}<br><br>
+                    @endif
                     @if ($type == 'player')
                         <table id="table_id" class="table table-striped table-hover table-sm w-100">
                             <thead><tr>

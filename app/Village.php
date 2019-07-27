@@ -89,7 +89,7 @@ class Village extends CustomModel
             case 3:
                 return "+100% Eisen";
             case 4:
-                return "+10% Bev&ouml;lkerung";
+                return "+10% Bevölkerung";
             case 5:
                 return "+33% schnellere Kaserne";
             case 6:
@@ -99,7 +99,7 @@ class Village extends CustomModel
             case 8:
                 return "+30% auf alle Rohstoffe";
             case 9:
-                return "+50% H&auml;ndler &amp; Speicher";
+                return "+50% Händler & Speicher";
         }
         return '-';
     }

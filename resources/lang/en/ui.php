@@ -89,6 +89,7 @@ return array (
     'ally' => 'Tribe',
     'player' => 'Player',
     'worldOverview' => 'World overview',
+    'searchLimited' => 'Only the first $limit entries are displayed because your search yielded too many results',
   ),
   'footer' => 
   array (

@@ -11,11 +11,12 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-
+    public static $limit = 100;
+    
     public function searchForm(Request $request, $server)
     {
         if ($request->search != null) {
-            return redirect()->route('search', [$server, $request->submit, $request->search]);
+            return redirect()->route('search', [$server, urlencode($request->submit), urlencode($request->search)]);
         }else{
             return redirect()->back();
         }
@@ -33,6 +34,9 @@ class SearchController extends Controller
                 $players->put('world', $world);
                 $players->put('player', $data);
                 $playerCollect->push($players);
+                
+                if($playerCollect->count() >= SearchController::$limit)
+                    return $playerCollect;
             }
         }
         return $playerCollect;
@@ -50,6 +54,9 @@ class SearchController extends Controller
                 $allys->put('world', $world);
                 $allys->put('ally', $data);
                 $allyCollect->push($allys);
+                
+                if($allyCollect->count() >= SearchController::$limit)
+                    return $allyCollect;
             }
         }
         return $allyCollect;
@@ -79,6 +86,9 @@ class SearchController extends Controller
                 $villages->put('world', $world);
                 $villages->put('village', $data);
                 $villageCollect->push($villages);
+                
+                if($villageCollect->count() >= SearchController::$limit)
+                    return $villageCollect;
             }
 
             if($coordsearch) {
@@ -88,6 +98,9 @@ class SearchController extends Controller
                     $villages->put('world', $world);
                     $villages->put('village', $data);
                     $villageCollect->push($villages);
+                    
+                    if($villageCollect->count() >= SearchController::$limit)
+                        return $villageCollect;
                 }
             }
         }

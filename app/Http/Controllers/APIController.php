@@ -234,6 +234,7 @@ class APIController extends Controller
                 return Carbon::createFromTimestamp($conquer->timestamp);
             })
             ->addColumn('village_name', function ($conquer){
+                if($conquer->village == null) return ucfirst (__("ui.player.deleted"));
                 return BasicFunctions::decodeName($conquer->village->name);
             })
             ->addColumn('old_owner_name', function ($conquer){

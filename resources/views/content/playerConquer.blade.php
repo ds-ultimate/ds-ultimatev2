@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('ui.titel.player')).': '.\App\Util\BasicFunctions::outputName($playerData->name))
+@section('titel', ucfirst(__('ui.titel.player')).': '.\App\Util\BasicFunctions::decodeName($playerData->name))
 
 @section('content')
     <div class="row justify-content-center">

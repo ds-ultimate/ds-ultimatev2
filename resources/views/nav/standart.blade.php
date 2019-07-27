@@ -31,12 +31,17 @@
                 </ul>
             </li>
             @endif
-            @if (false && isset($worldData))
+            @if (isset($worldData))
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{__('ui.server.ranking')}}
                     </a>
                     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-item"><a href="{{ route('world', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tabletitel.top10')) }}</a></li>
+                        <li class="dropdown-item"><a href="{{ route('worldPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }}</a></li>
+                        <li class="dropdown-item"><a href="{{ route('worldAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }}</a></li>
+            @if (false)
+            // FIXME: use below code
                         <li class="dropdown-submenu">
                             <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.player') }}</a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -53,6 +58,7 @@
                                 <a class="dropdown-item" href="village">{{ ucfirst(__('ui.table.bashDeff')) }}</a>
                             </div>
                         </li>
+            @endif
                     </ul>
                 </li>
             @endif

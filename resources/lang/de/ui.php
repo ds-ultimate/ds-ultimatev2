@@ -34,6 +34,7 @@ return array (
     'village' => 'Dorf',
     'worldOverview' => 'Weltenübersicht',
     'overview' => 'Übersicht',
+    'searchLimited' => 'Es werden nur die ersten $limit Einträge angezeigt, weil ihre suche zu viele Ergebnisse lieferte',
   ),
   'tabletitel' => 
   array (
