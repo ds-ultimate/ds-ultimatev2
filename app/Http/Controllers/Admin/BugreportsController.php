@@ -89,7 +89,7 @@ class BugreportsController extends Controller
         abort_unless(\Gate::allows('bugreport_show'), 403);
 
         if ($bugreport->firstSeen === null) {
-            $bugreport->firstSeenUser = Auth::user()->id;
+            $bugreport->firstSeenUser_id = Auth::user()->id;
             $bugreport->firstSeen = Carbon::now();
             $bugreport->save();
         }
