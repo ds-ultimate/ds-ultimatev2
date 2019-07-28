@@ -14,20 +14,35 @@ class BugreportRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'name' =>
-                'required',
-            'email' =>
-                'required|email',
-            'title' =>
-                'required',
-            'priority' =>
-                'required',
-            'description' =>
-                'required',
-            'g-recaptcha-response' =>
-                'required|captcha',
-        ];
+        if (env('APP_DEBUG') == false) {
+            return [
+                'name' =>
+                    'required',
+                'email' =>
+                    'required|email',
+                'title' =>
+                    'required',
+                'priority' =>
+                    'required',
+                'description' =>
+                    'required',
+                'g-recaptcha-response' =>
+                    'required|captcha',
+            ];
+        }else{
+            return [
+                'name' =>
+                    'required',
+                'email' =>
+                    'required|email',
+                'title' =>
+                    'required',
+                'priority' =>
+                    'required',
+                'description' =>
+                    'required',
+            ];
+        }
     }
 
     public function messages()

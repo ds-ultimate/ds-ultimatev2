@@ -81,4 +81,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany('\App\Role');
     }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        return $this->email;
+    }
 }

@@ -7,7 +7,7 @@
                 <h1 class="font-weight-normal">{{ __('user.bugreport.title') }}</h1>
             </div>
         </div>
-        <div class="col-12 col-md-6 mt-2">
+        <div class="col-12 col-md-8 mt-2">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ __('user.formular') }}:</h2>

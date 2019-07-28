@@ -173,4 +173,15 @@ return array (
       'deleted_at_helper' => '',
     ),
   ),
+  'news' => 
+  array (
+    'fields' => 
+    array (
+      'content' => 'Content',
+      'id' => 'ID',
+      'update' => 'Updated at',
+    ),
+    'title' => 'News',
+    'title_singular' => 'News',
+  ),
 );

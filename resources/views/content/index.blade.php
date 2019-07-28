@@ -1,6 +1,22 @@
 @extends('layouts.temp')
 
 @section('content')
+    @if (session()->has('successBugreport'))
+        <div class="toast" style="position: absolute; top: 60px; right: 10px;" data-delay="6000">
+            <div class="toast-header">
+                <strong class="mr-auto">{{ __('user.bugreport.title') }}</strong>
+                <small>{{ __('global.now') }}</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                {{ session()->get('successBugreport') }}
+                <br>
+                <b>{{ __('global.thankYou') }}</b>
+            </div>
+        </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-3 mx-auto my-1 text-center">
@@ -76,5 +92,9 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $(document).ready(function(){
+            $('.toast').toast('show');
+        });
+    </script>
 @stop

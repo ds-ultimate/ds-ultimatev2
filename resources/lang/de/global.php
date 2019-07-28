@@ -242,4 +242,6 @@ return array (
   'y_axis_field' => 'Y-Achsen Feld',
   'you_have_no_messages' => 'Sie haben keine Nachrichten.',
   'calendar' => 'Kalender',
+  'now' => 'jetzt',
+  'thankYou' => 'Vielen Dank!',
 );

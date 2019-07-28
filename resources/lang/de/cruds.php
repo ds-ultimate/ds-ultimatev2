@@ -139,6 +139,13 @@ return array (
   ),
   'news' => 
   array (
-    'title_singular' => 'News',
+    'title_singular' => 'Nachricht',
+    'title' => 'Nachrichten',
+    'fields' => 
+    array (
+      'content' => 'Inhalt',
+      'id' => 'ID',
+      'update' => 'Aktualisiert',
+    ),
   ),
 );
