@@ -184,4 +184,12 @@ return array (
     'title' => 'News',
     'title_singular' => 'News',
   ),
+  'bugreport' => 
+  array (
+    'fields' => 
+    array (
+      'comment' => 'Comments',
+      'comment_singular' => 'Comment',
+    ),
+  ),
 );

@@ -20,6 +20,12 @@ class Bugreport extends Model
         'status',
     ];
 
+    public function comments(){
+
+        return $this->hasMany('App\BugreportComment');
+
+    }
+
     public function firstSeenUser()
     {
         return $this->hasOne('App\User', 'id', 'firstSeenUser_id');

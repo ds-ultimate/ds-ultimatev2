@@ -125,6 +125,8 @@ return array (
       'created' => 'Erstellt',
       'description' => 'Beschreibung',
       'url' => 'URL',
+      'comment' => 'Kommentare',
+      'comment_singular' => 'Kommentar',
     ),
     'statusSelect' => 
     array (

@@ -69,6 +69,9 @@
                             {{ trans('cruds.bugreport.fields.status') }}
                         </th>
                         <th>
+                            {{ trans('cruds.bugreport.fields.comment') }}
+                        </th>
+                        <th>
                             {{ trans('cruds.bugreport.fields.created') }}
                         </th>
                         <th>
@@ -99,6 +102,9 @@
                                 <h4>{!! $bugreport->getStatusBadge() !!}</h4>
                             </td>
                             <td>
+                                {{ $bugreport->comments->count() }}
+                            </td>
+                            <td>
                                 {{ $bugreport->created_at->diffForHumans() }}
                             </td>
                             <td>
@@ -113,7 +119,7 @@
                                     </a>
                                 @endcan
                                 @can('bugreport_delete')
-                                    <form action="{{ route('admin.bugreports.destroy', $bugreport->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ action('Admin\BugreportsCommentController@destroy', [ 'id' => $bugreport->id]) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">

@@ -61,6 +61,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('bugreports/status/{status}', 'BugreportsController@indexStatus')->name('bugreports.status');
     Route::get('bugreports/new', 'BugreportsController@indexNew')->name('bugreports.new');
     Route::resource('bugreports', 'BugreportsController');
+
+    Route::resource('bugreportsComments', 'BugreportsCommentController');
 });
 
 Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {

@@ -244,4 +244,5 @@ return array (
   'calendar' => 'Calendar',
   'now' => 'now',
   'thankYou' => 'Thank you!',
+  'close' => 'Close',
 );
