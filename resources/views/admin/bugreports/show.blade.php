@@ -156,7 +156,7 @@
             </div>
         </div>
         <div>
-            <a class="btn btn-default mt-4" href="{{ url()->previous() }}">
+            <a class="btn btn-default mt-4" href="{{ route('admin.bugreports.index') }}">
                 Back
             </a>
             <button type="button" class="btn btn-primary float-right mt-4" data-toggle="modal" data-target="#exampleModal">

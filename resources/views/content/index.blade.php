@@ -2,7 +2,7 @@
 
 @section('content')
     @if (session()->has('successBugreport'))
-        <div class="toast" style="position: absolute; top: 60px; right: 10px;" data-delay="6000">
+        <div class="toast" style="position: absolute; top: 60px; right: 10px; z-index: 100;" data-delay="6000">
             <div class="toast-header">
                 <strong class="mr-auto">{{ __('user.bugreport.title') }}</strong>
                 <small>{{ __('global.now') }}</small>
