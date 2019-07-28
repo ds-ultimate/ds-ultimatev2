@@ -7,6 +7,7 @@
                 <h1 class="font-weight-normal">{{ env('APP_NAME') }}</h1>
             </div>
         </div>
+        @if (count($news) > 0)
         <!-- News -->
         <div class="col col-md-1"></div>
         <div class="col-12 col-md-10 mt-1 mb-3">
@@ -39,6 +40,7 @@
         </div>
         <div class="col col-md-1"></div>
         <!-- ENDE News -->
+        @endif
         <!-- Normale Welten -->
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
