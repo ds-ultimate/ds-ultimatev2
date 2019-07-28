@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale = 1.0; maximum-scale=1.0; user-scalable=no" />
+    <meta name="google-site-verification" content="VHh31G0jFa1hVoy54n4ZeGupk8sU4kOxPeYGgOEblkA" />
 
     <title>{{ config('app.name', 'Laravel') }} @yield('titel')</title>
 

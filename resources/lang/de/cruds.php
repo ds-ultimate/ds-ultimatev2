@@ -137,4 +137,8 @@ return array (
     'title_singular' => 'Fehlermeldung',
     'title' => 'Fehlermeldungen',
   ),
+  'news' => 
+  array (
+    'title_singular' => 'News',
+  ),
 );

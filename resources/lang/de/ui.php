@@ -103,4 +103,8 @@ return array (
     'noAlly' => 'Stammeslos',
     'deleted' => 'Gelöscht',
   ),
+  'news' => 
+  array (
+    'title' => 'Neuigkeiten',
+  ),
 );

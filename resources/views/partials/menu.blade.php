@@ -11,6 +11,16 @@
                 </a>
             </li>
             @can('user_management_access')
+                <li class="nav-item">
+                    <a href="{{ route('admin.news.index') }}" class="nav-link">
+                        <i class="fa-newspaper fas nav-icon">
+
+                        </i>
+                        {{ __('cruds.news.title') }}
+                    </a>
+                </li>
+            @endcan
+            @can('user_management_access')
                 <li class="nav-item nav-dropdown">
                     <a class="nav-link  nav-dropdown-toggle">
                         <i class="fa-fw fas fa-users nav-icon">

@@ -19,7 +19,7 @@ class MassDestroyBugreportRequest extends FormRequest
     {
         return [
             'ids'   => 'required|array',
-            'ids.*' => 'exists:users,id',
+            'ids.*' => 'exists:bugreports,id',
         ];
     }
 }

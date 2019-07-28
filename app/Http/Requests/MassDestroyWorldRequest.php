@@ -19,7 +19,7 @@ class MassDestroyWorldRequest extends FormRequest
     {
         return [
             'ids'   => 'required|array',
-            'ids.*' => 'exists:main.worlds,id',
+            'ids.*' => 'exists:worlds,id',
         ];
     }
 }

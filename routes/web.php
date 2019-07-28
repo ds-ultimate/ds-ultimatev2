@@ -52,6 +52,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     Route::resource('worlds', 'WorldsController');
 
+    Route::delete('news/destroy', 'NewsController@massDestroy')->name('news.massDestroy');
+
+    Route::resource('news', 'NewsController');
+
     Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
     Route::get('bugreports/priority/{priority}', 'BugreportsController@indexPriority')->name('bugreports.priority');
     Route::get('bugreports/status/{status}', 'BugreportsController@indexStatus')->name('bugreports.status');

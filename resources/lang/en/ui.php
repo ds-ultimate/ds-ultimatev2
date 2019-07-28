@@ -103,4 +103,8 @@ return array (
     'noAlly' => 'without tribe',
     'deleted' => 'deleted',
   ),
+  'news' => 
+  array (
+    'title' => 'News',
+  ),
 );

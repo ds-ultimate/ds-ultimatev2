@@ -14,4 +14,5 @@ _ide_helper.php
 /.idea
 /stats
 .htpasswd
+.htaccess
 workspace.xml

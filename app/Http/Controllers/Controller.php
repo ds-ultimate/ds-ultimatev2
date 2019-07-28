@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
+use App\News;
 use App\Player;
 use App\Server;
 use App\Util\BasicFunctions;
@@ -20,7 +21,8 @@ class Controller extends BaseController
     public function index(){
         BasicFunctions::local();
         $serverArray = Server::getServer();
-        return view('content.index', compact('serverArray'));
+        $news = News::all();
+        return view('content.index', compact('serverArray', 'news'));
     }
 
     /*

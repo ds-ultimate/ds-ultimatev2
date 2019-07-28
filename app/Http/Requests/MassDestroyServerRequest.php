@@ -19,7 +19,7 @@ class MassDestroyServerRequest extends FormRequest
     {
         return [
             'ids'   => 'required|array',
-            'ids.*' => 'exists:main.server,id',
+            'ids.*' => 'exists:server,id',
         ];
     }
 }
