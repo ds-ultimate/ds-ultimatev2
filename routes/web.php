@@ -70,6 +70,10 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
+Route::get('/todo', function(){
+    return view('todo');
+});
+
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
@@ -93,3 +97,4 @@ Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerContro
 
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
+Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');

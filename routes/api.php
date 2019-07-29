@@ -27,6 +27,7 @@ Route::get('/{server}/{world}/playerAllyChanges/{type}/{player}', 'APIController
 
 Route::get('/{server}/{world}/allyConquer/{type}/{ally}', 'APIController@getAllyConquer')->name('api.allyConquer');
 Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'APIController@getPlayerConquer')->name('api.playerConquer');
+Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getVillageConquer')->name('api.villageConquer');
 
 
 /*

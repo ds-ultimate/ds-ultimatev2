@@ -62,4 +62,22 @@ class VillageController extends Controller
 
         return \Lava::render('LineChart', $data, 'chart-'.$data);
     }
+    
+    public function conquer($server, $world, $type, $villageID){
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+        $villageData = Village::village($server, $world, $villageID);
+
+        switch($type) {
+            case "all":
+                $typeName = ucfirst(__('ui.conquer.all'));
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        return view('content.villageConquer', compact('worldData', 'server', 'villageData', 'typeName', 'type'));
+    }
 }

@@ -21,7 +21,7 @@
             </h4>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
-        <!-- Datachart Stammeswechsel -->
+        <!-- Datachart Eroberungen -->
         <div class="col-12 mt-2">
             <div class="card">
                 <div class="card-body">
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <!-- ENDE Datachart Stammeswechsel -->
+        <!-- ENDE Datachart Eroberungen -->
     </div>
 @endsection
 

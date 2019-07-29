@@ -158,6 +158,19 @@ class BasicFunctions
      * @param string|null $class
      * @return string
      */
+    public static function linkVillageConquer (World $world, $villageID, $conquer, $class = null){
+        return '<a class="'.$class.'" href="'.route('villageConquer',[$world->server->code, $world->name, 'all', $villageID]).'">'.
+                    BasicFunctions::numberConv($conquer->get('total')).
+                '</a>';
+    }
+
+    /**
+     * @param World $world
+     * @param int $playerID
+     * @param $conquer
+     * @param string|null $class
+     * @return string
+     */
     public static function linkPlayerConquer (World $world, $playerID, $conquer, $class = null){
         return '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'all', $playerID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).

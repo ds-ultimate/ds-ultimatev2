@@ -227,6 +227,25 @@ class APIController extends Controller
         
         return $this->doConquerReturn($query);
     }
+
+    public function getVillageConquer($server, $world, $type, $villageID)
+    {
+        $conquerModel = new Conquer();
+        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+
+        $query = $conquerModel->newQuery();
+
+        switch($type) {
+            case "all":
+                $query->where('village_id', $villageID);
+                break;
+            default:
+                // FIXME: create error view
+                return "Unknown type";
+        }
+        
+        return $this->doConquerReturn($query);
+    }
     
     private function doConquerReturn($query) {
         return DataTables::eloquent($query)
