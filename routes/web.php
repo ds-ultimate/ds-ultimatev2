@@ -70,10 +70,7 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
-Route::get('/todo', function(){
-    return view('todo');
-});
-
+Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');

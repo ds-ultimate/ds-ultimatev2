@@ -89,4 +89,28 @@ class Controller extends BaseController
         }
     }
 
+    public function sitemap() {
+        $servers = array();
+        $serverArray = Server::getServer();
+        
+        foreach($serverArray as $server) {
+            $worldsArray = World::worldsCollection($server->code);
+            $servers[$server->code] = collect();
+            
+            if($worldsArray->get('world') != null && count($worldsArray->get('world')) > 0) {
+                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('world'));
+            }
+            if($worldsArray->get('speed') != null && count($worldsArray->get('speed')) > 0) {
+                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('speed'));
+            }
+            if($worldsArray->get('casual') != null && count($worldsArray->get('casual')) > 0) {
+                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('casual'));
+            }
+            if($worldsArray->get('classic') != null && count($worldsArray->get('classic')) > 0) {
+                $servers[$server->code] =  $servers[$server->code]->merge($worldsArray->get('classic'));
+            }
+        }
+        
+        return response()->view('sitemap', compact('servers'))->header('Content-Type', 'text/xml');
+    }
 }
