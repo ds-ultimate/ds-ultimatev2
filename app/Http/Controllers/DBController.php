@@ -53,6 +53,7 @@ class DBController extends Controller
             $table->text('config');
             $table->boolean('active')->default(1);
             $table->timestamps();
+            $table->timestamp('worldCheck_at');
             $table->softDeletes();
         });
     }
@@ -151,6 +152,8 @@ class DBController extends Controller
                     foreach($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->get() as $world) {
                         if($worldNew == null) {
                             $worldNew = $world;
+                            $world->worldCheck_at = Carbon::createFromTimestamp(time());
+                            $world->update();
                         } else {
                             $world->delete();
                         }
@@ -167,6 +170,7 @@ class DBController extends Controller
                 $worldNew->url = $link;
                 $txt = file_get_contents("$link/interface.php?func=get_config");
                 $worldNew->config = $txt;
+                $world->worldCheck_at = Carbon::createFromTimestamp(time());
 
                 if ($worldNew->save() !== true){
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
@@ -188,6 +192,15 @@ class DBController extends Controller
                 BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
             }
         }
+
+        $worldModel = new World();
+
+        foreach ($worldModel->where('worldCheck_at', '<',\Carbon\Carbon::createFromTimestamp(time() - (60 * 30)))->get() as $world ){
+            BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
+            $world->active = null;
+            $world->update();
+        }
+
     }
     
     public function latestPlayer($server, $world){

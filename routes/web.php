@@ -18,7 +18,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
-    return view('test');
+
 });
 
 Route::get('/setlocale/{locale}',function($lang){
@@ -70,12 +70,14 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
+Route::post('/list', 'Admin\ListController@create');
+Route::get('/list', 'Admin\ListController@index');
+
 Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::get('/server', 'DBController@getWorld');
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');
 

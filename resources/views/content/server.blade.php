@@ -31,7 +31,7 @@
                                     <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                     @auth
                                         @if('world_access')
-                                            {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                            {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
                                         @endif
                                     @endauth
                                 </td>
@@ -70,7 +70,7 @@
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @if('world_access')
-                                                {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                                {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
                                             @endif
                                         @endauth
                                     </td>
@@ -87,7 +87,7 @@
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @if('world_access')
-                                                {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                                {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
                                             @endif
                                         @endauth
                                     </td>
@@ -104,7 +104,7 @@
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @if('world_access')
-                                                {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                                {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
                                             @endif
                                         @endauth
                                     </td>

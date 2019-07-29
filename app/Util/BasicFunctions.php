@@ -118,27 +118,83 @@ class BasicFunctions
 
     /**
      * @param World $world
+     * @param int $playerID
+     * @param string $text
+     * @param string|null $class
+     * @param string|null $id
+     * @return string
+     */
+    public static function linkPlayerAllyChanges(World $world, $playerID, $text, $class = null, $id = null){
+        return '<a class="'.$class.'" id="'.$id.'" href="'.route('playerAllyChanges',[$world->server->code, $world->name, 'all', $playerID]).'">'.$text.'</a>';
+    }
+
+    /**
+     * @param World $world
      * @param int $allyID
-     * @param \Illuminate\Support\Collection $conquer
+     * @param $allyChanges
      * @param string|null $class
      * @return string
      */
-    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer, $route, $class = null){
-        return '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'all', $itemID]).'">'.
+    public static function linkAllyAllyChanges(World $world, $allyID, $allyChanges, $class = null){
+        return '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'all', $allyID]).'">'.
+                    BasicFunctions::numberConv($allyChanges->get('total')).
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                    '<i class="text-success">'.
+                        BasicFunctions::numberConv($allyChanges->get('new')).
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('allyAllyChanges',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '<i class="text-danger">'.
+                        BasicFunctions::numberConv($allyChanges->get('old')).
+                    '</i>'.
+                '</a> )';
+    }
+
+    /**
+     * @param World $world
+     * @param int $playerID
+     * @param $conquer
+     * @param string|null $class
+     * @return string
+     */
+    public static function linkPlayerConquer (World $world, $playerID, $conquer, $class = null){
+        return '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'all', $playerID]).'">'.
                     BasicFunctions::numberConv($conquer->get('total')).
-                '</a>' .
-                (($conquer->has('new') && $conquer->has('old'))? //assume that there will be always gain an loose
-                    (' ( ' . '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'new', $itemID]).'">'.
-                        '<i class="text-success">'.
-                            BasicFunctions::numberConv($conquer->get('new')).
-                        '</i>'.
-                    '</a> - '.
-                    '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'old', $itemID]).'">'.
-                        '<i class="text-danger">'.
-                            BasicFunctions::numberConv($conquer->get('old')).
-                        '</i>'.
-                    '</a> )'):
-                    (''));
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'new', $playerID]).'">'.
+                    '<i class="text-success">'.
+                        BasicFunctions::numberConv($conquer->get('new')).
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('playerConquer',[$world->server->code, $world->name, 'old', $playerID]).'">'.
+                    '<i class="text-danger">'.
+                        BasicFunctions::numberConv($conquer->get('old')).
+                    '</i>'.
+                '</a> )';
+    }
+
+    /**
+     * @param World $world
+     * @param int $allyID
+     * @param $conquer
+     * @param string|null $class
+     * @return string
+     */
+    public static function linkAllyConquer (World $world, $allyID, $conquer, $class = null){
+        return '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'all', $allyID]).'">'.
+                    BasicFunctions::numberConv($conquer->get('total')).
+                '</a> ( '.
+                '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'new', $allyID]).'">'.
+                    '<i class="text-success">'.
+                        BasicFunctions::numberConv($conquer->get('new')).
+                    '</i>'.
+                '</a> - '.
+                '<a class="'.$class.'" href="'.route('allyConquer',[$world->server->code, $world->name, 'old', $allyID]).'">'.
+                    '<i class="text-danger">'.
+                        BasicFunctions::numberConv($conquer->get('old')).
+                    '</i>'.
+                '</a> )';
     }
 
     /**
@@ -289,5 +345,16 @@ class BasicFunctions
             'pa','pe','pf','pg','ph','pk','pl','pm','pn','pr','ps','pt','pw','py','qa','re','ro','rs','ru','rw','sa','sb','sc','sd','se','sg','sh','si','sj',
             'sk','sl','sm','sn','so','sr','ss','st','sv','sx','sy','sz','tc','td','tf','tg','th','tj','tk','tl','tm','tn','to','tr','tt','tv','tw','tz','ua',
             'ug','um','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','ws','ye','yt','za','zm','zw'];
+    }
+
+    public static function worldStatus($active){
+        switch ($active){
+            case null:
+                return '<span class="fas fa-ban" style="color: red"></span>';
+            case 1:
+                return '<span class="fas fa-check" style="color: green"></span>';
+            case 0:
+                return '<span class="fas fa-times" style="color: red"></span>';
+        }
     }
 }
