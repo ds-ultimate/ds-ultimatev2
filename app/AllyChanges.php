@@ -43,7 +43,9 @@ class AllyChanges extends CustomModel
         $allyChangesModel = new AllyChanges();
         $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
         
-        return $allyChangesModel->where('player_id', $playerID)->count();
+        $allyChanges = collect();
+        $allyChanges->put('total', $allyChangesModel->where('player_id', $playerID)->count());
+        return $allyChanges;
     }
 
     /**
