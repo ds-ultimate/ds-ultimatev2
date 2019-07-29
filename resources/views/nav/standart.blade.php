@@ -90,9 +90,23 @@
                 <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
             </div>
         </div>
-        @auth
+        @guest
+            @if (false)
             <div class="dropdown">
-                <button class="btn btn-outline-dark dropdown-toggle form-control ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ __('user.login') }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('user.login') }}</a>
+                    @if (Route::has('register'))
+                        <a class="nav-link" href="{{ route('register') }}">{{ __('user.register') }}</a>
+                    @endif
+                </div>
+            </div>
+            @endif
+        @else
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle form-control ml-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ Auth::user()->name }} <span class="caret"></span>
                 </button>
 
