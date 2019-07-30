@@ -49366,8 +49366,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/clients/client1/web1/web/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/clients/client1/web1/web/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Homepage\ds-ultimate\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Homepage\ds-ultimate\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

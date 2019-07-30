@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
 </head>
-<body style="padding-right: 0px">
+<body style="padding-right: 0px; min-height: 100%">
 <div class="flex-center position-ref full-height">
     @include('nav.standart')
     <div class="container mb-5 pb-3">
@@ -34,6 +34,19 @@
 <script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/dataTables.bootstrap4.js') }}"></script>
 <script src="{{ asset('plugin/Datatables/Responsive-2.2.2/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('js/numeral.min.js') }}"></script>
+<style>
+    .cookie-consent {
+        color: white;
+        background: red;
+        padding: 15px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
+</style>
 @yield('js')
 </body>
 </html>

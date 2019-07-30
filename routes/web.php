@@ -70,9 +70,6 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
-Route::post('/list', 'Admin\ListController@create');
-Route::get('/list', 'Admin\ListController@index');
-
 Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");
