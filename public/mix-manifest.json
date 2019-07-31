@@ -1,8 +1,6 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/plugin/tinymce/jquery.tinymce.js": "/plugin/tinymce/jquery.tinymce.js",
     "/plugin/tinymce/jquery.tinymce.min.js": "/plugin/tinymce/jquery.tinymce.min.js",
-    "/plugin/tinymce/tinymce.js": "/plugin/tinymce/tinymce.js",
     "/plugin/tinymce/tinymce.min.js": "/plugin/tinymce/tinymce.min.js"
 }

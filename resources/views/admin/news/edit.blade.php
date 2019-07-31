@@ -31,7 +31,7 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('plugin/tinymce/tinymce.js') }}"></script>
+    <script src="{{ asset('plugin/tinymce/tinymce.min.js') }}"></script>
     <script>
         tinymce.init({
             selector:'textarea.description',
