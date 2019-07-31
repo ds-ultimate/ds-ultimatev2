@@ -33,10 +33,10 @@ class AllyController extends Controller
         
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
-            $chartJS .= $this->chart($datas, $statsGeneral[$i]);
+            $chartJS .= Chart::generateChart($datas, $statsGeneral[$i]);
         }
         for ($i = 0; $i < count($statsBash); $i++){
-            $chartJS .= $this->chart($datas, $statsBash[$i]);
+            $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
         }
         
         $conquer = Conquer::allyConquerCounts($server, $world, $ally);
@@ -92,44 +92,5 @@ class AllyController extends Controller
                 return "Unknown type";
         }
         return view('content.allyConquer', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
-    }
-
-    public function chart($allyData, $data){
-        if (!Chart::validType($data)) {
-            return;
-        }
-        
-        $population = \Lava::DataTable();
-
-        $population->addDateColumn('Tag')
-            ->addNumberColumn(Chart::chartLabel($data));
-
-        $oldTimestamp = 0;
-        $i = 0;
-        foreach ($allyData as $aData){
-            if (date('Y-m-d', $aData->get('timestamp')) != $oldTimestamp){
-                $population->addRow([date('Y-m-d', $aData->get('timestamp')), $aData->get($data)]);
-                $oldTimestamp =date('Y-m-d', $aData->get('timestamp'));
-                $i++;
-            }
-        }
-
-        if ($i == 1){
-            $population->addRow([date('Y-m-d', $aData->get('timestamp')-60*60*24), 0]);
-        }
-
-        \Lava::LineChart($data, $population, [
-            'title' => Chart::chartTitel($data),
-            'legend' => 'none',
-            'hAxis' => [
-                'format' => 'dd/MM'
-            ],
-            'vAxis' => [
-                'direction' => (Chart::displayInvers($data)?(-1):(1)),
-                'format' => (Chart::vAxisFormat($data)),
-            ]
-        ]);
-
-        return \Lava::render('LineChart', $data, 'chart-'.$data);
     }
 }

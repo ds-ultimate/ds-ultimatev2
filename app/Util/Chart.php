@@ -95,4 +95,43 @@ class Chart
                 return false;
         }
     }
+
+    public static function generateChart($rawData, $chartType){
+        if (!Chart::validType($chartType)) {
+            return;
+        }
+        
+        $population = \Lava::DataTable();
+
+        $population->addDateColumn('Tag')
+            ->addNumberColumn(Chart::chartLabel($chartType));
+
+        $oldTimestamp = 0;
+        $i = 0;
+        foreach ($rawData as $data){
+            if (date('Y-m-d', $data->get('timestamp')) != $oldTimestamp){
+                $population->addRow([date('Y-m-d', $data->get('timestamp')), $data->get($chartType)]);
+                $oldTimestamp =date('Y-m-d', $data->get('timestamp'));
+                $i++;
+            }
+        }
+
+        if ($i == 1){
+            $population->addRow([date('Y-m-d', $data->get('timestamp')-60*60*24), 0]);
+        }
+
+        \Lava::LineChart($chartType, $population, [
+            'title' => Chart::chartTitel($chartType),
+            'legend' => 'none',
+            'hAxis' => [
+                'format' => 'dd/MM'
+            ],
+            'vAxis' => [
+                'direction' => (Chart::displayInvers($chartType)?(-1):(1)),
+                'format' => (Chart::vAxisFormat($chartType)),
+            ]
+        ]);
+
+        return \Lava::render('LineChart', $chartType, 'chart-'.$chartType);
+    }
 }

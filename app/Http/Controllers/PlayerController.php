@@ -31,10 +31,10 @@ class PlayerController extends Controller
         
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
-            $chartJS .= $this->chart($datas, $statsGeneral[$i]);
+            $chartJS .= Chart::generateChart($datas, $statsGeneral[$i]);
         }
         for ($i = 0; $i < count($statsBash); $i++){
-            $chartJS .= $this->chart($datas, $statsBash[$i]);
+            $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
         }
 
         $conquer = Conquer::playerConquerCounts($server, $world, $player);
@@ -84,38 +84,5 @@ class PlayerController extends Controller
                 return "Unknown type";
         }
         return view('content.playerConquer', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
-    }
-
-    public function chart($playerData, $data){
-        if (!Chart::validType($data)) {
-            return;
-        }
-
-        $population = \Lava::DataTable();
-
-        $population->addDateColumn('Tag')
-            ->addNumberColumn(Chart::chartLabel($data));
-
-        $oldTimestamp = 0;
-        foreach ($playerData as $pData){
-            if (date('Y-m-d', $pData->get('timestamp')) != $oldTimestamp){
-                $population->addRow([date('Y-m-d', $pData->get('timestamp')), $pData->get($data)]);
-                $oldTimestamp =date('Y-m-d', $pData->get('timestamp'));
-            }
-        }
-
-        \Lava::LineChart($data, $population, [
-            'title' => Chart::chartTitel($data),
-            'legend' => 'none',
-            'hAxis' => [
-                'format' => 'dd/MM'
-            ],
-            'vAxis' => [
-                'direction' => (Chart::displayInvers($data)?(-1):(1)),
-                'format' => (Chart::vAxisFormat($data)),
-            ]
-        ]);
-
-        return \Lava::render('LineChart', $data, 'chart-'.$data);
     }
 }
