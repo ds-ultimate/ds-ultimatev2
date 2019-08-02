@@ -19,7 +19,7 @@ mix.js('resources/js/app.js', 'public/js')
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: [/(flag-icon.*|col-.*)/],
+        whitelistPatterns: [/(flag-icon.*|col-.*|.*pagination.*|.*page.*)/],
     });
 
 mix.copyDirectory('node_modules/tinymce/plugins', 'public/plugin/tinymce/plugins');
