@@ -38,15 +38,19 @@ class UpdateVillage extends Command
      */
     public function handle()
     {
+        UpdateVillage::updateVillage($this->argument('server'), $this->argument('world'), $this->output);
+    }
+    
+    public static function updateVillage($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
-        if ($this->argument('world') != "null") {
-            $db->latestVillages($this->argument('server'), $this->argument('world'));
+        if ($server != null && $world != null && $server != "null" && $world != "null") {
+            $db->latestVillages($server, $world);
         } else {
             $worlds = BasicFunctions::getWorld();
             
-            $bar = $this->output->createProgressBar(count($worlds));
+            $bar = $output->createProgressBar(count($worlds));
             $bar->start();
             
             foreach ($worlds as $world){

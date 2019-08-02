@@ -38,15 +38,19 @@ class UpdateConquer extends Command
      */
     public function handle()
     {
+        UpdateConquer::updateConquer($this->argument('server'), $this->argument('world'), $this->output);
+    }
+    
+    public static function updateConquer($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
-        if ($this->argument('world') != "null") {
-            $db->conquer($this->argument('server'), $this->argument('world'));
+        if ($server != null && $world != null && $server != "null" && $world != "null") {
+            $db->conquer($server, $world);
         } else {
             $worlds = BasicFunctions::getWorld();
             
-            $bar = $this->output->createProgressBar(count($worlds));
+            $bar = $output->createProgressBar(count($worlds));
             $bar->start();
             
             foreach ($worlds as $world){

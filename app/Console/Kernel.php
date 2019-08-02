@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
          * Update Village
          */
         $schedule->command('update:village')
-            ->hourlyAt(1)
+            ->cron('1 */2 * * *')
             //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Village -> Erfolgreich');
@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
          * Update Ally
          */
         $schedule->command('update:ally')
-            ->hourlyAt(1)
+            ->cron('1 */2 * * *')
             //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Ally -> Erfolgreich');
@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
          * Update Player
          */
         $schedule->command('update:player')
-            ->hourlyAt(1)
+            ->cron('1 */2 * * *')
             //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('Player -> Erfolgreich');

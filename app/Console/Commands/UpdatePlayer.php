@@ -38,15 +38,19 @@ class UpdatePlayer extends Command
      */
     public function handle()
     {
+        UpdatePlayer::updatePlayer($this->argument('server'), $this->argument('world'), $this->output);
+    }
+    
+    public static function updatePlayer($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
-        if ($this->argument('world') != "null") {
-            $db->latestPlayer($this->argument('server'), $this->argument('world'));
+        if ($server != null && $world != null && $server != "null" && $world != "null") {
+            $db->latestPlayer($server, $world);
         } else {
             $worlds = BasicFunctions::getWorld();
             
-            $bar = $this->output->createProgressBar(count($worlds));
+            $bar = $output->createProgressBar(count($worlds));
             $bar->start();
             
             foreach ($worlds as $world){
@@ -56,5 +60,4 @@ class UpdatePlayer extends Command
             $bar->finish();
         }
     }
-
 }

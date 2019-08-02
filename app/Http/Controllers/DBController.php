@@ -370,7 +370,7 @@ class DBController extends Controller
 
     public function latestVillages($server, $world){
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '500M');
+        ini_set('memory_limit', '1800M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
@@ -421,7 +421,8 @@ class DBController extends Controller
         Schema::dropIfExists("$dbName.village_latest");
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
         
-        $hashVillage = $this->hashTable($array, 'v', 'villageID');
+        $villageDB = $this->prepareVillageChangeCheck($dbName); 
+        $hashVillage = $this->hashTable($array, 'v', 'villageID', array($this, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
@@ -636,6 +637,37 @@ class DBController extends Controller
         }
     }
     
+    private function prepareVillageChangeCheck($dbName) {
+        $villageModel = new Village();
+        $villageModel->setTable($dbName . '.village_latest');
+        
+        $arrVil = array();
+        foreach ($villageModel->get() as $village) {
+            $arrVil[$village->villageID] = array($village->name, $village->points, $village->owner);
+        }
+        return $arrVil;
+    }
+    
+    /**
+     * 
+     * @param type $arrVil
+     * @param type $data
+     * @return boolean true if same is already inside Database
+     */
+    private function villageSameSinceLast($arrVil, $data) {
+        if(!isset($arrVil[$data['villageID']])) return false;
+        //echo "Found in DB\n";
+
+        $possible_dup = $arrVil[$data['villageID']];
+        if($possible_dup[0] == $data['name'] &&
+                $possible_dup[1] == $data['points'] &&
+                $possible_dup[2] == $data['owner']) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     private function prepareConquerDupCheck($dbName) {
         $conquerModel = new Conquer();
         $conquerModel->setTable($dbName . '.conquer');
@@ -652,7 +684,7 @@ class DBController extends Controller
 
     private function conquerInsideDB($arrCon, $data) {
         if(!isset($arrCon[$data[1]])) return false;
-        //echo "Fount in DB\n";
+        //echo "Found in DB\n";
         $possible_dups = $arrCon[$data[1]];
 
         foreach($possible_dups as $possible_dup) {
@@ -666,9 +698,13 @@ class DBController extends Controller
         return false;
     }
 
-    public function hashTable($mainArray, $type, $index){
+    public function hashTable($mainArray, $type, $index, $cmpFkt = null, $cmpArr = null){
         $hashArray = array();
         foreach ($mainArray as $main){
+            if($cmpFkt != null && $cmpFkt($cmpArr, $main)) {
+                //remove "unwanted" entries
+                continue;
+            }
             $id = $main[$index];
             if (! array_key_exists(BasicFunctions::hash($id, $type), $hashArray)) {
                 $hashArray[BasicFunctions::hash($id, $type)] = array();

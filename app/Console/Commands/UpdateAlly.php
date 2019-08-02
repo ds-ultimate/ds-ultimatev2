@@ -38,15 +38,19 @@ class UpdateAlly extends Command
      */
     public function handle()
     {
+        UpdateAlly::updateAlly($this->argument('server'), $this->argument('world'), $this->output);
+    }
+    
+    public static function updateAlly($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
         $db = new \App\Http\Controllers\DBController();
         
-        if ($this->argument('world') != "null") {
-            $db->latestAlly($this->argument('server'), $this->argument('world'));
+        if ($server != null && $world != null && $server != "null" && $world != "null") {
+            $db->latestAlly($server, $world);
         } else {
             $worlds = BasicFunctions::getWorld();
             
-            $bar = $this->output->createProgressBar(count($worlds));
+            $bar = $output->createProgressBar(count($worlds));
             $bar->start();
             
             foreach ($worlds as $world){
