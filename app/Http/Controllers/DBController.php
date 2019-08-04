@@ -170,7 +170,7 @@ class DBController extends Controller
                 $worldNew->url = $link;
                 $txt = file_get_contents("$link/interface.php?func=get_config");
                 $worldNew->config = $txt;
-                $world->worldCheck_at = Carbon::createFromTimestamp(time());
+                $worldNew->worldCheck_at = Carbon::createFromTimestamp(time());
 
                 if ($worldNew->save() !== true){
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
