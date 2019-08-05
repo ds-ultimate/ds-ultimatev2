@@ -127,6 +127,18 @@ class DBController extends Controller
             $table->timestamps();
         });
     }
+    
+    public static function updateNeeded() {
+        foreach(BasicFunctions::getWorld() as $world) {
+            if(DBController::worldNeedsUpdate($world->server->code, $world->name)) {
+                
+            }
+        }
+    }
+
+    public static function worldNeedsUpdate($server, $world) {
+        
+    }
 
     public function getWorld(){
 
@@ -351,10 +363,6 @@ class DBController extends Controller
                 foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
-                if (BasicFunctions::existTable($dbName, 'player_' . $i) === true) {
-                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
-                    $delete->delete();
-                }
             }
         }
 
@@ -418,10 +426,10 @@ class DBController extends Controller
             $insert->insert($t);
         }
         
+        $villageDB = $this->prepareVillageChangeCheck($dbName);
         Schema::dropIfExists("$dbName.village_latest");
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
         
-        $villageDB = $this->prepareVillageChangeCheck($dbName); 
         $hashVillage = $this->hashTable($array, 'v', 'villageID', array($this, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
@@ -431,10 +439,6 @@ class DBController extends Controller
                 $insert->setTable($dbName . '.village_' . $i);
                 foreach (array_chunk($hashVillage[$i], 3000) as $t) {
                     $insert->insert($t);
-                }
-                if (BasicFunctions::existTable($dbName, 'village_' . $i) === true) {
-                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
-                    $delete->delete();
                 }
             }
         }
@@ -566,10 +570,6 @@ class DBController extends Controller
                 foreach (array_chunk($hashAlly[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
-                if (BasicFunctions::existTable($dbName, 'ally_' . $i) === true) {
-                    $delete = $insert->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
-                    $delete->delete();
-                }
             }
         }
 
@@ -637,7 +637,39 @@ class DBController extends Controller
         }
     }
     
+    public function cleanOldEntries($type) {
+        switch($type) {
+            case 'a':
+                $envHashIndex = 'HASH_ALLY';
+                $tablePrefix = 'ally';
+                $model = new Ally();
+                break;
+                
+            case 'p':
+                $envHashIndex = 'HASH_PLAYER';
+                $tablePrefix = 'player';
+                $model = new Player();
+                break;
+
+            case 'v':
+                $envHashIndex = 'HASH_VILLAGE';
+                $tablePrefix = 'village';
+                $model = new Village();
+                break;
+        }
+        
+        for ($i = 0; $i < env($envHashIndex); $i++){
+            if (BasicFunctions::existTable($dbName, "$tablePrefix_$i") === true) {
+                $delete = $model->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
+                $delete->delete();
+            }
+        }
+    }
+    
     private function prepareVillageChangeCheck($dbName) {
+        if(!BasicFunctions::existTable($dbName, 'village_latest')) {
+            return array();
+        }
         $villageModel = new Village();
         $villageModel->setTable($dbName . '.village_latest');
         
@@ -656,7 +688,6 @@ class DBController extends Controller
      */
     private function villageSameSinceLast($arrVil, $data) {
         if(!isset($arrVil[$data['villageID']])) return false;
-        //echo "Found in DB\n";
 
         $possible_dup = $arrVil[$data['villageID']];
         if($possible_dup[0] == $data['name'] &&

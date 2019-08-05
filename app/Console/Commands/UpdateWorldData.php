@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\DBController;
 use Illuminate\Console\Command;
 
 class UpdateWorldData extends Command
@@ -11,14 +12,14 @@ class UpdateWorldData extends Command
      *
      * @var string
      */
-    protected $signature = 'update:worldData {server} {world}';
+    protected $signature = 'update:worldData {server=null} {world=null} {part=village,player,ally}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Aktualisiert alle Daten (ohne adelungen) einer Welt in der Datenbank';
+    protected $description = 'Aktualisiert die Daten (ohne adelungen) einer Welt in der Datenbank.';
 
     /**
      * Create a new command instance.
@@ -37,16 +38,49 @@ class UpdateWorldData extends Command
      */
     public function handle()
     {
-        UpdateWorldData::updateWorldData($this->argument('server'), $this->argument('world'), $this->output);
-    }
-    
-    public function updateWorldData($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
+        $server = $this->argument('server');
+        $world = $this->argument('world');
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
-            UpdateVillage::updateVillage($server, $world, $output);
-            UpdatePlayer::updatePlayer($server, $world, $output);
-            UpdateAlly::updateAlly($server, $world, $output);
+            if($server == "*" && $world == "*") {
+                foreach(\App\Util\BasicFunctions::getWorld() as $dbWorld) {
+                    $server = $dbWorld->server->code;
+                    $world = $dbWorld->name;
+                    foreach(explode(",", $this->argument('part')) as $part) {
+                        UpdateWorldData::updateWorldData($server, $world, $part);
+                    }
+                }
+            } else {
+                foreach(explode(",", $this->argument('part')) as $part) {
+                    UpdateWorldData::updateWorldData($server, $world, $part);
+                }
+            }
+        }
+    }
+    
+    public function updateWorldData($server, $world, $part) {
+        $db = new DBController();
+        switch ($part) {
+            case "village":
+            case "v":
+                $db->latestVillages($server, $world);
+                break;
+
+            case "player":
+            case "p":
+                $db->latestPlayer($server, $world);
+                break;
+
+            case "ally":
+            case "a":
+                $db->latestAlly($server, $world);
+                break;
+
+            case "conquer":
+            case "c":
+                $db->conquer($server, $world);
+                break;
         }
     }
 }

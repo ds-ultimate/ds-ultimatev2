@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Util\BasicFunctions;
+use App\Http\Controllers\DBController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +18,15 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
     ];
-
+    
+    /*
+     * Use something like:
+     * ->everyFiveMinutes()->skip(worldNeedsUpdate($server, $world))
+     * TODO create "daily" scedule for cleanOldEntries(...)
+     * withoutOverlapping
+     *          ->appendOutputTo($filePath);
+     */
+    
     /**
      * Define the application's command schedule.
      *
@@ -25,50 +35,22 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-        // FIXME: uncomment ->runInBackground() for live server
         /*
-         * Update Village
+         * Update WorldData
          */
-        $schedule->command('update:village')
-            ->cron('1 */2 * * *')
+        $schedule->command("update:worldNextData")
+            ->everyFiveMinutes()
+            ->skip(! DBController::updateNeeded())
             //->runInBackground()
             ->onSuccess(function (){
-                Log::debug('Village -> Erfolgreich');
+                Log::debug('World -> Success');
             })
             ->onFailure(function (){
-                Log::debug('Village -> Fehlgeschlagen');
+                Log::debug('World -> Failture');
             });
 
         /*
-         * Update Ally
-         */
-        $schedule->command('update:ally')
-            ->cron('1 */2 * * *')
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Ally -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Ally -> Fehlgeschlagen');
-            });
-
-        /*
-         * Update Player
-         */
-        $schedule->command('update:player')
-            ->cron('1 */2 * * *')
-            //->runInBackground()
-            ->onSuccess(function (){
-                Log::debug('Player -> Erfolgreich');
-            })
-            ->onFailure(function (){
-                Log::debug('Player -> Fehlgeschlagen');
-            });
-
-        /*
-         * Update Player
+         * Update Conquers
          */
         $schedule->command('update:conquer')
             ->everyThirtyMinutes()
@@ -81,8 +63,7 @@ class Kernel extends ConsoleKernel
             });
 
         $schedule->command('update:world')
-            ->dailyAt('23:55')
-            ->runInBackground();
+            ->dailyAt('23:55');
         
         $schedule->command('session:gc')
             ->everyFifteenMinutes()
