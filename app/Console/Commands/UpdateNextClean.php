@@ -6,21 +6,21 @@ use App\Http\Controllers\DBController;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class UpdateNextWorld extends Command
+class UpdateNextClean extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update:nextWorld';
+    protected $signature = 'update:nextClean';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Aktualisiert die nächste Welt';
+    protected $description = 'Entfernt alte einträge von der nächsten Welt';
 
     /**
      * Create a new command instance.
@@ -40,17 +40,18 @@ class UpdateNextWorld extends Command
     public function handle()
     {
         \App\Util\BasicFunctions::ignoreErrs();
-        if(! DBController::updateNeeded()) {
-            echo "No Update needed\n";
+        if(! DBController::cleanNeeded()) {
+            echo "No Clean needed\n";
             return;
         }
         $worldModel = new \App\World();
-        $world = $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
-                - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))->where('active', '=', 1)
-                ->orderBy('worldUpdated_at', 'ASC')->first();
+        $world = $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
+                - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))->where('active', '=', 1)
+                ->orderBy('worldCleaned_at', 'ASC')->first();
         echo "Server: {$world->server->code} World:{$world->name}\n";
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
+        $db = new DBController();
+        $db->cleanOldEntries($world, 'v');
+        $db->cleanOldEntries($world, 'p');
+        $db->cleanOldEntries($world, 'a');
     }
 }

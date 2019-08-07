@@ -54,6 +54,8 @@ class DBController extends Controller
             $table->boolean('active')->default(1);
             $table->timestamps();
             $table->timestamp('worldCheck_at');
+            $table->timestamp('worldUpdated_at');
+            $table->timestamp('worldCleaned_at');
             $table->softDeletes();
         });
     }
@@ -129,19 +131,20 @@ class DBController extends Controller
     }
     
     public static function updateNeeded() {
-        foreach(BasicFunctions::getWorld() as $world) {
-            if(DBController::worldNeedsUpdate($world->server->code, $world->name)) {
-                
-            }
-        }
+        $worldModel = new World();
+        return $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
+                - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))
+                ->where('active', '=', 1)->count() > 0;
     }
-
-    public static function worldNeedsUpdate($server, $world) {
-        
+    
+    public static function cleanNeeded() {
+        $worldModel = new World();
+        return $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
+                - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))
+                ->where('active', '=', 1)->count() > 0;
     }
 
     public function getWorld(){
-
         if (BasicFunctions::existTable(env('DB_DATABASE'), 'worlds') === false){
             $this->worldTable();
         }
@@ -368,12 +371,9 @@ class DBController extends Controller
 
         $count = count($arrayPlayer);
 
-        if($worldUpdate->player_count != $count) {
-            $worldUpdate->player_count = $count;
-            $worldUpdate->save();
-        } else {
-            $worldUpdate->touch();
-        }
+        $worldUpdate->player_count = $count;
+        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->save();
     }
 
     public function latestVillages($server, $world){
@@ -445,17 +445,14 @@ class DBController extends Controller
 
         $count = count($array);
 
-        if($worldUpdate->village_count != $count) {
-            $worldUpdate->village_count = $count;
-            $worldUpdate->save();
-        } else {
-            $worldUpdate->touch();
-        }
+        $worldUpdate->village_count = $count;
+        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->save();
     }
 
     public function latestAlly($server, $world){
         ini_set('max_execution_time', 1800);
-        ini_set('memory_limit', '200M');
+        ini_set('memory_limit', '1500M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
@@ -575,12 +572,9 @@ class DBController extends Controller
 
         $count = count($array);
 
-        if($worldUpdate->ally_count != $count) {
-            $worldUpdate->ally_count = $count;
-            $worldUpdate->save();
-        } else {
-            $worldUpdate->touch();
-        }
+        $worldUpdate->ally_count = $count;
+        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->save();
     }
 
     public function conquer($server, $world){
@@ -637,7 +631,8 @@ class DBController extends Controller
         }
     }
     
-    public function cleanOldEntries($type) {
+    public function cleanOldEntries(World $world, $type) {
+        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         switch($type) {
             case 'a':
                 $envHashIndex = 'HASH_ALLY';
@@ -664,6 +659,8 @@ class DBController extends Controller
                 $delete->delete();
             }
         }
+        $world->worldCleaned_at = Carbon::createFromTimestamp(time());
+        $world->save();
     }
     
     private function prepareVillageChangeCheck($dbName) {

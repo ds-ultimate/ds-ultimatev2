@@ -59,7 +59,7 @@ class UpdateWorldData extends Command
         }
     }
     
-    public function updateWorldData($server, $world, $part) {
+    public static function updateWorldData($server, $world, $part) {
         $db = new DBController();
         switch ($part) {
             case "village":

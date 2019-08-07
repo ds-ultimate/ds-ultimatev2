@@ -19,14 +19,6 @@ class Kernel extends ConsoleKernel
         //
     ];
     
-    /*
-     * Use something like:
-     * ->everyFiveMinutes()->skip(worldNeedsUpdate($server, $world))
-     * TODO create "daily" scedule for cleanOldEntries(...)
-     * withoutOverlapping
-     *          ->appendOutputTo($filePath);
-     */
-    
     /**
      * Define the application's command schedule.
      *
@@ -38,10 +30,10 @@ class Kernel extends ConsoleKernel
         /*
          * Update WorldData
          */
-        $schedule->command("update:worldNextData")
+        $schedule->command("update:nextWorld")
             ->everyFiveMinutes()
+            ->withoutOverlapping()
             ->skip(! DBController::updateNeeded())
-            //->runInBackground()
             ->onSuccess(function (){
                 Log::debug('World -> Success');
             })
@@ -50,11 +42,25 @@ class Kernel extends ConsoleKernel
             });
 
         /*
+         * Update WorldData
+         */
+        $schedule->command("update:nextClean")
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->skip(! DBController::cleanNeeded())
+            ->onSuccess(function (){
+                Log::debug('Clean -> Success');
+            })
+            ->onFailure(function (){
+                Log::debug('Clean -> Failture');
+            });
+            
+        /*
          * Update Conquers
          */
         $schedule->command('update:conquer')
             ->everyThirtyMinutes()
-            //->runInBackground()
+            ->withoutOverlapping()
             ->onSuccess(function (){
                 Log::debug('Conquer -> Erfolgreich');
             })
