@@ -39,7 +39,8 @@ class Kernel extends ConsoleKernel
             })
             ->onFailure(function (){
                 Log::debug('World -> Failture');
-            });
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
 
         /*
          * Update WorldData
@@ -53,7 +54,8 @@ class Kernel extends ConsoleKernel
             })
             ->onFailure(function (){
                 Log::debug('Clean -> Failture');
-            });
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
             
         /*
          * Update Conquers
@@ -66,10 +68,12 @@ class Kernel extends ConsoleKernel
             })
             ->onFailure(function (){
                 Log::debug('Conquer -> Fehlgeschlagen');
-            });
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
 
         $schedule->command('update:world')
-            ->dailyAt('23:55');
+            ->dailyAt('23:55')
+            ->appendOutputTo("storage/logs/cron-critical.log");
         
         $schedule->command('session:gc')
             ->everyFifteenMinutes()

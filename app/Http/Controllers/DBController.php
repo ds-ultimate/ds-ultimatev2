@@ -654,7 +654,8 @@ class DBController extends Controller
         }
         
         for ($i = 0; $i < env($envHashIndex); $i++){
-            if (BasicFunctions::existTable($dbName, "$tablePrefix_$i") === true) {
+            if (BasicFunctions::existTable($dbName, "{$tablePrefix}_{$i}") === true) {
+                $model->setTable("$dbName.{$tablePrefix}_{$i}");
                 $delete = $model->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
                 $delete->delete();
             }
