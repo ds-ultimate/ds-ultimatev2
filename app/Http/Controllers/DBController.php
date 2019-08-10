@@ -17,33 +17,9 @@ use Illuminate\Support\Facades\Schema;
 
 class DBController extends Controller
 {
-    public function serverTable(){
-        if (BasicFunctions::existDatabase(env('DB_DATABASE')) === false){
-            DB::statement('CREATE DATABASE '.env('DB_DATABASE'));
-        }
-        Schema::create(env('DB_DATABASE').'.server', function (Blueprint $table){
-            $table->integer('id')->autoIncrement();
-            $table->char('code');
-            $table->char('flag');
-            $table->text('url');
-            $table->boolean('active')->default(1);
-            $table->timestamps();
-            $table->softDeletes();
-        });
-    }
-
-    public function logTable(){
-        Schema::create(env('DB_DATABASE').'.log', function (Blueprint $table){
-            $table->bigIncrements('id')->autoIncrement();
-            $table->text('type');
-            $table->text('msg');
-            $table->timestamps();
-        });
-    }
-
-    public function worldTable(){
+    public static function worldTable(){
         Schema::create(env('DB_DATABASE').'.worlds', function (Blueprint $table){
-            $table->integer('id')->autoIncrement();
+            $table->increments('id');
             $table->integer('server_id');
             $table->text('name');
             $table->integer('ally_count')->nullable();
@@ -727,7 +703,7 @@ class DBController extends Controller
         return false;
     }
 
-    public function hashTable($mainArray, $type, $index, $cmpFkt = null, $cmpArr = null){
+    public function hashTable($mainArray, $type, $index,callable $cmpFkt = null, $cmpArr = null){
         $hashArray = array();
         foreach ($mainArray as $main){
             if($cmpFkt != null && $cmpFkt($cmpArr, $main)) {
