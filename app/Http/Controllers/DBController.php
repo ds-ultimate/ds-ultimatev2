@@ -27,6 +27,7 @@ class DBController extends Controller
             $table->integer('village_count')->nullable();
             $table->text('url');
             $table->text('config');
+            $table->text('units');
             $table->boolean('active')->default(1);
             $table->timestamps();
             $table->timestamp('worldCheck_at');
@@ -36,7 +37,7 @@ class DBController extends Controller
         });
     }
 
-    public function playerTable($dbName, $tableName){
+    public static function playerTable($dbName, $tableName){
         Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
             $table->integer('playerID');
             $table->string('name');
@@ -54,7 +55,7 @@ class DBController extends Controller
         });
     }
 
-    public function allyTable($dbName, $tableName){
+    public static function allyTable($dbName, $tableName){
         Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
             $table->integer('allyID');
             $table->string('name');
@@ -73,7 +74,7 @@ class DBController extends Controller
         });
     }
 
-    public function villageTable($dbName, $tableName){
+    public static function villageTable($dbName, $tableName){
         Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
             $table->integer('villageID');
             $table->string('name');
@@ -159,8 +160,10 @@ class DBController extends Controller
                 $worldNew->server_id = $serverUrl->id;
                 $worldNew->name = $worldName;
                 $worldNew->url = $link;
-                $txt = file_get_contents("$link/interface.php?func=get_config");
-                $worldNew->config = $txt;
+                $txtConf = file_get_contents("$link/interface.php?func=get_config");
+                $worldNew->config = $txtConf;
+                $txtUnits = file_get_contents("$link/interface.php?func=get_unit_info");
+                $worldNew->units = $txtUnits;
                 $worldNew->worldCheck_at = Carbon::createFromTimestamp(time());
 
                 if ($worldNew->save() !== true){
