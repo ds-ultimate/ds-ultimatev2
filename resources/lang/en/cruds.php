@@ -190,6 +190,7 @@ return array (
     array (
       'comment' => 'Comments',
       'comment_singular' => 'Comment',
+      'seen' => 'Seen from',
     ),
   ),
 );

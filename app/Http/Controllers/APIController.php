@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
+use App\World;
 use App\Player;
+use App\Server;
 use App\Village;
 use App\Conquer;
 use App\AllyChanges;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Resources\World as WorldResource;
+use App\Http\Resources\Village as VillageResource;
 
 class APIController extends Controller
 {
@@ -275,5 +279,17 @@ class APIController extends Controller
                 return $conquer->newPlayer != null;
             })
             ->toJson();
+    }
+
+    public static function getWorld($server, $world){
+        $serverData = Server::getServerByCode($server);
+        return new WorldResource(World::where([['name', '=', $world],['server_id', '=', $serverData->id]])->first());
+    }
+
+    public static function getVillageByCoord($server, $world, $x, $y){
+        $villageModel = new Village();
+        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
+
+        return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
     }
 }

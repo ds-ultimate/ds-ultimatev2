@@ -245,4 +245,8 @@ return array (
   'now' => 'now',
   'thankYou' => 'Thank you!',
   'close' => 'Close',
+  'days' => 'Days',
+  'calculate' => 'Calculate',
+  'unit' => 'Unit',
+  'units' => 'Units',
 );

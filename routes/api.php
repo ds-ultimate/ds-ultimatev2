@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/{server}/{world}', 'APIController@getWorld');
+
+Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord');
+
 Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
 Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');
 Route::get('/{server}/{world}/ally/{ally}', 'APIController@getAllyPlayer')->name('api.allyPlayer');

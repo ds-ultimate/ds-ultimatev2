@@ -107,4 +107,30 @@ return array (
   array (
     'title' => 'Neuigkeiten',
   ),
+  'tool' => 
+  array (
+    'distCalc' => 
+    array (
+      'startVillage' => 'Startdorf',
+      'targetVillage' => 'Zieldorf',
+      'days' => 'Tag(e)',
+      'title' => 'Laufzeitrechner',
+    ),
+  ),
+  'unit' => 
+  array (
+    'spear' => 'Speerträger',
+    'sword' => 'Schwertkämpfer',
+    'axe' => 'Axtkämpfer',
+    'archer' => 'Bogenschütze',
+    'spy' => 'Späher',
+    'light' => 'Leiche Kavallerie',
+    'marcher' => 'Berittener Bogenschütze',
+    'heavy' => 'Schwere Kavallerie',
+    'ram' => 'Rammbock',
+    'catapult' => 'Katapult',
+    'knight' => 'Paladin',
+    'snob' => 'Adelsgeschlecht',
+  ),
+  'villageNotExist' => 'Dorf existiert nicht',
 );

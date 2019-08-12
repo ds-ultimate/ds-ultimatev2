@@ -125,6 +125,7 @@ return array (
       'created' => 'Erstellt',
       'description' => 'Beschreibung',
       'url' => 'URL',
+      'seen' => 'Angeschaut von',
       'comment' => 'Kommentare',
       'comment_singular' => 'Kommentar',
     ),

@@ -274,4 +274,19 @@ class BasicFunctions
                 return '<span class="fas fa-times" style="color: red"></span>';
         }
     }
+
+    public static function convertTime($input){
+        $input = floor($input / 1000);
+
+        $seconds = $input % 60;
+        $input = floor($input / 60);
+
+        $minutes = $input % 60;
+        $input = floor($input / 60);
+
+        $hour = $input % 24;
+        $day = floor($input / 24);
+
+        return $day.' '.__('ui.tool.distCalc.days').' '.str_pad($hour, 2, "0", STR_PAD_LEFT).':'.str_pad($minutes, 2, "0", STR_PAD_LEFT).':'.str_pad($seconds, 2, "0", STR_PAD_LEFT);
+    }
 }

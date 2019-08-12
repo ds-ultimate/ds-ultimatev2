@@ -94,3 +94,5 @@ Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerContro
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
 Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');
+
+Route::get('/{server}/{world}/distanceCalc', 'Tools\DistanceCalcController@index')->name('distanceCalc');

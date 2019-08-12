@@ -107,4 +107,30 @@ return array (
   array (
     'title' => 'News',
   ),
+  'tool' => 
+  array (
+    'distCalc' => 
+    array (
+      'startVillage' => 'Origin village',
+      'targetVillage' => 'Target village',
+      'days' => 'Day(s)',
+      'title' => 'Distance Calculator',
+    ),
+  ),
+  'unit' => 
+  array (
+    'archer' => 'Archer',
+    'axe' => 'Axe',
+    'catapult' => 'Catapult',
+    'heavy' => 'Heavy Cavalry',
+    'knight' => 'Paladin',
+    'light' => 'Light Cavalry',
+    'marcher' => 'Mounted Archer',
+    'ram' => 'Ram',
+    'snob' => 'Nobleman',
+    'spear' => 'Spear',
+    'spy' => 'Scout',
+    'sword' => 'Sword',
+  ),
+  'villageNotExist' => 'Village not exist',
 );
