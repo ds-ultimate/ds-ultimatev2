@@ -17,7 +17,7 @@ class StoreNewsRequest extends FormRequest
     {
 
         return [
-            'content' => [
+            'content_de' => [
                 'required',
             ],
         ];

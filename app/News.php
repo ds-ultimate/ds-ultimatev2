@@ -10,6 +10,7 @@ class News extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'content',
+        'content_de',
+        'content_en',
     ];
 }

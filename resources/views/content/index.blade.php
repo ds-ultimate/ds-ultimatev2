@@ -42,9 +42,13 @@
                         @endforeach
                     </ol>
                     <div class="carousel-inner">
-                        @foreach($news as $news)
+                        @foreach($news as $new)
                             <div class="carousel-item {{ (isset($active))? '' : 'active' }}">
-                                {!! $news->content !!}
+                                @if (App::getLocale() == 'de')
+                                    {!! $new->content_de !!}
+                                @else
+                                    {!! $new->content_en !!}
+                                @endif
                             </div>
                             @php
                                 $active = true;

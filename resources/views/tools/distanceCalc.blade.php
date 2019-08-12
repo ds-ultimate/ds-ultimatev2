@@ -24,7 +24,7 @@
             <div class="card" style="height: 500px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
-                    <form id="villageForm" method="POST">
+                    <form id="villageForm" method="POST" action="">
                         <table class="table table-bordered table-striped no-wrap">
                             <tr>
                                 <th>{{ __('ui.tool.distCalc.startVillage') }}</th>
@@ -294,6 +294,8 @@
                 $("#yTarget").val(coords[1].substring(0, 3));
             });
 
+            // TODO: calculate with press "ENTER"
+
             $(document).on('submit', '#villageForm', function (e) {
                 e.preventDefault();
                 var xStart = $(this).find('#xStart');
@@ -340,24 +342,24 @@
 
 
                 var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
-                $('#spearTime').html(convertTime('{{ $unitConfig->spear->speed }}' * dis));
-                $('#swordTime').html(convertTime('{{ $unitConfig->sword->speed }}' * dis));
-                $('#axeTime').html(convertTime('{{ $unitConfig->axe->speed }}' * dis));
+                $('#spearTime').html(convertTime('{{ round((float)$unitConfig->spear->speed) }}' * dis));
+                $('#swordTime').html(convertTime('{{ round((float)$unitConfig->sword->speed) }}' * dis));
+                $('#axeTime').html(convertTime('{{ round((float)$unitConfig->axe->speed) }}' * dis));
                 @if ($config->game->archer == 1)
-                $('#archerTime').html(convertTime('{{ $unitConfig->archer->speed }}' * dis));
+                $('#archerTime').html(convertTime('{{ round((float)$unitConfig->archer->speed) }}' * dis));
                 @endif
-                $('#spyTime').html(convertTime('{{ $unitConfig->spy->speed }}' * dis));
-                $('#lightTime').html(convertTime('{{ $unitConfig->light->speed }}' * dis));
+                $('#spyTime').html(convertTime('{{ round((float)$unitConfig->spy->speed) }}' * dis));
+                $('#lightTime').html(convertTime('{{ round((float)$unitConfig->light->speed) }}' * dis));
                 @if ($config->game->archer == 1)
-                $('#marcherTime').html(convertTime('{{ $unitConfig->marcher->speed }}' * dis));
+                $('#marcherTime').html(convertTime('{{ round((float)$unitConfig->marcher->speed) }}' * dis));
                 @endif
-                $('#heavyTime').html(convertTime('{{ $unitConfig->heavy->speed }}' * dis));
-                $('#ramTime').html(convertTime('{{ $unitConfig->ram->speed }}' * dis));
-                $('#catapultTime').html(convertTime('{{ $unitConfig->catapult->speed }}' * dis));
+                $('#heavyTime').html(convertTime('{{ round((float)$unitConfig->heavy->speed) }}' * dis));
+                $('#ramTime').html(convertTime('{{ round((float)$unitConfig->ram->speed) }}' * dis));
+                $('#catapultTime').html(convertTime('{{ round((float)$unitConfig->catapult->speed) }}' * dis));
                 @if ($config->game->knight > 0)
-                $('#knightTime').html(convertTime('{{ $unitConfig->knight->speed }}' * dis));
+                $('#knightTime').html(convertTime('{{ round((float)$unitConfig->knight->speed) }}' * dis));
                 @endif
-                $('#snobTime').html(convertTime('{{ $unitConfig->snob->speed }}' * dis));
+                $('#snobTime').html(convertTime('{{ round((float)$unitConfig->snob->speed) }}' * dis));
             });
         })
     </script>

@@ -15,7 +15,7 @@ class UpdateNewsRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => [
+            'content_de' => [
                 'required',
             ],
         ];

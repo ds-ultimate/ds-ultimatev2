@@ -26,7 +26,10 @@
                             {{ trans('cruds.news.fields.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.news.fields.content') }}
+                            {{ trans('cruds.news.fields.content') }} DE
+                        </th>
+                        <th>
+                            {{ trans('cruds.news.fields.content') }} EN
                         </th>
                         <th>
                             {{ trans('cruds.news.fields.update') }}
@@ -46,10 +49,13 @@
                                 {{ $news->id ?? '' }}
                             </td>
                             <td>
-                                {{ $news->content ?? '' }}
+                                {{ $news->content_de ?? '' }}
                             </td>
                             <td>
-                                {{ $news->updated_at }} || {{ $news->updated_at->diffForHumans() }}
+                                {{ $news->content_en ?? '' }}
+                            </td>
+                            <td>
+                                {{ $news->updated_at }}
                             </td>
                             <td>
                                 @can('news_show')
