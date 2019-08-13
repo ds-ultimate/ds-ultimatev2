@@ -23,18 +23,17 @@
         /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
         _paq.push(["setCookieDomain", "*.ds-ultimate.de"]);
-        _paq.push(["setDomains", ["*.ds-ultimate.de"]]);
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function() {
-            var u="//clanmember.de/";
+            var u="//matomo.ds-ultimate.de/";
             _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '2']);
+            _paq.push(['setSiteId', '1']);
             var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
             g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
         })();
     </script>
-    <noscript><p><img src="//clanmember.de/matomo.php?idsite=2&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+    <noscript><p><img src="//matomo.ds-ultimate.de/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
 </head>
 <body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
