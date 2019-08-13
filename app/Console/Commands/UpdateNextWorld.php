@@ -44,13 +44,19 @@ class UpdateNextWorld extends Command
             echo "No Update needed\n";
             return;
         }
-        $worldModel = new \App\World();
-        $world = $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
-                - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))->where('active', '=', 1)
-                ->orderBy('worldUpdated_at', 'ASC')->first();
-        echo "Server: {$world->server->code} World:{$world->name}\n";
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
-        UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
+        
+        $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
+        $toDo = ceil(env('DB_UPDATE_EVERY_HOURS') * 12 / $cnt);
+        
+        for($i = 0; $i < $toDo; $i++) {
+            $world = \App\Util\BasicFunctions::getWorldQuery()
+                    ->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
+                    - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))
+                    ->orderBy('worldUpdated_at', 'ASC')->first();
+            echo "Server: {$world->server->code} World:{$world->name}\n";
+            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
+            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
+            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
+        }
     }
 }

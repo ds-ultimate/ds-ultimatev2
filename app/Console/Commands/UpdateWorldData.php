@@ -44,7 +44,7 @@ class UpdateWorldData extends Command
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             if($server == "*" && $world == "*") {
-                foreach(\App\Util\BasicFunctions::getWorld() as $dbWorld) {
+                foreach(\App\Util\BasicFunctions::getWorldQuery()->get() as $dbWorld) {
                     $server = $dbWorld->server->code;
                     $world = $dbWorld->name;
                     foreach(explode(",", $this->argument('part')) as $part) {

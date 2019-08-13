@@ -199,10 +199,9 @@ class BasicFunctions
     /**
      * @return Collection
      */
-    public static function getWorld(){
+    public static function getWorldQuery(){
         $world = new World();
-        $world->setTable(env('DB_DATABASE').'.worlds');
-        return $world->where('active', '=', '1')->get();
+        return $world->where('active', '=', '1');
     }
     /**
      * @param string $server

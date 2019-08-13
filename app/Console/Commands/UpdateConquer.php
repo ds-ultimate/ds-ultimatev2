@@ -48,7 +48,7 @@ class UpdateConquer extends Command
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             $db->conquer($server, $world);
         } else {
-            $worlds = BasicFunctions::getWorld();
+            $worlds = BasicFunctions::getWorldQuery()->get();
             
             $bar = $output->createProgressBar(count($worlds));
             $bar->start();

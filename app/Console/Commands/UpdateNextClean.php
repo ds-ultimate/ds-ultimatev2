@@ -44,14 +44,19 @@ class UpdateNextClean extends Command
             echo "No Clean needed\n";
             return;
         }
-        $worldModel = new \App\World();
-        $world = $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
-                - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))->where('active', '=', 1)
-                ->orderBy('worldCleaned_at', 'ASC')->first();
-        echo "Server: {$world->server->code} World:{$world->name}\n";
-        $db = new DBController();
-        $db->cleanOldEntries($world, 'v');
-        $db->cleanOldEntries($world, 'p');
-        $db->cleanOldEntries($world, 'a');
+        $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
+        $toDo = ceil(env('DB_CLEAN_EVERY_HOURS') * 12 / $cnt);
+        
+        for($i = 0; $i < $toDo; $i++) {
+            $world = \App\Util\BasicFunctions::getWorldQuery()
+                    ->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
+                    - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))
+                    ->orderBy('worldCleaned_at', 'ASC')->first();
+            echo "Server: {$world->server->code} World:{$world->name}\n";
+            $db = new DBController();
+            $db->cleanOldEntries($world, 'v');
+            $db->cleanOldEntries($world, 'p');
+            $db->cleanOldEntries($world, 'a');
+        }
     }
 }
