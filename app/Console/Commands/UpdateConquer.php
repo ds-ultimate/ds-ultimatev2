@@ -43,10 +43,9 @@ class UpdateConquer extends Command
     
     public static function updateConquer($server, $world, $output) {
         \App\Util\BasicFunctions::ignoreErrs();
-        $db = new \App\Http\Controllers\DBController();
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
-            $db->conquer($server, $world);
+            DBController::conquer($server, $world);
         } else {
             $worlds = BasicFunctions::getWorldQuery()->get();
             
@@ -54,7 +53,7 @@ class UpdateConquer extends Command
             $bar->start();
             
             foreach ($worlds as $world){
-                $db->conquer($world->server->code, $world->name);
+                DBController::conquer($world->server->code, $world->name);
                 $bar->advance();
             }
             $bar->finish();

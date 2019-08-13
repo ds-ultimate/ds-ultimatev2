@@ -53,10 +53,9 @@ class UpdateNextClean extends Command
                     - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))
                     ->orderBy('worldCleaned_at', 'ASC')->first();
             echo "Server: {$world->server->code} World:{$world->name}\n";
-            $db = new DBController();
-            $db->cleanOldEntries($world, 'v');
-            $db->cleanOldEntries($world, 'p');
-            $db->cleanOldEntries($world, 'a');
+            DBController::cleanOldEntries($world, 'v');
+            DBController::cleanOldEntries($world, 'p');
+            DBController::cleanOldEntries($world, 'a');
         }
     }
 }

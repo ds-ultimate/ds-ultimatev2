@@ -60,26 +60,25 @@ class UpdateWorldData extends Command
     }
     
     public static function updateWorldData($server, $world, $part) {
-        $db = new DBController();
         switch ($part) {
             case "village":
             case "v":
-                $db->latestVillages($server, $world);
+                DBController::latestVillages($server, $world);
                 break;
 
             case "player":
             case "p":
-                $db->latestPlayer($server, $world);
+                DBController::latestPlayer($server, $world);
                 break;
 
             case "ally":
             case "a":
-                $db->latestAlly($server, $world);
+                DBController::latestAlly($server, $world);
                 break;
 
             case "conquer":
             case "c":
-                $db->conquer($server, $world);
+                DBController::conquer($server, $world);
                 break;
         }
     }

@@ -87,7 +87,7 @@ class DBController extends Controller
         });
     }
 
-    public function allyChangeTable($dbName){
+    public static function allyChangeTable($dbName){
         Schema::create($dbName.'.ally_changes', function (Blueprint $table) {
             $table->integer('player_id');
             $table->integer('old_ally_id');
@@ -97,7 +97,7 @@ class DBController extends Controller
         });
     }
 
-    public function conquerTable($dbName){
+    public static function conquerTable($dbName){
         Schema::create($dbName.'.conquer', function (Blueprint $table) {
             $table->integer('village_id');
             $table->bigInteger('timestamp');
@@ -121,9 +121,9 @@ class DBController extends Controller
                 ->where('active', '=', 1)->count() > 0;
     }
 
-    public function getWorld(){
+    public static function getWorld(){
         if (BasicFunctions::existTable(env('DB_DATABASE'), 'worlds') === false){
-            $this->worldTable();
+            DBController::worldTable();
         }
 
         $serverArray = Server::getServer();
@@ -197,22 +197,22 @@ class DBController extends Controller
 
     }
     
-    public function latestPlayer($server, $world){
+    public static function latestPlayer($server, $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
-            $this->playerTable($dbName, 'latest_temp');
+            DBController::playerTable($dbName, 'latest_temp');
         }
         
         if (BasicFunctions::existTable($dbName, 'ally_changes') === false){
-            $this->allyChangeTable($dbName);
+            DBController::allyChangeTable($dbName);
         }
 
         if (BasicFunctions::existTable($dbName, 'player_latest') === false){
-            $this->playerTable($dbName, 'latest');
+            DBController::playerTable($dbName, 'latest');
         }
         
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
@@ -334,12 +334,12 @@ class DBController extends Controller
         Schema::dropIfExists("$dbName.player_latest");
         DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
         
-        $hashPlayer = $this->hashTable($arrayPlayer, 'p', 'playerID');
+        $hashPlayer = DBController::hashTable($arrayPlayer, 'p', 'playerID');
 
         for ($i = 0; $i < env('HASH_PLAYER'); $i++){
             if (array_key_exists($i ,$hashPlayer)) {
                 if (BasicFunctions::existTable($dbName, 'player_' . $i) === false) {
-                    $this->playerTable($dbName, $i);
+                    DBController::playerTable($dbName, $i);
                 }
                 $insert->setTable($dbName . '.player_' . $i);
                 foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
@@ -355,14 +355,14 @@ class DBController extends Controller
         $worldUpdate->save();
     }
 
-    public function latestVillages($server, $world){
+    public static function latestVillages($server, $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1800M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
-            $this->villageTable($dbName, 'latest_temp');
+            DBController::villageTable($dbName, 'latest_temp');
         }
 
         $lines = gzfile("$worldUpdate->url/map/village.txt.gz");
@@ -405,15 +405,15 @@ class DBController extends Controller
             $insert->insert($t);
         }
         
-        $villageDB = $this->prepareVillageChangeCheck($dbName);
+        $villageDB = DBController::prepareVillageChangeCheck($dbName);
         Schema::dropIfExists("$dbName.village_latest");
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
         
-        $hashVillage = $this->hashTable($array, 'v', 'villageID', array($this, 'villageSameSinceLast'), $villageDB);
+        $hashVillage = DBController::hashTable($array, 'v', 'villageID', array(DBController::class, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
-                    $this->villageTable($dbName, $i);
+                    DBController::villageTable($dbName, $i);
                 }
                 $insert->setTable($dbName . '.village_' . $i);
                 foreach (array_chunk($hashVillage[$i], 3000) as $t) {
@@ -429,14 +429,14 @@ class DBController extends Controller
         $worldUpdate->save();
     }
 
-    public function latestAlly($server, $world){
+    public static function latestAlly($server, $world){
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '1500M');
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
-            $this->allyTable($dbName, 'latest_temp');
+            DBController::allyTable($dbName, 'latest_temp');
         }
 
         $lines = gzfile("$worldUpdate->url/map/ally.txt.gz");
@@ -535,12 +535,12 @@ class DBController extends Controller
         Schema::dropIfExists("$dbName.ally_latest");
         DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
 
-        $hashAlly = $this->hashTable($array, 'a', 'allyID');
+        $hashAlly = DBController::hashTable($array, 'a', 'allyID');
 
         for ($i = 0; $i < env('HASH_ALLY'); $i++){
             if (array_key_exists($i ,$hashAlly)) {
                 if (BasicFunctions::existTable($dbName, 'ally_' . $i) === false) {
-                    $this->allyTable($dbName, $i);
+                    DBController::allyTable($dbName, $i);
                 }
                 $insert->setTable($dbName . '.ally_' . $i);
                 foreach (array_chunk($hashAlly[$i], 3000) as $t) {
@@ -556,7 +556,7 @@ class DBController extends Controller
         $worldUpdate->save();
     }
 
-    public function conquer($server, $world){
+    public static function conquer($server, $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1500M');
         
@@ -564,7 +564,7 @@ class DBController extends Controller
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'conquer') === false) {
-            $this->conquerTable($dbName);
+            DBController::conquerTable($dbName);
         }
         $conquer = new Conquer();
         $conquer->setTable($dbName.'.conquer');
@@ -589,11 +589,11 @@ class DBController extends Controller
         }
         
         $array = array();
-        $databaseConquer = $this->prepareConquerDupCheck($dbName);
+        $databaseConquer = DBController::prepareConquerDupCheck($dbName);
         
         foreach ($lines as $line) {
             $exploded = explode(',', trim($line));
-            if($this->conquerInsideDB($databaseConquer, $exploded)) continue;
+            if(DBController::conquerInsideDB($databaseConquer, $exploded)) continue;
             
             $tempArr = array();
             list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
@@ -610,7 +610,7 @@ class DBController extends Controller
         }
     }
     
-    public function cleanOldEntries(World $world, $type) {
+    public static function cleanOldEntries(World $world, $type) {
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         switch($type) {
             case 'a':
@@ -643,7 +643,7 @@ class DBController extends Controller
         $world->save();
     }
     
-    private function prepareVillageChangeCheck($dbName) {
+    private static function prepareVillageChangeCheck($dbName) {
         if(!BasicFunctions::existTable($dbName, 'village_latest')) {
             return array();
         }
@@ -663,7 +663,7 @@ class DBController extends Controller
      * @param type $data
      * @return boolean true if same is already inside Database
      */
-    private function villageSameSinceLast($arrVil, $data) {
+    private static function villageSameSinceLast($arrVil, $data) {
         if(!isset($arrVil[$data['villageID']])) return false;
 
         $possible_dup = $arrVil[$data['villageID']];
@@ -676,7 +676,7 @@ class DBController extends Controller
         return false;
     }
     
-    private function prepareConquerDupCheck($dbName) {
+    private static function prepareConquerDupCheck($dbName) {
         $conquerModel = new Conquer();
         $conquerModel->setTable($dbName . '.conquer');
         
@@ -690,7 +690,7 @@ class DBController extends Controller
         return $arrCon;
     }
 
-    private function conquerInsideDB($arrCon, $data) {
+    private static function conquerInsideDB($arrCon, $data) {
         if(!isset($arrCon[$data[1]])) return false;
         //echo "Found in DB\n";
         $possible_dups = $arrCon[$data[1]];
@@ -706,7 +706,7 @@ class DBController extends Controller
         return false;
     }
 
-    public function hashTable($mainArray, $type, $index,callable $cmpFkt = null, $cmpArr = null){
+    public static function hashTable($mainArray, $type, $index,callable $cmpFkt = null, $cmpArr = null){
         $hashArray = array();
         foreach ($mainArray as $main){
             if($cmpFkt != null && $cmpFkt($cmpArr, $main)) {
