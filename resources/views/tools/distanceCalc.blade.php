@@ -256,6 +256,71 @@
             return day + '{{ __('ui.tool.distCalc.days') }}' + '&nbsp;' + pad(hour) + ':' + pad(minutes) + ':' + pad(seconds);
         }
 
+        function calc(){
+            var xStart = $('#villageForm').find('#xStart');
+            var yStart = $('#villageForm').find('#yStart');
+            var xTarget = $('#villageForm').find('#xTarget');
+            var yTarget = $('#villageForm').find('#yTarget');
+            axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ xStart.val() + '/' + yStart.val(), {
+
+            })
+                .then((response) =>{
+                    var start = $('#startVillage');
+                    const data = response.data.data;
+                    start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xStart.val() + '|' + yStart.val() + '</b>  [' + data['continent'] + ']');
+                    start.find('tr:nth-child(2) td').html(data['points']);
+                    start.find('tr:nth-child(3) td').html(data['ownerName']);
+                    start.find('tr:nth-child(4) td').html(data['ownerAlly']);
+                })
+                .catch((error) =>{
+                    var start = $('#startVillage');
+                    start.find('tr:nth-child(1) td').html('{{ __('ui.villageNotExist') }} ' + xStart.val() + '|' + yStart.val());
+                    start.find('tr:nth-child(2) td').html('-');
+                    start.find('tr:nth-child(3) td').html('-');
+                    start.find('tr:nth-child(4) td').html('-');
+                });
+
+            axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ xTarget.val() + '/' + yTarget.val(), {
+
+            })
+                .then((response) =>{
+                    var start = $('#targetVillage');
+                    const data = response.data.data;
+                    start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xTarget.val() + '|' + yTarget.val() + '</b>  [' + data['continent'] + ']');
+                    start.find('tr:nth-child(2) td').html(data['points']);
+                    start.find('tr:nth-child(3) td').html(data['ownerName']);
+                    start.find('tr:nth-child(4) td').html(data['ownerAlly']);
+                })
+                .catch((error) =>{
+                    var start = $('#targetVillage');
+                    start.find('tr:nth-child(1) td').html('{{ __('ui.villageNotExist') }} ' + xTarget.val() + '|' + yTarget.val());
+                    start.find('tr:nth-child(2) td').html('-');
+                    start.find('tr:nth-child(3) td').html('-');
+                    start.find('tr:nth-child(4) td').html('-');
+                });
+
+
+            var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
+            $('#spearTime').html(convertTime('{{ round((float)$unitConfig->spear->speed) }}' * dis));
+            $('#swordTime').html(convertTime('{{ round((float)$unitConfig->sword->speed) }}' * dis));
+            $('#axeTime').html(convertTime('{{ round((float)$unitConfig->axe->speed) }}' * dis));
+            @if ($config->game->archer == 1)
+            $('#archerTime').html(convertTime('{{ round((float)$unitConfig->archer->speed) }}' * dis));
+            @endif
+            $('#spyTime').html(convertTime('{{ round((float)$unitConfig->spy->speed) }}' * dis));
+            $('#lightTime').html(convertTime('{{ round((float)$unitConfig->light->speed) }}' * dis));
+            @if ($config->game->archer == 1)
+            $('#marcherTime').html(convertTime('{{ round((float)$unitConfig->marcher->speed) }}' * dis));
+            @endif
+            $('#heavyTime').html(convertTime('{{ round((float)$unitConfig->heavy->speed) }}' * dis));
+            $('#ramTime').html(convertTime('{{ round((float)$unitConfig->ram->speed) }}' * dis));
+            $('#catapultTime').html(convertTime('{{ round((float)$unitConfig->catapult->speed) }}' * dis));
+            @if ($config->game->knight > 0)
+            $('#knightTime').html(convertTime('{{ round((float)$unitConfig->knight->speed) }}' * dis));
+            @endif
+            $('#snobTime').html(convertTime('{{ round((float)$unitConfig->snob->speed) }}' * dis));
+        }
+
         String.prototype.trunc = String.prototype.trunc ||
             function(n){
                 return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
@@ -267,6 +332,9 @@
                 $(this).val($(this).val().replace(/[^\d].+/, ""));
                 if ((event.which < 48 || event.which > 57)) {
                     event.preventDefault();
+                }
+                if (event.keyCode == 13) {
+                    calc();
                 }
             });
 
@@ -298,68 +366,7 @@
 
             $(document).on('submit', '#villageForm', function (e) {
                 e.preventDefault();
-                var xStart = $(this).find('#xStart');
-                var yStart = $(this).find('#yStart');
-                var xTarget = $(this).find('#xTarget');
-                var yTarget = $(this).find('#yTarget');
-                axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ xStart.val() + '/' + yStart.val(), {
-
-                })
-                    .then((response) =>{
-                        var start = $('#startVillage');
-                        const data = response.data.data;
-                        start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xStart.val() + '|' + yStart.val() + '</b>  [' + data['continent'] + ']');
-                        start.find('tr:nth-child(2) td').html(data['points']);
-                        start.find('tr:nth-child(3) td').html(data['ownerName']);
-                        start.find('tr:nth-child(4) td').html(data['ownerAlly']);
-                    })
-                    .catch((error) =>{
-                        var start = $('#startVillage');
-                        start.find('tr:nth-child(1) td').html('{{ __('ui.villageNotExist') }} ' + xStart.val() + '|' + yStart.val());
-                        start.find('tr:nth-child(2) td').html('-');
-                        start.find('tr:nth-child(3) td').html('-');
-                        start.find('tr:nth-child(4) td').html('-');
-                    });
-
-                axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ xTarget.val() + '/' + yTarget.val(), {
-
-                })
-                    .then((response) =>{
-                        var start = $('#targetVillage');
-                        const data = response.data.data;
-                        start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xTarget.val() + '|' + yTarget.val() + '</b>  [' + data['continent'] + ']');
-                        start.find('tr:nth-child(2) td').html(data['points']);
-                        start.find('tr:nth-child(3) td').html(data['ownerName']);
-                        start.find('tr:nth-child(4) td').html(data['ownerAlly']);
-                    })
-                    .catch((error) =>{
-                        var start = $('#targetVillage');
-                        start.find('tr:nth-child(1) td').html('{{ __('ui.villageNotExist') }} ' + xTarget.val() + '|' + yTarget.val());
-                        start.find('tr:nth-child(2) td').html('-');
-                        start.find('tr:nth-child(3) td').html('-');
-                        start.find('tr:nth-child(4) td').html('-');
-                    });
-
-
-                var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
-                $('#spearTime').html(convertTime('{{ round((float)$unitConfig->spear->speed) }}' * dis));
-                $('#swordTime').html(convertTime('{{ round((float)$unitConfig->sword->speed) }}' * dis));
-                $('#axeTime').html(convertTime('{{ round((float)$unitConfig->axe->speed) }}' * dis));
-                @if ($config->game->archer == 1)
-                $('#archerTime').html(convertTime('{{ round((float)$unitConfig->archer->speed) }}' * dis));
-                @endif
-                $('#spyTime').html(convertTime('{{ round((float)$unitConfig->spy->speed) }}' * dis));
-                $('#lightTime').html(convertTime('{{ round((float)$unitConfig->light->speed) }}' * dis));
-                @if ($config->game->archer == 1)
-                $('#marcherTime').html(convertTime('{{ round((float)$unitConfig->marcher->speed) }}' * dis));
-                @endif
-                $('#heavyTime').html(convertTime('{{ round((float)$unitConfig->heavy->speed) }}' * dis));
-                $('#ramTime').html(convertTime('{{ round((float)$unitConfig->ram->speed) }}' * dis));
-                $('#catapultTime').html(convertTime('{{ round((float)$unitConfig->catapult->speed) }}' * dis));
-                @if ($config->game->knight > 0)
-                $('#knightTime').html(convertTime('{{ round((float)$unitConfig->knight->speed) }}' * dis));
-                @endif
-                $('#snobTime').html(convertTime('{{ round((float)$unitConfig->snob->speed) }}' * dis));
+                calc();
             });
         })
     </script>
