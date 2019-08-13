@@ -30,9 +30,9 @@ class DBController extends Controller
             $table->text('units');
             $table->boolean('active')->default(1);
             $table->timestamps();
-            $table->timestamp('worldCheck_at');
-            $table->timestamp('worldUpdated_at');
-            $table->timestamp('worldCleaned_at');
+            $table->timestamp('worldCheck_at')->useCurrent();
+            $table->timestamp('worldUpdated_at')->useCurrent();
+            $table->timestamp('worldCleaned_at')->useCurrent();
             $table->softDeletes();
         });
     }
@@ -108,6 +108,7 @@ class DBController extends Controller
     }
     
     public static function updateNeeded() {
+        if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
                 - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))
@@ -115,6 +116,7 @@ class DBController extends Controller
     }
     
     public static function cleanNeeded() {
+        if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
                 - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))
