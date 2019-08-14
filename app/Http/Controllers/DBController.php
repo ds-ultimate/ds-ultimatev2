@@ -52,6 +52,26 @@ class DBController extends Controller
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
+            $table->index('playerID');
+        });
+    }
+
+    public static function playerLatestTable($dbName, $tableName){
+        Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
+            $table->integer('playerID');
+            $table->string('name');
+            $table->integer('ally_id');
+            $table->integer('village_count');
+            $table->integer('points');
+            $table->integer('rank');
+            $table->bigInteger('offBash')->nullable();
+            $table->integer('offBashRank')->nullable();
+            $table->bigInteger('defBash')->nullable();
+            $table->integer('defBashRank')->nullable();
+            $table->bigInteger('gesBash')->nullable();
+            $table->integer('gesBashRank')->nullable();
+            $table->timestamps();
+            $table->primary('playerID');
         });
     }
 
@@ -71,6 +91,27 @@ class DBController extends Controller
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
+            $table->index('allyID');
+        });
+    }
+
+    public static function allyLatestTable($dbName, $tableName){
+        Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
+            $table->integer('allyID');
+            $table->string('name');
+            $table->string('tag');
+            $table->integer('member_count');
+            $table->integer('points');
+            $table->integer('village_count');
+            $table->integer('rank');
+            $table->bigInteger('offBash')->nullable();
+            $table->integer('offBashRank')->nullable();
+            $table->bigInteger('defBash')->nullable();
+            $table->integer('defBashRank')->nullable();
+            $table->bigInteger('gesBash')->nullable();
+            $table->integer('gesBashRank')->nullable();
+            $table->timestamps();
+            $table->primary('allyID');
         });
     }
 
@@ -84,6 +125,21 @@ class DBController extends Controller
             $table->integer('owner');
             $table->integer('bonus_id');
             $table->timestamps();
+            $table->index('playerID');
+        });
+    }
+
+    public static function villageLatestTable($dbName, $tableName){
+        Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
+            $table->integer('villageID');
+            $table->string('name');
+            $table->integer('x');
+            $table->integer('y');
+            $table->integer('points');
+            $table->integer('owner');
+            $table->integer('bonus_id');
+            $table->timestamps();
+            $table->primary('villageID');
         });
     }
 
@@ -206,7 +262,7 @@ class DBController extends Controller
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
-            DBController::playerTable($dbName, 'latest_temp');
+            DBController::playerLatestTable($dbName, 'latest_temp');
         }
         
         if (BasicFunctions::existTable($dbName, 'ally_changes') === false){
@@ -214,7 +270,7 @@ class DBController extends Controller
         }
 
         if (BasicFunctions::existTable($dbName, 'player_latest') === false){
-            DBController::playerTable($dbName, 'latest');
+            DBController::playerLatestTable($dbName, 'latest');
         }
         
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
@@ -364,7 +420,7 @@ class DBController extends Controller
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
-            DBController::villageTable($dbName, 'latest_temp');
+            DBController::villageLatestTable($dbName, 'latest_temp');
         }
 
         $lines = gzfile("$worldUpdate->url/map/village.txt.gz");
@@ -438,7 +494,7 @@ class DBController extends Controller
         $worldUpdate = World::getWorld($server, $world);
 
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
-            DBController::allyTable($dbName, 'latest_temp');
+            DBController::allyLatestTable($dbName, 'latest_temp');
         }
 
         $lines = gzfile("$worldUpdate->url/map/ally.txt.gz");
