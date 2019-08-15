@@ -66,6 +66,7 @@ return array (
     'title' => 'server',
     'worlds' => 'worlds',
     'ranking' => 'Ranking',
+    'tools' => 'Tools',
   ),
   'tabletitel' => 
   array (

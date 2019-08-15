@@ -90,6 +90,7 @@ return array (
     'show' => 'Welten anzeigen',
     'title' => 'Server',
     'ranking' => 'Rangliste',
+    'tools' => 'Tools',
   ),
   'footer' => 
   array (

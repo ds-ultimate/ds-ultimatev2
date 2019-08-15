@@ -8,7 +8,7 @@
                 <small>-</small>
             </li>
             <li class="list-inline-item">
-                <small><a href="#">Changelog</a></small>
+                <small><a href="{{ route('changelog') }}">Changelog</a></small>
             </li>
             <li class="list-inline-item">
                 <small> -</small>

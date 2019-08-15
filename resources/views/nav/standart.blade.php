@@ -61,6 +61,14 @@
             @endif
                     </ul>
                 </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{__('ui.server.tools')}}
+                        </a>
+                        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                            <li class="dropdown-item"><a href="{{ route('distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
+                        </ul>
+                    </li>
             @endif
         </ul>
         @if (isset($server))
