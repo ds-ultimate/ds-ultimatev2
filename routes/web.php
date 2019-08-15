@@ -33,28 +33,25 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('/', 'HomeController@index')->name('home');
 
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-
     Route::resource('permissions', 'PermissionsController');
 
     Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-
     Route::resource('roles', 'RolesController');
 
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-
     Route::resource('users', 'UsersController');
 
     Route::delete('server/destroy', 'ServerController@massDestroy')->name('server.massDestroy');
-
     Route::resource('server', 'ServerController');
 
     Route::delete('worlds/destroy', 'WorldsController@massDestroy')->name('worlds.massDestroy');
-
     Route::resource('worlds', 'WorldsController');
 
     Route::delete('news/destroy', 'NewsController@massDestroy')->name('news.massDestroy');
-
     Route::resource('news', 'NewsController');
+
+    Route::delete('changelogs/destroy', 'ChangelogsController@massDestroy')->name('changelogs.massDestroy');
+    Route::resource('changelogs', 'ChangelogsController');
 
     Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
     Route::get('bugreports/priority/{priority}', 'BugreportsController@indexPriority')->name('bugreports.priority');
@@ -74,6 +71,8 @@ Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
+
+Route::get('/changelog', 'Controller@changelog')->name('changelog');
 
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');

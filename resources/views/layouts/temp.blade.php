@@ -14,7 +14,6 @@
     <link href="{{ asset('plugin/Datatables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugin/Datatables/Responsive-2.2.2/css/responsive.bootstrap4.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
-    <script src="https://kit.fontawesome.com/d27d915b5f.js"></script>
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
     <!-- Matomo -->
@@ -46,6 +45,7 @@
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://kit.fontawesome.com/d27d915b5f.js"></script>
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/jquery.dataTables.min.js') }}"></script>

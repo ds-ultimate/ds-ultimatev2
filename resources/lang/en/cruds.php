@@ -193,4 +193,20 @@ return array (
       'seen' => 'Seen from',
     ),
   ),
+  'changelog' => 
+  array (
+    'fields' => 
+    array (
+      'id' => 'ID',
+      'version' => 'Version',
+      'repository_html_url' => 'URL',
+      'title' => 'Title',
+      'update' => 'Updated At',
+      'content' => 'Content',
+      'icon' => 'Icon',
+      'color' => 'Color',
+    ),
+    'title' => 'Changelogs',
+    'title_singular' => 'Changelog',
+  ),
 );

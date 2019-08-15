@@ -22,7 +22,7 @@ class CreateBugreportsTable extends Migration
             $table->text('description');
             $table->text('url')->nullable();
             $table->boolean('status')->default(0);
-            $table->integer('firstSeenUser')->nullable();
+            $table->integer('firstSeenUser_id')->nullable();
             $table->timestamp('firstSeen')->nullable();
             $table->timestamp('delivery')->nullable();
             $table->timestamps();

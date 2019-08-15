@@ -17,9 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/git/webhook', 'GitController@index');
+
 Route::get('/{server}/{world}', 'APIController@getWorld');
 
-Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord');
+Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord')->name('api.villageByCoord');
 
 Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
 Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');

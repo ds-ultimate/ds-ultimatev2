@@ -10,13 +10,23 @@
                     {{ trans('global.dashboard') }}
                 </a>
             </li>
-            @can('user_management_access')
+            @can('news_access')
                 <li class="nav-item">
                     <a href="{{ route('admin.news.index') }}" class="nav-link">
                         <i class="fa-newspaper fas nav-icon">
 
                         </i>
                         {{ __('cruds.news.title') }}
+                    </a>
+                </li>
+            @endcan
+            @can('changelog_access')
+                <li class="nav-item">
+                    <a href="{{ route('admin.changelogs.index') }}" class="nav-link">
+                        <i class="fa-file-code fas nav-icon">
+
+                        </i>
+                        {{ __('cruds.changelog.title') }}
                     </a>
                 </li>
             @endcan

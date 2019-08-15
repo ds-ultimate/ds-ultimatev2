@@ -151,4 +151,20 @@ return array (
       'update' => 'Aktualisiert',
     ),
   ),
+  'changelog' => 
+  array (
+    'fields' => 
+    array (
+      'id' => 'ID',
+      'version' => 'Version',
+      'title' => 'Titel',
+      'content' => 'Inhalt',
+      'repository_html_url' => 'URL',
+      'icon' => 'Symbol',
+      'update' => 'Aktualisiert',
+      'color' => 'Farbe',
+    ),
+    'title' => 'Changelogs',
+    'title_singular' => 'Changelog',
+  ),
 );

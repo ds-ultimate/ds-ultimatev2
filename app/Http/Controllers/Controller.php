@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
+use App\Changelog;
 use App\News;
 use App\Player;
 use App\Server;
@@ -113,4 +114,14 @@ class Controller extends BaseController
         
         return response()->view('sitemap', compact('servers'))->header('Content-Type', 'text/xml');
     }
+
+    public function changelog(){
+        $changelogModel = new Changelog();
+
+        $changelogs = $changelogModel->orderBy('created_at', 'DESC')->get();
+
+        return view('content.changelog', compact('changelogs'));
+
+    }
+
 }

@@ -2,5 +2,8 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/plugin/tinymce/jquery.tinymce.min.js": "/plugin/tinymce/jquery.tinymce.min.js",
-    "/plugin/tinymce/tinymce.min.js": "/plugin/tinymce/tinymce.min.js"
+    "/plugin/tinymce/tinymce.min.js": "/plugin/tinymce/tinymce.min.js",
+    "/plugin/fontIconPicker/jquery.fonticonpicker.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.min.css",
+    "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css",
+    "/plugin/fontIconPicker/jquery.fonticonpicker.min.js": "/plugin/fontIconPicker/jquery.fonticonpicker.min.js"
 }

@@ -125,7 +125,7 @@ class DBController extends Controller
             $table->integer('owner');
             $table->integer('bonus_id');
             $table->timestamps();
-            $table->index('playerID');
+            $table->index('villageID');
         });
     }
 

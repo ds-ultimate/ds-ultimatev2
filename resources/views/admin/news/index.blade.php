@@ -49,10 +49,10 @@
                                 {{ $news->id ?? '' }}
                             </td>
                             <td>
-                                {{ $news->content_de ?? '' }}
+                                {!! $news->content_de ?? '' !!}
                             </td>
                             <td>
-                                {{ $news->content_en ?? '' }}
+                                {!! $news->content_en ?? '' !!}
                             </td>
                             <td>
                                 {{ $news->updated_at }}
@@ -76,7 +76,6 @@
                                     </form>
                                 @endcan
                             </td>
-
                         </tr>
                     @endforeach
                 </tbody>
