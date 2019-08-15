@@ -32,7 +32,9 @@
     RewriteRule ^(.*) /public/index.php [L]
 </IfModule>
 
-AuthType Basic
-AuthName "Members Only"
-AuthUserFile /var/www/clients/client1/web3/web/.htpasswd
-require valid-user
+<If "%{HTTP_HOST} == 'test.ds-ultimate.de'">
+    AuthType Basic
+    AuthName "Members Only"
+    AuthUserFile /var/www/clients/client1/web3/web/.htpasswd
+    require valid-user
+</IF> 
