@@ -28,7 +28,7 @@ class DBController extends Controller
             $table->text('url');
             $table->text('config');
             $table->text('units');
-            $table->boolean('active')->default(1);
+            $table->boolean('active')->default(1)->nullable();
             $table->timestamps();
             $table->timestamp('worldCheck_at')->useCurrent();
             $table->timestamp('worldUpdated_at')->useCurrent();
