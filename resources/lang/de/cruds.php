@@ -110,6 +110,7 @@ return array (
       'config' => 'Konfiguration',
       'active' => 'Aktiv',
       'update' => 'Letztes Update',
+      'clean' => 'Letzter Clean',
     ),
     'title' => 'Welten',
   ),

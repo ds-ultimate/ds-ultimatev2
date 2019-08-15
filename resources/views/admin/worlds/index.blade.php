@@ -50,6 +50,9 @@
                             {{ trans('cruds.world.fields.update') }}
                         </th>
                         <th>
+                            {{ trans('cruds.world.fields.clean') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -85,7 +88,10 @@
                                 {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
                             </td>
                             <td>
-                                {{ $world->	updated_at->diffForHumans() }}
+                                {{ $world->worldUpdated_at->diffForHumans() }}
+                            </td>
+                            <td>
+                                {{ $world->worldCleaned_at->diffForHumans() }}
                             </td>
                             <td>
                                 @can('world_show')
