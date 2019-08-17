@@ -7,8 +7,7 @@ php artisan down
 git pull
 
 # update PHP dependencies
-export COMPOSER_HOME='/tmp/composer'
-composer install --no-interaction --no-dev --prefer-dist
+php composer.phar install --no-interaction --no-dev --prefer-dist
 	# --no-interaction	Do not ask any interactive question
 	# --no-dev		Disables installation of require-dev packages.
 	# --prefer-dist		Forces installation from package dist even for dev versions.
@@ -22,9 +21,6 @@ php artisan config:clear
 
 # cache config
 php artisan config:cache
-
-# restart queues
-php artisan -v queue:restart
 
 # update database
 php artisan migrate --force
