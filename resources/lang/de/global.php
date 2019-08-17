@@ -249,4 +249,5 @@ return array (
   'calculate' => 'Berechnen',
   'unit' => 'Einheit',
   'units' => 'Einheiten',
+  'back' => 'Zurück',
 );

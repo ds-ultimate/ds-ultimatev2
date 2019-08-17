@@ -1,5 +1,10 @@
 @extends('layouts.temp')
 @section('content')
+    <div class="justify-content-center my-3">
+        <div class="col-12 text-center">
+            <a class="btn btn-primary">{{ __('global.back') }}</a>
+        </div>
+    </div>
     <ul class="timeline">
         @foreach($changelogs as $key => $changelog)
             <li class="{{ ($key % 2 != 0)? 'timeline-inverted' : '' }}">
