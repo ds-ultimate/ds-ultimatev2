@@ -25,8 +25,8 @@ class AddDatabaseIndices extends Migration
     
     private function changeAllyTables($dbName) {
         $tablePrefix = 'ally';
-        $envHashIndex = 'HASH_ALLY';
-        for($i = 0; $i < env($envHashIndex); $i++) {
+        $envHashIndex = 'hash_ally';
+        for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
             if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
             Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
                 $table->index('allyID');
@@ -40,8 +40,8 @@ class AddDatabaseIndices extends Migration
     
     private function changePlayerTables($dbName) {
         $tablePrefix = 'player';
-        $envHashIndex = 'HASH_PLAYER';
-        for($i = 0; $i < env($envHashIndex); $i++) {
+        $envHashIndex = 'hash_player';
+        for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
             if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
             Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
                 $table->index('playerID');
@@ -55,8 +55,8 @@ class AddDatabaseIndices extends Migration
     
     private function changeVillageTables($dbName) {
         $tablePrefix = 'village';
-        $envHashIndex = 'HASH_VILLAGE';
-        for($i = 0; $i < env($envHashIndex); $i++) {
+        $envHashIndex = 'hash_village';
+        for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
             if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
             Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
                 $table->index('villageID');

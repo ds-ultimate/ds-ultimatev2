@@ -43,9 +43,9 @@ class MigrateFromOld extends Command
         BasicFunctions::ignoreErrs();
         
         $hashes = [
-            'ally' => env('HASH_ALLY'),
-            'player' => env('HASH_PLAYER'),
-            'village' => env('HASH_VILLAGE'),
+            'ally' => config('dsUltimate.hash_ally'),
+            'player' => config('dsUltimate.hash_player'),
+            'village' => config('dsUltimate.hash_village'),
         ];
         
         $databases = DB::select("SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE '".$this->argument('dbName')."'");

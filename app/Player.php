@@ -23,7 +23,7 @@ class Player extends CustomModel
     {
         parent::__construct($attributes);
 
-        $this->hash = env('HASH_PLAYER', 59);
+        $this->hash = config('dsUltimate.hash_player');
 
     }
 
@@ -113,7 +113,7 @@ class Player extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function playerDataChart($server, $world, $playerID){
-        $tabelNr = $playerID % env('HASH_PLAYER');
+        $tabelNr = $playerID % config('dsUltimate.hash_player');
 
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);

@@ -18,7 +18,7 @@ class Village extends CustomModel
     {
         parent::__construct($attributes);
 
-        $this->hash = env('HASH_VILLAGE', 109);
+        $this->hash = config('dsUltimate.hash_village');
 
     }
 
@@ -58,7 +58,7 @@ class Village extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function villageDataChart($server, $world, $villageID){
-        $tabelNr = $villageID % env('HASH_VILLAGE');
+        $tabelNr = $villageID % config('dsUltimate.hash_village');
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);
         

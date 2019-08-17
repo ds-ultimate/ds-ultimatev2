@@ -160,11 +160,11 @@ class BasicFunctions
     public static function hash($input ,$type){
         switch($type) {
             case 'p': //Player
-                return $input % env('HASH_PLAYER');
+                return $input % config('dsUltimate.hash_player');
             case 'a': //Ally
-                return $input % env('HASH_ALLY');
+                return $input % config('dsUltimate.hash_ally');
             case 'v': //Village
-                return $input % env('HASH_VILLAGE');
+                return $input % config('dsUltimate.hash_village');
         }
         return false;
     }
@@ -215,7 +215,7 @@ class BasicFunctions
         );
         return str_replace(array_keys($replaceArray),
             array_values($replaceArray),
-            env('DB_DATABASE_WORLD'));
+            config('dsUltimate.db_database_world'));
     }
     /**
      * @param $haystack

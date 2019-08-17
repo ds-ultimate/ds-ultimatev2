@@ -46,12 +46,12 @@ class UpdateNextWorld extends Command
         }
         
         $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
-        $toDo = ceil(env('DB_UPDATE_EVERY_HOURS') * 12 / $cnt);
+        $toDo = ceil(config('dsUltimate.db_update_every_hours') * 12 / $cnt);
         
         for($i = 0; $i < $toDo; $i++) {
             $world = \App\Util\BasicFunctions::getWorldQuery()
                     ->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
-                    - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))
+                    - (60 * 60) * config('dsUltimate.db_update_every_hours')))
                     ->orderBy('worldUpdated_at', 'ASC')->first();
             echo "Server: {$world->server->code} World:{$world->name}\n";
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');

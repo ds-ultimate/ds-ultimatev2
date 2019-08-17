@@ -15,7 +15,7 @@ class Ally extends CustomModel
     {
         parent::__construct($attributes);
 
-        $this->hash = env('HASH_ALLY', 29);
+        $this->hash = config('dsUltimate.hash_ally');
     }
 
     /**
@@ -102,7 +102,7 @@ class Ally extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function allyDataChart($server, $world, $allyID){
-        $tabelNr = $allyID % env('HASH_ALLY');
+        $tabelNr = $allyID % config('dsUltimate.hash_ally');
 
         $allyModel = new Ally();
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_'.$tabelNr);

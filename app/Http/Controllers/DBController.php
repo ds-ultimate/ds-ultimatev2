@@ -167,7 +167,7 @@ class DBController extends Controller
         if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
-                - (60 * 60) * env('DB_UPDATE_EVERY_HOURS')))
+                - (60 * 60) * config('dsUltimate.db_update_every_hours')))
                 ->where('active', '=', 1)->count() > 0;
     }
     
@@ -175,7 +175,7 @@ class DBController extends Controller
         if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
-                - (60 * 60) * env('DB_CLEAN_EVERY_HOURS')))
+                - (60 * 60) * config('dsUltimate.db_clean_every_hours')))
                 ->where('active', '=', 1)->count() > 0;
     }
 
@@ -394,7 +394,7 @@ class DBController extends Controller
         
         $hashPlayer = DBController::hashTable($arrayPlayer, 'p', 'playerID');
 
-        for ($i = 0; $i < env('HASH_PLAYER'); $i++){
+        for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
             if (array_key_exists($i ,$hashPlayer)) {
                 if (BasicFunctions::existTable($dbName, 'player_' . $i) === false) {
                     DBController::playerTable($dbName, $i);
@@ -468,7 +468,7 @@ class DBController extends Controller
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
         
         $hashVillage = DBController::hashTable($array, 'v', 'villageID', array(DBController::class, 'villageSameSinceLast'), $villageDB);
-        for ($i = 0; $i < env('HASH_VILLAGE'); $i++) {
+        for ($i = 0; $i < config('dsUltimate.hash_village'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
                     DBController::villageTable($dbName, $i);
@@ -595,7 +595,7 @@ class DBController extends Controller
 
         $hashAlly = DBController::hashTable($array, 'a', 'allyID');
 
-        for ($i = 0; $i < env('HASH_ALLY'); $i++){
+        for ($i = 0; $i < config('dsUltimate.hash_ally'); $i++){
             if (array_key_exists($i ,$hashAlly)) {
                 if (BasicFunctions::existTable($dbName, 'ally_' . $i) === false) {
                     DBController::allyTable($dbName, $i);
@@ -672,28 +672,28 @@ class DBController extends Controller
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         switch($type) {
             case 'a':
-                $envHashIndex = 'HASH_ALLY';
+                $envHashIndex = 'hash_ally';
                 $tablePrefix = 'ally';
                 $model = new Ally();
                 break;
                 
             case 'p':
-                $envHashIndex = 'HASH_PLAYER';
+                $envHashIndex = 'hash_player';
                 $tablePrefix = 'player';
                 $model = new Player();
                 break;
 
             case 'v':
-                $envHashIndex = 'HASH_VILLAGE';
+                $envHashIndex = 'hash_village';
                 $tablePrefix = 'village';
                 $model = new Village();
                 break;
         }
         
-        for ($i = 0; $i < env($envHashIndex); $i++){
+        for ($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++){
             if (BasicFunctions::existTable($dbName, "{$tablePrefix}_{$i}") === true) {
                 $model->setTable("$dbName.{$tablePrefix}_{$i}");
-                $delete = $model->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * env('DB_SAVE_DAY')));
+                $delete = $model->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * config('dsUltimate.db_save_day')));
                 $delete->delete();
             }
         }
