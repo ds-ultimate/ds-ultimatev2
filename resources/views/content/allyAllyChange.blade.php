@@ -68,6 +68,7 @@
                     { "data": "points", "render": function (value) {return numeral(value).format('0,0')}},
                 ],
                 responsive: true,
+                "order": [[ 0, "desc" ]],
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

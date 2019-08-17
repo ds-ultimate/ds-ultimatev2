@@ -55,6 +55,7 @@
             $('#table_id').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "order": [[ 0, "desc" ]],
                 "ajax": "{{ route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "timestamp"},

@@ -53,6 +53,7 @@
             $('#table_id').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "order": [[ 0, "desc" ]],
                 "ajax": "{{ route('api.villageConquer', [$worldData->server->code, $worldData->name, $type, $villageData->villageID]) }}",
                 "columns": [
                     { "data": "timestamp" },
