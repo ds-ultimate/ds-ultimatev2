@@ -52,8 +52,8 @@
                                     <th>{{$ally->get('world')->displayName()}}</th>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally->get('world'),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->name)) !!}</td>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally->get('world'),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->tag)) !!}</td>
-                                    <td>{{$ally->get('ally')->points}}</td>
-                                    <td>{{$ally->get('ally')->village_count}}</td>
+                                    <td>{{\App\Util\BasicFunctions::numberConv($ally->get('ally')->points)}}</td>
+                                    <td>{{\App\Util\BasicFunctions::numberConv($ally->get('ally')->village_count)}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
