@@ -366,16 +366,16 @@ class DBController extends Controller
             ];
             $arrayPlayer []= $dataPlayer;
             
-            if(isset($databasePlayer[$player->get('id')]) &&
-                    $databasePlayer[$player->get('id')] != $player->get('ally')) {
-                    $arrayAllyChange[] = [
-                        'player_id' => $player->get('id'),
-                        'old_ally_id' => $databasePlayer[$player->get('id')],
-                        'new_ally_id' => $player->get('ally'),
-                        'points' => $player->get('points'),
-                        'created_at' => Carbon::createFromTimestamp(time()),
-                        'updated_at' => Carbon::createFromTimestamp(time()),
-                    ];
+            if((isset($databasePlayer[$player->get('id')]) && $databasePlayer[$player->get('id')] != $player->get('ally')) ||
+                    (!isset($databasePlayer[$player->get('id')]) && $player->get('ally') != 0)) {
+                $arrayAllyChange[] = [
+                    'player_id' => $player->get('id'),
+                    'old_ally_id' => $databasePlayer[$player->get('id')],
+                    'new_ally_id' => $player->get('ally'),
+                    'points' => $player->get('points'),
+                    'created_at' => Carbon::createFromTimestamp(time()),
+                    'updated_at' => Carbon::createFromTimestamp(time()),
+                ];
             }
         }
 
