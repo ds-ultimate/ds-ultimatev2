@@ -34,17 +34,7 @@ class GitController extends BaseController
 
             switch ($request->header('X-GitHub-Event')){
                 case 'release':
-                    switch ($payload->action){
-                        case 'published':
-                            $this->release($payload);
-                            break;
-                        case 'deleted':
-                            echo 'deleted is not supported';
-                            break;
-                        default:
-                            echo $payload->action.' is not supported';
-                            break;
-                    }
+                    $this->release($payload);
                     break;
                 default:
                     echo $request->header('X-GitHub-Event').' is not supported';
@@ -54,6 +44,20 @@ class GitController extends BaseController
     }
 
     private function release($payload){
+        switch ($payload->action){
+            case 'published':
+                $this->releasePublished($payload);
+                break;
+            case 'deleted':
+                echo 'deleted is not supported';
+                break;
+            default:
+                echo $payload->action.' is not supported';
+                break;
+        }
+    }
+
+    private function releasePublished($payload){
         $changelog = new Changelog();
 
         $changelog->version = $payload->release->tag_name;
