@@ -288,6 +288,10 @@ class BasicFunctions
 
         return $day.' '.__('ui.tool.distCalc.days').' '.str_pad($hour, 2, "0", STR_PAD_LEFT).':'.str_pad($minutes, 2, "0", STR_PAD_LEFT).':'.str_pad($seconds, 2, "0", STR_PAD_LEFT);
     }
+    
+    public static function sign( $number ) {
+        return ( $number > 0 ) ? 1 : (( $number < 0 ) ? -1 : 0 );
+    }
 
     public static function fontawesome(){
         return array(

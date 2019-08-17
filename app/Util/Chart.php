@@ -107,11 +107,23 @@ class Chart
             ->addNumberColumn(Chart::chartLabel($chartType));
 
         $oldTimestamp = 0;
+        $oldTimestampRaw = null;
+        $oldData = null;
         $i = 0;
         foreach ($rawData as $data){
             if (date('Y-m-d', $data->get('timestamp')) != $oldTimestamp){
+                if($oldTimestampRaw != null && $oldTimestampRaw + 24 * 60 * 60 < $data->get('timestamp')) {
+                    $oldTimestampRaw += 24 * 60 * 60;
+                    while(date('Y-m-d', $data->get('timestamp')) != date('Y-m-d', $oldTimestampRaw)) {
+                        $population->addRow([date('Y-m-d', $oldTimestampRaw), $oldData]);
+                        $oldTimestampRaw += 24 * 60 * 60;
+                    }
+                }
+                
                 $population->addRow([date('Y-m-d', $data->get('timestamp')), $data->get($chartType)]);
-                $oldTimestamp =date('Y-m-d', $data->get('timestamp'));
+                $oldTimestamp = date('Y-m-d', $data->get('timestamp'));
+                $oldTimestampRaw = $data->get('timestamp');
+                $oldData = $data->get($chartType);
                 $i++;
             }
         }

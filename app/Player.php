@@ -118,7 +118,7 @@ class Player extends CustomModel
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
 
-        $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('updated_at', 'DESC')->get();
+        $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('updated_at', 'ASC')->get();
         $playerDatas = collect();
 
         foreach ($playerDataArray as $player){
