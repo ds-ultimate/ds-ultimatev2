@@ -6,7 +6,20 @@
                 <div class="timeline-badge" style="background-color: {{ $changelog->color }}"><i class="{{ $changelog->icon }}"></i></div>
                 <div class="timeline-panel bg-white">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title truncate">{{ $changelog->title }} <i class="float-right small truncate"><b>{{ $changelog->version }}</b></i></h4>
+                        <div class="d-none d-lg-block">
+                            <div class="timeline-title form-inline">
+                                <h4 class="text-truncate" style="width: 70%;">{{ $changelog->title }}</h4>
+                                <h4 class="text-truncate" style="width: 30%;">
+                                    <small><b class="float-right">{{ $changelog->version }}</b></small>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="d-lg-none">
+                            <h4>{{ $changelog->title }}</h4>
+                            <h4>
+                                <small><b>{{ $changelog->version }}</b></small>
+                            </h4>
+                        </div>
                         <p><small class="text-muted"><i class="fas fa-clock"></i> {{ $changelog->created_at->diffForHumans() }}</small></p>
                     </div>
                     <div class="timeline-body">
