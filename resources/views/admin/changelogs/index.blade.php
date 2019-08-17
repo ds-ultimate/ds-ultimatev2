@@ -16,7 +16,7 @@
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable">
+            <table class="table table-bordered table-striped table-hover datatable text-truncate">
                 <thead>
                     <tr>
                         <th width="10">
@@ -30,9 +30,6 @@
                         </th>
                         <th>
                             {{ trans('cruds.changelog.fields.title') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.changelog.fields.content') }}
                         </th>
                         <th>
                             {{ trans('cruds.changelog.fields.repository_html_url') }}
@@ -65,9 +62,6 @@
                             </td>
                             <td>
                                 {{ $changelog->title ?? '' }}
-                            </td>
-                            <td>
-                                {!! $changelog->content ?? '' !!}
                             </td>
                             <td>
                                 <a href="{{ $changelog->repository_html_url ?? '' }}">{{ $changelog->repository_html_url ?? '' }}</a>
@@ -143,7 +137,18 @@
   dtButtons.push(deleteButton)
 @endcan
 
-  $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  $('.datatable:not(.ajaxTable)').DataTable({
+    buttons: dtButtons,
+    columnDefs: [ {
+        targets: [2],
+        render: function ( data, type, row ) {
+            console.log(type);
+            return data.length > 20 ?
+                data.substr( 0, 20 ) +'…' :
+                data;
+        }
+    }],
+  })
 })
 
 </script>
