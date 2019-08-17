@@ -7,6 +7,7 @@ use App\Http\Requests\MassDestroyWorldRequest;
 use App\Http\Requests\StoreWorldRequest;
 use App\Http\Requests\UpdateWorldRequest;
 use App\World;
+use Illuminate\Support\Carbon;
 
 class WorldsController extends Controller
 {
@@ -16,7 +17,9 @@ class WorldsController extends Controller
 
         $worlds = World::all();
 
-        return view('admin.worlds.index', compact('worlds'));
+        $now = Carbon::createFromTimestamp(time());
+
+        return view('admin.worlds.index', compact('worlds', 'now'));
     }
 
     public function create()

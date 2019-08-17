@@ -1,23 +1,23 @@
 @extends('layouts.admin')
 @section('content')
-@can('world_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route("admin.worlds.create") }}">
-                {{ trans('global.add') }} {{ trans('cruds.world.title_singular') }}
-            </a>
+    @can('world_create')
+        <div style="margin-bottom: 10px;" class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-success" href="{{ route("admin.worlds.create") }}">
+                    {{ trans('global.add') }} {{ trans('cruds.world.title_singular') }}
+                </a>
+            </div>
         </div>
-    </div>
-@endcan
-<div class="card">
-    <div class="card-header">
-        {{ trans('cruds.world.title_singular') }} {{ trans('global.list') }}
-    </div>
+    @endcan
+    <div class="card">
+        <div class="card-header">
+            {{ trans('cruds.world.title_singular') }} {{ trans('global.list') }}
+        </div>
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable">
-                <thead>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class=" table table-bordered table-striped table-hover datatable">
+                    <thead>
                     <tr>
                         <th width="10">
 
@@ -56,8 +56,8 @@
                             &nbsp;
                         </th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach($worlds as $key => $world)
                         <tr data-entry-id="{{ $world->id }}">
                             <td>
@@ -85,12 +85,12 @@
                                 <a href="{{ $world->url ?? '' }}" target="_blank">{{ $world->url ?? '' }}</a>
                             </td>
                             <td>
-                                {!! ($world->active == 1)? '<span class="fas fa-check" style="color: green"></span>' : '<span class="fas fa-times" style="color: red"></span>' !!}
+                                {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
                             </td>
-                            <td>
+                            <td class="{{ ($world->active != null)?(($now->diffInSeconds($world->worldUpdated_at) >= ((60*60)*config('dsUltimate.db_update_every_hours'))*2)? 'bg-danger' : ''): '' }}">
                                 {{ $world->worldUpdated_at->diffForHumans() }}
                             </td>
-                            <td>
+                            <td class="{{ ($world->active != null)?(($now->diffInSeconds($world->worldCleaned_at) >= ((60*60)*config('dsUltimate.db_clean_every_hours'))*2)? 'bg-danger' : ''): '' }}">
                                 {{ $world->worldCleaned_at->diffForHumans() }}
                             </td>
                             <td>
@@ -115,49 +115,44 @@
 
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 @section('scripts')
-@parent
-<script>
-    $(function () {
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.worlds.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('world_delete')
-  dtButtons.push(deleteButton)
-@endcan
-
-  $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons })
-})
-
-</script>
+    @parent
+    <script>
+        $(function () {
+            let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
+            let deleteButton = {
+                text: deleteButtonTrans,
+                url: "{{ route('admin.worlds.massDestroy') }}",
+                className: 'btn-danger',
+                action: function (e, dt, node, config) {
+                    var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
+                        return $(entry).data('entry-id')
+                    });
+                    if (ids.length === 0) {
+                        alert('{{ trans('global.datatables.zero_selected') }}')
+                        return
+                    }
+                    if (confirm('{{ trans('global.areYouSure') }}')) {
+                        $.ajax({
+                            headers: {'x-csrf-token': _token},
+                            method: 'POST',
+                            url: config.url,
+                            data: { ids: ids, _method: 'DELETE' }})
+                            .done(function () { location.reload() })
+                    }
+                }
+            }
+            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+            @can('world_delete')
+            dtButtons.push(deleteButton)
+            @endcan
+            $('.datatable:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+        })
+    </script>
 @endsection
