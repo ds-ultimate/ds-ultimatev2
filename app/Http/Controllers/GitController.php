@@ -29,6 +29,8 @@ class GitController extends BaseController
                 default:
                     return $request->header('X-GitHub-Event').' is not supported';
             }
+        }else{
+            echo 'Hash is not correct';
         }
     }
 
