@@ -52,8 +52,8 @@
                     <div class="card">
                         <div class="card-body text-center">
                             Wir führen derzeit Wartungsarbeiten durch.<br>
-                            Nähere infos erhaltet ihr auf unserem Discord unter <b>#update</b>:
-                            <a href="https://discord.gg/JcDAmPm">Einladungs Link</a>
+                            Nähere Infos erhaltet ihr auf unserem Discord unter <b>#update</b>:
+                            <a href="https://discord.gg/JcDAmPm" target="_blank">Einladungs Link</a>
                         </div>
                     </div>
                 </div>

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Schema;
 class DBController extends Controller
 {
     public static function worldTable(){
-        Schema::create(env('DB_DATABASE').'.worlds', function (Blueprint $table){
+        Schema::create('worlds', function (Blueprint $table){
             $table->increments('id');
             $table->integer('server_id');
             $table->text('name');
@@ -164,7 +164,7 @@ class DBController extends Controller
     }
     
     public static function updateNeeded() {
-        if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
+        if(!BasicFunctions::existTable(null, 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
                 - (60 * 60) * config('dsUltimate.db_update_every_hours')))
@@ -172,7 +172,7 @@ class DBController extends Controller
     }
     
     public static function cleanNeeded() {
-        if(!BasicFunctions::existTable(env('DB_DATABASE'), 'worlds')) return false;
+        if(!BasicFunctions::existTable(null, 'worlds')) return false;
         $worldModel = new World();
         return $worldModel->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
                 - (60 * 60) * config('dsUltimate.db_clean_every_hours')))
@@ -180,7 +180,7 @@ class DBController extends Controller
     }
 
     public static function getWorld(){
-        if (BasicFunctions::existTable(env('DB_DATABASE'), 'worlds') === false){
+        if (BasicFunctions::existTable(null, 'worlds') === false){
             DBController::worldTable();
         }
 
@@ -189,7 +189,7 @@ class DBController extends Controller
         foreach ($serverArray as $serverUrl){
             $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
             $worldTable = new World();
-            $worldTable->setTable(env('DB_DATABASE').'.worlds');
+            $worldTable->setTable('worlds');
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
 
@@ -212,7 +212,7 @@ class DBController extends Controller
                     //create new entry
                     $create = true;
                     $worldNew = new World();
-                    $worldNew->setTable(env('DB_DATABASE').'.worlds');
+                    $worldNew->setTable('worlds');
                 }
                 
                 $worldNew->server_id = $serverUrl->id;

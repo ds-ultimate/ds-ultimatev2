@@ -141,7 +141,7 @@ class BasicFunctions
      */
     public static function existTable($dbName, $table){
         try{
-            $result = DB::statement("SELECT 1 FROM `$dbName`.`$table` LIMIT 1");
+            $result = DB::statement("SELECT 1 FROM " . (($dbName!=null)?("`$dbName`."):("")) . "`$table` LIMIT 1");
         } catch (\Exception $e){
             return false;
         }
