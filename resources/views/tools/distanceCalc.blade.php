@@ -268,7 +268,7 @@
                     var start = $('#startVillage');
                     const data = response.data.data;
                     start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xStart.val() + '|' + yStart.val() + '</b>  [' + data['continent'] + ']');
-                    start.find('tr:nth-child(2) td').html(data['points']);
+                    start.find('tr:nth-child(2) td').html(numeral(data['points']).format('0,0'));
                     start.find('tr:nth-child(3) td').html(data['ownerName']);
                     start.find('tr:nth-child(4) td').html(data['ownerAlly']);
                 })
@@ -287,7 +287,7 @@
                     var start = $('#targetVillage');
                     const data = response.data.data;
                     start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xTarget.val() + '|' + yTarget.val() + '</b>  [' + data['continent'] + ']');
-                    start.find('tr:nth-child(2) td').html(data['points']);
+                    start.find('tr:nth-child(2) td').html(numeral(data['points']).format('0,0'));
                     start.find('tr:nth-child(3) td').html(data['ownerName']);
                     start.find('tr:nth-child(4) td').html(data['ownerAlly']);
                 })
