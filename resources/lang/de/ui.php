@@ -17,6 +17,8 @@ return array (
     'all' => 'Adelungen',
     'lost' => 'Verluste',
     'won' => 'Gewinne',
+    'playerOwn' => 'Eigene Adelungen',
+    'allyOwn' => 'Interne / Eigen-Adelungen',
   ),
   'world' => 
   array (

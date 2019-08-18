@@ -196,10 +196,13 @@ class APIController extends Controller
                 $query->whereIn('new_owner', $allyPlayers)->orWhereIn('old_owner', $allyPlayers);
                 break;
             case "old":
-                $query->whereIn('old_owner', $allyPlayers);
+                $query->whereIn('old_owner', $allyPlayers)->whereNotIn('new_owner', $allyPlayers);
                 break;
             case "new":
-                $query->whereIn('new_owner', $allyPlayers);
+                $query->whereNotIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers);
+                break;
+            case "own":
+                $query->whereIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers);
                 break;
             default:
                 // FIXME: create error view
@@ -221,10 +224,13 @@ class APIController extends Controller
                 $query->where('new_owner', $playerID)->orWhere('old_owner', $playerID);
                 break;
             case "old":
-                $query->where('old_owner', $playerID);
+                $query->where([['old_owner', "=", $playerID],['new_owner', '!=', $playerID]]);
                 break;
             case "new":
-                $query->where('new_owner', $playerID);
+                $query->where([['old_owner', "!=", $playerID],['new_owner', '=', $playerID]]);
+                break;
+            case "own":
+                $query->where([['old_owner', "=", $playerID],['new_owner', '=', $playerID]]);
                 break;
             default:
                 // FIXME: create error view

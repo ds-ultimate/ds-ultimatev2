@@ -79,6 +79,9 @@ class PlayerController extends Controller
             case "new":
                 $typeName = ucfirst(__('ui.conquer.won'));
                 break;
+            case "own":
+                $typeName = ucfirst(__('ui.conquer.playerOwn'));
+                break;
             default:
                 // FIXME: create error view
                 return "Unknown type";

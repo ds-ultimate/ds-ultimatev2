@@ -52,6 +52,8 @@ return array (
     'all' => 'Conquers',
     'lost' => 'Loose',
     'won' => 'Gain',
+    'allyOwn' => 'Internal / Own-Conquers',
+    'playerOwn' => 'Own conquers',
   ),
   'player' => 
   array (

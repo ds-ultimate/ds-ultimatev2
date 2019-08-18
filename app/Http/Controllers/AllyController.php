@@ -87,6 +87,9 @@ class AllyController extends Controller
             case "new":
                 $typeName = ucfirst(__('ui.conquer.won'));
                 break;
+            case "own":
+                $typeName = ucfirst(__('ui.conquer.allyOwn'));
+                break;
             default:
                 // FIXME: create error view
                 return "Unknown type";
