@@ -140,7 +140,7 @@
   $('.datatable:not(.ajaxTable)').DataTable({
     buttons: dtButtons,
     columnDefs: [ {
-        targets: [2],
+        targets: [3],
         render: function ( data, type, row ) {
             console.log(type);
             return data.length > 20 ?
