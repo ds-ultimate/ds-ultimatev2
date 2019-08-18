@@ -25,7 +25,7 @@
                 <h4><label for="icon">{{ trans('cruds.changelog.fields.icon') }}*</label></h4>
                 <select id="icon" name="icon" class="form-control">
                     <option value="">No icon</option>
-                    @foreach (\App\Util\BasicFunctions::fontawesome() as $key =>$icon)
+                    @foreach (\App\Util\Icon::fontawesome() as $key =>$icon)
                         <option>{{ $key }}</option>
                     @endforeach
                 </select>

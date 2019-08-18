@@ -23,7 +23,7 @@
             <div class="form-group {{ $errors->has('flag') ? 'has-error' : '' }}">
                 <label for="flag">{{ trans('cruds.server.fields.flag') }}*</label>
                 <select id="flag" name="flag" class="form-control">
-                    @foreach (\App\Util\BasicFunctions::flags() as $iso)
+                    @foreach( \App\Util\Flag::flags() as $iso)
                         <option>{{ $iso }}</option>
                     @endforeach
                 </select>

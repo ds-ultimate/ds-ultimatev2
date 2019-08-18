@@ -36,6 +36,7 @@
         <noscript><p><img src="//matomo.ds-ultimate.de/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
         <!-- End Matomo Code -->
     @endif
+    @yield('style')
 </head>
 <body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
 <div class="flex-center position-ref full-height">
@@ -49,6 +50,7 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://kit.fontawesome.com/d27d915b5f.js"></script>
 <script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/dataTables.bootstrap4.js') }}"></script>
