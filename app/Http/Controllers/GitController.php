@@ -50,7 +50,7 @@ class GitController extends BaseController
 
         $changelog->version = $payload->release->tag_name;
         $changelog->title = $payload->release->name;
-        $changelog->content = $payload->release->body;
+        $changelog->content = nl2br($payload->release->body);
         $changelog->repository_html_url = $payload->repository->html_url;
 
         if($changelog->save()){
