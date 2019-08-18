@@ -205,6 +205,7 @@ return array (
       'content' => 'Content',
       'icon' => 'Icon',
       'color' => 'Color',
+      'buffer' => 'Buffer',
     ),
     'title' => 'Changelogs',
     'title_singular' => 'Changelog',

@@ -11,6 +11,9 @@ use Symfony\Component\Process\Process;
 
 class GitController extends BaseController
 {
+
+    private $buffer;
+
     public function index(Request $request)
     {
 
@@ -60,9 +63,11 @@ class GitController extends BaseController
                 $root_path = base_path();
                 $process = new Process('cd ' . $root_path . '; ./deploy.sh');
                 $process->run(function ($type, $buffer) {
+                    $this->buffer = $buffer;
                     echo $buffer;
                 });
             }
+            $changelog->buffer = nl2br($this->buffer);
             echo 'sucsess';
         }else{
             Log::debug('Release failed');

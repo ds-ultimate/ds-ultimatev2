@@ -52,6 +52,14 @@
                         </tr>
                         <tr>
                             <th>
+                                {{ trans('cruds.changelog.fields.buffer') }}
+                            </th>
+                            <td>
+                                {{ $changelog->buffer }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
                                 {{ trans('cruds.changelog.fields.update') }}
                             </th>
                             <td>

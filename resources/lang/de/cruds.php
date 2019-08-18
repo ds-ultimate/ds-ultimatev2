@@ -164,6 +164,7 @@ return array (
       'icon' => 'Symbol',
       'update' => 'Aktualisiert',
       'color' => 'Farbe',
+      'buffer' => 'Buffer',
     ),
     'title' => 'Changelogs',
     'title_singular' => 'Changelog',
