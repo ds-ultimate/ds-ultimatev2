@@ -198,7 +198,7 @@ class BasicFunctions
     public static function createLog($type, $msg){
         // FIXME: would like to get E-Mails from log messages
         $log = new App\Log();
-        $log->setTable(env('DB_DATABASE').'.log');
+        $log->setTable('log');
         $log->type = $type;
         $log->msg = $msg;
         $log->save();
