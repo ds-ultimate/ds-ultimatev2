@@ -13,7 +13,7 @@ class CreateServerTable extends Migration
      */
     public function up()
     {
-        Schema::create(env('DB_DATABASE').'.server', function (Blueprint $table){
+        Schema::create('server', function (Blueprint $table){
             $table->increments('id');
             $table->char('code');
             $table->char('flag');
