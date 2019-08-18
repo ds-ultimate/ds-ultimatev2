@@ -55,7 +55,7 @@
                                 {{ trans('cruds.changelog.fields.buffer') }}
                             </th>
                             <td>
-                                {{ $changelog->buffer }}
+                                {!! $changelog->buffer !!}
                             </td>
                         </tr>
                         <tr>
