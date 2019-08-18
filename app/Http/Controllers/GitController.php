@@ -2,18 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Ally;
 use App\Changelog;
-use App\News;
-use App\Player;
-use App\Server;
-use App\Util\BasicFunctions;
-use App\World;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
@@ -34,11 +25,9 @@ class GitController extends BaseController
 
             switch ($request->header('X-GitHub-Event')){
                 case 'release':
-                    $this->release($payload);
-                    break;
+                    return $this->release($payload);
                 default:
-                    echo $request->header('X-GitHub-Event').' is not supported';
-                    break;
+                    return $request->header('X-GitHub-Event').' is not supported';
             }
         }
     }
@@ -46,14 +35,11 @@ class GitController extends BaseController
     private function release($payload){
         switch ($payload->action){
             case 'published':
-                $this->releasePublished($payload);
-                break;
+                return $this->releasePublished($payload);
             case 'deleted':
-                echo 'deleted is not supported';
-                break;
+                return 'deleted is not supported';
             default:
-                echo $payload->action.' is not supported';
-                break;
+                return $payload->action.' is not supported';
         }
     }
 
@@ -66,7 +52,7 @@ class GitController extends BaseController
         $changelog->repository_html_url = $payload->repository->html_url;
 
         if($changelog->save()){
-            echo 'sucsess';
+
 
             if (env('APP_DEBUG') == false) {
                 $root_path = base_path();
@@ -75,11 +61,12 @@ class GitController extends BaseController
                     echo $buffer;
                 });
             }
-
+            echo 'sucsess';
         }else{
-            echo 'failed';
             Log::debug('Release failed');
+            echo 'failed';
         }
     }
 
 }
+
