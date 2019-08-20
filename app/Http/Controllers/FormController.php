@@ -32,7 +32,7 @@ class FormController extends Controller
             }
         }
 
-        if (env('APP_DEBUG') == false) {
+        if (config('app.debug') == false) {
             \Notification::send($users, new \App\Notifications\Bugreport($bugreport));
         }
 
