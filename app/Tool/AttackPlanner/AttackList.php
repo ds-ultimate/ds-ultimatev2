@@ -37,4 +37,9 @@ class AttackList extends Model
         return $this->belongsTo('App\World');
     }
 
+    public function items()
+    {
+        return $this->hasMany('App\Tool\AttackPlanner\AttackListItem' )->orderBy('send_time');
+    }
+
 }

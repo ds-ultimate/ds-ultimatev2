@@ -43,119 +43,128 @@
                 </ul>
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
-                        <div class="row pt-3">
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">Typ</label>
-                                    <div class="col-1">
-                                        <img id="type_img" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
-                                    </div>
-                                    <div class="col-8">
-                                        <select id="type" class="form-control form-control-sm">
-                                            <optgroup label="Offensiv">
-                                                <option value="0">Angriff</option>
-                                                <option value="1">Eroberung</option>
-                                                <option value="2">Fake</option>
-                                                <option value="3">Wallbrecher</option>
-                                            </optgroup>
-                                            <optgroup label="Defensiv">
-                                                <option value="4">Unterstützung</option>
-                                                <option value="5">Stand Unterstützung</option>
-                                                <option value="6">Schnelle Unterstützung</option>
-                                                <option value="7">Fake Unterstützung</option>
-                                            </optgroup>
-                                        </select>
-                                        <small class="form-control-feedback">Typ des Angriffes</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-4">Startdorf</label>
-                                    <div id="start" class="form-inline col-8">
-                                        <input id="xStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                        |
-                                        <input id="yStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                        <small id="villageStart" class="form-control-feedback ml-2">Koordinaten des Startdorfes</small>
+                        <form id="createItemForm">
+                            <div class="row pt-3">
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-3">Typ</label>
+                                        <div class="col-1">
+                                            <img id="type_img" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="type" class="form-control form-control-sm">
+                                                <optgroup label="Offensiv">
+                                                    <option value="0">Angriff</option>
+                                                    <option value="1">Eroberung</option>
+                                                    <option value="2">Fake</option>
+                                                    <option value="3">Wallbrecher</option>
+                                                </optgroup>
+                                                <optgroup label="Defensiv">
+                                                    <option value="4">Unterstützung</option>
+                                                    <option value="5">Stand Unterstützung</option>
+                                                    <option value="6">Schnelle Unterstützung</option>
+                                                    <option value="7">Fake Unterstützung</option>
+                                                </optgroup>
+                                            </select>
+                                            <small class="form-control-feedback">Typ des Angriffes</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-4">Zieldorf</label>
-                                    <div id="target" class="form-inline col-8">
-                                        <input id="xTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                        |
-                                        <input id="yTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                        <small id="villageTarget" class="form-control-feedback ml-2">Koordinaten des Zieldorfes</small>
+                                <!--/span-->
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-4">Startdorf</label>
+                                        <div id="start" class="form-inline col-8">
+                                            <input id="xStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            |
+                                            <input id="yStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <small id="villageStart" class="form-control-feedback ml-2">Koordinaten des Startdorfes</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">Datum</label>
-                                    <div class="col-9">
-                                        <input type="date" class="form-control form-control-sm" />
-                                        <small class="form-control-feedback">Ankunftstag des Angriffes</small>
+                                <!--/span-->
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-4">Zieldorf</label>
+                                        <div id="target" class="form-inline col-8">
+                                            <input id="xTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            |
+                                            <input id="yTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <small id="villageTarget" class="form-control-feedback ml-2">Koordinaten des Zieldorfes</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-4">Uhrzeit</label>
-                                    <div class="col-8">
-                                        <input id="settime" type="time" step="1" class="form-control form-control-sm" />
-                                        <small class="form-control-feedback">Ankunftszeit des Angriffes</small>
+                                <!--/span-->
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-3">Datum</label>
+                                        <div class="col-9">
+                                            <input id="day" type="date" class="form-control form-control-sm" />
+                                            <small id="day_feedback" class="form-control-feedback">Ankunftstag des Angriffes</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">Einheit</label>
-                                    <div class="col-1">
-                                        <img id="unit_img" src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
-                                    </div>
-                                    <div class="col-8">
-                                        <select id="unit" class="form-control form-control-sm">
-                                            <option value="spear">{{ __('ui.unit.spear') }}</option>
-                                            <option value="sword">{{ __('ui.unit.sword') }}</option>
-                                            <option value="axe">{{ __('ui.unit.axe') }}</option>
-                                            @if ($config->game->archer == 1)
-                                                <option value="archer">{{ __('ui.unit.archer') }}</option>
-                                            @endif
-                                            <option value="spy">{{ __('ui.unit.spy') }}</option>
-                                            <option value="light">{{ __('ui.unit.light') }}</option>
-                                            @if ($config->game->archer == 1)
-                                                <option value="marcher">{{ __('ui.unit.marcher') }}</option>
-                                            @endif
-                                            <option value="heavy">{{ __('ui.unit.heavy') }}</option>
-                                            <option value="ram">{{ __('ui.unit.ram') }}</option>
-                                            <option value="catapult">{{ __('ui.unit.catapult') }}</option>
-                                            @if ($config->game->knight == 1)
-                                                <option value="knight">{{ __('ui.unit.knight') }}</option>
-                                            @endif
-                                            <option value="snob">{{ __('ui.unit.snob') }}</option>
-                                        </select>
-                                        <small class="form-control-feedback">Langsamste Einheit</small>
+                                <!--/span-->
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-4">Uhrzeit</label>
+                                        <div class="col-8">
+                                            <input id="time" type="time" step="1" class="form-control form-control-sm" />
+                                            <small id="time_feedback" class="form-control-feedback">Ankunftszeit des Angriffes</small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">Notizen</label>
-                                    <div class="col-12">
-                                        <textarea class="form-control form-control-sm" style="height: 80px"></textarea>
+                                <!--/span-->
+                                <div class="col-md-4">
+                                    <div class="form-group row">
+                                        <label class="control-label col-3">Einheit</label>
+                                        <div class="col-1">
+                                            <img id="unit_img" src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
+                                        </div>
+                                        <div class="col-8">
+                                            <select id="slowest_unit" class="form-control form-control-sm">
+                                                <option value="spear">{{ __('ui.unit.spear') }}</option>
+                                                <option value="sword">{{ __('ui.unit.sword') }}</option>
+                                                <option value="axe">{{ __('ui.unit.axe') }}</option>
+                                                @if ($config->game->archer == 1)
+                                                    <option value="archer">{{ __('ui.unit.archer') }}</option>
+                                                @endif
+                                                <option value="spy">{{ __('ui.unit.spy') }}</option>
+                                                <option value="light">{{ __('ui.unit.light') }}</option>
+                                                @if ($config->game->archer == 1)
+                                                    <option value="marcher">{{ __('ui.unit.marcher') }}</option>
+                                                @endif
+                                                <option value="heavy">{{ __('ui.unit.heavy') }}</option>
+                                                <option value="ram">{{ __('ui.unit.ram') }}</option>
+                                                <option value="catapult">{{ __('ui.unit.catapult') }}</option>
+                                                @if ($config->game->knight == 1)
+                                                    <option value="knight">{{ __('ui.unit.knight') }}</option>
+                                                @endif
+                                                <option value="snob">{{ __('ui.unit.snob') }}</option>
+                                            </select>
+                                            <small class="form-control-feedback">Langsamste Einheit</small>
+                                        </div>
                                     </div>
                                 </div>
+                                <!--/span-->
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="control-label col-3">Notizen</label>
+                                        <div class="col-12">
+                                            <textarea id="#note" class="form-control form-control-sm" style="height: 80px"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                @csrf
+                                <input id="attack_list_id" type="hidden" value="{{ $attackList->id }}">
+                                <input id="start_village_id" type="hidden">
+                                <input id="target_village_id" type="hidden">
+                                <div class="col-12">
+                                    <input type="submit" class="btn btn-sm btn-success float-right">
+                                </div>
+                                <!--/span-->
                             </div>
-                            <!--/span-->
-                        </div>
+                        </form>
                     </div>
                     <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
                         <div class="row pt-3">
@@ -215,103 +224,11 @@
                                 <th>Einheit</th>
                                 <th>Abschickzeit</th>
                                 <th>Ankunft</th>
-                                <th>Restzeit</th>
+                                <th width="95px">Restzeit</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody class="small">
-                            <tr>
-                                <td><img id="type_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>#Mable Pines <b>490|531</b> [K45]</td>
-                                <td>PureArroganz</td>
-                                <td>#Shmebulock. <b>437|487</b> [K44]</td>
-                                <td>PureArroganz</td>
-                                <td><img id="unit_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>{{ $now }}</td>
-                                <td>{{ $now }}</td>
-                                <td data-countdown="2019/08/17">
-                                </td>
-                                <td>
-                                    <button class="btn btn-link dropdown text-black-50 p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{ __('global.edit') }}</a>
-                                        <form action="" method="POST" onsubmit="" style="display: inline-block;">
-                                            <input type="submit" class="dropdown-item" style="width: 158px" value="{{ trans('global.delete') }}">
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><img id="type_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>#Mable Pines <b>490|531</b> [K45]</td>
-                                <td>PureArroganz</td>
-                                <td>#Shmebulock. <b>437|487</b> [K44]</td>
-                                <td>PureArroganz</td>
-                                <td><img id="unit_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>{{ $now }}</td>
-                                <td>{{ $now }}</td>
-                                <td data-countdown="2019/08/18 14:06:00">
-                                </td>
-                                <td>
-                                    <button class="btn btn-link dropdown text-black-50 p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{ __('global.edit') }}</a>
-                                        <form action="" method="POST" onsubmit="" style="display: inline-block;">
-                                            <input type="submit" class="dropdown-item" style="width: 158px" value="{{ trans('global.delete') }}">
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><img id="type_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>#Mable Pines <b>490|531</b> [K45]</td>
-                                <td>PureArroganz</td>
-                                <td>#Shmebulock. <b>437|487</b> [K44]</td>
-                                <td>PureArroganz</td>
-                                <td><img id="unit_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>{{ $now }}</td>
-                                <td>{{ $now }}</td>
-                                <td data-countdown="2019/08/19">
-                                </td>
-                                <td>
-                                    <button class="btn btn-link dropdown text-black-50 p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{ __('global.edit') }}</a>
-                                        <form action="" method="POST" onsubmit="" style="display: inline-block;">
-                                            <input type="submit" class="dropdown-item" style="width: 158px" value="{{ trans('global.delete') }}">
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><img id="type_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>#Mable Pines <b>490|531</b> [K45]</td>
-                                <td>PureArroganz</td>
-                                <td>#Shmebulock. <b>437|487</b> [K44]</td>
-                                <td>PureArroganz</td>
-                                <td><img id="unit_img_list" src="{{ asset('images/ds_images/unit/unit_ram.png') }}"></td>
-                                <td>{{ $now }}</td>
-                                <td>{{ $now }}</td>
-                                <td data-countdown="2019/08/20">
-                                </td>
-                                <td>
-                                    <button class="btn btn-link dropdown text-black-50 p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">{{ __('global.edit') }}</a>
-                                        <form action="" method="POST" onsubmit="" style="display: inline-block;">
-                                            <input type="submit" class="dropdown-item" style="width: 158px" value="{{ trans('global.delete') }}">
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -325,6 +242,40 @@
     <script type="text/javascript" src="{{ asset('plugin/jquery.countdown/jquery.countdown.min.js') }}"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        var table =
+            $('#data1').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('attackPlannerItem.data', [ $attackList->id ]) !!}',
+                columns: [
+                    { data: 'type', name: 'type' },
+                    { data: 'start_village_id', name: 'start_village_id' },
+                    { data: 'attacker', name: 'attacker' },
+                    { data: 'target_village_id', name: 'target_village_id' },
+                    { data: 'defender', name: 'defender' },
+                    { data: 'slowest_unit', name: 'slowest_unit'},
+                    { data: 'send_time', name: 'send_time' },
+                    { data: 'arrival_time', name: 'arrival_time' },
+                    { data: 'time', name: 'time' },
+                ],
+                columnDefs: [
+                    {
+                        'targets': 8,
+                        'createdCell':  function (td, cellData, rowData, row, col) {
+                            $(td).attr('data-countdown', cellData);
+                        }
+                    }
+                ],
+                "drawCallback": function(settings, json) {
+                    countdown();
+                },
+                keys: true, //enable KeyTable extension
+                {!! \App\Util\Datatable::language() !!}
+            });
+
         function typ_img(input){
             switch (input) {
                 case 0:
@@ -357,10 +308,79 @@
             document.execCommand("copy");
         }
 
+        function countdown(){
+            $('[data-countdown]').each(function() {
+                var $this = $(this), finalDate = $(this).data('countdown');
+                $this.countdown(finalDate, function(event) {
+                    var format = '%H:%M:%S';
+                    if(event.offset.totalDays > 0) {
+                        if (event.offset.totalDays > 1) {
+                            format = '%D Tage ' + format;
+                        }else {
+                            format = '%D Tag ' + format;
+                        }
+                    }
+                    $this.html(event.strftime(format));
+                }).on('finish.countdown', function (e) {
+                    $this.addClass('bg-danger text-white')
+                });
+            });
+        };
+
         String.prototype.trunc = String.prototype.trunc ||
             function(n){
                 return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
             };
+
+        function store(send, arrival) {
+            axios.post('{{ route('attackPlannerItem.store') }}', {
+                'attack_list_id' : $('#attack_list_id').val(),
+                'type' : $('#type option:selected' ).val(),
+                'start_village_id' : $('#start_village_id').val(),
+                'target_village_id' : $('#target_village_id').val(),
+                'slowest_unit' : $('#slowest_unit option:selected').val(),
+                'note' : $('#note').val(),
+                'send_time' : send,
+                'arrival_time' : arrival,
+            })
+                .then((response) => {
+
+                    table.ajax.reload();
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+
+        function slowest_unit(unit, dis){
+            switch (unit) {
+                case 'spear':
+                    return Math.round('{{ round((float)$unitConfig->spear->speed) }}' * dis);
+                case 'sword':
+                    return Math.round('{{ round((float)$unitConfig->sword->speed) }}' * dis);
+                case 'axe':
+                    return Math.round('{{ round((float)$unitConfig->axe->speed) }}' * dis);
+                case 'archer':
+                    return Math.round('{{ round((float)$unitConfig->archer->speed) }}' * dis);
+                case 'spy':
+                    return Math.round('{{ round((float)$unitConfig->spy->speed) }}' * dis);
+                case 'light':
+                    return Math.round('{{ round((float)$unitConfig->light->speed) }}' * dis);
+                case 'marcher':
+                    return Math.round('{{ round((float)$unitConfig->marcher->speed) }}' * dis);
+                case 'heavy':
+                    return Math.round('{{ round((float)$unitConfig->heavy->speed) }}' * dis);
+                case 'ram':
+                    return Math.round('{{ round((float)$unitConfig->ram->speed) }}' * dis);
+                case 'catapult':
+                    return Math.round('{{ round((float)$unitConfig->catapult->speed) }}' * dis);
+                case 'knight':
+                    return Math.round('{{ round((float)$unitConfig->knight->speed) }}' * dis);
+                case 'snob':
+                    return Math.round('{{ round((float)$unitConfig->snob->speed) }}' * dis);
+            }
+        }
 
         $(document).ready(function (e) {
             $('#type').change(function (e) {
@@ -369,21 +389,11 @@
                 img.attr('src', typ_img(input));
             });
 
-            $('#unit').change(function (e) {
+            $('#slowest_unit').change(function (e) {
                 var img = $('#unit_img');
                 var input = $(this).val();
 
                 img.attr('src', '{{ asset('images/ds_images/unit/') }}/unit_' + input + '.png');
-            });
-
-            $('#data1').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                //responsive: true,
-
-                keys: true, //enable KeyTable extension
-                {!! \App\Util\Datatable::language() !!}
             });
 
             $('.koord').on("keypress keyup blur",function (event) {
@@ -420,10 +430,6 @@
                 $("#yTarget").val(coords[1].substring(0, 3));
             });
 
-            // $('.koord').change(function (e) {
-            //     console.log(e.target.val());
-            // });
-
             $('.koord').change(function (e) {
                 var input = $('#' + this.id).parent().attr('id');
                 var type = input.substring(0, 1).toUpperCase() + input.substring(1);
@@ -434,35 +440,69 @@
                 }
             });
 
-            $('[data-countdown]').each(function() {
-                var $this = $(this), finalDate = $(this).data('countdown');
-                $this.countdown(finalDate, function(event) {
-                    var format = '%H:%M:%S';
-                    if(event.offset.totalDays > 0) {
-                        if (event.offset.totalDays > 1) {
-                            format = '%D Tage ' + format;
-                        }else {
-                            format = '%D Tag ' + format;
-                        }
-                    }
-                    $this.html(event.strftime(format));
-                }).on('finish.countdown', function (e) {
-                    $this.addClass('bg-danger text-white')
-                });
-            });
-
             function village(x, y, input) {
                 axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ x + '/' + y, {
 
                 })
                     .then((response) =>{
                         const data = response.data.data;
-                        $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']');
+                        $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
+                        $('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
+                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid');
+                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid');
                     })
                     .catch((error) =>{
-                        $('#village' + input).html('{{ __('ui.villageNotExist') }}');
+                        $('#village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
+                        $('#' + input.toLowerCase() + '_village_id').val('');
+                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid');
+                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid');
                     });
             }
+
+            $(document).on('submit', '#createItemForm', function (e) {
+                e.preventDefault();
+                var start = $('#start_village_id').val();
+                var target = $('#target_village_id').val();
+                var day = $('#day').val();
+                var time = $('#time').val();
+
+                var xStart = $('#xStart');
+                var yStart = $('#yStart');
+                var xTarget = $('#xTarget');
+                var yTarget = $('#yTarget');
+
+                $('#day').attr('class', 'form-control form-control-sm');
+                $('#time').attr('class', 'form-control form-control-sm');
+
+                var error = 0;
+
+                if (day == ''){
+                    $('#day').attr('class', 'form-control form-control-sm is-invalid');
+                    error += 1;
+                }
+                if (time == ''){
+                    $('#time').attr('class', 'form-control form-control-sm is-invalid');
+                    error += 1;
+                }
+                if (start == ''){
+                    error += 1;
+                }
+                if (target == ''){
+                    error += 1;
+                }
+                if (start == target){
+                    alert('Start- und Zieldorf haben die gleichen Koordinaten!');
+                    error += 1;
+                }
+
+                if (error == 0){
+                    var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
+                    var slow = $('#slowest_unit').val();
+                    var dateUnixArrival = new Date(day + ' ' + time).getTime();
+                    var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*60*1000);
+                    store(dateUnixSend, dateUnixArrival);
+                }
+            });
 
         })
     </script>
