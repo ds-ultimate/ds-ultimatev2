@@ -15,7 +15,7 @@ class PictureController extends Controller
     
     public function __construct()
     {
-        $this->debug = env('APP_DEBUG', 'false');
+        $this->debug = config('app.debug');
     }
     
     public function getAllySizedPic($server, $world, $allyID, $type, $width, $height, $ext)

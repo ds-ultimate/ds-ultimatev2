@@ -59,7 +59,7 @@ class GitController extends BaseController
         if($changelog->save()){
 
 
-            if (env('APP_DEBUG') == false) {
+            if (config('app.debug') == false) {
                 $root_path = base_path();
                 $process = new Process('cd ' . $root_path . '; ./deploy.sh');
                 $process->run(function ($type, $buffer) {
