@@ -72,6 +72,9 @@ Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
+Route::resource('attackPlannerItem','Tools\AttackPlannerItemController');
+Route::get('attackPlannerItem/data/{attackList}','Tools\AttackPlannerItemController@data')->name('attackPlannerItem.data');
+
 Route::get('/changelog', 'Controller@changelog')->name('changelog');
 
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
