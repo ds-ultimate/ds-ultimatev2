@@ -36,18 +36,21 @@ Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'APIController@getPl
 Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getVillageConquer')->name('api.villageConquer');
 
 
+Route::get('/map/{id}/{token}/{width}-{height}.{ext}', 'Tools\MapController@getSizedMapByID')->name('api.map.showPNG');
+Route::get('/map/{id}/{token}/map.{ext}', 'Tools\MapController@getMapByID')->name('api.map.showPNG');
 /*
+ * Picture API:
  * alternative methods
  *  can use:
- *  [**]/{width}/{height}
- *  [**]/w/{width}
- *  [**]/h/{height}
+ *  [**]-{width}-{height}
+ *  [**]-w-{width}
+ *  [**]-h-{height}
  */
 Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}', 'PictureController@getAllySizedPic')->name('api.picture.ally.dimension');
 Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', 'PictureController@getPlayerSizedPic')->name('api.picture.player.dimension');
 Route::get('/picture/{server}-{world}-v-{villageID}-{type}-{width}-{height}.{ext}', 'PictureController@getVillageSizedPic')->name('api.picture.village.dimension');
 
-
 Route::get('/picture/{server}-{world}-a-{allyID}-{type}.{ext}', 'PictureController@getAllyPic')->name('api.picture.ally');
 Route::get('/picture/{server}-{world}-p-{playerID}-{type}.{ext}', 'PictureController@getPlayerPic')->name('api.picture.player');
 Route::get('/picture/{server}-{world}-v-{villageID}-{type}.{ext}', 'PictureController@getVillagePic')->name('api.picture.village');
+
