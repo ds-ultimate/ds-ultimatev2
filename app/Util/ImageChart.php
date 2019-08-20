@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Util;
 
-class ImageChart {
+class ImageChart extends PictureRender {
     /*
     imagecolorallocate ( resource $image , int $red , int $green , int $blue ) : int
     imagestring ( resource $image , int $font , int $x , int $y , string $string , int $color ) : bool
@@ -13,7 +14,6 @@ class ImageChart {
     imagefilledellipse ( resource $image , int $cx , int $cy , int $width , int $height , int $color ) : bool
     imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color ) : bool
      */
-    private $stats_image;
     private $font;
     private $width;
     private $height;
@@ -35,11 +35,11 @@ class ImageChart {
             $img_width = $std_aspect * $img_height;
         }
         
-        $stats_image = imagecreate(round($img_width, 0), round($img_height, 0));
-        if($stats_image === false) die("Error");
+        $image = imagecreate(round($img_width, 0), round($img_height, 0));
+        if($image === false) die("Error");
 
         $this -> font = realpath($font);
-        $this -> stats_image = $stats_image;
+        $this -> image = $image;
         $this -> width= $img_width;
         $this -> height = $img_height;
         $this -> show_errs = $show_errs;
@@ -47,14 +47,14 @@ class ImageChart {
 
     public function render($data, $identification_str, $diagram_type, $display_invers) {
         $thick = 1;
-        imagesetthickness($this->stats_image,$thick);
+        imagesetthickness($this->image,$thick);
 
         //preparation & settings specification
         ksort($data);
         if(count($data)<= 1) {
             echo "No / Not enough Data";
 
-            imagecolorallocate($this->stats_image, 255, 255, 255); #Hintergrund
+            imagecolorallocate($this->image, 255, 255, 255); #Hintergrund
             $this->outputPNG();
             die();
         }
@@ -72,10 +72,10 @@ class ImageChart {
             $data_range = $max_data - $min_data;
         }
 
-        $color_white = imagecolorallocate($this->stats_image, 255, 255, 255); #Hintergrund
-        $color_grey = imagecolorallocate($this->stats_image, 210, 210, 210);
-        $color_black = imagecolorallocate($this->stats_image, 0, 0, 0);
-        $color_blue = imagecolorallocate($this->stats_image, 0, 0, 255);
+        $color_white = imagecolorallocate($this->image, 255, 255, 255); #Hintergrund
+        $color_grey = imagecolorallocate($this->image, 210, 210, 210);
+        $color_black = imagecolorallocate($this->image, 0, 0, 0);
+        $color_blue = imagecolorallocate($this->image, 0, 0, 255);
 
 
         $font_size = $this->height / 20;
@@ -93,11 +93,11 @@ class ImageChart {
         $box = imagettfbbox($font_size, 0, $this->font, $identification_str);
         $temp = $main_area_top - $box[5];
 
-        imagettftext($this->stats_image, $font_size, 0, $main_area_top * 2, $temp, $color_black, $this->font, $identification_str);
+        imagettftext($this->image, $font_size, 0, $main_area_top * 2, $temp, $color_black, $this->font, $identification_str);
 
         $box = imagettfbbox($font_size, 0, $this->font, $diagram_type);
         $temp2 = $this->width - $main_area_top * 2 - $box[2];
-        imagettftext($this->stats_image, $font_size, 0, $temp2, $temp, $color_black, $this->font, $diagram_type);
+        imagettftext($this->image, $font_size, 0, $temp2, $temp, $color_black, $this->font, $diagram_type);
 
 
         $draw_area_top = $temp + $this->height * 0.08;
@@ -109,7 +109,7 @@ class ImageChart {
 
         //grid & label drawing
         $thick = max(round($this->height / 200, 0), 1);
-        imagesetthickness($this->stats_image,$thick);
+        imagesetthickness($this->image,$thick);
         //draw y Axis label
         for($i = 0; $i <= 3; $i++) {
             if(!$display_invers)
@@ -139,20 +139,20 @@ class ImageChart {
 
         //vertical lines
         $thick = max(round($this->height / 1000, 0), 1);
-        imagesetthickness($this->stats_image,$thick);
+        imagesetthickness($this->image,$thick);
         for($i = 12; $i < $count_data; $i+=12) {
             $left = $draw_area_left + ($draw_area_right - $draw_area_left) * ($data_keys[$i] - $data_keys[0]) / $data_key_range;
-            imageline($this->stats_image, $left, $draw_area_top, $left, $draw_area_bottom, $color_grey);
+            imageline($this->image, $left, $draw_area_top, $left, $draw_area_bottom, $color_grey);
         }
 
         //horizontal lines
         for($i = 0; $i < $horizontal_line_cnt; $i++) {
             $top = $draw_area_top + ($draw_area_bottom - $draw_area_top) * $i / $horizontal_line_cnt;
-            imageline($this->stats_image, $draw_area_left, $top, $draw_area_right, $top, $color_grey);
+            imageline($this->image, $draw_area_left, $top, $draw_area_right, $top, $color_grey);
         }
 
         $thick = max(round($this->height / 200, 0), 1);
-        imagesetthickness($this->stats_image,$thick);
+        imagesetthickness($this->image,$thick);
         $this->customDrawLine($draw_area_left, $draw_area_bottom, $draw_area_right, $draw_area_bottom, $color_black, $thick); #unten
         $this->customDrawLine($draw_area_left, $draw_area_top, $draw_area_left, $draw_area_bottom, $color_black, $thick); #links
 
@@ -178,33 +178,7 @@ class ImageChart {
     }
 
     public function output($ext) {
-        switch ($ext) {
-            case "png":
-                return $this->outputPNG();
-            case "jpg":
-            case "jpeg":
-                return $this->outputJPEG();
-            default:
-                return "Unknown extension";
-        }
-    }
-
-    public function outputPNG() {
-        ob_start();
-        imagepng($this->stats_image);
-        $imagedata = ob_get_clean();
-        imagedestroy($this->stats_image);
-        return response($imagedata, 200)
-                ->header('Content-Type', 'image/png');
-    }
-
-    public function outputJPEG() {
-        ob_start();
-        imagejpeg($this->stats_image);
-        $imagedata = ob_get_clean();
-        imagedestroy($this->stats_image);
-        return response($imagedata, 200)
-                ->header('Content-Type', 'image/jpeg');
+        return PictureOutput::output($ext);
     }
 
     private function prepareAmountForRendering($amount) {
@@ -244,8 +218,8 @@ class ImageChart {
         $txtX = $x - $line_lenght - $box[2];
         $txtY = $y - ($box[5] + $box[3]) / 2;
 
-        imageline($this->stats_image, $x - $line_lenght, $y, $x, $y, $colour);
-        imagettftext($this->stats_image, $font_size, 0, $txtX, $txtY, $colour, $this->font, $amount);
+        imageline($this->image, $x - $line_lenght, $y, $x, $y, $colour);
+        imagettftext($this->image, $font_size, 0, $txtX, $txtY, $colour, $this->font, $amount);
     }
 
     private function renderXAxis($font_size, $amount, $x, $y, $line_lenght, $colour) {
@@ -260,19 +234,19 @@ class ImageChart {
         }
 
         /*
-        imageline($this->stats_image, $txtX + $box[0], $txtY + $box[1], $txtX + $box[2], $txtY + $box[3], $colour);
-        imageline($this->stats_image, $txtX + $box[2], $txtY + $box[3], $txtX + $box[4], $txtY + $box[5], $colour);
-        imageline($this->stats_image, $txtX + $box[4], $txtY + $box[5], $txtX + $box[6], $txtY + $box[7], $colour);
-        imageline($this->stats_image, $txtX + $box[6], $txtY + $box[7], $txtX + $box[0], $txtY + $box[1], $colour);
+        imageline($this->image, $txtX + $box[0], $txtY + $box[1], $txtX + $box[2], $txtY + $box[3], $colour);
+        imageline($this->image, $txtX + $box[2], $txtY + $box[3], $txtX + $box[4], $txtY + $box[5], $colour);
+        imageline($this->image, $txtX + $box[4], $txtY + $box[5], $txtX + $box[6], $txtY + $box[7], $colour);
+        imageline($this->image, $txtX + $box[6], $txtY + $box[7], $txtX + $box[0], $txtY + $box[1], $colour);
         */
 
-        imageline($this->stats_image, $x, $y, $x, $y+$line_lenght, $colour);
-        imagettftext($this->stats_image, $font_size, 0, $txtX, $txtY, $colour, $this->font, $amount);
+        imageline($this->image, $x, $y, $x, $y+$line_lenght, $colour);
+        imagettftext($this->image, $font_size, 0, $txtX, $txtY, $colour, $this->font, $amount);
     }
 
     private function customDrawLine($x1, $y1, $x2, $y2, $colour, $thickness) {
-        imagefilledellipse ($this->stats_image, $x1, $y1, $thickness, $thickness, $colour);
-        imagefilledellipse ($this->stats_image, $x2, $y2, $thickness, $thickness, $colour);
-        imageline($this->stats_image, $x1, $y1, $x2, $y2, $colour);
+        imagefilledellipse ($this->image, $x1, $y1, $thickness, $thickness, $colour);
+        imagefilledellipse ($this->image, $x2, $y2, $thickness, $thickness, $colour);
+        imageline($this->image, $x1, $y1, $x2, $y2, $colour);
     }
 }
