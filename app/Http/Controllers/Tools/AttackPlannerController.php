@@ -10,38 +10,30 @@ namespace App\Http\Controllers\Tools;
 
 
 use App\Tool\AttackPlanner\AttackList;
-use App\Tool\AttackPlanner\AttackListItem;
-use App\User;
 use App\Util\BasicFunctions;
 use App\World;
-use http\Url;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AttackPlannerController extends BaseController
 {
-
     public function index($server, $world){
         BasicFunctions::local();
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
 
-        $unitConfig = simplexml_load_string($worldData->units);
-        $config = simplexml_load_string($worldData->config);
-        $now = Carbon::createFromTimestamp(time());
-
         $list = new AttackList();
         $list->world_id = $worldData->id;
         if (\Auth::user()){
             $list->user_id = \Auth::user()->id;
         }
-        $list->create_key = base64_encode(Hash::make('create'.Carbon::createFromTimestamp(time())));
-        $list->show_key = base64_encode(Hash::make('show'.Carbon::createFromTimestamp(time())));
+        $list->edit_key = Str::random(40);
+        $list->show_key = Str::random(40);
         $list->save();
 
-        return redirect()->route('attackPlannerMode', [$server, $world, $list->id, 'create', $list->create_key]);
+        return redirect()->route('attackPlannerMode', [$server, $world, $list->id, 'edit', $list->edit_key]);
 
     }
 
@@ -50,10 +42,10 @@ class AttackPlannerController extends BaseController
         $listWorld = $attackList->world;
 
         switch ($mode){
-            case 'create':
-                if ($attackList->create_key == $key){
+            case 'edit':
+                if ($attackList->edit_key == $key){
                     if ($listWorld->is($worldData)){
-                        return $this->create($attackList);
+                        return $this->edit($attackList);
                     }else{
                         return redirect()->route('attackPlannerMode',[$listWorld->server->code, $listWorld->name, $attackList->id, $mode, $key]);
                     }
@@ -68,16 +60,27 @@ class AttackPlannerController extends BaseController
                     }
                 }
                 return redirect()->route('index');
+            case 'exportWB':
+                if ($attackList->show_key == $key){
+                    if ($listWorld->is($worldData)){
+                        return $this->exportWB($attackList);
+                    }else{
+                        return redirect()->route('attackPlannerMode',[$listWorld->server->code, $listWorld->name, $attackList->id, $mode, $key]);
+                    }
+                }
+                return redirect()->route('index');
+            default:
+                return redirect()->route('index');
         }
     }
 
-    public function create(AttackList $attackList){
+    public function edit(AttackList $attackList){
         BasicFunctions::local();
         $worldData = $attackList->world;
 
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
-        $mode = 'create';
+        $mode = 'edit';
         $now = Carbon::createFromTimestamp(time());
 
         return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now'));
@@ -93,6 +96,14 @@ class AttackPlannerController extends BaseController
         $now = Carbon::createFromTimestamp(time());
 
         return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now'));
+    }
+
+    public function exportWB(AttackList $attackList){
+        $items = $attackList->items();
+        $export = '';
+        foreach ($items as $item){
+            $export .= $item->start_village_id.'&'.$item->target_village_id.'&'.$item->slowest_unit;
+        }
     }
 
 }

@@ -19,8 +19,8 @@ class CreateAttackListItemsTable extends Migration
             $table->tinyInteger('type');
             $table->integer('start_village_id');
             $table->integer('target_village_id');
-            $table->string('slowest_unit');
-            $table->text('note');
+            $table->integer('slowest_unit');
+            $table->text('note')->nullable();
             $table->timestamp('send_time')->useCurrent();
             $table->timestamp('arrival_time')->useCurrent();
             $table->timestamps();

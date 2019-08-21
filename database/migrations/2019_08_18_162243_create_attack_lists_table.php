@@ -17,7 +17,7 @@ class CreateAttackListsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('world_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('create_key');
+            $table->string('edit_key');
             $table->string('show_key');
             $table->timestamps();
             $table->softDeletes();

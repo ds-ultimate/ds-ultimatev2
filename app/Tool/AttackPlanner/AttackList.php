@@ -22,7 +22,7 @@ class AttackList extends Model
     ];
 
     protected $hidden = [
-        'create_key',
+        'edit_key',
         'show_key',
     ];
 

@@ -23,7 +23,7 @@
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
-        @if($mode == 'create')
+        @if($mode == 'edit')
         <!-- Village Card -->
         <div class="col-12 mt-2">
             <div class="card">
@@ -123,24 +123,24 @@
                                         </div>
                                         <div class="col-8">
                                             <select id="slowest_unit" class="form-control form-control-sm">
-                                                <option value="spear">{{ __('ui.unit.spear') }}</option>
-                                                <option value="sword">{{ __('ui.unit.sword') }}</option>
-                                                <option value="axe">{{ __('ui.unit.axe') }}</option>
+                                                <option value="0">{{ __('ui.unit.spear') }}</option>
+                                                <option value="1">{{ __('ui.unit.sword') }}</option>
+                                                <option value="2">{{ __('ui.unit.axe') }}</option>
                                                 @if ($config->game->archer == 1)
-                                                    <option value="archer">{{ __('ui.unit.archer') }}</option>
+                                                    <option value="3">{{ __('ui.unit.archer') }}</option>
                                                 @endif
-                                                <option value="spy">{{ __('ui.unit.spy') }}</option>
-                                                <option value="light">{{ __('ui.unit.light') }}</option>
+                                                <option value="4">{{ __('ui.unit.spy') }}</option>
+                                                <option value="5">{{ __('ui.unit.light') }}</option>
                                                 @if ($config->game->archer == 1)
-                                                    <option value="marcher">{{ __('ui.unit.marcher') }}</option>
+                                                    <option value="6">{{ __('ui.unit.marcher') }}</option>
                                                 @endif
-                                                <option value="heavy">{{ __('ui.unit.heavy') }}</option>
-                                                <option value="ram">{{ __('ui.unit.ram') }}</option>
-                                                <option value="catapult">{{ __('ui.unit.catapult') }}</option>
+                                                <option value="7">{{ __('ui.unit.heavy') }}</option>
+                                                <option value="8">{{ __('ui.unit.ram') }}</option>
+                                                <option value="9">{{ __('ui.unit.catapult') }}</option>
                                                 @if ($config->game->knight == 1)
-                                                    <option value="knight">{{ __('ui.unit.knight') }}</option>
+                                                    <option value="10">{{ __('ui.unit.knight') }}</option>
                                                 @endif
-                                                <option value="snob">{{ __('ui.unit.snob') }}</option>
+                                                <option value="11">{{ __('ui.unit.snob') }}</option>
                                             </select>
                                             <small class="form-control-feedback">Langsamste Einheit</small>
                                         </div>
@@ -175,7 +175,7 @@
                                         <button class="btn btn-primary btn-sm" onclick="copy('create')">Kopieren</button>
                                     </div>
                                     <div class="col-9">
-                                        <input id="link-create" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$worldData->server->code, $worldData->name, $attackList->id, 'create', $attackList->create_key]) }}" />
+                                        <input id="link-create" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$worldData->server->code, $worldData->name, $attackList->id, 'create', $attackList->edit_key]) }}" />
                                         <small class="form-control-feedback ml-2">Link um den Angriffsplan zu bearbeiten</small>
                                     </div>
                                 </div>
@@ -279,21 +279,21 @@
         function typ_img(input){
             switch (input) {
                 case 0:
-                    return '{{ asset('images/ds_images/unit/unit_ram.png') }}';
+                    return '{{ \App\Util\Icon::icons(8) }}';
                 case 1:
-                    return '{{ asset('images/ds_images/unit/unit_snob.png') }}';
+                    return '{{ \App\Util\Icon::icons(11) }}';
                 case 2:
-                    return '{{ asset('images/ds_images/unit/fake.png') }}';
+                    return '{{ \App\Util\Icon::icons(14) }}';
                 case 3:
-                    return '{{ asset('images/ds_images/unit/wall.png') }}';
+                    return '{{ \App\Util\Icon::icons(45) }}';
                 case 4:
-                    return '{{ asset('images/ds_images/unit/unit_spear.png') }}';
+                    return '{{ \App\Util\Icon::icons(0) }}';
                 case 5:
-                    return '{{ asset('images/ds_images/unit/unit_sword.png') }}';
+                    return '{{ \App\Util\Icon::icons(1) }}';
                 case 6:
-                    return '{{ asset('images/ds_images/unit/unit_heavy.png') }}';
+                    return '{{ \App\Util\Icon::icons(7) }}';
                 case 7:
-                    return '{{ asset('images/ds_images/unit/def_fake.png') }}';
+                    return '{{ \App\Util\Icon::icons(46) }}';
             }
         }
 
@@ -355,30 +355,59 @@
 
         function slowest_unit(unit, dis){
             switch (unit) {
-                case 'spear':
+                case '0':
                     return Math.round('{{ round((float)$unitConfig->spear->speed) }}' * dis);
-                case 'sword':
+                case '1':
                     return Math.round('{{ round((float)$unitConfig->sword->speed) }}' * dis);
-                case 'axe':
+                case '2':
                     return Math.round('{{ round((float)$unitConfig->axe->speed) }}' * dis);
-                case 'archer':
+                case '3':
                     return Math.round('{{ round((float)$unitConfig->archer->speed) }}' * dis);
-                case 'spy':
+                case '4':
                     return Math.round('{{ round((float)$unitConfig->spy->speed) }}' * dis);
-                case 'light':
+                case '5':
                     return Math.round('{{ round((float)$unitConfig->light->speed) }}' * dis);
-                case 'marcher':
+                case '6':
                     return Math.round('{{ round((float)$unitConfig->marcher->speed) }}' * dis);
-                case 'heavy':
+                case '7':
                     return Math.round('{{ round((float)$unitConfig->heavy->speed) }}' * dis);
-                case 'ram':
+                case '8':
                     return Math.round('{{ round((float)$unitConfig->ram->speed) }}' * dis);
-                case 'catapult':
+                case '9':
                     return Math.round('{{ round((float)$unitConfig->catapult->speed) }}' * dis);
-                case 'knight':
+                case '10':
                     return Math.round('{{ round((float)$unitConfig->knight->speed) }}' * dis);
-                case 'snob':
+                case '11':
                     return Math.round('{{ round((float)$unitConfig->snob->speed) }}' * dis);
+            }
+        }
+
+        function slowest_unit_img(unit){
+            switch (unit) {
+                case '0':
+                    return '{{ \App\Util\Icon::icons(0) }}';
+                case '1':
+                    return '{{ \App\Util\Icon::icons(1) }}';
+                case '2':
+                    return '{{ \App\Util\Icon::icons(2) }}';
+                case '3':
+                    return '{{ \App\Util\Icon::icons(3) }}';
+                case '4':
+                    return '{{ \App\Util\Icon::icons(4) }}';
+                case '5':
+                    return '{{ \App\Util\Icon::icons(5) }}';
+                case '6':
+                    return '{{ \App\Util\Icon::icons(6) }}';
+                case '7':
+                    return '{{ \App\Util\Icon::icons(7) }}';
+                case '8':
+                    return '{{ \App\Util\Icon::icons(8) }}';
+                case '9':
+                    return '{{ \App\Util\Icon::icons(9) }}';
+                case '10':
+                    return '{{ \App\Util\Icon::icons(10) }}';
+                case '11':
+                    return '{{ \App\Util\Icon::icons(11) }}';
             }
         }
 
@@ -393,7 +422,7 @@
                 var img = $('#unit_img');
                 var input = $(this).val();
 
-                img.attr('src', '{{ asset('images/ds_images/unit/') }}/unit_' + input + '.png');
+                img.attr('src', slowest_unit_img(input));
             });
 
             $('.koord').on("keypress keyup blur",function (event) {
