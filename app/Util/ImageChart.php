@@ -177,10 +177,6 @@ class ImageChart extends PictureRender {
         }
     }
 
-    public function output($ext) {
-        return PictureOutput::output($ext);
-    }
-
     private function prepareAmountForRendering($amount) {
         $suffix = "";
 
