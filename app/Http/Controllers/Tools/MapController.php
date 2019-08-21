@@ -24,10 +24,35 @@ class MapController extends BaseController
         switch($id) {
             case '0':
                 $map = new MapGenerator($world, "fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+                $map->setLayerOrder(array(MapGenerator::$LAYER_MARK));
+                $map->markVillage(10, array(255, 0, 0));
+                $map->markVillage(20, array(255, 0, 0));
                 break;
             case '1':
                 $map = new MapGenerator($world, "fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
-                $map->setMapDimensions(400, 400, 500, 500);
+                $map->setMapDimensions(400, 400, 440, 440);
+                $map->setSkin("default");
+                $map->setLayerOrder(array(MapGenerator::$LAYER_PICTURE, MapGenerator::$LAYER_MARK));
+                $map->setOpaque(40);
+                break;
+            case '2':
+                $map = new MapGenerator($world, "fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+                $map->setLayerOrder(array(MapGenerator::$LAYER_MARK));
+                $map->markPlayer(2908937, array(255, 0, 0));
+                $map->markPlayer(186056, array(0, 255, 0));
+                $map->markPlayer(344194, array(0, 0, 255));
+                break;
+            case '3':
+                $map = new MapGenerator($world, "fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+                $map->setLayerOrder(array(MapGenerator::$LAYER_MARK));
+                $map->markAlly(4, array(255, 0, 0));
+                $map->markAlly(27, array(0, 255, 0));
+                $map->markAlly(852, array(0, 0, 255));
+                break;
+            case '4':
+                $map = new MapGenerator($world, "fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
+                $map->setLayerOrder(array(MapGenerator::$LAYER_MARK));
+                break;
         }
         $map -> render();
         return $map -> output($ext);

@@ -6,11 +6,10 @@ use App\Ally;
 use App\Player;
 use App\Village;
 use App\World;
+use Illuminate\Support\Facades\DB;
 
 class MapGenerator extends PictureRender {
     private $font;
-    private $width;
-    private $height;
     private $show_errs;
     private $world;
     
@@ -19,10 +18,16 @@ class MapGenerator extends PictureRender {
     private $village;
     private $skin;
     private $opaque;
-    private $mapDimension;
     private $playerColour;
     private $barbarianColour;
+    private $backgroundColour;
     
+    private $width;
+    private $height;
+    private $mapDimension;
+    private $fieldWidth;
+    private $fieldHeight;
+        
     public static $LAYER_MARK = 0;
     public static $LAYER_PICTURE = 1;
     public static $LAYER_TEXT = 2;
@@ -72,28 +77,41 @@ class MapGenerator extends PictureRender {
             MapGenerator::$LAYER_PICTURE,
             MapGenerator::$LAYER_TEXT,
         ));
-        $this -> setOpaque(50);
+        $this -> setOpaque(100);
         $this -> setMapDimensions(0, 0, 1000, 1000);
-        $this -> setPlayerColour(0, 0, 255);
-        $this -> setBarbarianColour(0, 255, 0);
+        $this -> setPlayerColour(51, 23, 4);
+        $this -> setBarbarianColour(179, 174, 167);
+        $this -> setBackgroundColour(34, 46, 10);
     }
 
     public function render() {
+        $startTime = microtime(true);
         $this->grabInformation();
         
-        $color_white = imagecolorallocate($this->image, 255, 255, 255); #Background
-        imagefill($this->image, 0, 0, $color_white);
+        $this->fieldWidth = $this->width / $this->mapDimension['w'];
+        $this->fieldHeight = $this->height / $this->mapDimension['h'];
+        
+        $colour_bg = imagecolorallocate($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2]);
+        imagefill($this->image, 0, 0, $colour_bg);
         
         foreach($this->layerOrder as $layer) {
             switch ($layer) {
                 case MapGenerator::$LAYER_MARK:
                     $this->renderMarks();
+                    break;
                 case MapGenerator::$LAYER_PICTURE:
                     $this->renderPictures();
+                    break;
                 case MapGenerator::$LAYER_TEXT:
                     $this->renderText();
+                    break;
             }
         }
+        
+        $renderTime = microtime(true) - $startTime;
+        $white = imagecolorallocate($this->image, 255, 255, 255);
+        imagettftext($this->image, 10, 0, $this->width-300, $this->height-100, $white, $this->font, "@Debug:");
+        imagettftext($this->image, 10, 0, $this->width-300, $this->height-80, $white, $this->font, "Render time: " . $renderTime);
     }
     
     private function grabInformation() {
@@ -111,17 +129,21 @@ class MapGenerator extends PictureRender {
         if(count($this->ally) > 0) {
             $allyModel = new Ally();
             $allyModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.ally_latest');
+            $evaluateModel = false;
             
             foreach($this->ally as $ally) {
                 if($ally['showText']) {
-                    $allyModel = $allyModel->where('allyID', $ally['id']);
+                    $allyModel = $allyModel->orWhere('allyID', $ally['id']);
+                    $evaluateModel = true;
                 }
                 $this->dataAlly[$ally['id']] = $ally;
             }
             
-            foreach($allyModel->get() as $ally) {
-                $this->dataAlly[$ally->allyID]['name'] = $ally->name;
-                $this->dataAlly[$ally->allyID]['tag'] = $ally->tag;
+            if($evaluateModel) {
+                foreach($allyModel->get() as $ally) {
+                    $this->dataAlly[$ally->allyID]['name'] = $ally->name;
+                    $this->dataAlly[$ally->allyID]['tag'] = $ally->tag;
+                }
             }
         }
         
@@ -130,7 +152,7 @@ class MapGenerator extends PictureRender {
             $playerModel = new Player();
             $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
             foreach($this->dataAlly as $ally) {
-                $playerModel = $playerModel->where('ally_id', $ally['id']);
+                $playerModel = $playerModel->orWhere('ally_id', $ally['id']);
             }
 
             foreach($playerModel->get() as $player) {
@@ -149,38 +171,44 @@ class MapGenerator extends PictureRender {
         if(count($this->player) > 0) {
             $playerModel = new Player();
             $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
+            $evaluateModel = false;
             
             foreach($this->player as $player) {
                 if($player['showText']) {
-                    $playerModel = $playerModel->where('allyID', $player['id']);
+                    $playerModel = $playerModel->orWhere('allyID', $player['id']);
+                    $evaluateModel = true;
                 }
                 $this->dataPlayer[$player['id']] = $player;
             }
 
-            foreach($playerModel->get() as $player) {
-                $this->dataPlayer[$player->playerID]['name'] = $player->name;
+            if($evaluateModel) {
+                foreach($playerModel->get() as $player) {
+                    $this->dataPlayer[$player->playerID]['name'] = $player->name;
+                }
             }
         }
     }
     
     private function grabVillage() {
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.village_latest');
-        $villageModel = $villageModel->where('x', '>=', $this->mapDimension[0])
-                ->where('y', '>=', $this->mapDimension[1])
-                ->where('x', '<', $this->mapDimension[2])
-                ->where('y', '<', $this->mapDimension[3]);
-
+        //DO NOT use Laravel functions here as they use way more memory than this code
+        $tableName = "`".BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'`.`village_latest`';
+        $res = DB::select("SELECT name, x, y, points, bonus_id, villageID, owner FROM $tableName WHERE".
+                " x >= ".intval($this->mapDimension['xs']).
+                " AND y >= ".intval($this->mapDimension['ys']).
+                " AND x < ".intval($this->mapDimension['xe']).
+                " AND y < ".intval($this->mapDimension['ye']));
+        
         foreach($this->village as $village) {
             $this->dataVillage[$village['id']] = $village;
         }
 
-        foreach($villageModel->get() as $village) {
+        foreach($res as $village) {
             if(isset($this->dataVillage[$village->villageID])) {
                 //For real village markers
                 $this->dataVillage[$village->villageID]['name'] = $village->name;
                 $this->dataVillage[$village->villageID]['x'] = $village->x;
                 $this->dataVillage[$village->villageID]['y'] = $village->y;
+                $this->dataVillage[$village->villageID]['owner'] = $village->owner;
                 $this->dataVillage[$village->villageID]['points'] = $village->points;
                 $this->dataVillage[$village->villageID]['bonus_id'] = $village->bonus_id;
             } else {
@@ -190,12 +218,13 @@ class MapGenerator extends PictureRender {
                     "name" => $village->name,
                     "x" => $village->x,
                     "y" => $village->y,
+                    'owner' => $village->owner,
                     "points" => $village->points,
                     "bonus_id" => $village->bonus_id,
                     "showText" => false,
                 );
                 
-                if (isset($this->dataPlayer[$village->owner])) {
+                if (isset($this->dataPlayer[$village->owner]) && $village->owner != 0) {
                     //For player / ally markers
                     $this->dataVillage[$village->villageID]['colour'] =
                             $this->dataPlayer[$village->owner]['colour'];
@@ -207,24 +236,19 @@ class MapGenerator extends PictureRender {
     }
     
     private function renderMarks() {
-        $mapWidth = $this->mapDimension[2] - $this->mapDimension[0];
-        $mapHeight = $this->mapDimension[3] - $this->mapDimension[1];
-        
-        $fieldWidth = $this->width / $mapWidth;
-        $fieldHeight = $this->height / $mapHeight;
-        
         foreach($this->dataVillage as $village) {
+            if($village['colour'] == null) {
+                continue;
+            }
             $col = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-$this->opaque*127/100);
-            imagesetthickness($this->image, 1); //deactivate to draw Rectangles without stroke
             
-            $x = intval($fieldWidth * ($village['x'] - $this->mapDimension[0]));
-            $y = intval($fieldHeight * ($village['y'] - $this->mapDimension[1]));
-            imagefilledrectangle($this->image, $x, $y, intval($x + $fieldWidth - 1), intval($y + $fieldHeight - 1), $col);
+            $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
+            $y = intval($this->fieldHeight * ($village['y'] - $this->mapDimension['ys']));
+            imagefilledrectangle($this->image, $x, $y, intval($x + $this->fieldWidth - 1), intval($y + $this->fieldHeight - 1), $col);
         }
     }
     
     private function renderPictures() {
-        return;
         /*
          * https://www.php.net/manual/de/function.imagecreatefrompng.php
          *  imagecopyresampled ( resource $dst_image , resource $src_image , int $dst_x , int $dst_y , int $src_x , int $src_y , int $dst_w , int $dst_h , int $src_w , int $src_h ) : bool
@@ -233,28 +257,31 @@ class MapGenerator extends PictureRender {
          * 
          */
         
-        
-        $this->skin = 'old';
-        $skin = array();
-        $skin['b1'] = array('img' => imagecreatefrompng("images/ds_images/skins/{$this->skin}/b1.png"));
-        $skin['b1']['x'] = imagesx($skin['b1']['img']);
-        $skin['b1']['y'] = imagesy($skin['b1']['img']);
-        $skin['b1']['asp'] = $skin['b1']['x'] / $skin['b1']['y'];
-        
-        imagecopyresampled($this->image, $skin['b1']['img'], 10, 10, 0, 0, 100, 100, $skin['b1']['x'], $skin['b1']['y']);
-        imagecopyresampled($this->image, $skin['b1']['img'], 10, 200, 0, 0, 100, 100 / $skin['b1']['asp'], $skin['b1']['x'], $skin['b1']['y']);
-        
-        $blue = imagecolorallocate($this->image, 0, 0, 255);
-        imagefilledrectangle($this->image, 200, 10, 200+$skin['b1']['asp']*100, 10+100, $blue);
-        imagecopyresampled($this->image, $skin['b1']['img'], 200, 10, 0, 0, 100*$skin['b1']['asp'], 100, $skin['b1']['x'], $skin['b1']['y']);
-        
-        $yellow = imagecolorallocatealpha($this->image, 255, 255, 0, 127-$this->opaque*127/100);
-        imagecopyresampled($this->image, $skin['b1']['img'], 200, 200, 0, 0, 100*$skin['b1']['asp'], 100, $skin['b1']['x'], $skin['b1']['y']);
-        imagefilledrectangle($this->image, 200, 200, 200+$skin['b1']['asp']*100, 200+100, $yellow);
+        foreach($this->dataVillage as $village) {
+            $skinImg = $this->getSkinImage(Village::getSkinImageName($village['owner'], $village['points'], $village['bonus_id']));
+            
+            $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
+            $y = intval($this->fieldHeight * ($village['y'] - $this->mapDimension['ys']));
+            imagecopyresampled($this->image, $skinImg['img'], $x, $y, 0, 0, $this->fieldWidth, $this->fieldHeight, $skinImg['x'], $skinImg['y']);
+        }
     }
     
     private function renderText() {
         //TODO for future
+    }
+    
+    private $skinCache = array();
+    private function getSkinImage($name) {
+        if(isset($this->skinCache[$name])) {
+            return $this->skinCache[$name];
+        }
+        
+        $this->skinCache[$name] = array('img' => imagecreatefrompng("images/".Village::getSkinImagePath($this->skin, $name)));
+        $this->skinCache[$name]['x'] = imagesx($this->skinCache[$name]['img']);
+        $this->skinCache[$name]['y'] = imagesy($this->skinCache[$name]['img']);
+        $this->skinCache[$name]['asp'] = $this->skinCache[$name]['x'] / $this->skinCache[$name]['y'];
+        
+        return $this->skinCache[$name];
     }
     
     public function markAlly($allyID, $colour, $showText=null) {
@@ -339,12 +366,24 @@ class MapGenerator extends PictureRender {
     }
     
     public function setMapDimensions($xStart, $yStart, $xEnd, $yEnd) {
-        $this->mapDimension = array(
-            (int) $xStart,
-            (int) $yStart,
-            (int) $xEnd,
-            (int) $yEnd,
+        $tmp = array(
+            'xs' => (int) $xStart,
+            'ys' => (int) $yStart,
+            'xe' => (int) $xEnd,
+            'ye' => (int) $yEnd,
         );
+        
+        $tmp['w'] = $tmp['xe'] - $tmp['xs'];
+        $tmp['h'] = $tmp['ye'] - $tmp['ys'];
+        if($tmp['w'] <= 0 || $tmp['h'] <= 0) {
+            if($this->show_errs) {
+                throw new \InvalidArgumentException("start / end need correct sorting or with / height is zero");
+            } else {
+                return false;
+            }
+        }
+        
+        $this->mapDimension = $tmp;
         return $this;
     }
     
@@ -355,6 +394,11 @@ class MapGenerator extends PictureRender {
     
     public function setBarbarianColour($r, $g, $b) {
         $this->barbarianColour = array((int) $r, (int) $g, (int) $b);
+        return $this;
+    }
+    
+    public function setBackgroundColour($r, $g, $b) {
+        $this->backgroundColour = array((int) $r, (int) $g, (int) $b);
         return $this;
     }
 }
