@@ -123,36 +123,44 @@ class Village extends CustomModel
      * @return string|null
      */
     public function getVillageSkinImage($skin) {
+        $imgName = Village::getSkinImageName($this->owner, $this->points, $this->bonus_id);
+        return Village::getSkinImagePath($skin, $imgName);
+    }
+    
+    public static function getSkinImagePath($skin, $imgName) {
         $skins = array("dark", "default", "old", "symbol", "winter");
         $index = array_search($skin, $skins);
         if($index === false){
             return null;
         }
-
+        
+        return "ds_images/skins/{$skins[$index]}/$imgName.png";
+    }
+    
+    public static function getSkinImageName($owner, $points, $bonus_id) {
         $left = "";
-        if($this->owner == 0) {
+        if($owner == 0) {
             $left = "_left";
         }
 
-        if($this->points < 300) {
+        if($points < 300) {
             $lv = 1;
-        } else if($this->points < 1000) {
+        } else if($points < 1000) {
             $lv = 2;
-        } else if($this->points < 3000) {
+        } else if($points < 3000) {
             $lv = 3;
-        } else if($this->points < 9000) {
+        } else if($points < 9000) {
             $lv = 4;
-        } else if($this->points < 11000) {
+        } else if($points < 11000) {
             $lv = 5;
         } else {
             $lv = 6;
         }
 
         $bonus = "v";
-        if($this->bonus_id != 0) {
+        if($bonus_id != 0) {
             $bonus = "b";
         }
-
-        return "ds_images/skins/{$skins[$index]}/$bonus$lv$left.png";
+        return "$bonus$lv$left";
     }
 }
