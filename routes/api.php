@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/git/webhook', 'GitController@index');
 
-Route::get('/{server}/{world}', 'APIController@getWorld');
+Route::get('/{server}/{world}/data', 'APIController@getWorld')->name('api.worldData');
 
 Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord')->name('api.villageByCoord');
 
