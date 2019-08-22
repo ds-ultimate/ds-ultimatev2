@@ -12,6 +12,8 @@ class PictureRender {
             case "jpg":
             case "jpeg":
                 return $this->outputJPEG();
+            case "base64":
+                return $this->outputBase64();
             default:
                 return "Unknown extension";
         }
@@ -33,5 +35,16 @@ class PictureRender {
         imagedestroy($this->image);
         return response($imagedata, 200)
                 ->header('Content-Type', 'image/jpeg');
+    }
+
+    private function outputBase64() {
+        ob_start();
+        imagepng($this->image);
+        $imagedata = ob_get_clean();
+        imagedestroy($this->image);
+        
+        $encodedData = "data:image/png;base64,".base64_encode($imagedata);
+        return response($encodedData, 200)
+                ->header('Content-Type', 'image/base64');
     }
 }
