@@ -22,34 +22,46 @@
         <!-- Informationen -->
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
-                    <table id="data1" class="table table-bordered no-wrap">
-                        <thead>
-                        <tr>
-                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.continent')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.coordinates')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.owner')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.bonusType')) }}</th>
-                            <th class="desktop"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{ \App\Util\BasicFunctions::decodeName($villageData->name) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
-                            <th>{{ $villageData->continentString() }}</th>
-                            <td>{{ $villageData->coordinates() }}</td>
-                            <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('ui.player.barbarian')) !!}</td>
-                            <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $villageData->villageID, $conquer, 'villageConquer') !!}</td>
-                            <th>{{ $villageData->bonusText() }}</th>
-                            <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">_('ui.nav.stats')</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">_('ui.nav.map')</a>
+                    </li>
+                </ul>
+                <div class="card-body tab-content">
+                    <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
+                        <table id="data1" class="table table-bordered no-wrap">
+                            <thead>
+                            <tr>
+                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.continent')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.coordinates')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.owner')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.bonusType')) }}</th>
+                                <th class="desktop"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{{ \App\Util\BasicFunctions::decodeName($villageData->name) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
+                                <th>{{ $villageData->continentString() }}</th>
+                                <td>{{ $villageData->coordinates() }}</td>
+                                <td>{!! ($villageData->owner != 0)?\App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name)) : ucfirst(__('ui.player.barbarian')) !!}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $villageData->villageID, $conquer, 'villageConquer') !!}</td>
+                                <th>{{ $villageData->bonusText() }}</th>
+                                <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,6 +80,18 @@
 @endsection
 
 @section('js')
+    <script>
+        $('#map-tab').click(function (e) {
+            if($('#map-img').length > 0) return;
+            $.ajax({
+                type: "GET",
+                url:"{{ route('api.map.overview', [$worldData->server->code, $worldData->name, 'v', $villageData->villageID, 'base64']) }}",
+                contentType: "image/png",
+                success: function(data){
+                $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
+            });
+        });
+    </script>
     <script>
 
         $(document).ready( function () {

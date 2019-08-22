@@ -22,61 +22,73 @@
         <!-- Informationen -->
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
-                    <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
-                    <table id="data1" class="table table-bordered no-wrap">
-                        <thead>
-                        <tr>
-                            <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
-                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.ally')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.allyChanges')) }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>{{ \App\Util\BasicFunctions::numberConv($playerData->rank) }}</th>
-                            <td>{{ \App\Util\BasicFunctions::decodeName($playerData->name) }}</td>
-                            <td>{!! ($playerData->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
-                            <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>
-                            <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $conquer, 'playerConquer') !!}</td>
-                            <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $allyChanges, 'playerAllyChanges') !!}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <br>
-                    <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
-                    <table id="data2" class="table table-bordered no-wrap">
-                        <thead>
-                        <tr>
-                            <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
-                            <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
-                            <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBashRank) }}</th>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBash) }}</td>
-                            <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): ('-') }}%</td>
-                            <th>{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</th>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($playerData->offBash) }}</td>
-                            <th>{{ \App\Util\BasicFunctions::numberConv($playerData->defBashRank) }}</th>
-                            <td>{{ \App\Util\BasicFunctions::numberConv($playerData->defBash) }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">_('ui.nav.stats')</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">_('ui.nav.map')</a>
+                    </li>
+                </ul>
+                <div class="card-body tab-content">
+                    <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
+                        <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
+                        <table id="data1" class="table table-bordered no-wrap">
+                            <thead>
+                            <tr>
+                                <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.ally')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.allyChanges')) }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>{{ \App\Util\BasicFunctions::numberConv($playerData->rank) }}</th>
+                                <td>{{ \App\Util\BasicFunctions::decodeName($playerData->name) }}</td>
+                                <td>{!! ($playerData->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
+                                <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $conquer, 'playerConquer') !!}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $allyChanges, 'playerAllyChanges') !!}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
+                        <table id="data2" class="table table-bordered no-wrap">
+                            <thead>
+                            <tr>
+                                <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
+                                <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBashRank) }}</th>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBash) }}</td>
+                                <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): ('-') }}%</td>
+                                <th>{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</th>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($playerData->offBash) }}</td>
+                                <th>{{ \App\Util\BasicFunctions::numberConv($playerData->defBashRank) }}</th>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($playerData->defBash) }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,6 +163,18 @@
 
 @section('js')
     <script>
+        $('#map-tab').click(function (e) {
+            if($('#map-img').length > 0) return;
+            $.ajax({
+                type: "GET",
+                url:"{{ route('api.map.overview.sized', [$worldData->server->code, $worldData->name, 'p', $playerData->playerID, '500', '500', 'base64']) }}",
+                contentType: "image/png",
+                success: function(data){
+                $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function () {
             $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
             $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
@@ -211,7 +235,6 @@
 
     </script>
     <script>
-
         $(document).ready( function () {
             $.extend( $.fn.dataTable.defaults, {
                 responsive: true

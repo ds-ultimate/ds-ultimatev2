@@ -40,7 +40,7 @@ class MapGenerator extends PictureRender {
     private $dataPlayer;
     private $dataVillage;
     
-    public function __construct(World $world, $font, $dim=null, $show_errs=false) {
+    public function __construct(World $world, $dim=null, $show_errs=false) {
         $std_aspect = 1/1;
         if(isset($dim["height"]) && isset($dim["width"])) {
             $img_height = $dim["height"];
@@ -55,13 +55,12 @@ class MapGenerator extends PictureRender {
             $img_height = 1000;
             $img_width = $std_aspect * $img_height;
         }
-        
         $image = imagecreatetruecolor(round($img_width, 0), round($img_height, 0));
         imagealphablending($image, true); //needed to work with alpha values
         
         if($image === false) die("Error");
 
-        $this -> font = realpath($font);
+        $this -> setFont("fonts/NotoMono-Regular.ttf");
         $this -> image = $image;
         $this -> width= $img_width;
         $this -> height = $img_height;
@@ -81,7 +80,7 @@ class MapGenerator extends PictureRender {
         $this -> setMapDimensions(0, 0, 1000, 1000);
         $this -> setPlayerColour(51, 23, 4);
         $this -> setBarbarianColour(179, 174, 167);
-        $this -> setBackgroundColour(34, 46, 10);
+        $this -> setBackgroundColour(112, 153, 32);
     }
 
     public function render() {
@@ -97,10 +96,14 @@ class MapGenerator extends PictureRender {
         foreach($this->layerOrder as $layer) {
             switch ($layer) {
                 case MapGenerator::$LAYER_MARK:
-                    $this->renderMarks();
+                    $this->renderMarks('barb');
+                    $this->renderMarks('play');
+                    $this->renderMarks('mark');
                     break;
                 case MapGenerator::$LAYER_PICTURE:
-                    $this->renderPictures();
+                    $this->renderPictures('barb');
+                    $this->renderPictures('play');
+                    $this->renderPictures('mark');
                     break;
                 case MapGenerator::$LAYER_TEXT:
                     $this->renderText();
@@ -108,16 +111,23 @@ class MapGenerator extends PictureRender {
             }
         }
         
-        $renderTime = microtime(true) - $startTime;
-        $white = imagecolorallocate($this->image, 255, 255, 255);
-        imagettftext($this->image, 10, 0, $this->width-300, $this->height-100, $white, $this->font, "@Debug:");
-        imagettftext($this->image, 10, 0, $this->width-300, $this->height-80, $white, $this->font, "Render time: " . $renderTime);
+        $renderTime = round(microtime(true) - $startTime, 3);
+        if($this->show_errs) {
+            $white = imagecolorallocate($this->image, 255, 255, 255);
+            $box1 = imagettfbbox(10, 0, $this->font, "@Debug:");
+            $box2 = imagettfbbox(10, 0, $this->font, "Render time: " . $renderTime . "s");
+            $x = $this->width - max($box1[2], $box2[2]);
+            $y2 = $this->height - $box2[1] + $box2[5];
+            $y1 = $y2 - $box1[1] + $box1[5];
+            imagettftext($this->image, 10, 0, $x, $y1, $white, $this->font, "@Debug:");
+            imagettftext($this->image, 10, 0, $x, $y2, $white, $this->font, "Render time: " . $renderTime . "s");
+        }
     }
     
     private function grabInformation() {
         $this->dataAlly = array();
         $this->dataPlayer = array();
-        $this->dataVillage = array();
+        $this->dataVillage = array('barb', 'play', 'mark');
         
         $this->grabAlly();
         $this->grabPlayer();
@@ -198,36 +208,46 @@ class MapGenerator extends PictureRender {
                 " AND x < ".intval($this->mapDimension['xe']).
                 " AND y < ".intval($this->mapDimension['ye']));
         
+        $tmpVillage = array();
         foreach($this->village as $village) {
-            $this->dataVillage[$village['id']] = $village;
+            $tmpVillage[$village['id']] = $village;
         }
 
         foreach($res as $village) {
-            if(isset($this->dataVillage[$village->villageID])) {
+            if(isset($tmpVillage[$village->villageID])) {
+                $this->dataVillage['mark'][$village->villageID] = $tmpVillage[$village->villageID];
                 //For real village markers
-                $this->dataVillage[$village->villageID]['name'] = $village->name;
-                $this->dataVillage[$village->villageID]['x'] = $village->x;
-                $this->dataVillage[$village->villageID]['y'] = $village->y;
-                $this->dataVillage[$village->villageID]['owner'] = $village->owner;
-                $this->dataVillage[$village->villageID]['points'] = $village->points;
-                $this->dataVillage[$village->villageID]['bonus_id'] = $village->bonus_id;
+                $this->dataVillage['mark'][$village->villageID]['name'] = $village->name;
+                $this->dataVillage['mark'][$village->villageID]['x'] = $village->x;
+                $this->dataVillage['mark'][$village->villageID]['y'] = $village->y;
+                $this->dataVillage['mark'][$village->villageID]['owner'] = $village->owner;
+                $this->dataVillage['mark'][$village->villageID]['points'] = $village->points;
+                $this->dataVillage['mark'][$village->villageID]['bonus_id'] = $village->bonus_id;
+                $this->dataVillage['mark'][$village->villageID]['marked'] = true;
             } else {
-                $this->dataVillage[$village->villageID] = array(
+                $tmp = array(
                     "id" => (int) $village->villageID,
                     "colour" => ($village->owner != 0)?($this->playerColour):($this->barbarianColour),
                     "name" => $village->name,
                     "x" => $village->x,
                     "y" => $village->y,
-                    'owner' => $village->owner,
+                    "owner" => $village->owner,
                     "points" => $village->points,
                     "bonus_id" => $village->bonus_id,
                     "showText" => false,
+                    "marked" => false,
                 );
                 
                 if (isset($this->dataPlayer[$village->owner]) && $village->owner != 0) {
                     //For player / ally markers
-                    $this->dataVillage[$village->villageID]['colour'] =
+                    $this->dataVillage['mark'][$village->villageID] = $tmp;
+                    $this->dataVillage['mark'][$village->villageID]['colour'] =
                             $this->dataPlayer[$village->owner]['colour'];
+                    $this->dataVillage['mark'][$village->villageID]['marked'] = true;
+                } else if($village->owner != 0) {
+                    $this->dataVillage['play'][$village->villageID] = $tmp;
+                } else {
+                    $this->dataVillage['barb'][$village->villageID] = $tmp;
                 }
             }
             
@@ -235,8 +255,8 @@ class MapGenerator extends PictureRender {
         }
     }
     
-    private function renderMarks() {
-        foreach($this->dataVillage as $village) {
+    private function renderMarks($type) {
+        foreach($this->dataVillage[$type] as $village) {
             if($village['colour'] == null) {
                 continue;
             }
@@ -248,7 +268,7 @@ class MapGenerator extends PictureRender {
         }
     }
     
-    private function renderPictures() {
+    private function renderPictures($type) {
         /*
          * https://www.php.net/manual/de/function.imagecreatefrompng.php
          *  imagecopyresampled ( resource $dst_image , resource $src_image , int $dst_x , int $dst_y , int $src_x , int $src_y , int $dst_w , int $dst_h , int $src_w , int $src_h ) : bool
@@ -257,7 +277,7 @@ class MapGenerator extends PictureRender {
          * 
          */
         
-        foreach($this->dataVillage as $village) {
+        foreach($this->dataVillage[$type] as $village) {
             $skinImg = $this->getSkinImage(Village::getSkinImageName($village['owner'], $village['points'], $village['bonus_id']));
             
             $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
@@ -399,6 +419,11 @@ class MapGenerator extends PictureRender {
     
     public function setBackgroundColour($r, $g, $b) {
         $this->backgroundColour = array((int) $r, (int) $g, (int) $b);
+        return $this;
+    }
+    
+    public function setFont($font) {
+        $this->font = realpath($font);
         return $this;
     }
 }
