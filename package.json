@@ -22,9 +22,8 @@
         "sass-loader": "^7.1.0",
         "tinymce": "^5.0.12",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
-    },
-    "dependencies": {
-        "laravel-mix-purgecss": "^4.1.0"
+        "vue-template-compiler": "^2.6.10",
+        "laravel-mix-purgecss": "^4.1.0",
+        "@fonticonpicker/fonticonpicker": "^3.1.1"
     }
 }
