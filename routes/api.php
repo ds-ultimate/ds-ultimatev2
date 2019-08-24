@@ -22,6 +22,8 @@ Route::post('/git/webhook', 'GitController@index');
 Route::get('/{server}/{world}/data', 'APIController@getWorld')->name('api.worldData');
 
 Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord')->name('api.villageByCoord');
+Route::get('/{server}/{world}/playerName/{name}', 'APIController@getPlayerByName')->name('api.playerByName');
+Route::get('/{server}/{world}/allyName/{name}', 'APIController@getAllyByName')->name('api.allyByName');
 
 Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('api.worldPlayer');
 Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('api.worldAlly');
@@ -44,8 +46,8 @@ Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getV
  *  [**]-w-{width}
  *  [**]-h-{height}
  */
-Route::get('/map/{id}/{token}/{width}-{height}.{ext}', 'Tools\MapController@getSizedMapByID')->name('api.map.show');
-Route::get('/map/{id}/{token}/map.{ext}', 'Tools\MapController@getMapByID')->name('api.map.show.dimension');
+Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', 'Tools\MapController@getSizedMapByID')->name('api.map.show.sized');
+Route::get('/map/{wantedMap}/{token}/map.{ext}', 'Tools\MapController@getMapByID')->name('api.map.show');
 
 Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', 'Tools\MapController@getSizedOverviewMap')->name('api.map.overview.sized');
 Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', 'Tools\MapController@getOverviewMap')->name('api.map.overview');
