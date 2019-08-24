@@ -27,6 +27,7 @@ class MapGenerator extends PictureRender {
     private $mapDimension;
     private $fieldWidth;
     private $fieldHeight;
+    private $autoResize;
         
     public static $LAYER_MARK = 0;
     public static $LAYER_PICTURE = 1;
@@ -78,9 +79,10 @@ class MapGenerator extends PictureRender {
         ));
         $this -> setOpaque(100);
         $this -> setMapDimensions(0, 0, 1000, 1000);
-        $this -> setPlayerColour(51, 23, 4);
-        $this -> setBarbarianColour(179, 174, 167);
-        $this -> setBackgroundColour(112, 153, 32);
+        $this -> setPlayerColour([51, 23, 4]);
+        $this -> setBarbarianColour([179, 174, 167]);
+        $this -> setBackgroundColour([112, 153, 32]);
+        $this -> setAutoResize(false);
     }
 
     public function render() {
@@ -127,7 +129,7 @@ class MapGenerator extends PictureRender {
     private function grabInformation() {
         $this->dataAlly = array();
         $this->dataPlayer = array();
-        $this->dataVillage = array('barb', 'play', 'mark');
+        $this->dataVillage = array('barb' => [], 'play' => [], 'mark' => []);
         
         $this->grabAlly();
         $this->grabPlayer();
@@ -212,8 +214,23 @@ class MapGenerator extends PictureRender {
         foreach($this->village as $village) {
             $tmpVillage[$village['id']] = $village;
         }
-
+        
+        $realSize = null;
         foreach($res as $village) {
+            if($realSize == null) {
+                $realSize = [
+                    'xs' => $village->x,
+                    'ys' => $village->y,
+                    'xe' => $village->x,
+                    'ye' => $village->y,
+                ];
+            } else {
+                if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
+                if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
+                if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
+                if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
+            }
+            
             if(isset($tmpVillage[$village->villageID])) {
                 $this->dataVillage['mark'][$village->villageID] = $tmpVillage[$village->villageID];
                 //For real village markers
@@ -250,8 +267,15 @@ class MapGenerator extends PictureRender {
                     $this->dataVillage['barb'][$village->villageID] = $tmp;
                 }
             }
-            
-            
+        }
+        
+        if($this->autoResize) {
+            //Add border
+            $realSize['xs'] = ($realSize['xs'] >= 10)?($realSize['xs']-10):(0);
+            $realSize['ys'] = ($realSize['ys'] >= 10)?($realSize['ys']-10):(0);
+            $realSize['xe'] = ($realSize['xe'] <= 990)?($realSize['xe']+10):(0);
+            $realSize['ye'] = ($realSize['ye'] <= 990)?($realSize['ye']+10):(0);
+            $this->setMapDimensions($realSize['xs'], $realSize['ys'], $realSize['xe'], $realSize['ye']);
         }
     }
     
@@ -278,6 +302,9 @@ class MapGenerator extends PictureRender {
          */
         
         foreach($this->dataVillage[$type] as $village) {
+            if($village['colour'] == null) {
+                continue;
+            }
             $skinImg = $this->getSkinImage(Village::getSkinImageName($village['owner'], $village['points'], $village['bonus_id']));
             
             $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
@@ -407,23 +434,40 @@ class MapGenerator extends PictureRender {
         return $this;
     }
     
-    public function setPlayerColour($r, $g, $b) {
-        $this->playerColour = array((int) $r, (int) $g, (int) $b);
+    public function setPlayerColour($col) {
+        if($col == null) {
+            $this->playerColour = null;
+        } else {
+            $this->playerColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+        }
         return $this;
     }
     
-    public function setBarbarianColour($r, $g, $b) {
-        $this->barbarianColour = array((int) $r, (int) $g, (int) $b);
+    public function setBarbarianColour($col) {
+        if($col == null) {
+            $this->barbarianColour = null;
+        } else {
+            $this->barbarianColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+        }
         return $this;
     }
     
-    public function setBackgroundColour($r, $g, $b) {
-        $this->backgroundColour = array((int) $r, (int) $g, (int) $b);
+    public function setBackgroundColour($col) {
+        if($col == null) {
+            $this->backgroundColour = null;
+        } else {
+            $this->backgroundColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+        }
         return $this;
     }
     
     public function setFont($font) {
         $this->font = realpath($font);
+        return $this;
+    }
+    
+    public function setAutoResize($value) {
+        $this->autoResize = (boolean) $value;
         return $this;
     }
 }

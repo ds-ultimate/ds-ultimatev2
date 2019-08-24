@@ -13,6 +13,8 @@ use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Resources\World as WorldResource;
+use App\Http\Resources\Ally as AllyResource;
+use App\Http\Resources\Player as PlayerResource;
 use App\Http\Resources\Village as VillageResource;
 
 class APIController extends Controller
@@ -297,5 +299,19 @@ class APIController extends Controller
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
 
         return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
+    }
+
+    public static function getPlayerByName($server, $world, $name){
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+
+        return new PlayerResource($playerModel->where('name', urlencode($name))->first());
+    }
+
+    public static function getAllyByName($server, $world, $name){
+        $allyModel = new Ally();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
+
+        return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
     }
 }
