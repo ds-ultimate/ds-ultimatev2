@@ -32,6 +32,9 @@
                             <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('ui.tool.map.edit')) }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{ ucfirst(__('ui.tool.map.settings')) }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ ucfirst(__('ui.tool.map.links')) }}</a>
                         </li>
                     </ul>
@@ -60,28 +63,88 @@
                             <div class="row pt-3">
                                 <div class="col-12">
                                     <div class="form-group row">
-                                        <label class="control-label col-2">{{ ucfirst(__('ui.tool.map.editLink')) }}</label>
+                                        <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.editLink')) }}</label>
                                         <div class="col-1">
                                             <button class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('ui.tool.map.copy')) }}</button>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'edit', $wantedMap->edit_key]) }}" />
-                                            <small class="form-control-feedback ml-2">{{ ucfirst(__('ui.tool.map.editLinkDesc')) }}</small>
+                                            <small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.editLinkDesc')) }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group row">
-                                        <label class="control-label col-2">{{ ucfirst(__('ui.tool.map.showLink')) }}</label>
+                                        <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.showLink')) }}</label>
                                         <div class="col-1">
                                             <button class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('ui.tool.map.copy')) }}</button>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}" />
-                                            <small class="form-control-feedback ml-2">{{ ucfirst(__('ui.tool.map.showLinkDesc')) }}</small>
+                                            <small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.showLinkDesc')) }}</small>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                            <div id='default-background-div' class='col-12 input-group mb-2 mr-sm-2'>
+                                <div class='colour-picker-map input-group-prepend'>
+                                    <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                    <input name='default[background]' type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
+                                </div>
+                                <label class='form-control'>{{ _('ui.tool.map.defaultBackground') }}</label>
+                            </div>
+                            <div class="form-inline mb-2">
+                                <div class="form-check col-lg-auto ml-auto">
+                                    <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
+                                    <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
+                                    <label class="form-check-label" for="checkbox-show-player">{{ _('ui.tool.map.showPlayer') }}</label>
+                                </div>
+                                <div id='default-player-div' class='col-lg-9 input-group'>
+                                    <div class='colour-picker-map input-group-prepend'>
+                                        <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                        <input name='default[player]' type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
+                                    </div>
+                                    <label class='form-control'>{{ _('ui.tool.map.defaultPlayer') }}</label>
+                                </div>
+                            </div>
+                            <div class="form-inline mb-2">
+                                <div class="form-check col-lg-auto ml-auto">
+                                    <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
+                                    <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
+                                    <label class="form-check-label" for="checkbox-show-barbarian">{{ _('ui.tool.map.showBarbarian') }}</label>
+                                </div>
+                                <div id='default-barbarian-div' class='col-lg-9 input-group'>
+                                    <div class='colour-picker-map input-group-prepend'>
+                                        <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                        <input name='default[barbarian]' type='hidden' value='{{ $wantedMap->getDefBarbarianColour() }}'/>
+                                    </div>
+                                    <label class='form-control'>{{ _('ui.tool.map.defaultBarbarian') }}</label>
+                                </div>
+                            </div>
+                            <div class="col-4 form-group">
+                                <label for="zoom-value">{{ _('ui.tool.map.zoom') }}</label>
+                                <select class="form-control" id="map-zoom-value" name="zoomValue">
+                                    <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
+                                    <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
+                                    <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
+                                    <option value="215"{{ ($mapDimensions['w'] == 215)?(' selected="selected"'):('') }}>3</option>
+                                    <option value="129"{{ ($mapDimensions['w'] == 129)?(' selected="selected"'):('') }}>4</option>
+                                    <option value="77"{{ ($mapDimensions['w'] == 77)?(' selected="selected"'):('') }}>5</option>
+                                    <option value="46"{{ ($mapDimensions['w'] == 46)?(' selected="selected"'):('') }}>6</option>
+                                    <option value="28"{{ ($mapDimensions['w'] == 28)?(' selected="selected"'):('') }}>7</option>
+                                    <option value="16"{{ ($mapDimensions['w'] == 16)?(' selected="selected"'):('') }}>8</option>
+                                    <option value="10"{{ ($mapDimensions['w'] == 10)?(' selected="selected"'):('') }}>9</option>
+                                </select>
+                            </div>
+                            <div id="center-pos-div" class="input-group mb-2 mr-sm-2">
+                                {{ _('ui.tool.map.center') }}
+                                <input id="center-pos-x" name="centerX" class="form-control mr-1" placeholder="500" type="text" value="{{ $mapDimensions['cx'] }}"/>|
+                                <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
+                            </div>
+                            <div class="col-12">
+                                <input type="submit" class="btn btn-sm btn-success float-right">
                             </div>
                         </div>
                     </div>
@@ -91,8 +154,25 @@
         @endif
         <div class="col-12 mt-2">
             <div class="card">
-                <div class="card-body">
-                    <img class="container-fluid" src="{{ route('api.map.show', [$wantedMap->id, $wantedMap->show_key, 'png']).'?'.Str::random(10) }}" />
+                <ul class="nav nav-tabs" id="mapshowtabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active map-show-tab" id="size-1-tab" data-toggle="tab" href="#size-1" role="tab" aria-controls="size-1" aria-selected="true">{{ '1000x1000' }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link map-show-tab" id="size-2-tab" data-toggle="tab" role="tab" href="#size-2" aria-controls="size-2" aria-selected="false">{{ '700x700' }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link map-show-tab" id="size-3-tab" data-toggle="tab" role="tab" href="#size-3" aria-controls="size-3" aria-selected="false">{{ '500x500' }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link map-show-tab" id="size-4-tab" data-toggle="tab" role="tab" href="#size-4" aria-controls="size-4" aria-selected="false">{{ '200x200' }}</a>
+                    </li>
+                </ul>
+                <div class="card-body tab-content">
+                    <div class="tab-pane fade show active map-show-content" id="size-1" role="tabpanel" aria-labelledby="size-1-tab"></div>
+                    <div class="tab-pane fade map-show-content" id="size-2" role="tabpanel" aria-labelledby="size-2-tab"></div>
+                    <div class="tab-pane fade map-show-content" id="size-3" role="tabpanel" aria-labelledby="size-3-tab"></div>
+                    <div class="tab-pane fade map-show-content" id="size-4" role="tabpanel" aria-labelledby="size-4-tab"></div>
                 </div>
             </div>
         </div>
@@ -102,6 +182,7 @@
 @section('js')
     <script src="{{ asset('plugin/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+@if($mode == 'edit')
     <script>
         function copy(type) {
             /* Get the text field */
@@ -151,6 +232,10 @@
                     checkPart(this, e);
                     addNewParts(this, e);
                 });
+                
+                $('.colour-picker-map').colorpicker({
+                    useHashPrefix: false
+                });
             }
         }
 
@@ -182,7 +267,7 @@
                     var parts = that.id.split("-");
                     
                     $('#'+that.id).removeClass('is-invalid').addClass('is-valid');
-                    that.value = data['name'];
+                    that.value = data['nameRaw'];
                     $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val(data['allyID']);
                 })
                 .catch((error) =>{
@@ -228,5 +313,30 @@
                     $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val('');
                 });
         }
-</script>
+    </script>
+@endif
+    <script>
+        var sizeRoutes = {
+            "size-1": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'base64']) }}",
+            "size-2": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'base64']) }}",
+            "size-3": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'base64']) }}",
+            "size-4": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'base64']) }}"
+        };
+        $('.map-show-tab').click(function (e) {
+            var targetID = this.attributes['aria-controls'].nodeValue;
+            if($('#'+targetID)[0].innerHTML.length > 0) return;
+            
+            $.ajax({
+                type: "GET",
+                url: sizeRoutes[targetID] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
+                success: function(data){
+                    $('#'+targetID).html('<img id="'+targetID+'-img" class="container-fluid p-0" src="' + data + '" />');
+                },
+            });
+        });
+        
+        $(function () {
+            $('.active.map-show-tab').trigger('click');
+        });
+    </script>
 @endsection

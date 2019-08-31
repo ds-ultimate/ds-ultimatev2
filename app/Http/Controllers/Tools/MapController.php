@@ -8,7 +8,6 @@ use App\Util\MapGenerator;
 use App\World;
 
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class MapController extends BaseController
@@ -51,12 +50,8 @@ class MapController extends BaseController
     }
     
     public function edit(Map $wantedMap){
-        $getArray = \Illuminate\Support\Facades\Input::get();
-        var_dump($getArray);
-        if(isset($getArray['mark'])) {
-            $wantedMap->setMarkers($getArray['mark']);
-            $wantedMap->save();
-        }
+        $this->save($wantedMap);
+        
         $worldData = $wantedMap->world;
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -65,8 +60,9 @@ class MapController extends BaseController
         ];
         $mode = 'edit';
         $server = $worldData->server->code;
+        $mapDimensions = $this->getMapDimension($wantedMap);
         
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults'));
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions'));
     }
     
     public function show(Map $wantedMap){
@@ -76,6 +72,56 @@ class MapController extends BaseController
         return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode'));
     }
     
+    public function save(Map $wantedMap) {
+        $getArray = \Illuminate\Support\Facades\Input::get();
+        var_dump($getArray);
+        if(isset($getArray['mark'])) {
+            $wantedMap->setMarkers($getArray['mark']);
+        }
+        if(isset($getArray['default'])) {
+            $wantedMap->setDefaultColours(
+                    (isset($getArray['default']['background']))?($getArray['default']['background']):(null),
+                    (isset($getArray['default']['player']))?($getArray['default']['player']):(null),
+                    (isset($getArray['default']['barbarian']))?($getArray['default']['barbarian']):(null),
+            );
+        }
+        //do this after setting Default Colours as it modifies the same Property
+        if(isset($getArray['showBarbarianHere'])) {
+            if(!isset($getArray['showBarbarian'])) {
+                $wantedMap->disableBarbarian();
+            }
+        }
+        if(isset($getArray['showPlayerHere'])) {
+            if(!isset($getArray['showPlayer'])) {
+                $wantedMap->disablePlayer();
+            }
+        }
+        
+        if(isset($getArray['zoomValue']) &&
+                isset($getArray['centerX']) &&
+                isset($getArray['centerY'])) {
+            $zoom = (int) $getArray['zoomValue'];
+            $cX = (int) $getArray['centerX'];
+            $cY = (int) $getArray['centerY'];
+            
+            $xs = ceil($cX - $zoom / 2);
+            $xe = ceil($cX + $zoom / 2);
+            $ys = ceil($cY - $zoom / 2);
+            $ye = ceil($cY + $zoom / 2);
+            $wantedMap->setDimensions($xs, $xe, $ys, $ye);
+        }
+        $wantedMap->save();
+    }
+    
+    private function getMapDimension(Map $mapModel) {
+        $dimensions = $mapModel->getDimensions();
+        $dimension['w'] = $dimensions['xe'] - $dimensions['xs'];
+        $dimension['h'] = $dimensions['ye'] - $dimensions['ys'];
+        $dimension['cx'] = intval(($dimensions['xs'] + $dimensions['xe']) / 2);
+        $dimension['cy'] = intval(($dimensions['ys'] + $dimensions['ye']) / 2);
+        return $dimension;
+    }
+
     public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);

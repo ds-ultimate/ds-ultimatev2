@@ -20,7 +20,9 @@ class Ally extends JsonResource
         return[
             'allyID' => $this->allyID,
             'name' => BasicFunctions::outputName($this->name),
+            'nameRaw' => BasicFunctions::decodeName($this->name),
             'tag' => BasicFunctions::outputName($this->tag),
+            'tagRaw' => BasicFunctions::decodeName($this->tag),
             'member_count' => $this->member_count,
             'points' => $this->points,
             'rank' => $this->rank,
