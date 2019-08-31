@@ -261,6 +261,7 @@ class DBController extends Controller
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
+        Schema::dropIfExists("$dbName.player_latest_temp");
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
             DBController::playerLatestTable($dbName, 'latest_temp');
         }
@@ -419,6 +420,7 @@ class DBController extends Controller
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
+        Schema::dropIfExists("$dbName.village_latest_temp");
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
             DBController::villageLatestTable($dbName, 'latest_temp');
         }
@@ -493,6 +495,7 @@ class DBController extends Controller
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
+        Schema::dropIfExists("$dbName.ally_latest_temp");
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
             DBController::allyLatestTable($dbName, 'latest_temp');
         }
