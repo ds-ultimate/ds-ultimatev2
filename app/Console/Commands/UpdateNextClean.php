@@ -45,14 +45,17 @@ class UpdateNextClean extends Command
             return;
         }
         $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
-        $toDo = ceil(config('dsUltimate.db_clean_every_hours') * 12 / $cnt);
+        $toDo = ceil($cnt/(config('dsUltimate.db_clean_every_hours') * 12));
         
         for($i = 0; $i < $toDo; $i++) {
             $world = \App\Util\BasicFunctions::getWorldQuery()
                     ->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
                     - (60 * 60) * config('dsUltimate.db_clean_every_hours')))
                     ->orderBy('worldCleaned_at', 'ASC')->first();
-            echo "Server: {$world->server->code} World:{$world->name}\n";
+            if($world == null) {
+                break;
+            }
+            
             DBController::cleanOldEntries($world, 'v');
             DBController::cleanOldEntries($world, 'p');
             DBController::cleanOldEntries($world, 'a');

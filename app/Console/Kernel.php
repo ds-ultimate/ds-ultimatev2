@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
         /*
          * Update Conquers
          */
-        $schedule->command('update:conquer')
+        $schedule->command('update:conquer no-progress')
             ->everyThirtyMinutes()
             ->withoutOverlapping()
             ->onSuccess(function (){
