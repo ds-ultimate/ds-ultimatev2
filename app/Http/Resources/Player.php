@@ -31,7 +31,6 @@ class Player extends JsonResource
             'defBashRank' => $this->defBashRank,
             'gesBash' => $this->gesBash,
             'gesBashRank' => $this->gesBashRank,
-            'test' => '"\'\\$!"§&/()='
         ];
     }
 }
