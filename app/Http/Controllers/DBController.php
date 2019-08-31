@@ -370,7 +370,7 @@ class DBController extends Controller
                     (!isset($databasePlayer[$player->get('id')]) && $player->get('ally') != 0)) {
                 $arrayAllyChange[] = [
                     'player_id' => $player->get('id'),
-                    'old_ally_id' => $databasePlayer[$player->get('id')],
+                    'old_ally_id' => (isset($databasePlayer[$player->get('id')]))?($databasePlayer[$player->get('id')]):(0),
                     'new_ally_id' => $player->get('ally'),
                     'points' => $player->get('points'),
                     'created_at' => Carbon::createFromTimestamp(time()),
