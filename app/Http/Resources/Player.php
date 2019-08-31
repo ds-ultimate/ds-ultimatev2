@@ -20,6 +20,7 @@ class Player extends JsonResource
         return[
             'playerID' => $this->playerID,
             'name' => BasicFunctions::outputName($this->name),
+            'nameRaw' => BasicFunctions::decodeName($this->name),
             'ally_id' => $this->ally_id,
             'points' => $this->points,
             'rank' => $this->rank,
@@ -30,6 +31,7 @@ class Player extends JsonResource
             'defBashRank' => $this->defBashRank,
             'gesBash' => $this->gesBash,
             'gesBashRank' => $this->gesBashRank,
+            'test' => '"\'\\$!"§&/()='
         ];
     }
 }

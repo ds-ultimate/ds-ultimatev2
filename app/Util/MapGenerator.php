@@ -18,13 +18,25 @@ class MapGenerator extends PictureRender {
     private $village;
     private $skin;
     private $opaque;
+    
+    
     private $playerColour;
+    public static $DEFAULT_PLAYER_COLOUR = [51, 23, 4];
     private $barbarianColour;
+    public static $DEFAULT_BARBARIAN_COLOUR = [179, 174, 167];
     private $backgroundColour;
+    public static $DEFAULT_BACKGROUND_COLOUR = [112, 153, 32];
+    
+    private $mapDimension;
+    public static $DEFAULT_DIMENSIONS = [
+        'xs' => 0,
+        'xe' => 1000,
+        'ys' => 0,
+        'ye' => 1000,
+    ];
     
     private $width;
     private $height;
-    private $mapDimension;
     private $fieldWidth;
     private $fieldHeight;
     private $autoResize;
@@ -78,10 +90,10 @@ class MapGenerator extends PictureRender {
             MapGenerator::$LAYER_TEXT,
         ));
         $this -> setOpaque(100);
-        $this -> setMapDimensions(0, 0, 1000, 1000);
-        $this -> setPlayerColour([51, 23, 4]);
-        $this -> setBarbarianColour([179, 174, 167]);
-        $this -> setBackgroundColour([112, 153, 32]);
+        $this -> setMapDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
+        $this -> setPlayerColour(MapGenerator::$DEFAULT_PLAYER_COLOUR);
+        $this -> setBarbarianColour(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+        $this -> setBackgroundColour(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
         $this -> setAutoResize(false);
     }
 
@@ -286,9 +298,9 @@ class MapGenerator extends PictureRender {
             }
             $col = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-$this->opaque*127/100);
             
-            $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
-            $y = intval($this->fieldHeight * ($village['y'] - $this->mapDimension['ys']));
-            imagefilledrectangle($this->image, $x, $y, intval($x + $this->fieldWidth - 1), intval($y + $this->fieldHeight - 1), $col);
+            $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs']);
+            $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys']);
+            imagefilledrectangle($this->image, intval($x), intval($y), intval($x + max($this->fieldWidth-1, 0)), intval($y + max($this->fieldHeight-1, 0)), $col);
         }
     }
     
@@ -307,9 +319,9 @@ class MapGenerator extends PictureRender {
             }
             $skinImg = $this->getSkinImage(Village::getSkinImageName($village['owner'], $village['points'], $village['bonus_id']));
             
-            $x = intval($this->fieldWidth * ($village['x'] - $this->mapDimension['xs']));
-            $y = intval($this->fieldHeight * ($village['y'] - $this->mapDimension['ys']));
-            imagecopyresampled($this->image, $skinImg['img'], $x, $y, 0, 0, $this->fieldWidth, $this->fieldHeight, $skinImg['x'], $skinImg['y']);
+            $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs']);
+            $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys']);
+            imagecopyresampled($this->image, $skinImg['img'], intval($x), intval($y), 0, 0, max(intval($this->fieldWidth),1), max(intval($this->fieldHeight),1), $skinImg['x'], $skinImg['y']);
         }
     }
     
@@ -412,12 +424,22 @@ class MapGenerator extends PictureRender {
         return $this;
     }
     
-    public function setMapDimensions($xStart, $yStart, $xEnd, $yEnd) {
+    /**
+     * Set shown koordinate range of the map
+     * 
+     * @param type $dimensions
+     * Requires an array containing:
+     * xs: First Column (x Position) to be shown
+     * ys: First Row (y Position) to be shown
+     * xe: Column (x Position) where the map should end (exclusive)
+     * ye: Row (y Position) where the map should end (exclusive)
+     */
+    public function setMapDimensions($dimensions) {
         $tmp = array(
-            'xs' => (int) $xStart,
-            'ys' => (int) $yStart,
-            'xe' => (int) $xEnd,
-            'ye' => (int) $yEnd,
+            'xs' => (int) $dimensions['xs'],
+            'ys' => (int) $dimensions['ys'],
+            'xe' => (int) $dimensions['xe'],
+            'ye' => (int) $dimensions['ye'],
         );
         
         $tmp['w'] = $tmp['xe'] - $tmp['xs'];
@@ -454,7 +476,7 @@ class MapGenerator extends PictureRender {
     
     public function setBackgroundColour($col) {
         if($col == null) {
-            $this->backgroundColour = null;
+            return false;
         } else {
             $this->backgroundColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
         }

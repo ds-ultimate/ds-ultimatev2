@@ -123,6 +123,100 @@ class Map extends Model
         return $result;
     }
     
+    public function getDefPlayerColour() {
+        if(isset($this->defaultColours) && $this->defaultColours != null) {
+            $parts = explode(";", $this->defaultColours);
+            if(count($parts) == 3 && $this->checkHex($parts[1])) {
+                return $parts[1];
+            }
+        }
+        return $this->RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
+    }
+    
+    public function getDefBarbarianColour() {
+        if(isset($this->defaultColours) && $this->defaultColours != null) {
+            $parts = explode(";", $this->defaultColours);
+            if(count($parts) == 3 && $this->checkHex($parts[2])) {
+                return $parts[2];
+            }
+        }
+        return $this->RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+    }
+    
+    public function getBackgroundColour() {
+        if(isset($this->defaultColours) && $this->defaultColours != null) {
+            $parts = explode(";", $this->defaultColours);
+            if(count($parts) == 3 && $this->checkHex($parts[0])) {
+                return $parts[0];
+            }
+        }
+        return $this->RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+    }
+    
+    public function setDefaultColours($background, $player, $barbarian) {
+        $defCol = (($this->checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
+        $defCol .= (($this->checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
+        $defCol .= (($this->checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
+        $this->defaultColours = $defCol;
+    }
+    
+    public function disableBarbarian() {
+        if(!isset($this->defaultColours) || $this->defaultColours == null) {
+            return;
+        }
+        
+        $parts = explode(";", $this->defaultColours);
+        $this->defaultColours = "{$parts[0]};{$parts[1]};null";
+    }
+    
+    public function barbarianEnabled() {
+        if(!isset($this->defaultColours) || $this->defaultColours == null) {
+            return true;
+        }
+        
+        $parts = explode(";", $this->defaultColours);
+        return $parts[2] != "null";
+    }
+    
+    public function disablePlayer() {
+        if(!isset($this->defaultColours) || $this->defaultColours == null) {
+            return;
+        }
+        
+        $parts = explode(";", $this->defaultColours);
+        $this->defaultColours = "{$parts[0]};null;{$parts[2]}";
+    }
+    
+    public function playerEnabled() {
+        if(!isset($this->defaultColours) || $this->defaultColours == null) {
+            return true;
+        }
+        
+        $parts = explode(";", $this->defaultColours);
+        return $parts[1] != "null";
+    }
+    
+    public function setDimensions($xs, $xe, $ys, $ye) {
+        $dim = "" . ((int) $xs) . ";";
+        $dim .= ((int) $xe) . ";";
+        $dim .= ((int) $ys) . ";";
+        $dim .= ((int) $ye);
+        $this->dimensions = $dim;
+    }
+    
+    public function getDimensions() {
+        if(!isset($this->dimensions) || $this->dimensions == null) {
+            return MapGenerator::$DEFAULT_DIMENSIONS;
+        }
+        $parts = explode(";", $this->dimensions);
+        return [
+            'xs' => (int) $parts[0],
+            'xe' => (int) $parts[1],
+            'ys' => (int) $parts[2],
+            'ye' => (int) $parts[3],
+        ];
+    }
+    
     /**
      * Configure given MapGenerator for rendering this map
      * @param \App\Util\MapGenerator $generator Generator to Configure
@@ -148,10 +242,49 @@ class Map extends Model
                 }
             }
         }
+        
+        if(isset($this->defaultColours) && $this->defaultColours != null) {
+            $parts = explode(";", $this->defaultColours);
+            if(count($parts) == 3) {
+                $rgb = $this->hexToRGB($parts[0]);
+                if($rgb != null) {
+                    $generator->setBackgroundColour($rgb);
+                }
+                
+                $rgb = $this->hexToRGB($parts[1]);
+                if($rgb != null) {
+                    $generator->setPlayerColour($rgb);
+                }
+                if($parts[1] == "null") {
+                    $generator->setPlayerColour(null);
+                }
+                
+                $rgb = $this->hexToRGB($parts[2]);
+                if($rgb != null) {
+                    $generator->setBarbarianColour($rgb);
+                }
+                if($parts[2] == "null") {
+                    $generator->setBarbarianColour(null);
+                }
+            }
+        }
+        
+        if(isset($this->dimensions) && $this->dimensions != null) {
+            $parts = explode(";", $this->dimensions);
+            if(count($parts) == 4) {
+                $generator->setMapDimensions([
+                    'xs' => $parts[0],
+                    'xe' => $parts[1],
+                    'ys' => $parts[2],
+                    'ye' => $parts[3],
+                ]);
+            }
+        }
     }
     
     private function checkHex($hex) {
         if(!ctype_alnum($hex)) return false;
+        if(strlen($hex) != 6) return false;
         $validHex = "0123456789ABCDEF";
         
         for($i = 0; $i < strlen($hex); $i++) {
@@ -172,5 +305,17 @@ class Map extends Model
             strpos($hexChars, $hex[2]) * 16 + strpos($hexChars, $hex[3]),
             strpos($hexChars, $hex[4]) * 16 + strpos($hexChars, $hex[5]),
         ];
+    }
+    private function RGBToHex($rgb) {
+        if(count($rgb) != 3) return null;
+        $hexChars = "0123456789ABCDEF";
+        
+        $hex = $hexChars[intval(((int)$rgb[0]) / 16)];
+        $hex .= $hexChars[((int)$rgb[0]) % 16];
+        $hex .= $hexChars[intval(((int)$rgb[1]) / 16)];
+        $hex .= $hexChars[((int)$rgb[1]) % 16];
+        $hex .= $hexChars[intval(((int)$rgb[2]) / 16)];
+        $hex .= $hexChars[((int)$rgb[2]) % 16];
+        return $hex;
     }
 }
