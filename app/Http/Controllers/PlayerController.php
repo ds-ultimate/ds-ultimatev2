@@ -50,6 +50,11 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
+        if ($playerData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über den Spieler mit der ID '$player' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
 
         switch($type) {
             case "all":
@@ -68,6 +73,11 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
+        if ($playerData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über den Spieler mit der ID '$player' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
 
         switch($type) {
             case "all":

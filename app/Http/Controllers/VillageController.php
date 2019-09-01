@@ -36,6 +36,11 @@ class VillageController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $villageData = Village::village($server, $world, $villageID);
+        if ($villageData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über das Dorf mit der ID '$village' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
 
         switch($type) {
             case "all":

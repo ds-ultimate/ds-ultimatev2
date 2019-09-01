@@ -51,6 +51,11 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
+        if ($allyData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
         
         switch($type) {
             case "all":
@@ -76,6 +81,11 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
+        if ($allyData == null){
+            //TODO: View ergänzen für Fehlermeldungen
+            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
+            exit;
+        }
 
         switch($type) {
             case "all":
