@@ -74,7 +74,7 @@ class MapController extends BaseController
     
     public function save(Map $wantedMap) {
         $getArray = \Illuminate\Support\Facades\Input::get();
-        var_dump($getArray);
+        
         if(isset($getArray['mark'])) {
             $wantedMap->setMarkers($getArray['mark']);
         }
