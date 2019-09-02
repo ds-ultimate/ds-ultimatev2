@@ -119,6 +119,28 @@ return array (
       'days' => 'Tag(e)',
       'title' => 'Laufzeitrechner',
     ),
+    'map' => 
+    array (
+      'title' => 'Weltkarte',
+      'edit' => 'Markierungen editieren',
+      'settings' => 'Generelle Einstellungen',
+      'links' => 'Links zum Teilen',
+      'editLink' => 'Editierungs Link',
+      'copy' => 'Kopieren',
+      'editLinkDesc' => 'Jeder der diesen Link hat kann die Map editieren. Sei daher vorsichtig und gib den Link nur Leuten denen du vertraust!',
+      'showLink' => 'Ansehen Link',
+      'showLinkDesc' => 'Mit diesem Link kann die Map angesehen werden, allerdings nicht editiert',
+      'showPlayer' => 'Spielerdörfer anzeigen',
+      'showBarbarian' => 'Barbarendörfer anzeigen',
+      'defaultPlayer' => 'Standardfarbe für Spielerdörfer (unmarkiert)',
+      'defaultBarbarian' => 'Standardfarbe für Barbarendörfer (unmarkiert)',
+      'defaultBackground' => 'Hintergrundfarbe',
+      'zoom' => 'Zoomstufe',
+      'center' => 'Mittelpunkt der Karte',
+      'ally' => 'Stamm markieren',
+      'player' => 'Spieler Markieren',
+      'village' => 'Dorf Markieren',
+    ),
   ),
   'unit' => 
   array (

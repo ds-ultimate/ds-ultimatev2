@@ -119,6 +119,28 @@ return array (
       'days' => 'Day(s)',
       'title' => 'Distance Calculator',
     ),
+    'map' => 
+    array (
+      'copy' => 'Copy',
+      'edit' => 'Edit Markers',
+      'editLink' => 'Edit Link',
+      'editLinkDesc' => 'Everybody with this link can edit the Map. Be careful!',
+      'links' => 'Links for sharing the map',
+      'settings' => 'Generation settings',
+      'showLink' => 'View Link',
+      'showLinkDesc' => 'This Links gives only show access to the Map',
+      'title' => 'World Map',
+      'defaultBarbarian' => 'Default colour for Barbarian villages that are not marked',
+      'defaultPlayer' => 'Default colour for Player villages that are not marked',
+      'showBarbarian' => 'Show barbarian villages',
+      'showPlayer' => 'Show player villages',
+      'defaultBackground' => 'Background colour',
+      'center' => 'Center of created map',
+      'zoom' => 'Zoom',
+      'ally' => 'Mark an ally',
+      'player' => 'Mark a player',
+      'village' => 'Mark a village',
+    ),
   ),
   'unit' => 
   array (
