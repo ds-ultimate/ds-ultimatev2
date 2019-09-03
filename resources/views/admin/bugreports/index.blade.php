@@ -50,7 +50,7 @@
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable">
+            <table class=" table table-bordered table-striped table-hover datatable w-100">
                 <thead>
                     <tr>
                         <th width="10">

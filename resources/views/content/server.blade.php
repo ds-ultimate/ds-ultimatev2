@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ __('ui.tabletitel.normalWorlds') }}:</h2>
-                    <table class="table table-hover table-striped no-wrap">
+                    <table class="table table-hover table-striped no-wrap w-100">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.world')) }}</th>
@@ -53,7 +53,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ __('ui.tabletitel.specialWorlds') }}:</h2>
-                    <table class="table table-hover table-striped no-wrap">
+                    <table class="table table-hover table-striped no-wrap w-100">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.world')) }}</th>

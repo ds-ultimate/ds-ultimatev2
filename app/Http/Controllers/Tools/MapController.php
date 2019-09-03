@@ -156,7 +156,12 @@ class MapController extends BaseController
                 return "Wrong type " . htmlentities($type);
         }
         $map->setLayerOrder([MapGenerator::$LAYER_MARK]);
-        $map->setMapDimensions(0, 0, 1000, 1000);
+        $map->setMapDimensions([
+            'xs' => 0,
+            'ys' => 0,
+            'xe' => 1000,
+            'ye' => 1000,
+        ]);
         $map->setOpaque(100);
         $map->setAutoResize(true);
         $map->render();

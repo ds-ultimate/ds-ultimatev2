@@ -24,17 +24,17 @@
             <div class="card">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">_('ui.nav.stats')</a>
+                        <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">{{ __('ui.nav.stats') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">_('ui.nav.map')</a>
+                        <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">{{ __('ui.nav.map') }}</a>
                     </li>
                 </ul>
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
                         <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
                         <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
-                        <table id="data1" class="table table-bordered no-wrap">
+                        <table id="data1" class="table table-bordered no-wrap w-100">
                             <thead>
                             <tr>
                                 <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
@@ -62,7 +62,7 @@
                         </table>
                         <br>
                         <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
-                        <table id="data2" class="table table-bordered no-wrap">
+                        <table id="data2" class="table table-bordered no-wrap w-100">
                             <thead>
                             <tr>
                                 <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>

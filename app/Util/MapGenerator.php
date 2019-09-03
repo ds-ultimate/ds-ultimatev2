@@ -287,7 +287,7 @@ class MapGenerator extends PictureRender {
             $realSize['ys'] = ($realSize['ys'] >= 10)?($realSize['ys']-10):(0);
             $realSize['xe'] = ($realSize['xe'] <= 990)?($realSize['xe']+10):(0);
             $realSize['ye'] = ($realSize['ye'] <= 990)?($realSize['ye']+10):(0);
-            $this->setMapDimensions($realSize['xs'], $realSize['ys'], $realSize['xe'], $realSize['ye']);
+            $this->setMapDimensions($realSize);
         }
     }
     

@@ -158,4 +158,9 @@ return array (
     'sword' => 'Sword',
   ),
   'villageNotExist' => 'Village not exist',
+  'nav' => 
+  array (
+    'stats' => 'Stats',
+    'map' => 'Map',
+  ),
 );

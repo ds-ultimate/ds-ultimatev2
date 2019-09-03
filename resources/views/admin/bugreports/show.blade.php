@@ -9,7 +9,7 @@
     <div class="card-body">
         <h1>{{ $bugreport->title }}</h1>
         <input type="hidden" name="id" value="{{ $bugreport->id }}">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped w-100">
             <tbody>
             <tr>
                 <th width="150">

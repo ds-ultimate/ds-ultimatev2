@@ -8,7 +8,7 @@
 
         <div class="card-body">
             <div>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped w-100">
                     <tbody>
 
                     </tbody>

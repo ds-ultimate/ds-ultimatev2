@@ -158,4 +158,9 @@ return array (
     'snob' => 'Adelsgeschlecht',
   ),
   'villageNotExist' => 'Dorf existiert nicht',
+  'nav' => 
+  array (
+    'stats' => 'Statistiken',
+    'map' => 'Übersichtskarte',
+  ),
 );
