@@ -20,7 +20,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-3 mx-auto my-1 text-center">
-                <h1 class="font-weight-normal">{{ env('APP_NAME') }}</h1>
+                <h1 class="font-weight-normal">{{ config('app.name') }}</h1>
             </div>
         </div>
         @if (count($news) > 0)
