@@ -32,7 +32,7 @@
         <ul class="list-inline my-0">
             @if (isset($worldData))
                 <li class="list-inline-item">
-                    <small class="text-muted">{{ __('ui.footer.lastUpdate') }}: {{ $worldData->worldUpdated_at->diffForHumans() }}</small>
+                    <small class="text-muted">{{ __('ui.footer.lastUpdate') }}: {{ $worldData->updated_at->diffForHumans() }}</small>
                 </li>
                 <li class="list-inline-item">
                     <small class="text-muted">||</small>

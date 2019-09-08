@@ -54,16 +54,16 @@
                                         <div class="col-8">
                                             <select id="type" class="form-control form-control-sm">
                                                 <optgroup label="Offensiv">
-                                                    <option value="0">Angriff</option>
-                                                    <option value="1">Eroberung</option>
-                                                    <option value="2">Fake</option>
-                                                    <option value="3">Wallbrecher</option>
+                                                    <option value="8">Angriff</option>
+                                                    <option value="11">Eroberung</option>
+                                                    <option value="14">Fake</option>
+                                                    <option value="45">Wallbrecher</option>
                                                 </optgroup>
                                                 <optgroup label="Defensiv">
-                                                    <option value="4">Unterstützung</option>
-                                                    <option value="5">Stand Unterstützung</option>
-                                                    <option value="6">Schnelle Unterstützung</option>
-                                                    <option value="7">Fake Unterstützung</option>
+                                                    <option value="0">Unterstützung</option>
+                                                    <option value="1">Stand Unterstützung</option>
+                                                    <option value="7">Schnelle Unterstützung</option>
+                                                    <option value="46">Fake Unterstützung</option>
                                                 </optgroup>
                                             </select>
                                             <small class="form-control-feedback">Typ des Angriffes</small>
@@ -151,7 +151,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">Notizen</label>
                                         <div class="col-12">
-                                            <textarea id="#note" class="form-control form-control-sm" style="height: 80px"></textarea>
+                                            <textarea id="note" class="form-control form-control-sm" style="height: 80px"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -160,6 +160,7 @@
                                 <input id="start_village_id" type="hidden">
                                 <input id="target_village_id" type="hidden">
                                 <div class="col-12">
+                                    <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('ui.tool.attackPlanner.outdated') }}">
                                     <input type="submit" class="btn btn-sm btn-success float-right">
                                 </div>
                                 <!--/span-->
@@ -170,25 +171,25 @@
                         <div class="row pt-3">
                             <div class="col-12">
                                 <div class="form-group row">
-                                    <label class="control-label col-2">Bearbeitungslink</label>
-                                    <div class="col-1">
-                                        <button class="btn btn-primary btn-sm" onclick="copy('create')">Kopieren</button>
+                                    <label class="control-label col-md-2">Bearbeitungslink</label>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-primary btn-sm" onclick="copy('link-edit')">Kopieren</button>
                                     </div>
-                                    <div class="col-9">
-                                        <input id="link-create" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$worldData->server->code, $worldData->name, $attackList->id, 'create', $attackList->edit_key]) }}" />
-                                        <small class="form-control-feedback ml-2">Link um den Angriffsplan zu bearbeiten</small>
+                                    <div class="col-md-9">
+                                        <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$attackList->id, 'edit', $attackList->edit_key]) }}" />
+                                        <small class="form-control-feedback">Link um den Angriffsplan zu bearbeiten</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
-                                    <label class="control-label col-2">Präsentationslink</label>
-                                    <div class="col-1">
-                                        <button class="btn btn-primary btn-sm" onclick="copy('show')">Kopieren</button>
+                                    <label class="control-label col-md-2">Präsentationslink</label>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-primary btn-sm" onclick="copy('link-show')">Kopieren</button>
                                     </div>
-                                    <div class="col-9">
-                                        <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$worldData->server->code, $worldData->name, $attackList->id, 'show', $attackList->show_key]) }}" />
-                                        <small class="form-control-feedback ml-2">Link um den Angriffsplan anzuschauen</small>
+                                    <div class="col-md-9">
+                                        <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$attackList->id, 'show', $attackList->show_key]) }}" />
+                                        <small class="form-control-feedback">Link um den Angriffsplan anzuschauen</small>
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +197,24 @@
                     </div>
                     <div class="tab-pane fade" id="import" role="tabpanel" aria-labelledby="import-tab">
                         <div class="row pt-3">
-                            IMPORTS
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="control-label mr-3">Export</label> <button class="btn btn-primary btn-sm" onclick="copy('importWB')">Kopieren</button>
+                                    <textarea id="exportWB" class="form-control form-control-sm" style="height: 80px"></textarea>
+                                    <small class="form-control-feedback">Export für die Workbench</small>
+                                </div>
+                                <form id="importItemsForm">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="control-label mr-3">Import</label>
+                                        <textarea id="importWB" class="form-control form-control-sm" style="height: 80px"></textarea>
+                                        <small class="form-control-feedback">Importiere Angriffe aus deiner Workbench</small>
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="submit" class="btn btn-sm btn-success float-right" value="Import">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
@@ -212,20 +230,23 @@
         <!-- Unit Card -->
         <div class="col-12 mt-2">
             <div class="card">
-                <div class="card-body">
-                    <table id="data1" class="table table-bordered no-wrap">
+                <div class="card-body table-responsive">
+                    <table id="data1" class="table table-bordered table-striped no-wrap w-100">
                         <thead>
                             <tr>
-                                <th>Typ</th>
                                 <th>Startdorf</th>
                                 <th>Angreifer</th>
                                 <th>Zieldorf</th>
                                 <th>Verteidiger</th>
                                 <th>Einheit</th>
+                                <th>Typ</th>
                                 <th>Abschickzeit</th>
                                 <th>Ankunft</th>
                                 <th width="95px">Restzeit</th>
-                                <th>&nbsp;</th>
+                                <th style="min-width: 25px">&nbsp;</th>
+                                @if($mode == 'edit')
+                                    <th style="min-width: 25px">&nbsp;</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="small">
@@ -244,22 +265,26 @@
     <script>
         var table =
             $('#data1').DataTable({
-                dom: 't',
                 ordering: false,
-                paging: false,
                 processing: true,
                 serverSide: true,
-                ajax: '{!! route('attackPlannerItem.data', [ $attackList->id ]) !!}',
+                pageLength: 25,
+                searching: false,
+                ajax: '{!! route('attackListItem.data', [ $attackList->id ]) !!}',
                 columns: [
-                    { data: 'type', name: 'type' },
-                    { data: 'start_village_id', name: 'start_village_id' },
+                    { data: 'start_village', name: 'start_village', render: function (val) {return val.trunc(25)}},
                     { data: 'attacker', name: 'attacker' },
-                    { data: 'target_village_id', name: 'target_village_id' },
+                    { data: 'target_village', name: 'target_village', render: function (val) {return val.trunc(25)}},
                     { data: 'defender', name: 'defender' },
                     { data: 'slowest_unit', name: 'slowest_unit'},
+                    { data: 'type', name: 'type' },
                     { data: 'send_time', name: 'send_time' },
                     { data: 'arrival_time', name: 'arrival_time' },
                     { data: 'time', name: 'time' },
+                    { data: 'action', name: 'action' },
+                    @if($mode == 'edit')
+                    { data: 'delete', name: 'action' },
+                    @endif
                 ],
                 columnDefs: [
                     {
@@ -270,70 +295,60 @@
                     }
                 ],
                 "drawCallback": function(settings, json) {
+                    exportWB();
                     countdown();
                 },
-                keys: true, //enable KeyTable extension
                 {!! \App\Util\Datatable::language() !!}
             });
 
         function typ_img(input){
             switch (input) {
-                case 0:
-                    return '{{ \App\Util\Icon::icons(8) }}';
-                case 1:
-                    return '{{ \App\Util\Icon::icons(11) }}';
-                case 2:
-                    return '{{ \App\Util\Icon::icons(14) }}';
-                case 3:
-                    return '{{ \App\Util\Icon::icons(45) }}';
-                case 4:
-                    return '{{ \App\Util\Icon::icons(0) }}';
-                case 5:
-                    return '{{ \App\Util\Icon::icons(1) }}';
-                case 6:
-                    return '{{ \App\Util\Icon::icons(7) }}';
-                case 7:
-                    return '{{ \App\Util\Icon::icons(46) }}';
+                case 8: return '{{ \App\Util\Icon::icons(8) }}';
+                case 11: return '{{ \App\Util\Icon::icons(11) }}';
+                case 14: return '{{ \App\Util\Icon::icons(14) }}';
+                case 45: return '{{ \App\Util\Icon::icons(45) }}';
+                case 0: return '{{ \App\Util\Icon::icons(0) }}';
+                case 1: return '{{ \App\Util\Icon::icons(1) }}';
+                case 7: return '{{ \App\Util\Icon::icons(7) }}';
+                case 46: return '{{ \App\Util\Icon::icons(46) }}';
             }
         }
 
-        function copy(type) {
-            /* Get the text field */
-            var copyText = $("#link-" + type);
-
-            /* Select the text field */
-            copyText.select();
-
-            /* Copy the text inside the text field */
-            document.execCommand("copy");
+        @if($mode == 'edit')
+        function destroy(id,key) {
+            $.ajax(
+                {
+                    url: "{{ config('app.url') }}/attackListItem/"+id,
+                    type: 'DELETE',
+                    dataType: "JSON",
+                    data: {
+                        "id": id,
+                        "_method": 'DELETE',
+                        "key": key,
+                        "_token": '{{ csrf_token() }}',
+                    },
+                    success: function ()
+                    {
+                        table.ajax.reload();
+                    }
+                });
         }
 
-        function countdown(){
-            $('[data-countdown]').each(function() {
-                var $this = $(this), finalDate = $(this).data('countdown');
-                $this.countdown(finalDate, function(event) {
-                    var format = '%H:%M:%S';
-                    if(event.offset.totalDays > 0) {
-                        if (event.offset.totalDays > 1) {
-                            format = '%D Tage ' + format;
-                        }else {
-                            format = '%D Tag ' + format;
-                        }
+        function destroyOutdated() {
+            $.ajax(
+                {
+                    url: '{{ route('attackPlannerMode', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}',
+                    type: 'GET',
+                    dataType: "JSON",
+                    success: function ()
+                    {
+                        table.ajax.reload();
                     }
-                    $this.html(event.strftime(format));
-                }).on('finish.countdown', function (e) {
-                    $this.addClass('bg-danger text-white')
                 });
-            });
-        };
-
-        String.prototype.trunc = String.prototype.trunc ||
-            function(n){
-                return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
-            };
+        }
 
         function store(send, arrival) {
-            axios.post('{{ route('attackPlannerItem.store') }}', {
+            axios.post('{{ route('attackListItem.store') }}', {
                 'attack_list_id' : $('#attack_list_id').val(),
                 'type' : $('#type option:selected' ).val(),
                 'start_village_id' : $('#start_village_id').val(),
@@ -349,36 +364,110 @@
 
                 })
                 .catch((error) => {
-                    console.log(error);
+
                 });
         }
+
+        function importWB() {
+                var importWB = $('#importWB');
+                axios.post('{{ route('attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
+                    'import': importWB.val(),
+                    'key': '{{$attackList->edit_key}}',
+                    "_token": '{{ csrf_token() }}',
+                })
+                    .then((response) => {
+                        importWB.val('');
+                        table.ajax.reload();
+                    })
+                    .catch((error) => {
+                        console.log(importWB.html());
+                    });
+        }
+
+        $(document).on('submit', '#importItemsForm', function (e) {
+            e.preventDefault();
+            importWB();
+        });
+
+        @endif
+
+        function exportWB() {
+            axios.get('{{ route('attackPlannerMode', [$attackList->id, 'exportWB', $attackList->show_key]) }}', {
+              })
+                .then((response) => {
+                    $('#exportWB').html(response.data);
+                })
+                .catch((error) => {
+
+                });
+        }
+
+        function copy(type) {
+            /* Get the text field */
+            var copyText = $("#" + type);
+
+            /* Select the text field */
+            copyText.select();
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+        }
+
+        function countdown(){
+            $('[data-countdown]').each(function() {
+                var $this = $(this), finalDate = $(this).data('countdown');
+                $this.countdown(finalDate, {
+                    precision:  500
+                })
+                    .on('update.countdown', function(event) {
+                        var format = '%H:%M:%S';
+                        if(event.offset.totalDays > 0) {
+                            if (event.offset.totalDays > 1) {
+                                format = '%D Tage ' + format;
+                            }else {
+                                format = '%D Tag ' + format;
+                            }
+                        }
+                        $this.html(event.strftime(format));
+                    })
+                    .on('finish.countdown', function (e) {
+                        $this.addClass('bg-danger text-white').html('00:00:00')
+                    });
+            });
+        };
+
+        String.prototype.trunc = String.prototype.trunc ||
+            function(n){
+                return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
+            };
+
 
         function slowest_unit(unit, dis){
             switch (unit) {
                 case '0':
-                    return Math.round('{{ round((float)$unitConfig->spear->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->spear->speed * 60) }}' * dis);
                 case '1':
-                    return Math.round('{{ round((float)$unitConfig->sword->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->sword->speed * 60) }}' * dis);
                 case '2':
-                    return Math.round('{{ round((float)$unitConfig->axe->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->axe->speed * 60) }}' * dis);
                 case '3':
-                    return Math.round('{{ round((float)$unitConfig->archer->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->archer->speed * 60) }}' * dis);
                 case '4':
-                    return Math.round('{{ round((float)$unitConfig->spy->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->spy->speed * 60) }}' * dis);
                 case '5':
-                    return Math.round('{{ round((float)$unitConfig->light->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->light->speed * 60) }}' * dis);
                 case '6':
-                    return Math.round('{{ round((float)$unitConfig->marcher->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->marcher->speed * 60) }}' * dis);
                 case '7':
-                    return Math.round('{{ round((float)$unitConfig->heavy->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->heavy->speed * 60) }}' * dis);
                 case '8':
-                    return Math.round('{{ round((float)$unitConfig->ram->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->ram->speed * 60) }}' * dis);
                 case '9':
-                    return Math.round('{{ round((float)$unitConfig->catapult->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->catapult->speed * 60) }}' * dis);
                 case '10':
-                    return Math.round('{{ round((float)$unitConfig->knight->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->knight->speed * 60) }}' * dis);
                 case '11':
-                    return Math.round('{{ round((float)$unitConfig->snob->speed) }}' * dis);
+                    return Math.round('{{ round((float)$unitConfig->snob->speed * 60) }}' * dis);
             }
         }
 
@@ -477,14 +566,14 @@
                         const data = response.data.data;
                         $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
                         $('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
-                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid');
-                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid');
+                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
+                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
                     })
                     .catch((error) =>{
                         $('#village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
                         $('#' + input.toLowerCase() + '_village_id').val('');
-                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid');
-                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid');
+                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
+                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
                     });
             }
 
@@ -528,7 +617,7 @@
                     var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
                     var slow = $('#slowest_unit').val();
                     var dateUnixArrival = new Date(day + ' ' + time).getTime();
-                    var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*60*1000);
+                    var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*1000);
                     store(dateUnixSend, dateUnixArrival);
                 }
             });

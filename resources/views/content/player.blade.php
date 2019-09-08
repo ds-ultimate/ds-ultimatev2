@@ -251,7 +251,7 @@
                     { "data": "points", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "continent", "orderable": false},
                     { "data": "coordinates", "orderable": false},
-                    { "data": "bonus_id", "render": function (value, type, row) {return row.bonus}},
+                    { "data": "bonus"},
                 ],
                 responsive: true,
                 {!! \App\Util\Datatable::language() !!}
