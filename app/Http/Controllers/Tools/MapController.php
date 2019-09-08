@@ -163,6 +163,7 @@ class MapController extends BaseController
             'ye' => 1000,
         ]);
         $map->setOpaque(100);
+        $map->setHighlight(true);
         $map->setAutoResize(true);
         $map->render();
         return $map->output($ext);

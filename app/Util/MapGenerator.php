@@ -18,14 +18,17 @@ class MapGenerator extends PictureRender {
     private $village;
     private $skin;
     private $opaque;
+    private $highlight;
     
     
     private $playerColour;
-    public static $DEFAULT_PLAYER_COLOUR = [51, 23, 4];
+    public static $DEFAULT_PLAYER_COLOUR = [130, 60, 10];
     private $barbarianColour;
-    public static $DEFAULT_BARBARIAN_COLOUR = [179, 174, 167];
+    public static $DEFAULT_BARBARIAN_COLOUR = [150, 150, 150];
     private $backgroundColour;
-    public static $DEFAULT_BACKGROUND_COLOUR = [112, 153, 32];
+    public static $DEFAULT_BACKGROUND_COLOUR = [88, 118, 27];
+    private $gridColour;
+    public static $DEFAULT_GRID_COLOUR = [0, 0, 0, 30]; //ca 30% deckkraft
     
     private $mapDimension;
     public static $DEFAULT_DIMENSIONS = [
@@ -90,6 +93,7 @@ class MapGenerator extends PictureRender {
             MapGenerator::$LAYER_TEXT,
         ));
         $this -> setOpaque(100);
+        $this -> setHighlight(false);
         $this -> setMapDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
         $this -> setPlayerColour(MapGenerator::$DEFAULT_PLAYER_COLOUR);
         $this -> setBarbarianColour(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
@@ -298,6 +302,14 @@ class MapGenerator extends PictureRender {
             }
             $col = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-$this->opaque*127/100);
             
+            if($type == 'mark' && $this->highlight) {
+                $col2 = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-($this->opaque*0.75)*127/100);
+
+                $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs'] + 0.5);
+                $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys'] + 0.5);
+                imagefilledellipse($this->image, intval($x), intval($y), intval(max($this->fieldWidth*3-1, 0)), intval(max($this->fieldHeight*3-1, 0)), $col2);
+            }
+            
             $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs']);
             $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys']);
             imagefilledrectangle($this->image, intval($x), intval($y), intval($x + max($this->fieldWidth-1, 0)), intval($y + max($this->fieldHeight-1, 0)), $col);
@@ -400,6 +412,11 @@ class MapGenerator extends PictureRender {
             throw new InvalidArgumentException("Opaque needs to be between 0 and 100");
         }
         return false;
+    }
+    
+    public function setHighlight($highlight) {
+        $this->highlight = ($highlight === true)?(true):(false);
+        return $this;
     }
     
     public function setLayerOrder($layerOrder) {

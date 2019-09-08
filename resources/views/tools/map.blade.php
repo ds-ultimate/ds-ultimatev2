@@ -49,9 +49,9 @@
                                         @endforeach
                                     </div>
                                 @endforeach
-                            </div>
-                            <div class="col-12">
-                                <input type="submit" class="btn btn-sm btn-success float-right">
+                                <div class="col-12">
+                                    <input type="submit" class="btn btn-sm btn-success float-right">
+                                </div>
                             </div>
                             <div id="model" style="display: none">
                                 @foreach(['ally', 'player', 'village'] as $type)
@@ -65,7 +65,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.editLink')) }}</label>
                                         <div class="col-1">
-                                            <button class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('ui.tool.map.copy')) }}</button>
+                                            <a class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'edit', $wantedMap->edit_key]) }}" />
@@ -77,7 +77,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.showLink')) }}</label>
                                         <div class="col-1">
-                                            <button class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('ui.tool.map.copy')) }}</button>
+                                            <a class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}" />
@@ -145,8 +145,8 @@
                                     <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <input type="submit" class="btn btn-sm btn-success float-right">
+                            <div class="form-group float-right">
+                                <input type="submit" class="btn btn-sm btn-success">
                             </div>
                         </div>
                     </div>
@@ -171,10 +171,10 @@
                     </li>
                 </ul>
                 <div class="card-body tab-content">
-                    <div class="tab-pane fade show active map-show-content" id="size-1" role="tabpanel" aria-labelledby="size-1-tab"></div>
-                    <div class="tab-pane fade map-show-content" id="size-2" role="tabpanel" aria-labelledby="size-2-tab"></div>
-                    <div class="tab-pane fade map-show-content" id="size-3" role="tabpanel" aria-labelledby="size-3-tab"></div>
-                    <div class="tab-pane fade map-show-content" id="size-4" role="tabpanel" aria-labelledby="size-4-tab"></div>
+                    <div class="tab-pane fade show active map-show-content text-center" id="size-1" role="tabpanel" aria-labelledby="size-1-tab"></div>
+                    <div class="tab-pane fade map-show-content text-center" id="size-2" role="tabpanel" aria-labelledby="size-2-tab"></div>
+                    <div class="tab-pane fade map-show-content text-center" id="size-3" role="tabpanel" aria-labelledby="size-3-tab"></div>
+                    <div class="tab-pane fade map-show-content text-center" id="size-4" role="tabpanel" aria-labelledby="size-4-tab"></div>
                 </div>
             </div>
         </div>
@@ -332,7 +332,7 @@
                 type: "GET",
                 url: sizeRoutes[targetID] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
                 success: function(data){
-                    $('#'+targetID).html('<img id="'+targetID+'-img" class="container-fluid p-0" src="' + data + '" />');
+                    $('#'+targetID).html('<img id="'+targetID+'-img" class="p-0" src="' + data + '" />');
                 },
             });
         });
