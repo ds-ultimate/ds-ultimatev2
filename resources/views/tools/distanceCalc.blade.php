@@ -362,8 +362,6 @@
                 $("#yTarget").val(coords[1].substring(0, 3));
             });
 
-            // TODO: calculate with press "ENTER"
-
             $(document).on('submit', '#villageForm', function (e) {
                 e.preventDefault();
                 calc();

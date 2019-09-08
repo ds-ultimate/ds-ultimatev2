@@ -20,6 +20,8 @@ use App\Http\Requests\StoreAttackPlannerItemRequest;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
@@ -41,30 +43,29 @@ class AttackPlannerItemController extends BaseController
     }
 
     public function data(AttackList $attackList){
-        $items = $attackList->items;
-        $world = $attackList->world;
-        $this->dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
 
-        return Datatables::collection($items)
-            ->editColumn('start_village_id', function (AttackListItem $attackListItem) {
+        $query = AttackListItem::query()->where('attack_list_id', $attackList->id)->orderBy('send_time');
+
+        return Datatables::of($query)
+            ->addColumn('start_village', function (AttackListItem $attackListItem) {
                 $village =$attackListItem->start_village;
-                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::outputName($village->name);
+                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name);
             })
-            ->editColumn('target_village_id', function (AttackListItem $attackListItem) {
+            ->addColumn('target_village', function (AttackListItem $attackListItem) {
                 $village =$attackListItem->target_village;
-                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::outputName($village->name);
+                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name);
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {
-                return self::type_img($attackListItem->type);
+                return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'">';
             })
             ->editColumn('slowest_unit', function (AttackListItem $attackListItem) {
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
-                return BasicFunctions::outputName($attackListItem->start_village->playerLatest->name);
+                return BasicFunctions::decodeName($attackListItem->start_village->playerLatest->name);
             })
             ->addColumn('defender', function (AttackListItem $attackListItem) {
-                return BasicFunctions::outputName($attackListItem->target_village->playerLatest->name);
+                return BasicFunctions::decodeName($attackListItem->target_village->playerLatest->name);
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time->format('d.m.y H:i:s');
@@ -75,28 +76,21 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time;
             })
-            ->rawColumns(['type', 'slowest_unit'])
-            ->toJson();
+            ->addColumn('action', function (AttackListItem $attackListItem){
+                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&mode=command&target='.$attackListItem->target_village_id.'&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0"><i class="fas fa-play-circle"></i></a></h4>';
+            })
+            ->addColumn('delete', function (AttackListItem $attackListItem){
+                return '<h4 class="mb-0"><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')"><i class="fas fa-times"></i></a></h4>';
+            })
+            ->rawColumns(['type', 'slowest_unit', 'action', 'delete'])
+            ->make(true);
     }
 
-    public static function type_img($type){
-        switch ($type){
-            case 0:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/unit_ram.png').'">';
-            case 1:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/unit_snob.png').'">';
-            case 2:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/fake.png').'">';
-            case 3:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/wall.png').'">';
-            case 4:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/unit_spear.png').'">';
-            case 5:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/unit_sword.png').'">';
-            case 6:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/unit_heavy.png').'">';
-            case 7:
-                return '<img id="type_img" src="'.asset('images/ds_images/unit/def_fake.png').'">';
+    public function destroy(AttackListItem $attackListItem)
+    {
+        if ($attackListItem->list->edit_key === request('key')){
+            $attackListItem->delete();
+            return ['success' => true, 'message' => 'destroy !!'];
         }
     }
 

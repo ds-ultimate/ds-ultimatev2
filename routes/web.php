@@ -71,8 +71,10 @@ Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::resource('attackPlannerItem','Tools\AttackPlannerItemController');
-Route::get('attackPlannerItem/data/{attackList}','Tools\AttackPlannerItemController@data')->name('attackPlannerItem.data');
+Route::post('/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerModeImportWB');
+Route::get('/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
+Route::resource('/attackListItem','Tools\AttackPlannerItemController');
+Route::get('/attackListItem/data/{attackList}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
 Route::get('/changelog', 'Controller@changelog')->name('changelog');
 
