@@ -25,7 +25,7 @@ class Village extends JsonResource
             'points' => $this->points,
             'owner' => $this->owner,
             'ownerName' => ($this->owner == 0)? '-' : BasicFunctions::outputName($this->playerLatest->name),
-            'ownerAlly' => ($this->ally == 0)? '-' : BasicFunctions::outputName($this->playerLatest->allyLatest->name),
+            'ownerAlly' => ($this->playerLatest->ally == 0)? '-' : BasicFunctions::outputName($this->playerLatest->allyLatest->name),
             'bonus_id' => $this->bonus_id,
             'bonus' => $this->bonusText(),
             'continent' => $this->continentString(),
