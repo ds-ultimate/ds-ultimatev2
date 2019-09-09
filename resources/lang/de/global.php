@@ -56,7 +56,7 @@ return array (
   'yes' => 'Ja',
   'youAreLoggedIn' => 'Sie sind angemeldet!',
   'yourAccountNeedsAdminApproval' => 'Your accounts needs an administrator approval in order to log in',
-  'submit' => 'Submit',
+  'submit' => 'Senden',
   'action' => 'Action',
   'action_id' => 'Action ID',
   'action_model' => 'Action Model',
@@ -250,4 +250,5 @@ return array (
   'unit' => 'Einheit',
   'units' => 'Einheiten',
   'back' => 'Zurück',
+  'total' => 'Total',
 );

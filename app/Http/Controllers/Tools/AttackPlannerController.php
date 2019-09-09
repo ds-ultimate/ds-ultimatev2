@@ -71,7 +71,24 @@ class AttackPlannerController extends BaseController
         $mode = 'edit';
         $now = Carbon::createFromTimestamp(time());
 
-        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server'));
+        $stats['total'] = $attackList->items()->count();
+        $stats['start_village'] = $attackList->items()->get()->groupBy('start_village_id')->count();
+        $stats['target_village'] = $attackList->items()->get()->groupBy('target_village_id')->count();
+
+        foreach ($attackList->items()->get()->groupBy('type') as $type){
+            $stats['type'][$type[0]->type]['id'] = $type[0]->type;
+            $stats['type'][$type[0]->type]['count'] = $type->count();
+        }
+
+        foreach ($attackList->items()->get()->groupBy('slowest_unit') as $slowest_unit){
+            $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['id'] = $slowest_unit[0]->slowest_unit;
+            $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['count'] = $slowest_unit->count();
+        }
+
+        ksort($stats['type']);
+        ksort($stats['slowest_unit']);
+
+        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats'));
     }
 
     public function show(AttackList $attackList){
@@ -137,10 +154,10 @@ class AttackPlannerController extends BaseController
     }
 
     public function destroyOutdated(AttackList $attackList){
-        $items = $attackList->items->where('send_time', '<', Carbon::createFromTimestamp(time()));
-        foreach ($items as $item){
-            $item->delete();
-        }
+        AttackListItem::where(
+            ['send_time', '<', Carbon::createFromTimestamp(time())],
+            ['attack_list_id', $attackList->id]
+        )->delete();
         return ['success' => true, 'message' => 'destroy !!'];
     }
 
