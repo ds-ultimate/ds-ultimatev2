@@ -42,7 +42,8 @@ class AttackPlannerItemController extends BaseController
         $item->save();
     }
 
-    public function data(AttackList $attackList){
+    public function data(AttackList $attackList, $key){
+        abort_unless($attackList->show_key == $key, 403);
 
         $query = AttackListItem::query()->where('attack_list_id', $attackList->id)->orderBy('send_time');
 

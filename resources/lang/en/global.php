@@ -250,4 +250,5 @@ return array (
   'unit' => 'Unit',
   'units' => 'Units',
   'back' => 'Back',
+  'total' => 'Total',
 );
