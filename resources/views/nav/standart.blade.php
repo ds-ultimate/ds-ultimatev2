@@ -67,6 +67,7 @@
                         </a>
                         <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                             <li class="dropdown-item"><a href="{{ route('distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
+                            <li class="dropdown-item"><a href="{{ route('attackPlanner', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
                             <li class="dropdown-item"><a href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.map.title')) }}</a></li>
                         </ul>
                     </li>

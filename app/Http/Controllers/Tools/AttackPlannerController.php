@@ -85,8 +85,13 @@ class AttackPlannerController extends BaseController
             $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['count'] = $slowest_unit->count();
         }
 
-        ksort($stats['type']);
-        ksort($stats['slowest_unit']);
+        if (isset($stats['type'])){
+            ksort($stats['type']);
+        }
+
+        if (isset($stats['slowest_unit'])){
+            ksort($stats['slowest_unit']);
+        }
 
         return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats'));
     }
