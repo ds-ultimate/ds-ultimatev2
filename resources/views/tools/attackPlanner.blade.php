@@ -236,20 +236,24 @@
                             <div class="col-1"></div>
                             <div class="col-2">
                                 <h3>{{ __('global.units') }}</h3>
-                                @foreach ($stats['slowest_unit'] as $slowest_unit)
-                                    <div class="form-group">
-                                        <img src="{{ \App\Util\Icon::icons($slowest_unit['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($slowest_unit['count']) }}</b>
-                                    </div>
-                                @endforeach
+                                @if (isset($stats['slowest_unit']))
+                                    @foreach ($stats['slowest_unit'] as $slowest_unit)
+                                        <div class="form-group">
+                                            <img src="{{ \App\Util\Icon::icons($slowest_unit['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($slowest_unit['count']) }}</b>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                             <div class="col-1"></div>
                             <div class="col-2">
                                 <h3>{{ __('ui.tool.attackPlanner.type') }}</h3>
-                                @foreach ($stats['type'] as $type)
-                                    <div class="form-group">
-                                        <img src="{{ \App\Util\Icon::icons($type['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($type['count']) }}</b>
-                                    </div>
-                                @endforeach
+                                @if (isset($stats['type']))
+                                    @foreach ($stats['type'] as $type)
+                                        <div class="form-group">
+                                            <img src="{{ \App\Util\Icon::icons($type['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($type['count']) }}</b>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                             <div class="col-1"></div>
                         </div>
