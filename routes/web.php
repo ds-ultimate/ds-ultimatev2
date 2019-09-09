@@ -73,7 +73,9 @@ Route::get('/impressum', function () {
 
 Route::post('/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerModeImportWB');
 Route::get('/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
-Route::resource('/attackListItem','Tools\AttackPlannerItemController');
+Route::resource('/attackListItem','Tools\AttackPlannerItemController', [
+    'only' => ['store', 'destroy'],
+]);
 Route::get('/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
 Route::get('/changelog', 'Controller@changelog')->name('changelog');

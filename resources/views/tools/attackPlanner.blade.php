@@ -146,6 +146,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- TODO: Add Note and Units -->
                                 <!--/span-->
                                 {{--<div class="col-md-12">--}}
                                     {{--<div class="form-group row">--}}
@@ -388,6 +389,7 @@
                 'note' : $('#note').val(),
                 'send_time' : send,
                 'arrival_time' : arrival,
+                'key' : '{{ $attackList->edit_key }}',
             })
                 .then((response) => {
 
