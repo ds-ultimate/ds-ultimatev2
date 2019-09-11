@@ -1838,6 +1838,7 @@ body.tox-dialog__disable-scroll {
   margin-bottom: -1px;
   padding: 0 4px 0 4px;
 }
+/* Deprecated. Remove in next major release */
 .tox .tox-mbtn {
   align-items: center;
   background: none;
@@ -1861,23 +1862,26 @@ body.tox-dialog__disable-scroll {
 }
 .tox .tox-mbtn[disabled] {
   background-color: none;
-  border-color: none;
+  border: 0;
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
   cursor: not-allowed;
 }
-.tox .tox-mbtn:hover:not(:disabled) {
-  background: #dee0e2;
-  box-shadow: none;
-  color: #222f3e;
-}
 .tox .tox-mbtn:focus:not(:disabled) {
   background: #dee0e2;
+  border: 0;
   box-shadow: none;
   color: #222f3e;
 }
 .tox .tox-mbtn--active {
   background: #c8cbcf;
+  border: 0;
+  box-shadow: none;
+  color: #222f3e;
+}
+.tox .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
+  background: #dee0e2;
+  border: 0;
   box-shadow: none;
   color: #222f3e;
 }
@@ -2319,30 +2323,32 @@ body.tox-dialog__disable-scroll {
   padding-right: 5px;
   width: inherit;
 }
-.tox .tox-tbtn--enabled {
-  background: #c8cbcf;
+.tox .tox-tbtn:focus {
+  background: #dee0e2;
+  border: 0;
+  box-shadow: none;
+}
+.tox .tox-tbtn:hover {
+  background: #dee0e2;
+  border: 0;
   box-shadow: none;
   color: #222f3e;
 }
-.tox .tox-tbtn--enabled > * {
-  transform: none;
-}
-.tox .tox-tbtn--enabled svg {
+.tox .tox-tbtn:hover svg {
   fill: #222f3e;
-}
-.tox .tox-tbtn:focus {
-  background: #dee0e2;
-  box-shadow: none;
 }
 .tox .tox-tbtn:active {
   background: #c8cbcf;
+  border: 0;
   box-shadow: none;
+  color: #222f3e;
 }
 .tox .tox-tbtn--disabled,
 .tox .tox-tbtn--disabled:hover,
 .tox .tox-tbtn:disabled,
 .tox .tox-tbtn:disabled:hover {
   background: none;
+  border: 0;
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
   cursor: not-allowed;
@@ -2354,24 +2360,26 @@ body.tox-dialog__disable-scroll {
   /* stylelint-disable-line no-descending-specificity */
   fill: rgba(34, 47, 62, 0.5);
 }
-.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) {
-  background: #dee0e2;
+.tox .tox-tbtn--enabled,
+.tox .tox-tbtn--enabled:hover {
+  background: #c8cbcf;
+  border: 0;
   box-shadow: none;
   color: #222f3e;
 }
-.tox .tox-tbtn:hover:not(.tox-tbtn--disabled) svg {
+.tox .tox-tbtn--enabled > *,
+.tox .tox-tbtn--enabled:hover > * {
+  transform: none;
+}
+.tox .tox-tbtn--enabled svg,
+.tox .tox-tbtn--enabled:hover svg {
+  /* stylelint-disable-line no-descending-specificity */
   fill: #222f3e;
 }
 .tox .tox-tbtn:focus:not(.tox-tbtn--disabled) {
   color: #222f3e;
 }
 .tox .tox-tbtn:focus:not(.tox-tbtn--disabled) svg {
-  fill: #222f3e;
-}
-.tox .tox-tbtn:active:not(.tox-tbtn--disabled) {
-  color: #222f3e;
-}
-.tox .tox-tbtn:active:not(.tox-tbtn--disabled) svg {
   fill: #222f3e;
 }
 .tox .tox-tbtn:active > * {
@@ -2466,6 +2474,9 @@ body.tox-dialog__disable-scroll {
   background: none;
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
+}
+.tox .tox-toolbar-overlord {
+  background-color: #fff;
 }
 .tox .tox-toolbar,
 .tox .tox-toolbar__primary,
