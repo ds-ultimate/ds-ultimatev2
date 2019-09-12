@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Util\BasicFunctions;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        view()->composer('*', function ($view)
+        {
+            BasicFunctions::local();
+        });
+
         Schema::defaultStringLength(191);
     }
 }
