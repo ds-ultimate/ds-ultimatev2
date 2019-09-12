@@ -103,7 +103,6 @@ Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageControl
 Route::get('/{server}/{world}/distanceCalc', 'Tools\DistanceCalcController@index')->name('distanceCalc');
 
 Route::get('/{server}/{world}/attackPlanner', 'Tools\AttackPlannerController@index')->name('attackPlanner');
-Route::get('/{server}/{world}/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
 
 Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->name('tools.mapNew');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@mode')->name('tools.mapToolMode');
