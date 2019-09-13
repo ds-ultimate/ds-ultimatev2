@@ -39,7 +39,24 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapToolRoutes();
         //
+    }
+
+    /**
+     * Define the routes for all tools.
+     *
+     * Mostly same configuration as web routes
+     * ! No ! Prefix so that it is possible to define routes with server/world
+     *
+     * @return void
+     */
+    protected function mapToolRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->name('tools.')
+             ->group(base_path('routes/tools.php'));
     }
 
     /**
@@ -67,6 +84,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
+             ->name('api.')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }

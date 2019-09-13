@@ -71,13 +71,6 @@ Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::post('/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerModeImportWB');
-Route::get('/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
-Route::resource('/attackListItem','Tools\AttackPlannerItemController', [
-    'only' => ['store', 'destroy'],
-]);
-Route::get('/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
-
 Route::get('/changelog', 'Controller@changelog')->name('changelog');
 
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
@@ -99,10 +92,3 @@ Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerContro
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
 Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');
-
-Route::get('/{server}/{world}/distanceCalc', 'Tools\DistanceCalcController@index')->name('distanceCalc');
-
-Route::get('/{server}/{world}/attackPlanner', 'Tools\AttackPlannerController@index')->name('attackPlanner');
-
-Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->name('tools.mapNew');
-Route::get('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@mode')->name('tools.mapToolMode');

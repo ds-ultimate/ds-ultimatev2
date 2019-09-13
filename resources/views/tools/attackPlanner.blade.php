@@ -177,7 +177,7 @@
                                         <button class="btn btn-primary btn-sm" onclick="copy('link-edit')">{{ __('global.datatables.copy') }}</button>
                                     </div>
                                     <div class="col-md-9">
-                                        <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$attackList->id, 'edit', $attackList->edit_key]) }}" />
+                                        <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'edit', $attackList->edit_key]) }}" />
                                         <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.editLink_helper') }}</small>
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@
                                         <button class="btn btn-primary btn-sm" onclick="copy('link-show')">{{ __('global.datatables.copy') }}</button>
                                     </div>
                                     <div class="col-md-9">
-                                        <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('attackPlannerMode', [$attackList->id, 'show', $attackList->show_key]) }}" />
+                                        <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'show', $attackList->show_key]) }}" />
                                         <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.showLink_helper') }}</small>
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@
                 serverSide: true,
                 pageLength: 25,
                 searching: false,
-                ajax: '{!! route('attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
+                ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
                 columns: [
                     { data: 'start_village', name: 'start_village', render: function (val) {return val.trunc(25)}},
                     { data: 'attacker', name: 'attacker' },
@@ -373,7 +373,7 @@
         function destroyOutdated() {
             $.ajax(
                 {
-                    url: '{{ route('attackPlannerMode', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}',
+                    url: '{{ route('tools.attackPlannerMode', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}',
                     type: 'GET',
                     dataType: "JSON",
                     success: function ()
@@ -384,7 +384,7 @@
         }
 
         function store(send, arrival) {
-            axios.post('{{ route('attackListItem.store') }}', {
+            axios.post('{{ route('tools.attackListItem.store') }}', {
                 'attack_list_id' : $('#attack_list_id').val(),
                 'type' : $('#type option:selected' ).val(),
                 'start_village_id' : $('#start_village_id').val(),
@@ -407,7 +407,7 @@
 
         function importWB() {
                 var importWB = $('#importWB');
-                axios.post('{{ route('attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
+                axios.post('{{ route('tools.attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
                     'import': importWB.val(),
                     'key': '{{$attackList->edit_key}}',
                     "_token": '{{ csrf_token() }}',
@@ -429,7 +429,7 @@
         @endif
 
         function exportWB() {
-            axios.get('{{ route('attackPlannerMode', [$attackList->id, 'exportWB', $attackList->show_key]) }}', {
+            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->show_key]) }}', {
               })
                 .then((response) => {
                     $('#exportWB').html(response.data);

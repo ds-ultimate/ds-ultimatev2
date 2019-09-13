@@ -40,25 +40,6 @@
                         <li class="dropdown-item"><a href="{{ route('world', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tabletitel.top10')) }}</a></li>
                         <li class="dropdown-item"><a href="{{ route('worldPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }}</a></li>
                         <li class="dropdown-item"><a href="{{ route('worldAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }}</a></li>
-            @if (false)
-            // FIXME: use below code
-                        <li class="dropdown-submenu">
-                            <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.player') }}</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="player">{{ ucfirst(__('ui.table.bashGes')) }}</a>
-                                <a class="dropdown-item" href="ally">{{ ucfirst(__('ui.table.bashOff')) }}</a>
-                                <a class="dropdown-item" href="village">{{ ucfirst(__('ui.table.bashDeff')) }}</a>
-                            </div>
-                        </li>
-                        <li class="dropdown-submenu">
-                            <a  class="dropdown-item" tabindex="-1" href="#">{{ __('ui.table.ally') }}</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="player">{{ ucfirst(__('ui.table.bashGes')) }}</a>
-                                <a class="dropdown-item" href="ally">{{ ucfirst(__('ui.table.bashOff')) }}</a>
-                                <a class="dropdown-item" href="village">{{ ucfirst(__('ui.table.bashDeff')) }}</a>
-                            </div>
-                        </li>
-            @endif
                     </ul>
                 </li>
                     <li class="nav-item dropdown">
@@ -66,8 +47,8 @@
                             {{__('ui.server.tools')}}
                         </a>
                         <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                            <li class="dropdown-item"><a href="{{ route('distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
-                            <li class="dropdown-item"><a href="{{ route('attackPlanner', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
+                            <li class="dropdown-item"><a href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
+                            <li class="dropdown-item"><a href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
                             <li class="dropdown-item"><a href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.map.title')) }}</a></li>
                         </ul>
                     </li>

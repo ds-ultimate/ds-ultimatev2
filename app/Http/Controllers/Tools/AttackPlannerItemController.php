@@ -11,17 +11,11 @@ namespace App\Http\Controllers\Tools;
 
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
-use App\User;
 use App\Util\BasicFunctions;
 use App\Util\Icon;
-use App\World;
-use http\Url;
 use App\Http\Requests\StoreAttackPlannerItemRequest;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
@@ -63,9 +57,13 @@ class AttackPlannerItemController extends BaseController
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
+                if($attackListItem->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+                if($attackListItem->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
                 return BasicFunctions::decodeName($attackListItem->start_village->playerLatest->name);
             })
             ->addColumn('defender', function (AttackListItem $attackListItem) {
+                if($attackListItem->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+                if($attackListItem->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
                 return BasicFunctions::decodeName($attackListItem->target_village->playerLatest->name);
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {

@@ -17,8 +17,6 @@ use App\Village;
 use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 class AttackPlannerController extends BaseController
@@ -38,7 +36,7 @@ class AttackPlannerController extends BaseController
         $list->show_key = Str::random(40);
         $list->save();
 
-        return redirect()->route('attackPlannerMode', [$list->id, 'edit', $list->edit_key]);
+        return redirect()->route('tools.attackPlannerMode', [$list->id, 'edit', $list->edit_key]);
 
     }
 
@@ -159,10 +157,10 @@ class AttackPlannerController extends BaseController
     }
 
     public function destroyOutdated(AttackList $attackList){
-        AttackListItem::where(
+        AttackListItem::where([
             ['send_time', '<', Carbon::createFromTimestamp(time())],
             ['attack_list_id', $attackList->id]
-        )->delete();
+        ])->delete();
         return ['success' => true, 'message' => 'destroy !!'];
     }
 
