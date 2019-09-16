@@ -163,6 +163,8 @@ class APIController extends Controller
     private function doAllyChangeReturn($query) {
         return DataTables::eloquent($query)
             ->addColumn('player_name', function ($allyChange){
+                if($allyChange->player_id == 0) return ucfirst(__('ui.player.barbarian'));
+                if($allyChange->player == null) return ucfirst(__('ui.player.deleted'));
                 return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->player->name) : '-';
             })
             ->addColumn('old_ally_name', function ($allyChange){
