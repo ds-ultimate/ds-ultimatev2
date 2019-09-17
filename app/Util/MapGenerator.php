@@ -47,6 +47,7 @@ class MapGenerator extends PictureRender {
     public static $LAYER_MARK = 0;
     public static $LAYER_PICTURE = 1;
     public static $LAYER_TEXT = 2;
+    public static $LAYER_GRID = 3;
     private $layerOrder;
 
     /*
@@ -91,6 +92,7 @@ class MapGenerator extends PictureRender {
             MapGenerator::$LAYER_MARK,
             MapGenerator::$LAYER_PICTURE,
             MapGenerator::$LAYER_TEXT,
+            MapGenerator::$LAYER_GRID,
         ));
         $this -> setOpaque(100);
         $this -> setHighlight(false);
@@ -118,14 +120,19 @@ class MapGenerator extends PictureRender {
                     $this->renderMarks('play');
                     $this->renderMarks('mark');
                     break;
+                
                 case MapGenerator::$LAYER_PICTURE:
                     $this->renderPictures('barb');
                     $this->renderPictures('play');
                     $this->renderPictures('mark');
                     break;
+                
                 case MapGenerator::$LAYER_TEXT:
                     $this->renderText();
                     break;
+                
+                case MapGenerator::$LAYER_GRID:
+                    $this->renderGrid();
             }
         }
         
@@ -337,6 +344,42 @@ class MapGenerator extends PictureRender {
         }
     }
     
+    private function renderGrid() {
+        $gridCol = imagecolorallocatealpha($this->image, $this->gridColour[0],
+                $this->gridColour[1], $this->gridColour[2], 90); //ca 30% deckkraft
+        
+        //draw vertical grid
+        for($i = 1; $i <= 9; $i++) { //draw 9 lines (from 1 to 9)
+            $x = intval($this->fieldWidth * ($i*100 - $this->mapDimension['xs']));
+            if($x < 0 || $x > $this->width) continue; //ignore lines outside border
+            
+            imageline($this->image, $x, 0, $x, $this->height, $gridCol);
+        }
+        
+        //draw horizontal grid
+        for($i = 1; $i <= 9; $i++) { //draw 9 lines (from 1 to 9)
+            $y = intval($this->fieldHeight * ($i*100 - $this->mapDimension['ys']));
+            if($y < 0 || $y > $this->height) continue; //ignore lines outside border
+            
+            imageline($this->image, 0, $y, $this->width, $y, $gridCol);
+        }
+        
+        for($i = 0; $i <= 9; $i++) {
+            for($j = 0; $j <= 9; $j++) {
+                $txt = "K$i$j";
+                $size = $this->fieldWidth * 10;
+                $box = imagettfbbox($size, 0, $this->font, $txt);
+                
+                $xwanted = intval($this->fieldWidth * (($i+1)*100 - $this->mapDimension['xs']));
+                $ywanted = intval($this->fieldHeight * (($j+1)*100 - $this->mapDimension['ys']));
+                
+                $x = $xwanted - $box[2];
+                $y = $ywanted - $box[1];
+                imagettftext($this->image, $size, 0, $x, $y, $gridCol, $this->font, $txt);
+            }
+        }
+    }
+    
     private function renderText() {
         //TODO for future
     }
@@ -425,7 +468,8 @@ class MapGenerator extends PictureRender {
         foreach($layerOrder as $layer) {
             if($layer == MapGenerator::$LAYER_MARK ||
                     $layer == MapGenerator::$LAYER_PICTURE ||
-                    $layer == MapGenerator::$LAYER_TEXT) {
+                    $layer == MapGenerator::$LAYER_TEXT ||
+                    $layer == MapGenerator::$LAYER_GRID) {
                 $tmp[] = $layer;
             }
             else if($this->show_errs) {

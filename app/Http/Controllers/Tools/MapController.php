@@ -156,7 +156,7 @@ class MapController extends BaseController
                 //FIXME create error view
                 return "Wrong type " . htmlentities($type);
         }
-        $map->setLayerOrder([MapGenerator::$LAYER_MARK]);
+        $map->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
         $map->setMapDimensions([
             'xs' => 0,
             'ys' => 0,
@@ -249,7 +249,7 @@ class MapController extends BaseController
             $map->markPlayer($player->playerID, $color[$i]);
             $i++;
         }
-        $map->setLayerOrder([MapGenerator::$LAYER_MARK]);
+        $map->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
         $map->setMapDimensions([
             'xs' => 0,
             'ys' => 0,

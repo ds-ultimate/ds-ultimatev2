@@ -222,7 +222,7 @@ class Map extends Model
      * @param \App\Util\MapGenerator $generator Generator to Configure
      */
     public function prepareRendering(MapGenerator $generator) {
-        $generator->setLayerOrder([MapGenerator::$LAYER_MARK]);
+        $generator->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
         if(isset($this->markers) && $this->markers != null) {
             foreach(explode(";", $this->markers) as $marker) {
                 $parts = explode(":", $marker);
