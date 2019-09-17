@@ -230,7 +230,8 @@
                 maxIndex[parts[0]]++;
                 var newElm = $('#'+parts[0]+'-mark-model-div')[0].outerHTML;
                 $('#main-'+parts[0]).append(newElm.replace(/model/gi, maxIndex[parts[0]]));
-                $('#'+parts[0]+'-mark-'+maxIndex[parts[0]]+'-div').change(function (e) {
+                var par = $('#'+parts[0]+'-mark-'+maxIndex[parts[0]]+'-div');
+                $('.data-input-map' , par).change(function (e) {
                     checkPart(this, e);
                     addNewParts(this, e);
                 });
