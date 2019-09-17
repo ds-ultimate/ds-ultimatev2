@@ -119,12 +119,9 @@ class AttackPlannerController extends BaseController
     public function exportWB(AttackList $attackList){
         /** @var  AttackListItem */
         $items = $attackList->items;
+        $export = "";
         foreach ($items as $item){
-            if (isset($export)){
-                $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \r\n";
-            }else{
-                $export = $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \r\n";
-            }
+            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \r\n";
         }
         return $export;
     }
