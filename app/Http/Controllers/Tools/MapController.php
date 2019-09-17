@@ -6,6 +6,7 @@ use App\Tool\Map\Map;
 use App\Util\BasicFunctions;
 use App\Util\MapGenerator;
 use App\World;
+use App\Player;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
@@ -231,5 +232,54 @@ class MapController extends BaseController
             $selector .= "</div>";
         }
         return $selector;
+    }
+    
+    public function mapTop10P($server, $world){
+        BasicFunctions::local();
+        $world = World::getWorld($server, $world);
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
+        $players = $playerModel->orderBy('rank')->limit(10)->get();
+
+        $map = new MapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
+
+        $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
+        $i = 0;
+        foreach ($players as $player){
+            $map->markPlayer($player->playerID, $color[$i]);
+            $i++;
+        }
+        $map->setLayerOrder([MapGenerator::$LAYER_MARK]);
+        $map->setMapDimensions([
+            'xs' => 0,
+            'ys' => 0,
+            'xe' => 1000,
+            'ye' => 1000,
+        ]);
+        $map->setOpaque(100);
+        $map->setHighlight(true);
+        $map->setAutoResize(true);
+        $map->render();
+        return $map->output('png');
+    }
+
+    public function mapTop10($server, $world){
+        World::existWorld($server, $world);
+        $worldData = World::getWorld($server, $world);
+
+        $world = World::getWorld($server, $world);
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
+        $players = $playerModel->orderBy('rank')->limit(10)->get();
+
+        $map = new MapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
+
+        $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
+
+        foreach ($players as $key => $player){
+            $ps[$key] = ['name' => $player->name, 'color' => $color[$key]];
+        }
+
+        return view('content.mapTop10', compact('worldData', 'server', 'ps'));
     }
 }

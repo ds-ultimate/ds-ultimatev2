@@ -26,3 +26,6 @@ Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\
 //Map Tool
 Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->name('mapNew');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@mode')->name('mapToolMode');
+
+Route::get('/{server}/{world}/maptop10', 'Tools\MapController@mapTop10')->name('top10');
+Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name('top10p');
