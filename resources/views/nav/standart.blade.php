@@ -48,7 +48,9 @@
                         </a>
                         <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                             <li class="dropdown-item"><a href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
-                            <li class="dropdown-item"><a href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
+                            @if($worldData->config != null && $worldData->units != null)
+                                <li class="dropdown-item"><a href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
+                            @endif
                             <li class="dropdown-item"><a href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.map.title')) }}</a></li>
                         </ul>
                     </li>
