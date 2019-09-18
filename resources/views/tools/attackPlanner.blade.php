@@ -354,7 +354,7 @@
         function destroy(id,key) {
             $.ajax(
                 {
-                    url: "{{ config('app.url') }}/tools/attackListItem/"+id,
+                    url: "{{ route('tools.attackListItem.store') }}/"+id,
                     type: 'DELETE',
                     dataType: "JSON",
                     data: {

@@ -20,8 +20,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
 {
-    private $dbName;
-
     public function store(StoreAttackPlannerItemRequest $request)
     {
         $item = new AttackListItem();
