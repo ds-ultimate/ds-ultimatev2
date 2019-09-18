@@ -27,6 +27,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "bootstrap-colorpicker": "^3.1.2"
+        "bootstrap-colorpicker": "^3.1.2",
+        "select2": "^4.0.10"
     }
 }

@@ -5,5 +5,7 @@
     "/plugin/tinymce/tinymce.min.js": "/plugin/tinymce/tinymce.min.js",
     "/plugin/fontIconPicker/jquery.fonticonpicker.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.min.css",
     "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css",
-    "/plugin/fontIconPicker/jquery.fonticonpicker.min.js": "/plugin/fontIconPicker/jquery.fonticonpicker.min.js"
+    "/plugin/fontIconPicker/jquery.fonticonpicker.min.js": "/plugin/fontIconPicker/jquery.fonticonpicker.min.js",
+    "/plugin/select2/select2.min.css": "/plugin/select2/select2.min.css",
+    "/plugin/select2/select2.min.js": "/plugin/select2/select2.min.js"
 }

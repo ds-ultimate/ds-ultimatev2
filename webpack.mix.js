@@ -33,3 +33,6 @@ mix.copy('node_modules/@fonticonpicker/fonticonpicker/dist/css/themes/bootstrap-
 mix.copy('node_modules/@fonticonpicker/fonticonpicker/dist/js/jquery.fonticonpicker.min.js', 'public/plugin/fontIconPicker/jquery.fonticonpicker.min.js');
 mix.copyDirectory('node_modules/@fonticonpicker/fonticonpicker/dist/fonts', 'public/fonts');
 mix.copyDirectory('node_modules/bootstrap-colorpicker/dist', 'public/plugin/bootstrap-colorpicker/');
+
+mix.copy('node_modules/select2/dist/css/select2.min.css', 'public/plugin/select2/select2.min.css');
+mix.copy('node_modules/select2/dist/js/select2.min.js', 'public/plugin/select2/select2.min.js');
