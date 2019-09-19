@@ -58,7 +58,7 @@ class Map extends Model
                 if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
                     continue;
                 }
-                if($marker['id'] == 0) continue;
+                if(!isset($marker['id']) || $marker['id'] == 0) continue;
                 
                 $markerStr .= "a:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
             }
@@ -68,7 +68,7 @@ class Map extends Model
                 if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
                     continue;
                 }
-                if($marker['id'] == 0) continue;
+                if(!isset($marker['id']) || $marker['id'] == 0) continue;
                 
                 $markerStr .= "p:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
             }
@@ -78,7 +78,7 @@ class Map extends Model
                 if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
                     continue;
                 }
-                if($marker['id'] == 0) continue;
+                if(!isset($marker['id']) || $marker['id'] == 0) continue;
                 
                 $markerStr .= "v:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
             }
@@ -96,20 +96,25 @@ class Map extends Model
             
             switch($parts[0]) {
                 case 'a':
+                    $ally = Ally::ally($world->server->code, $world->name, $parts[1]);
                     $result[] = [
-                        'name' => BasicFunctions::outputName(Ally::ally($world->server->code, $world->name, $parts[1])->name),
+                        'id' => $ally->allyID,
+                        'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
                         'colour' => $parts[2],
                     ];
                     break;
                 case 'p':
+                    $player = Player::player($world->server->code, $world->name, $parts[1]);
                     $result[] = [
-                        'name' => BasicFunctions::outputName(Player::player($world->server->code, $world->name, $parts[1])->name),
+                        'id' => $player->playerID,
+                        'name' => BasicFunctions::outputName($player->name),
                         'colour' => $parts[2],
                     ];
                     break;
                 case 'v':
                     $vil = Village::village($world->server->code, $world->name, $parts[1]);
                     $result[] = [
+                        'id' => $vil->villageID,
                         'x' => $vil->x,
                         'y' => $vil->y,
                         'colour' => $parts[2],

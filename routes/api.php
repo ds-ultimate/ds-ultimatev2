@@ -25,6 +25,9 @@ Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageB
 Route::get('/{server}/{world}/playerName/{name}', 'APIController@getPlayerByName')->name('playerByName');
 Route::get('/{server}/{world}/allyName/{name}', 'APIController@getAllyByName')->name('allyByName');
 
+Route::get('/{server}/{world}/searchPlayer', 'APIController@getSearchPlayerByName')->name('searchPlayerByName');
+Route::get('/{server}/{world}/searchAlly', 'APIController@getSearchAllyByName')->name('searchAllyByName');
+
 Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('worldPlayer');
 Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('worldAlly');
 Route::get('/{server}/{world}/ally/{ally}', 'APIController@getAllyPlayer')->name('allyPlayer');

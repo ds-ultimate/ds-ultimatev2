@@ -3,10 +3,62 @@
 @section('titel', $worldData->displayName(),': '.__('ui.tool.attackPlanner.title'))
 
 @section('style')
-    <link href="{{ asset('plugin/bootstrap-colorpicker/css/bootstrap-colorpicker.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
+    <style>.select2-container{
+ width: 1%!important;
+ flex: 1 1 auto;
+ }</style>
 @stop
 
 @section('content')
+    <?php
+        function generateHTMLSelector($type, $id, $defaultContent=null) {
+            if($type == 'ally' || $type == 'player') {
+                if($defaultContent != null) {
+                    $defName = $defaultContent['name'];
+                    $defCol = $defaultContent['colour'];
+                } else {
+                    $defName = '';
+                    $defCol = 'FFFFFF';
+                }?>
+                <div id="{{ "$type-mark-$id-div" }}" class="input-group mb-2 mr-sm-2">
+                    <div class="colour-picker-map input-group-prepend">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                        <input name="{{ "mark[$type][$id][colour]" }}" type="hidden" value="{{ $defCol }}"/>
+                    </div>
+                    <select id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}"
+                        class="form-control mr-1 data-input-map select2-{{ $type }} select2-single">
+                        @if($defaultContent != null)
+                        <option value="{{ $defaultContent['id'] }}" selected="selected">{{ $defaultContent['name'] }}</option>
+                        @endif
+                    </select>
+                </div>
+                <?php
+            } else if($type == 'village') {
+                if($defaultContent != null) {
+                    $defX = $defaultContent['x'];
+                    $defY = $defaultContent['y'];
+                    $defCol = $defaultContent['colour'];
+                } else {
+                    $defX = '';
+                    $defY = '';
+                    $defCol = 'FFFFFF';
+                }?>
+                <div id="{{ "$type-mark-$id-div" }}" class="input-group mb-2 mr-sm-2">
+                    <div class="colour-picker-map input-group-prepend">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                        <input name="{{ "mark[$type][$id][colour]" }}" type="hidden" value="{{ $defCol }}"/>
+                    </div>
+                    <input id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}" type="hidden"/>
+                    <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defX }}"/>|
+                    <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defY }}"/>
+                </div>
+                <?php
+            }
+        }
+    ?>
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
@@ -45,7 +97,7 @@
                                     <div id="main-{{$type}}" class="col-lg-4">
                                         {{ ucfirst(__('ui.tool.map.'.$type)) }}
                                         @foreach($defaults[$type] as $num=>$defValues)
-                                            {!! \App\Http\Controllers\Tools\MapController::generateHTMLSelector($type, $num, $defValues) !!}
+                                            {!! generateHTMLSelector($type, $num, $defValues) !!}
                                         @endforeach
                                     </div>
                                 @endforeach
@@ -55,7 +107,9 @@
                             </div>
                             <div id="model" style="display: none">
                                 @foreach(['ally', 'player', 'village'] as $type)
-                                    {!! \App\Http\Controllers\Tools\MapController::generateHTMLSelector($type, "model") !!}
+                                    <textarea id="{{ $type }}-mark-model-area">
+                                        {!! generateHTMLSelector($type, "model") !!}
+                                    </textarea>
                                 @endforeach
                             </div>
                         </div>
@@ -182,9 +236,10 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('plugin/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 @if($mode == 'edit')
+    <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script>
         function copy(type) {
             /* Get the text field */
@@ -202,21 +257,19 @@
         };
 
         $(function () {
-            $('.colour-picker-map').colorpicker({
-                useHashPrefix: false
-            });
-
-            $('.data-input-map').change(function (e) {
-                checkPart(this, e);
-                addNewParts(this, e);
-            });
-            
             $('.data-input-map').each(function() {
-                if(this.value != null && this.value != "" && this.id.split('-')[3] != 'x') {
-                    checkPart(this, null);
+                if(this.value != null && this.value != "") {
                     addNewParts(this, null);
                 }
             });
+            
+            $('.checked-data-input-map').each(function() {
+                if(this.value != null && this.value != "" && this.id.split('-')[3] != 'x') {
+                    checkPart(this, null);
+                }
+            });
+        
+            addCustomLibs(null);
         });
 
         /**
@@ -228,17 +281,10 @@
 
             if(parts[2] == maxIndex[parts[0]]) {
                 maxIndex[parts[0]]++;
-                var newElm = $('#'+parts[0]+'-mark-model-div')[0].outerHTML;
+                var newElm = $('#'+parts[0]+'-mark-model-area')[0].value;
                 $('#main-'+parts[0]).append(newElm.replace(/model/gi, maxIndex[parts[0]]));
                 var par = $('#'+parts[0]+'-mark-'+maxIndex[parts[0]]+'-div');
-                $('.data-input-map' , par).change(function (e) {
-                    checkPart(this, e);
-                    addNewParts(this, e);
-                });
-                
-                $('.colour-picker-map').colorpicker({
-                    useHashPrefix: false
-                });
+                addCustomLibs(par);
             }
         }
 
@@ -251,51 +297,10 @@
             var parts = that.id.split("-");
 
             switch(parts[0]) {
-                case 'ally':
-                    checkAlly(that, e);
-                    break;
-                case 'player':
-                    checkPlayer(that, e);
-                    break;
                 case 'village':
                     checkVillage(that, e);
                     break;
             }     
-        }
-
-        function checkAlly(that, e) {
-            axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/allyName/'+ encodeURI(that.value), {})
-                .then((response) =>{
-                    const data = response.data.data;
-                    var parts = that.id.split("-");
-                    
-                    $('#'+that.id).removeClass('is-invalid').addClass('is-valid');
-                    that.value = data['nameRaw'];
-                    $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val(data['allyID']);
-                })
-                .catch((error) =>{
-                    var parts = that.id.split("-");
-                    
-                    $('#'+that.id).removeClass('is-valid').addClass('is-invalid');
-                    $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val('');
-                });
-        }
-
-        function checkPlayer(that, e) {
-            axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/playerName/'+ encodeURI(that.value), {})
-                .then((response) =>{
-                    const data = response.data.data;
-                    var parts = that.id.split("-");
-                    
-                    $('#'+that.id).removeClass('is-invalid').addClass('is-valid');
-                    $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val(data['playerID']);
-                })
-                .catch((error) =>{
-                    var parts = that.id.split("-");
-                    
-                    $('#'+that.id).removeClass('is-valid').addClass('is-invalid');
-                    $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val('');
-                });
         }
 
         function checkVillage(that, e) {
@@ -316,6 +321,61 @@
                     $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val('');
                 });
         }
+        
+        function addCustomLibs(context) {
+            context = (context)?($(context)):($(document));
+            
+            $('.select2-player', context).select2({
+                ajax: {
+                    url: '{{ route("api.searchPlayerByName", [$worldData->server->code, $worldData->name]) }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            page: params.page || 1
+                        }
+
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
+                    },
+                    allowClear: true,
+                    delay: 250
+                },
+                theme: "bootstrap4"
+            });
+            $('.select2-ally', context).select2({
+                ajax: {
+                    url: '{{ route("api.searchAllyByName", [$worldData->server->code, $worldData->name]) }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            page: params.page || 1
+                        }
+
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
+                    },
+                    allowClear: true,
+                    delay: 250
+                },
+                theme: "bootstrap4"
+            });
+            
+            $('.colour-picker-map', context).colorpicker({
+                useHashPrefix: false
+            });
+            
+            $('.data-input-map').change(function() {
+                if(this.value != null && this.value != "") {
+                    addNewParts(this, null);
+                }
+            });
+            
+            $('.checked-data-input-map').change(function() {
+                if(this.value != null && this.value != "") {
+                    checkPart(this, null);
+                }
+            });
+        }
     </script>
 @endif
     <script>
@@ -325,6 +385,12 @@
             "size-3": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'base64']) }}",
             "size-4": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'base64']) }}"
         };
+        var sizeRoutes2 = {
+            "size-1": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'png']) }}",
+            "size-2": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'png']) }}",
+            "size-3": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'png']) }}",
+            "size-4": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'png']) }}"
+        };
         $('.map-show-tab').click(function (e) {
             var targetID = this.attributes['aria-controls'].nodeValue;
             if($('#'+targetID)[0].innerHTML.length > 0) return;
@@ -333,7 +399,7 @@
                 type: "GET",
                 url: sizeRoutes[targetID] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
                 success: function(data){
-                    $('#'+targetID).html('<img id="'+targetID+'-img" class="p-0" src="' + data + '" />');
+                    $('#'+targetID).html('<img id="'+targetID+'-img" class="p-0" src="' + data + '" />'+sizeRoutes2[targetID]);
                 },
             });
         });

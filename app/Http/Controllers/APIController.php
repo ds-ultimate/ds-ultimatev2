@@ -17,6 +17,8 @@ use App\Http\Resources\Ally as AllyResource;
 use App\Http\Resources\Player as PlayerResource;
 use App\Http\Resources\Village as VillageResource;
 
+use App\Http\Resources\PlayerNameSelect as PlayerNameSelectResource;
+
 class APIController extends Controller
 {
     public function getPlayers($server, $world)
@@ -315,5 +317,51 @@ class APIController extends Controller
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
         return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
+    }
+
+    public static function getSearchPlayerByName($server, $world){
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+        return APIController::select2return($playerModel, array('name'), function($rawData) {
+            return array(
+                'id' => $rawData->playerID,
+                'text' => BasicFunctions::decodeName($rawData->name),
+            );
+        });
+    }
+
+    public static function getSearchAllyByName($server, $world){
+        $allyModel = new Ally();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
+        return APIController::select2return($allyModel, array('name', 'tag'), function($rawData) {
+            return array(
+                'id' => $rawData->allyID,
+                'text' => BasicFunctions::decodeName($rawData->name) . ' [' . BasicFunctions::decodeName($rawData->tag) . ']',
+            );
+        });
+    }
+    
+    private static function select2return(\Illuminate\Database\Eloquent\Model $model, $searchIn, callable $extractOne) {
+        $getArray = \Illuminate\Support\Facades\Input::get();
+        $perPage = 50;
+        $search = (isset($getArray['search']))?('%'.BasicFunctions::likeSaveEscape(urlencode($getArray['search'])).'%'):('%');
+        $page = (isset($getArray['page']))?($getArray['page']-1):(0);
+        
+        foreach($searchIn as $row) {
+            $model = $model->orWhere($row, 'like', $search);
+        }
+        
+        $dataAll = $model->offset($perPage*$page)->limit($perPage+1)->get();
+        $converted = array('results' => array(), 'pagination' => array('more' => false));
+        $i = 0;
+        foreach($dataAll as $data) {
+            if($i < $perPage) {
+                $converted['results'][] = $extractOne($data);
+            } else {
+                $converted['pagination']['more'] = true;
+            }
+            $i++;
+        }
+        return response()->json($converted);
     }
 }

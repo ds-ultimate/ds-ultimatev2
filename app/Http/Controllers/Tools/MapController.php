@@ -192,48 +192,6 @@ class MapController extends BaseController
         }
     }
     
-    public static function generateHTMLSelector($type, $id, $defaultContent=null) {
-        if($type == 'ally' || $type == 'player') {
-            if($defaultContent != null) {
-                $defName = $defaultContent['name'];
-                $defCol = $defaultContent['colour'];
-            } else {
-                $defName = '';
-                $defCol = 'FFFFFF';
-            }
-            
-            $selector = "<div id='$type-mark-$id-div' class='input-group mb-2 mr-sm-2'>";
-                $selector .= "<div class='colour-picker-map input-group-prepend'>";
-                    $selector .= "<span class='input-group-text colorpicker-input-addon'><i></i></span>";
-                    $selector .= "<input name='mark[$type][$id][colour]' type='hidden' value='$defCol'/>";
-                $selector .= "</div>";
-                $selector .= "<input id='$type-mark-$id-id' name='mark[$type][$id][id]' type='hidden'/>";
-                $selector .= "<input id='$type-mark-$id-name' name='mark[$type][$id][name]' class='form-control data-input-map' type='text' value='$defName'/>";
-            $selector .= "</div>";
-        } else if($type == 'village') {
-            if($defaultContent != null) {
-                $defX = $defaultContent['x'];
-                $defY = $defaultContent['y'];
-                $defCol = $defaultContent['colour'];
-            } else {
-                $defX = '';
-                $defY = '';
-                $defCol = 'FFFFFF';
-            }
-            
-            $selector = "<div id='$type-mark-$id-div' class='input-group mb-2 mr-sm-2'>";
-                $selector .= "<div class='colour-picker-map input-group-prepend'>";
-                    $selector .= "<span class='input-group-text colorpicker-input-addon'><i></i></span>";
-                    $selector .= "<input name='mark[$type][$id][colour]' type='hidden' value='$defCol'/>";
-                $selector .= "</div>";
-                $selector .= "<input id='$type-mark-$id-id' name='mark[$type][$id][id]' type='hidden'/>";
-                $selector .= "<input id='$type-mark-$id-x' name='mark[$type][$id][x]' class='form-control mr-1 data-input-map' placeholder='500' type='text' value='$defX'/>|";
-                $selector .= "<input id='$type-mark-$id-y' name='mark[$type][$id][y]' class='form-control ml-1 data-input-map' placeholder='500' type='text' value='$defY'/>";
-            $selector .= "</div>";
-        }
-        return $selector;
-    }
-    
     public function mapTop10P($server, $world){
         BasicFunctions::local();
         $world = World::getWorld($server, $world);
