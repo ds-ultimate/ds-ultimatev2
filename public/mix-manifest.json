@@ -1,11 +1,23 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/plugin/jquery.countdown/jquery.countdown.min.js": "/plugin/jquery.countdown/jquery.countdown.min.js",
+    "/plugin/jquery-ui/jquery-ui.min.css": "/plugin/jquery-ui/jquery-ui.min.css",
+    "/plugin/jquery-ui/jquery-ui.min.js": "/plugin/jquery-ui/jquery-ui.min.js",
     "/plugin/tinymce/jquery.tinymce.min.js": "/plugin/tinymce/jquery.tinymce.min.js",
     "/plugin/tinymce/tinymce.min.js": "/plugin/tinymce/tinymce.min.js",
     "/plugin/fontIconPicker/jquery.fonticonpicker.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.min.css",
     "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css": "/plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css",
     "/plugin/fontIconPicker/jquery.fonticonpicker.min.js": "/plugin/fontIconPicker/jquery.fonticonpicker.min.js",
+    "/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css": "/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css",
+    "/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js": "/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js",
     "/plugin/select2/select2.min.css": "/plugin/select2/select2.min.css",
-    "/plugin/select2/select2.min.js": "/plugin/select2/select2.min.js"
+    "/plugin/select2/select2.full.min.js": "/plugin/select2/select2.full.min.js",
+    "/plugin/select2/select2-bootstrap4.min.css": "/plugin/select2/select2-bootstrap4.min.css",
+    "/plugin/datatables/jquery.datatables.min.js": "/plugin/datatables/jquery.datatables.min.js",
+    "/plugin/datatables/dataTables.bootstrap4.min.js": "/plugin/datatables/dataTables.bootstrap4.min.js",
+    "/plugin/datatables/dataTables.bootstrap4.min.css": "/plugin/datatables/dataTables.bootstrap4.min.css",
+    "/plugin/datatables/dataTables.responsive.min.js": "/plugin/datatables/dataTables.responsive.min.js",
+    "/plugin/datatables/dataTables.responsive.bootstrap.min.js": "/plugin/datatables/dataTables.responsive.bootstrap.min.js",
+    "/plugin/datatables/dataTables.responsive.bootstrap4.min.css": "/plugin/datatables/dataTables.responsive.bootstrap4.min.css"
 }

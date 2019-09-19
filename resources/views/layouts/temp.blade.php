@@ -11,8 +11,8 @@
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('plugin/Datatables/DataTables-1.10.18/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('plugin/Datatables/Responsive-2.2.2/css/responsive.bootstrap4.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugin/datatables/datatables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugin/datatables/datatables.responsive.bootstrap4.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
@@ -52,9 +52,10 @@
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('plugin/Datatables/DataTables-1.10.18/js/dataTables.bootstrap4.js') }}"></script>
-<script src="{{ asset('plugin/Datatables/Responsive-2.2.2/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugin/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugin/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('plugin/datatables/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('plugin/datatables/dataTables.responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/numeral.min.js') }}"></script>
 <style>
     .cookie-consent {
