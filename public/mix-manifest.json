@@ -14,10 +14,6 @@
     "/plugin/select2/select2.min.css": "/plugin/select2/select2.min.css",
     "/plugin/select2/select2.full.min.js": "/plugin/select2/select2.full.min.js",
     "/plugin/select2/select2-bootstrap4.min.css": "/plugin/select2/select2-bootstrap4.min.css",
-    "/plugin/datatables/jquery.datatables.min.js": "/plugin/datatables/jquery.datatables.min.js",
-    "/plugin/datatables/dataTables.bootstrap4.min.js": "/plugin/datatables/dataTables.bootstrap4.min.js",
-    "/plugin/datatables/dataTables.bootstrap4.min.css": "/plugin/datatables/dataTables.bootstrap4.min.css",
-    "/plugin/datatables/dataTables.responsive.min.js": "/plugin/datatables/dataTables.responsive.min.js",
-    "/plugin/datatables/dataTables.responsive.bootstrap.min.js": "/plugin/datatables/dataTables.responsive.bootstrap.min.js",
-    "/plugin/datatables/dataTables.responsive.bootstrap4.min.css": "/plugin/datatables/dataTables.responsive.bootstrap4.min.css"
+    "/js/datatables.min.js": "/js/datatables.min.js",
+    "/css/datatables.min.css": "/css/datatables.min.css"
 }

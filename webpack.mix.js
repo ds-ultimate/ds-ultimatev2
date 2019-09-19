@@ -12,15 +12,15 @@ require('laravel-mix-purgecss');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-    .copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false)
+mix.js('resources/js/app.js', 'public/js');
+mix.sass('resources/sass/app.scss', 'public/css')
     .options({
         processCssUrls: false
     })
     .purgeCss({
         whitelistPatterns: [/(flag-icon.*|col-.*|.*pagination.*|.*page.*)/],
     });
+mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
 
 
 /*
@@ -66,9 +66,32 @@ mix.copy('node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.
  * Datatables
  */
 
-mix.copy('node_modules/datatables.net/js/jquery.dataTables.min.js', 'public/plugin/datatables/jquery.datatables.min.js');
-mix.copy('node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js', 'public/plugin/datatables/dataTables.bootstrap4.min.js');
-mix.copy('node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css', 'public/plugin/datatables/dataTables.bootstrap4.min.css');
-mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.min.js', 'public/plugin/datatables/dataTables.responsive.min.js');
-mix.copy('node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js', 'public/plugin/datatables/dataTables.responsive.bootstrap.min.js');
-mix.copy('node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css', 'public/plugin/datatables/dataTables.responsive.bootstrap4.min.css');
+mix.scripts([
+    'node_modules/datatables.net/js/jquery.dataTables.min.js',
+    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js',
+    'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
+    'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js',
+    'node_modules/datatables.net-buttons/js/dataTables.buttons.min.js',
+    'node_modules/datatables.net-buttons/js/buttons.colVis.min.js',
+    'node_modules/datatables.net-buttons/js/buttons.html5.min.js',
+    'node_modules/datatables.net-buttons/js/buttons.print.min.js',
+    'node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js',
+    'node_modules/datatables.net-select/js/dataTables.select.min.js',
+    'node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js',
+], 'public/js/datatables.min.js');
+
+mix.styles([
+    'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css',
+    'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css',
+    'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css',
+    'node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css',
+], 'public/css/datatables.min.css')
+    .purgeCss({});
+
+/*mix.copy('node_modules/datatables.net/js/jquery.dataTables.min.js', 'public/plugin/datatables/jquery.datatables.min.js');
+mix.copy('node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js', 'public/plugin/datatables/datatables.bootstrap4.min.js');
+mix.copy('node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css', 'public/plugin/datatables/datatables.bootstrap4.min.css');
+mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.min.js', 'public/plugin/datatables/datatables.responsive.min.js');
+mix.copy('node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js', 'public/plugin/datatables/datatables.responsive.bootstrap4.min.js');
+mix.copy('node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css', 'public/plugin/datatables/datatables.responsive.bootstrap4.min.css');
+*/
