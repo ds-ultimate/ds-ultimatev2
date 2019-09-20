@@ -140,6 +140,8 @@ return array (
       'ally' => 'Mark an ally',
       'player' => 'Mark a player',
       'village' => 'Mark a village',
+      'forumLink' => 'Forum Link',
+      'forumLinkDesc' => 'Use these BB-Codes to show this map to other players in forums',
     ),
     'attackPlanner' => 
     array (
@@ -152,7 +154,7 @@ return array (
       'offensive' => 'Offensive',
       'standSupport' => 'Long-term Support (LTS)',
       'support' => 'Support',
-      'title' => 'Attackplanner (BETA v1.0)',
+      'title' => 'Attackplanner (BETA v1.1)',
       'type_helper' => 'Attacktype',
       'wallbreaker' => 'Wallbreaker',
       'type' => 'Type',

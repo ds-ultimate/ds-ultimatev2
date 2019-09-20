@@ -121,7 +121,7 @@ return array (
     ),
     'attackPlanner' => 
     array (
-      'title' => 'Angriffsplaner (BETA v1.0)',
+      'title' => 'Angriffsplaner (BETA v1.1)',
       'offensive' => 'Offensiv',
       'attack' => 'Offensiv',
       'conquest' => 'Eroberung',
@@ -185,6 +185,8 @@ return array (
       'ally' => 'Stamm markieren',
       'player' => 'Spieler Markieren',
       'village' => 'Dorf Markieren',
+      'forumLink' => 'Forums Link',
+      'forumLinkDesc' => 'MIt diesen BB-Codes kannst du die Map in ein Forum einbinden',
     ),
   ),
   'unit' => 

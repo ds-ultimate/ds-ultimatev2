@@ -366,7 +366,7 @@ class MapGenerator extends PictureRender {
         
         for($i = 0; $i <= 9; $i++) {
             for($j = 0; $j <= 9; $j++) {
-                $txt = "K$i$j";
+                $txt = "K$j$i";
                 $size = $this->fieldWidth * 10;
                 $box = imagettfbbox($size, 0, $this->font, $txt);
                 

@@ -238,7 +238,6 @@
 @section('js')
 @if($mode == 'edit')
     <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script>
         function copy(type) {
@@ -380,16 +379,22 @@
 @endif
     <script>
         var sizeRoutes = {
-            "size-1": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'base64']) }}",
-            "size-2": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'base64']) }}",
-            "size-3": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'base64']) }}",
-            "size-4": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'base64']) }}"
-        };
-        var sizeRoutes2 = {
-            "size-1": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'png']) }}",
-            "size-2": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'png']) }}",
-            "size-3": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'png']) }}",
-            "size-4": "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'png']) }}"
+            "size-1": [
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'base64']) }}",
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'png']) }}"
+            ],
+            "size-2": [
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'base64']) }}",
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'png']) }}"
+            ],
+            "size-3": [
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'base64']) }}",
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'png']) }}"
+            ],
+            "size-4": [
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'base64']) }}",
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'png']) }}"
+            ],
         };
         $('.map-show-tab').click(function (e) {
             var targetID = this.attributes['aria-controls'].nodeValue;
@@ -397,9 +402,21 @@
             
             $.ajax({
                 type: "GET",
-                url: sizeRoutes[targetID] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
+                url: sizeRoutes[targetID][0] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
                 success: function(data){
-                    $('#'+targetID).html('<img id="'+targetID+'-img" class="p-0" src="' + data + '" />'+sizeRoutes2[targetID]);
+                    $('#'+targetID).html(
+                        '<div class="form-group row">' +
+                            '<label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.forumLink')) }}</label>' +
+                            '<div class="col-1">' +
+                                '<a class="btn btn-primary btn-sm" onclick="copy(\''+targetID+'\')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>' +
+                            '</div>' +
+                            '<div class="col-9">' +
+                                '<input id="link-'+targetID+'" type="text" class="form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
+                                '<small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.forumLinkDesc')) }}</small>' +
+                            '</div>' +
+                        '</div>' +
+                        '<img id="'+targetID+'-img" class="p-0" src="' + data + '" />'
+                    );
                 },
             });
         });
