@@ -34,7 +34,12 @@
                 </ul>
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}</h4>
+                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
+                            <span class="float-right">
+                                <a href="{{ $allyData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
+                                <a href="{{ $allyData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
+                            </span>
+                        </h4>
                         <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
                         <table id="data1" class="table table-bordered no-wrap w-100">
                             <thead>

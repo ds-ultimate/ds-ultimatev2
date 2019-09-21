@@ -154,7 +154,7 @@ return array (
       'offensive' => 'Offensive',
       'standSupport' => 'Long-term Support (LTS)',
       'support' => 'Support',
-      'title' => 'Attackplanner (BETA v1.1)',
+      'title' => 'Attackplanner',
       'type_helper' => 'Attacktype',
       'wallbreaker' => 'Wallbreaker',
       'type' => 'Type',
@@ -209,5 +209,10 @@ return array (
   array (
     'stats' => 'Stats',
     'map' => 'Map',
+  ),
+  'ingame' => 
+  array (
+    'guest' => 'Ingame (Guest access)',
+    'normal' => 'Ingame (User access)',
   ),
 );

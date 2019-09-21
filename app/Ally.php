@@ -126,5 +126,13 @@ class Ally extends CustomModel
         return $allyDatas;
 
     }
-
+    
+    public function linkIngame(World $world, $guest=false) {
+        $guestPart = "game";
+        if($guest) {
+            $guestPart = "guest";
+        }
+            
+        return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->allyID}";
+    }
 }

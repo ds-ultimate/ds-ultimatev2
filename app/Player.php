@@ -149,4 +149,13 @@ class Player extends CustomModel
             return $this->name . " [-]";
         }
     }
+    
+    public function linkIngame(World $world, $guest=false) {
+        $guestPart = "game";
+        if($guest) {
+            $guestPart = "guest";
+        }
+            
+        return "{$world->url}/$guestPart.php?screen=info_player&id={$this->playerID}";
+    }
 }

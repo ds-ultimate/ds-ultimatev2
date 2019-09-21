@@ -121,7 +121,7 @@ return array (
     ),
     'attackPlanner' => 
     array (
-      'title' => 'Angriffsplaner (BETA v1.1)',
+      'title' => 'Angriffsplaner',
       'offensive' => 'Offensiv',
       'attack' => 'Offensiv',
       'conquest' => 'Eroberung',
@@ -209,5 +209,10 @@ return array (
   array (
     'stats' => 'Statistiken',
     'map' => 'Übersichtskarte',
+  ),
+  'ingame' => 
+  array (
+    'normal' => 'Ingame (Normal)',
+    'guest' => 'Ingame (Gastzugang)',
   ),
 );

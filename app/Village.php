@@ -163,4 +163,13 @@ class Village extends CustomModel
         }
         return "$bonus$lv$left";
     }
+    
+    public function linkIngame(World $world, $guest=false) {
+        $guestPart = "game";
+        if($guest) {
+            $guestPart = "guest";
+        }
+            
+        return "{$world->url}/$guestPart.php?screen=info_village&id={$this->villageID}";
+    }
 }
