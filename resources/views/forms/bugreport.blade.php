@@ -14,7 +14,7 @@
                     <form action="{{ route('form.bugreport.store') }}" method="post">
                         <div class="form-group">
                             <label for="name">{{ __('user.bugreport.name') }}*</label>
-                            <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" name="name" aria-describedby="nameHelp" placeholder="{{ __('user.bugreport.name') }}" required>
+                            <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" value="{{ old('name', '') }}" name="name" aria-describedby="nameHelp" placeholder="{{ __('user.bugreport.name') }}" required>
                             @if($errors->has('name'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('name') }}
@@ -24,7 +24,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">{{ __('user.bugreport.email') }}*</label>
-                            <input type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" name="email" aria-describedby="emailHelp" placeholder="{{ __('user.bugreport.email') }}" required>
+                            <input type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" value="{{ old('email', '') }}" name="email" aria-describedby="emailHelp" placeholder="{{ __('user.bugreport.email') }}" required>
                             @if($errors->has('email'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('email') }}
@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group">
                             <label for="title">{{ __('user.bugreport.form_title') }}*</label>
-                            <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" name="title" aria-describedby="titleHelp" placeholder="{{ __('user.bugreport.form_title') }}" required>
+                            <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" value="{{ old('title', '') }}" name="title" aria-describedby="titleHelp" placeholder="{{ __('user.bugreport.form_title') }}" required>
                             @if($errors->has('title'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('title') }}
@@ -45,10 +45,10 @@
                         <div class="form-group">
                             <label for="priority">{{ __('user.bugreport.priority') }}*</label>
                             <select class="form-control {{ $errors->has('priority') ? 'is-invalid' : '' }}" name="priority">
-                                <option value="0">{{ __('user.bugreport.prioritySelect.low') }}</option>
-                                <option value="1">{{ __('user.bugreport.prioritySelect.normal') }}</option>
-                                <option value="2">{{ __('user.bugreport.prioritySelect.high') }}</option>
-                                <option value="3">{{ __('user.bugreport.prioritySelect.critical') }}</option>
+                                <option value="0"{{ (old('priority', 0)==0)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.low') }}</option>
+                                <option value="1"{{ (old('priority', 0)==1)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.normal') }}</option>
+                                <option value="2"{{ (old('priority', 0)==2)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.high') }}</option>
+                                <option value="3"{{ (old('priority', 0)==3)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.critical') }}</option>
                             </select>
                             @if($errors->has('priority'))
                                 <div class="in valid-feedback">
@@ -59,7 +59,7 @@
                         </div>
                         <div class="form-group">
                             <label for="description">{{ __('user.bugreport.description') }}*</label>
-                            <textarea type="text" class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" name="description" aria-describedby="descriptionHelp" placeholder="{{ __('user.bugreport.description') }}" required></textarea>
+                            <textarea type="text" class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" name="description" aria-describedby="descriptionHelp" placeholder="{{ __('user.bugreport.description') }}" required>{{ old('description', '') }}</textarea>
                             @if($errors->has('description'))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('description') }}
@@ -69,7 +69,7 @@
                         </div>
                         <div class="form-group">
                             <label for="url">{{ __('user.bugreport.url') }}</label>
-                            <input type="text" class="form-control" id="url" name="url" aria-describedby="urlHelp" placeholder="{{ __('user.bugreport.url') }}">
+                            <input type="text" class="form-control" id="url" value="{{ old('url', '') }}" name="url" aria-describedby="urlHelp" placeholder="{{ __('user.bugreport.url') }}">
                             <small id="urlHelp" class="form-text text-muted">{{ __('user.bugreport.url_help') }}</small>
                         </div>
                         @csrf
