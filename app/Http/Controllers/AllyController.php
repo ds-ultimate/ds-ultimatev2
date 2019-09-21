@@ -53,7 +53,7 @@ class AllyController extends Controller
         $allyData = Ally::ally($server, $world, $allyID);
         if ($allyData == null){
             //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
+            echo "Keine Daten über den Stamm mit der ID '$allyID' auf der Welt '$server$world' vorhanden.";
             exit;
         }
         
@@ -83,7 +83,7 @@ class AllyController extends Controller
         $allyData = Ally::ally($server, $world, $allyID);
         if ($allyData == null){
             //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
+            echo "Keine Daten über den Stamm mit der ID '$allyID' auf der Welt '$server$world' vorhanden.";
             exit;
         }
 

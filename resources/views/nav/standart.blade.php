@@ -51,7 +51,9 @@
                             @if($worldData->config != null && $worldData->units != null)
                                 <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
                             @endif
-                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.map.title')) }}</a></li>
+                            @if($worldData->units != null)
+                                <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.map.title')) }}</a></li>
+                            @endif
                         </ul>
                     </li>
             @endif

@@ -21,10 +21,14 @@ class DistanceCalcController extends BaseController
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
+        if($worldData->units == null) {
+            //TODO real error blade here
+            return "Der Laufzeitenrechner ist für diese Welt nicht verfügbar";
+        }
 
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
-
+        
         return view('tools.distanceCalc', compact('worldData', 'server', 'unitConfig', 'config'));
 
     }
