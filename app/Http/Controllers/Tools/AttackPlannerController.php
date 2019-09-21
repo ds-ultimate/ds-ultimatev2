@@ -13,10 +13,12 @@ use App\Http\Requests\ImportAttackPlannerItemRequest;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\Util\BasicFunctions;
+use App\Util\Icon;
 use App\Village;
 use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class AttackPlannerController extends BaseController
@@ -60,6 +62,12 @@ class AttackPlannerController extends BaseController
             case 'exportWB':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
                 return $this->exportWB($attackList);
+            case 'exportBB':
+                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                return $this->exportBB($attackList);
+            case 'exportIGM':
+                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                return $this->exportIGM($attackList);
             case 'destroyOutdated':
                 abort_unless($attackList->edit_key == $key, 403);
                 return $this->destroyOutdated($attackList);
@@ -121,9 +129,81 @@ class AttackPlannerController extends BaseController
         $items = $attackList->items;
         $export = "";
         foreach ($items as $item){
-            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \r\n";
+            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \n";
         }
         return $export;
+    }
+
+    public function exportBB(AttackList $attackList){
+        BasicFunctions::local();
+        /** @var  AttackListItem */
+        $items = $attackList->items;
+        $count = count($items);
+        $rowTemplate = __('tool.attackPlanner.export.BB.default.row');
+        $i = 1;
+        $now = Carbon::parse(Carbon::now())->locale(App::getLocale());
+        $row = "";
+        foreach ($items as $item){
+            $date = Carbon::parse($item->send_time)->locale(App::getLocale());
+            $searchReplaceArrayRow = array(
+                '%ELEMENT_ID%' => $i,
+                '%TYPE%' => "[img]".Icon::icons($item->type)."[/img]",
+                '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
+                '%SOURCE%' => $item->start_village->coordinates(),
+                '%TARGET%' => $item->target_village->coordinates(),
+                '%SEND%' => $date->isoFormat('L LT'),
+                '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
+            );
+            $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
+
+            $i++;
+        }
+
+        $searchReplaceArrayBody = array(
+            '%TITLE%' => 'Geplante Befehle',
+            '%ELEMENT_COUNT%' => $count,
+            '%ROW%' => $row,
+        );
+
+        $bodyTemplate = __('tool.attackPlanner.export.BB.default.body');
+        $body = str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
+
+        $body .="\n[size=8]Erstellt am ".$now->isoFormat('L LT')." mit [url=".route('index')."]DS-Ultimate[/url][/size]";
+
+        return $body;
+    }
+
+    public function exportIGM(AttackList $attackList){
+        BasicFunctions::local();
+        /** @var  AttackListItem */
+        $items = $attackList->items;
+        $rowTemplate = __('tool.attackPlanner.export.IGM.default.row');
+        $i = 1;
+        $now = Carbon::parse(Carbon::now())->locale(App::getLocale());
+        $row = "";
+        foreach ($items as $item){
+            $dateSend = Carbon::parse($item->send_time)->locale(App::getLocale());
+            $dateArrival = Carbon::parse($item->arrival_time)->locale(App::getLocale());
+            $searchReplaceArrayRow = array(
+                '%TYPE%' => $item->typeIDToName(),
+                '%ATTACKER%' => $item->attackerName(),
+                '%SOURCE%' => $item->start_village->coordinates(),
+                '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
+                '%DEFENDER%' => $item->defenderName(),
+                '%TARGET%' => $item->target_village->coordinates(),
+                '%SEND%' => $dateSend->isoFormat('L LT'),
+                '%ARRIVE%' => $dateArrival->isoFormat('L LT'),
+                '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
+            );
+            $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
+
+            $i++;
+        }
+
+
+        $row .="\nErstellt am ".$now->isoFormat('L LT')." mit [url=".route('index')."]DS-Ultimate[/url]";
+
+        return $row;
     }
 
     public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){

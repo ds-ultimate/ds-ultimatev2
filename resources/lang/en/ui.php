@@ -176,7 +176,7 @@ return array (
       'import' => 'Import',
       'importExport' => 'Import/Export',
       'import_helper' => 'Import attacks from your Workbench',
-      'links' => 'Links for sharing the map',
+      'links' => 'Links for sharing',
       'outdated' => 'leaked attacks',
       'sendTime' => 'Send time',
       'showLink' => 'View Link',

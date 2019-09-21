@@ -55,14 +55,10 @@ class AttackPlannerItemController extends BaseController
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
-                if($attackListItem->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-                if($attackListItem->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-                return BasicFunctions::decodeName($attackListItem->start_village->playerLatest->name);
+                return $attackListItem->attackerName();
             })
             ->addColumn('defender', function (AttackListItem $attackListItem) {
-                if($attackListItem->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-                if($attackListItem->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-                return BasicFunctions::decodeName($attackListItem->target_village->playerLatest->name);
+                return $attackListItem->defenderName();
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time->format('d.m.y H:i:s');

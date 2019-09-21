@@ -124,4 +124,66 @@ class AttackListItem extends CustomModel
         }
     }
 
+    public function typeIDToName(){
+        switch ($this->type) {
+            case '8':
+                return __('ui.tool.attackPlanner.attack');
+            case '11':
+                return __('ui.tool.attackPlanner.conquest');
+            case '14':
+                return __('ui.tool.attackPlanner.fake');
+            case '45':
+                return __('ui.tool.attackPlanner.wallbreaker');
+            case '0':
+                return __('ui.tool.attackPlanner.support');
+            case '1':
+                return __('ui.tool.attackPlanner.standSupport');
+            case '7':
+                return __('ui.tool.attackPlanner.fastSupport');
+            case '46':
+                return __('ui.tool.attackPlanner.fakeSupport');
+        }
+    }
+
+    public function unitIDToNameOutput(){
+        switch ($this->slowest_unit) {
+            case '0':
+                return __('ui.unit.spear');
+            case '1':
+                return __('ui.unit.sword');
+            case '2':
+                return __('ui.unit.axe');
+            case '3':
+                return __('ui.unit.archer');
+            case '4':
+                return __('ui.unit.spy');
+            case '5':
+                return __('ui.unit.light');
+            case '6':
+                return __('ui.unit.marcher');
+            case '7':
+                return __('ui.unit.heavy');
+            case '8':
+                return __('ui.unit.ram');
+            case '9':
+                return __('ui.unit.catapult');
+            case '10':
+                return __('ui.unit.knight');
+            case '11':
+                return __('ui.unit.snob');
+        }
+    }
+
+    public function attackerName(){
+        if($this->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->start_village->playerLatest->name);
+    }
+
+    public function defenderName(){
+        if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->target_village->playerLatest->name);
+    }
+
 }

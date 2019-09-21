@@ -200,16 +200,26 @@
                         <div class="row pt-3">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label class="control-label mr-3">{{ __('ui.tool.attackPlanner.export') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('importWB')">{{ __('global.datatables.copy') }}</button>
-                                    <textarea id="exportWB" class="form-control form-control-sm" style="height: 80px"></textarea>
-                                    <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.export_helper') }}</small>
+                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportWB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportWB')">{{ __('global.datatables.copy') }}</button>
+                                    <textarea id="exportWB" class="form-control form-control-sm" rows="1"></textarea>
+                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportWBDesc') }}</small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportBB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportBB')">{{ __('global.datatables.copy') }}</button>
+                                    <textarea id="exportBB" class="form-control form-control-sm" rows="1"></textarea>
+                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportBBDesc') }}</small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportIGM') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportIGM')">{{ __('global.datatables.copy') }}</button>
+                                    <textarea id="exportIGM" class="form-control form-control-sm" rows="1"></textarea>
+                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportIGMDesc') }}</small>
                                 </div>
                                 <form id="importItemsForm">
                                     @csrf
                                     <div class="form-group">
-                                        <label class="control-label mr-3">{{ __('ui.tool.attackPlanner.import') }}</label>
+                                        <label class="control-label mr-3">{{ __('tool.attackPlanner.import') }}</label>
                                         <textarea id="importWB" class="form-control form-control-sm" style="height: 80px"></textarea>
-                                        <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.import_helper') }}</small>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.import_helper') }}</small>
                                     </div>
                                     <div class="col-12">
                                         <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('ui.tool.attackPlanner.import') }}">
@@ -297,7 +307,6 @@
 
 @section('js')
     <script type="text/javascript" src="{{ asset('plugin/jquery.countdown/jquery.countdown.min.js') }}"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         var table =
             $('#data1').DataTable({
@@ -332,6 +341,8 @@
                 ],
                 "drawCallback": function(settings, json) {
                     exportWB();
+                    exportBB();
+                    exportIGM()
                     countdown();
                 },
                 {!! \App\Util\Datatable::language() !!}
@@ -429,10 +440,32 @@
         @endif
 
         function exportWB() {
-            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->show_key]) }}', {
+            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->edit_key]) }}', {
               })
                 .then((response) => {
                     $('#exportWB').html(response.data);
+                })
+                .catch((error) => {
+
+                });
+        }
+
+        function exportBB() {
+            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportBB', $attackList->edit_key]) }}', {
+            })
+                .then((response) => {
+                    $('#exportBB').html(response.data);
+                })
+                .catch((error) => {
+
+                });
+        }
+
+        function exportIGM() {
+            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportIGM', $attackList->edit_key]) }}', {
+            })
+                .then((response) => {
+                    $('#exportIGM').html(response.data);
                 })
                 .catch((error) => {
 
@@ -452,8 +485,8 @@
 
         function countdown(){
             $('[data-countdown]').each(function() {
-                var $this = $(this), finalDate = $(this).data('countdown');
-                $this.countdown(finalDate, {
+                var finalDate = $(this).data('countdown');
+                $(this).countdown(finalDate, {
                     precision:  500
                 })
                     .on('update.countdown', function(event) {
@@ -465,10 +498,10 @@
                                 format = '%D {{ __('ui.tool.distCalc.days') }} ' + format;
                             }
                         }
-                        $this.html(event.strftime(format));
+                        $(this).html(event.strftime(format));
                     })
                     .on('finish.countdown', function (e) {
-                        $this.addClass('bg-danger text-white').html('00:00:00')
+                        $(this).addClass('bg-danger text-white').html('00:00:00')
                     });
             });
         };
