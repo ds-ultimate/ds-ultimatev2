@@ -85,8 +85,7 @@ mix.styles([
     'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css',
     'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css',
     'node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css',
-], 'public/css/datatables.min.css')
-    .purgeCss({});
+], 'public/css/datatables.min.css');
 
 /*mix.copy('node_modules/datatables.net/js/jquery.dataTables.min.js', 'public/plugin/datatables/jquery.datatables.min.js');
 mix.copy('node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js', 'public/plugin/datatables/datatables.bootstrap4.min.js');
