@@ -6,10 +6,21 @@
     <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
-    <style>.select2-container{
- width: 1%!important;
- flex: 1 1 auto;
- }</style>
+    <style>
+        .select2-container{
+            width: 1%!important;
+            flex: 1 1 auto;
+        }
+        #map-popup {
+            position: absolute;
+            background-color: #ffffff80;
+            padding: 5px;
+            pointer-events: none;
+        }
+        #map-popup a {
+            pointer-events: auto;
+        }
+    </style>
 @stop
 
 @section('content')
@@ -381,19 +392,23 @@
         var sizeRoutes = {
             "size-1": [
                 "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'base64']) }}",
-                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'png']) }}"
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '1000', '1000', 'png']) }}",
+                1000, 1000
             ],
             "size-2": [
                 "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'base64']) }}",
-                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'png']) }}"
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '700', '700', 'png']) }}",
+                700, 700
             ],
             "size-3": [
                 "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'base64']) }}",
-                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'png']) }}"
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '500', '500', 'png']) }}",
+                500, 500
             ],
             "size-4": [
                 "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'base64']) }}",
-                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'png']) }}"
+                "{{ route('api.map.show.sized', [$wantedMap->id, $wantedMap->show_key, '200', '200', 'png']) }}",
+                200, 200
             ],
         };
         $('.map-show-tab').click(function (e) {
@@ -411,15 +426,56 @@
                                 '<a class="btn btn-primary btn-sm" onclick="copy(\''+targetID+'\')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>' +
                             '</div>' +
                             '<div class="col-9">' +
-                                '<input id="link-'+targetID+'" type="text" class="form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
+                                '<input id="link-'+targetID+'" type="text" class="border form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
                                 '<small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.forumLinkDesc')) }}</small>' +
                             '</div>' +
                         '</div>' +
                         '<img id="'+targetID+'-img" class="p-0" src="' + data + '" />'
                     );
+                    
+                    $('#'+targetID+'-img').click(function(e) {
+                        mapClicked(e, this, targetID, sizeRoutes[targetID][2], sizeRoutes[targetID][3]);
+                    });
                 },
             });
         });
+        
+        function mapClicked(e, that, targetID, xSize, ySize) {
+            var xPerc = (e.pageX - $(that).offset().left) / xSize;
+            var yPerc = (e.pageY - $(that).offset().top) / ySize;
+            
+            var mapX = Math.floor( {{$mapDimensions['xs']}} + {{$mapDimensions['w']}}*xPerc );
+            var mapY = Math.floor( {{$mapDimensions['ys']}} + {{$mapDimensions['h']}}*yPerc );
+            
+            
+            if($('#map-popup')[0]) {
+                $('#map-popup').remove();
+            }
+            
+            axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ mapX + '/' + mapY, {
+            })
+                .then((response) => {
+                    const data = response.data.data;
+                    var xRel = e.pageX - $($('#size-1')[0].parentElement.parentElement).offset().left;
+                    var yRel = e.pageY - $($('#size-1')[0].parentElement.parentElement).offset().top;
+                    
+                    $('#'+targetID).append("<div id='map-popup'>"+
+                        "{{ ucfirst(__('ui.table.name')) }}: "+data.name+"<br>"+
+                        "{{ ucfirst(__('ui.table.points')) }}: "+data.points+"<br>"+
+                        "{{ ucfirst(__('ui.table.coordinates')) }}: "+data.coordinates+"<br>"+
+                        "{{ ucfirst(__('ui.table.owner')) }}: "+data.ownerLink+"<br>"+
+                        "{{ ucfirst(__('ui.table.ally')) }}: "+data.ownerAllyLink+"<br>"+
+                        "{{ ucfirst(__('ui.table.conquer')) }}: "+data.conquer+"<br>"+
+                        "</div>");
+                    
+                    $('#map-popup')[0].style.left = xRel+"px";
+                    $('#map-popup')[0].style.top = yRel+"px";
+                    
+                    console.log(data);
+                })
+                .catch((error) => {
+                });
+        }
         
         $(function () {
             $('.active.map-show-tab').trigger('click');

@@ -17,8 +17,6 @@ use App\Http\Resources\Ally as AllyResource;
 use App\Http\Resources\Player as PlayerResource;
 use App\Http\Resources\Village as VillageResource;
 
-use App\Http\Resources\PlayerNameSelect as PlayerNameSelectResource;
-
 class APIController extends Controller
 {
     public function getPlayers($server, $world)

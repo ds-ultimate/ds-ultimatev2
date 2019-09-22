@@ -47,8 +47,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkWorld(World $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('world',[$world->server->code, $world->name]).'">'.$text.'</a>';
+    public static function linkWorld(World $world, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('world',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -57,8 +57,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkWorldAlly(World $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldAlly',[$world->server->code, $world->name]).'">'.$text.'</a>';
+    public static function linkWorldAlly(World $world, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('worldAlly',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -67,8 +67,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkWorldPlayer(World $world, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('worldPlayer',[$world->server->code, $world->name]).'">'.$text.'</a>';
+    public static function linkWorldPlayer(World $world, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('worldPlayer',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -78,8 +78,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkPlayer(World $world, $playerID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('player',[$world->server->code, $world->name, $playerID]).'">'.$text.'</a>';
+    public static function linkPlayer(World $world, $playerID, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('player',[$world->server->code, $world->name, $playerID]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -89,8 +89,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkAlly(World $world, $allyID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
+    public static function linkAlly(World $world, $allyID, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -100,8 +100,8 @@ class BasicFunctions
      * @param string|null $id
      * @return string
      */
-    public static function linkVillage(World $world, $villageID, $text, $class = null, $id = null){
-        return '<a class="'.$class.'" id="'.$id.'" href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
+    public static function linkVillage(World $world, $villageID, $text, $class = null, $id = null, $blank=false){
+        return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
     }
     /**
      * @param World $world
@@ -110,25 +110,25 @@ class BasicFunctions
      * @param string|null $class
      * @return string
      */
-    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer, $route, $class = null){
-        $data = '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'all', $itemID]).'">'.
+    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer, $route, $class = null, $blank=false){
+        $data = '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'all', $itemID]).'">'.
                 BasicFunctions::numberConv($conquer->get('total')).
                 '</a>';
         
         if($conquer->has('new') && $conquer->has('old')) {
             //assume that there will be always gain an loose
             $data .= ' ( ';
-            $data .= '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'new', $itemID]).'"><i class="text-success">'.
+            $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'new', $itemID]).'"><i class="text-success">'.
                     BasicFunctions::numberConv($conquer->get('new')).
                     '</i></a> - ';
             
             if($conquer->has('own')) {
-                $data .= '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'own', $itemID]).'"><i class="text-info">'.
+                $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'own', $itemID]).'"><i class="text-info">'.
                         BasicFunctions::numberConv($conquer->get('own')).
                         '</i></a> - ';
             }
             
-            $data .= '<a class="'.$class.'" href="'.route($route,[$world->server->code, $world->name, 'old', $itemID]).'"><i class="text-danger">'.
+            $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'old', $itemID]).'"><i class="text-danger">'.
                     BasicFunctions::numberConv($conquer->get('old')).
                     '</i></a> )';
         }

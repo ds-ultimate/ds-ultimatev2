@@ -70,7 +70,9 @@ class MapController extends BaseController
         $worldData = $wantedMap->world;
         $mode = 'show';
         $server = $worldData->server->code;
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode'));
+        $mapDimensions = $this->getMapDimension($wantedMap);
+        
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'mapDimensions'));
     }
     
     public function save(Map $wantedMap) {
@@ -116,11 +118,11 @@ class MapController extends BaseController
     
     private function getMapDimension(Map $mapModel) {
         $dimensions = $mapModel->getDimensions();
-        $dimension['w'] = $dimensions['xe'] - $dimensions['xs'];
-        $dimension['h'] = $dimensions['ye'] - $dimensions['ys'];
-        $dimension['cx'] = intval(($dimensions['xs'] + $dimensions['xe']) / 2);
-        $dimension['cy'] = intval(($dimensions['ys'] + $dimensions['ye']) / 2);
-        return $dimension;
+        $dimensions['w'] = $dimensions['xe'] - $dimensions['xs'];
+        $dimensions['h'] = $dimensions['ye'] - $dimensions['ys'];
+        $dimensions['cx'] = intval(($dimensions['xs'] + $dimensions['xe']) / 2);
+        $dimensions['cy'] = intval(($dimensions['ys'] + $dimensions['ye']) / 2);
+        return $dimensions;
     }
 
     public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){
