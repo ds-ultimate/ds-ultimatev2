@@ -38,6 +38,43 @@ class StoreAttackPlannerItemRequest extends FormRequest
             'arrival_time'    => [
                 'required',
             ],
+            //Truppen
+            'spear'    => [
+                'numeric',
+            ],
+            'sword'    => [
+                'numeric',
+            ],
+            'axe'    => [
+                'numeric',
+            ],
+            'archer'    => [
+                'numeric',
+            ],
+            'spy'    => [
+                'numeric',
+            ],
+            'light'    => [
+                'numeric',
+            ],
+            'marcher'    => [
+                'numeric',
+            ],
+            'heavy'    => [
+                'numeric',
+            ],
+            'ram'    => [
+                'numeric',
+            ],
+            'catapult'    => [
+                'numeric',
+            ],
+            'knight'    => [
+                'numeric',
+            ],
+            'snob'    => [
+                'numeric',
+            ],
         ];
     }
 }

@@ -19,6 +19,7 @@ use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AttackPlannerController extends BaseController
@@ -129,7 +130,7 @@ class AttackPlannerController extends BaseController
         $items = $attackList->items;
         $export = "";
         foreach ($items as $item){
-            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=MA==/sword=MA==/axe=MA==/spy=MA==/light=MA==/heavy=MA==/ram=MA==/catapult=MA==/knight=MA==/snob=MA==/militia=MA== \n";
+            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
         }
         return $export;
     }
@@ -226,16 +227,15 @@ class AttackPlannerController extends BaseController
                     $unit = $list[2];
                     $time = $arrival-$unitConfig->$unit->speed * 60 * $dist*1000;
                     $send = date( 'Y-m-d H:i:s' , $time/1000);
-//                    //TODO:add Units to AttackList
-//                    $units = explode('/', $list[7]);
-//                    foreach ($units as $unit){
-//                        $unitSplit = explode('=', $unit, 2);
-//                        var_dump($unitSplit);
-//                        $unitArray[] = [$unitSplit[0] => $unitSplit[1]];
-//                    }
-//
-//                    $importArray[$i] = array_merge($list, $unitArray);
-                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), $send, date('Y-m-d H:i:s' , $arrival/1000), $list[4]);
+                    if ($list[7] != '') {
+                        $units = explode('/', $list[7]);
+                        $unitArray = [];
+                        foreach ($units as $unit) {
+                            $unitSplit = explode('=', $unit, 2);
+                            $unitArray += [$unitSplit[0] => base64_decode(str_replace('/', '', $unitSplit[1]))];
+                        }
+                    }
+                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), $send, date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
                 }
             }
         }
@@ -250,7 +250,7 @@ class AttackPlannerController extends BaseController
         return ['success' => true, 'message' => 'destroy !!'];
     }
 
-    public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $send_time, $arrival_time, $type){
+    public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $send_time, $arrival_time, $type, $units){
         $item = new AttackListItem();
         $item->attack_list_id = $attack_list_id;
         $item->start_village_id = $start_village_id;
@@ -259,6 +259,13 @@ class AttackPlannerController extends BaseController
         $item->send_time = $send_time;
         $item->arrival_time = $arrival_time;
         $item->type = $type;
+        if ($units != null) {
+            foreach ($units as $key => $unit) {
+                if ($key != 'militia'){
+                    $item->$key = $unit;
+                }
+            }
+        }
         $item->save();
     }
 

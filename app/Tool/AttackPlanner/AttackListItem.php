@@ -27,6 +27,18 @@ class AttackListItem extends CustomModel
         'note',
         'send_time',
         'arrival_time',
+        'spear',
+        'sword',
+        'axe',
+        'archer',
+        'spy',
+        'light',
+        'marcher',
+        'heavy',
+        'ram',
+        'catapult',
+        'knight',
+        'snob',
     ];
 
     protected $dates = [

@@ -137,7 +137,7 @@
                                                 <option value="7">{{ __('ui.unit.heavy') }}</option>
                                                 <option value="8">{{ __('ui.unit.ram') }}</option>
                                                 <option value="9">{{ __('ui.unit.catapult') }}</option>
-                                                @if ($config->game->knight == 1)
+                                                @if ($config->game->knight > 0)
                                                     <option value="10">{{ __('ui.unit.knight') }}</option>
                                                 @endif
                                                 <option value="11">{{ __('ui.unit.snob') }}</option>
@@ -146,16 +146,73 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- TODO: Add Note and Units -->
+                                <div class="col-12">
+                                    <div class="form-inline">
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_spear" class="pr-2" src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
+                                            <input id="spear" name="spear" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_sword" class="pr-2" src="{{ asset('images/ds_images/unit/unit_sword.png') }}">
+                                            <input id="sword" name="sword" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_axe" class="pr-2" src="{{ asset('images/ds_images/unit/unit_axe.png') }}">
+                                            <input id="axe" name="axe" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @if ($config->game->archer == 1)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_archer" class="pr-2" src="{{ asset('images/ds_images/unit/unit_archer.png') }}">
+                                            <input id="archer" name="archer" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @endif
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_spy" class="pr-2" src="{{ asset('images/ds_images/unit/unit_spy.png') }}">
+                                            <input id="spy" name="spy" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_light" class="pr-2" src="{{ asset('images/ds_images/unit/unit_light.png') }}">
+                                            <input id="light" name="light" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @if ($config->game->archer == 1)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_marcher" class="pr-2" src="{{ asset('images/ds_images/unit/unit_marcher.png') }}">
+                                            <input id="marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @endif
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_heavy" class="pr-2" src="{{ asset('images/ds_images/unit/unit_heavy.png') }}">
+                                            <input id="heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_ram" class="pr-2" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
+                                            <input id="ram" name="ram" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_catapult" class="pr-2" src="{{ asset('images/ds_images/unit/unit_catapult.png') }}">
+                                            <input id="catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @if ($config->game->knight > 0)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_knight" class="pr-2" src="{{ asset('images/ds_images/unit/unit_knight.png') }}">
+                                            <input id="knight" name="knight" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                        @endif
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_snob" class="pr-2" src="{{ asset('images/ds_images/unit/unit_snob.png') }}">
+                                            <input id="snob" name="snob" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--/span-->
-                                {{--<div class="col-md-12">--}}
-                                    {{--<div class="form-group row">--}}
-                                        {{--<label class="control-label col-3">Notizen</label>--}}
-                                        {{--<div class="col-12">--}}
-                                            {{--<textarea id="note" class="form-control form-control-sm" style="height: 80px"></textarea>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="control-label col-3">Notizen</label>
+                                        <div class="col-12">
+                                            <textarea id="note" class="form-control form-control-sm"  rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
                                 @csrf
                                 <input id="attack_list_id" type="hidden" value="{{ $attackList->id }}">
                                 <input id="start_village_id" type="hidden">
@@ -217,9 +274,9 @@
                                 <form id="importItemsForm">
                                     @csrf
                                     <div class="form-group">
-                                        <label class="control-label mr-3">{{ __('tool.attackPlanner.import') }}</label>
+                                        <label class="control-label mr-3">{{ __('ui.tool.attackPlanner.import') }}</label>
                                         <textarea id="importWB" class="form-control form-control-sm" style="height: 80px"></textarea>
-                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.import_helper') }}</small>
+                                        <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.import_helper') }}</small>
                                     </div>
                                     <div class="col-12">
                                         <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('ui.tool.attackPlanner.import') }}">
@@ -290,6 +347,7 @@
                                 <th>{{ __('ui.tool.attackPlanner.arrivalTime') }}</th>
                                 <th width="95px">{{ __('ui.tool.attackPlanner.countdown') }}</th>
                                 <th style="min-width: 25px">&nbsp;</th>
+                                <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
                                     <th style="min-width: 25px">&nbsp;</th>
                                 @endif
@@ -326,6 +384,7 @@
                     { data: 'send_time', name: 'send_time' },
                     { data: 'arrival_time', name: 'arrival_time' },
                     { data: 'time', name: 'time' },
+                    { data: 'info', name: 'info' },
                     { data: 'action', name: 'action' },
                     @if($mode == 'edit')
                     { data: 'delete', name: 'action' },
@@ -342,8 +401,9 @@
                 "drawCallback": function(settings, json) {
                     exportWB();
                     exportBB();
-                    exportIGM()
+                    exportIGM();
                     countdown();
+                    popover();
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
@@ -405,6 +465,18 @@
                 'send_time' : send,
                 'arrival_time' : arrival,
                 'key' : '{{ $attackList->edit_key }}',
+                'spear': $('#spear').val() != 0 ? $('#spear').val() : 0,
+                'sword': $('#sword').val() != 0 ? $('#sword').val() : 0,
+                'axe': $('#axe').val() != 0 ? $('#axe').val() : 0,
+                'archer': $('#archer').val() != 0 ? $('#archer').val() : 0,
+                'spy': $('#spy').val() != 0 ? $('#spy').val() : 0,
+                'light': $('#light').val() != 0 ? $('#light').val() : 0,
+                'marcher': $('#marcher').val() != 0 ? $('#marcher').val() : 0,
+                'heavy': $('#heavy').val() != 0 ? $('#heavy').val() : 0,
+                'ram': $('#ram').val() != 0 ? $('#ram').val() : 0,
+                'catapult': $('#catapult').val() != 0 ? $('#catapult').val() : 0,
+                'knight': $('#knight').val() != 0 ? $('#knight').val() : 0,
+                'snob': $('#snob').val() != 0 ? $('#snob').val() : 0,
             })
                 .then((response) => {
 
@@ -412,7 +484,7 @@
 
                 })
                 .catch((error) => {
-
+                    
                 });
         }
 
@@ -421,14 +493,13 @@
                 axios.post('{{ route('tools.attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
                     'import': importWB.val(),
                     'key': '{{$attackList->edit_key}}',
-                    "_token": '{{ csrf_token() }}',
                 })
                     .then((response) => {
                         importWB.val('');
                         table.ajax.reload();
                     })
                     .catch((error) => {
-                        console.log(importWB.html());
+
                     });
         }
 
@@ -570,7 +641,17 @@
             }
         }
 
+        function popover(){
+            $(function () {
+                $('[data-toggle="popover"]').popover({
+                    html : true,
+                    container: 'body'
+                })
+            });
+        };
+
         $(document).ready(function (e) {
+
             $('#type').change(function (e) {
                 var img = $('#type_img');
                 var input = parseInt($(this).val());
