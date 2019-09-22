@@ -137,6 +137,16 @@
                     </a>
                 </li>
             @endcan
+            @can('applog_access')
+                <li class="nav-item">
+                    <a href="{{ route("admin.appLog") }}" class="nav-link">
+                        <i class="fa-info-circle fas nav-icon">
+
+                        </i>
+                        {{ __('user.applog') }}
+                    </a>
+                </li>
+            @endcan
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">
                     <i class="nav-icon fas fa-fw fa-sign-out-alt">

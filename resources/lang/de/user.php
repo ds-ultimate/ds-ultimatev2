@@ -40,4 +40,5 @@ return array (
     'successMessage' => 'Ihre Fehlermeldung wurde erfolgreich weitergeleitet.',
   ),
   'formular' => 'Formular',
+  'applog' => 'Anwendungs Log',
 );

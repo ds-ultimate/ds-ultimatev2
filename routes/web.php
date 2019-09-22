@@ -18,6 +18,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
+    return view("test");
 });
 
 Route::get('/setlocale/{locale}',function($lang){
@@ -59,6 +60,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('bugreports', 'BugreportsController');
 
     Route::resource('bugreportsComments', 'BugreportsCommentController');
+
+    Route::get('/appLog', 'AppLogController@index')->name('appLog');
 });
 
 Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {
@@ -72,6 +75,8 @@ Route::get('/impressum', function () {
 })->name('legalPage');
 
 Route::get('/changelog', 'Controller@changelog')->name('changelog');
+
+Route::view('/team', 'content.team')->name('team');
 
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');
