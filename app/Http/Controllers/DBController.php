@@ -248,7 +248,9 @@ class DBController extends Controller
         $worldModel = new World();
 
         foreach ($worldModel->where('worldCheck_at', '<',\Carbon\Carbon::createFromTimestamp(time() - (60 * 30)))->get() as $world ){
-            BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
+            if($world->active != null) {
+                BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
+            }
             $world->active = null;
             $world->update();
         }
