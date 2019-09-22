@@ -35,4 +35,9 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
       ),
     ),
   ),
+  'map' => 
+  array (
+    'playerSelectPlaceholder' => 'Spieler wählen',
+    'allySelectPlaceholder' => 'Stamm wählen',
+  ),
 );

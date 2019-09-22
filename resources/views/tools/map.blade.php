@@ -89,7 +89,7 @@
         @if($mode == 'edit')
         <div class="col-12 mt-2">
             <div class="card">
-                <form id="mapEditForm" action="{{ route('tools.mapToolMode', [$wantedMap->id, 'edit', $wantedMap->edit_key]) }}">
+                <form id="mapEditForm">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('ui.tool.map.edit')) }}</a>
@@ -156,7 +156,7 @@
                             <div id='default-background-div' class='col-12 input-group mb-2 mr-sm-2'>
                                 <div class='colour-picker-map input-group-prepend'>
                                     <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                    <input name='default[background]' type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
+                                    <input name='default[background]' id="bg-colour" type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
                                 </div>
                                 <label class='form-control'>{{ __('ui.tool.map.defaultBackground') }}</label>
                             </div>
@@ -169,7 +169,7 @@
                                 <div id='default-player-div' class='col-lg-9 input-group'>
                                     <div class='colour-picker-map input-group-prepend'>
                                         <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                        <input name='default[player]' type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
+                                        <input name='default[player]' id="player-colour" type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
                                     </div>
                                     <label class='form-control'>{{ __('ui.tool.map.defaultPlayer') }}</label>
                                 </div>
@@ -183,7 +183,7 @@
                                 <div id='default-barbarian-div' class='col-lg-9 input-group'>
                                     <div class='colour-picker-map input-group-prepend'>
                                         <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                        <input name='default[barbarian]' type='hidden' value='{{ $wantedMap->getDefBarbarianColour() }}'/>
+                                        <input name='default[barbarian]' type='hidden' id="barbarian-colour" value='{{ $wantedMap->getDefBarbarianColour() }}'/>
                                     </div>
                                     <label class='form-control'>{{ __('ui.tool.map.defaultBarbarian') }}</label>
                                 </div>
@@ -347,9 +347,10 @@
                         // Query parameters will be ?search=[term]&page=[page]
                         return query;
                     },
-                    allowClear: true,
                     delay: 250
                 },
+                allowClear: true,
+                placeholder: '{{ ucfirst(__('tool.map.playerSelectPlaceholder')) }}',
                 theme: "bootstrap4"
             });
             $('.select2-ally', context).select2({
@@ -364,9 +365,10 @@
                         // Query parameters will be ?search=[term]&page=[page]
                         return query;
                     },
-                    allowClear: true,
                     delay: 250
                 },
+                allowClear: true,
+                placeholder: '{{ ucfirst(__('tool.map.allySelectPlaceholder')) }}',
                 theme: "bootstrap4"
             });
             
@@ -385,6 +387,33 @@
                     checkPart(this, null);
                 }
             });
+            
+            $('.data-input-map').change(store);
+            $('.colour-picker-map').on('colorpickerHide', store);
+            $('#checkbox-show-player').change(store);
+            $('#checkbox-show-barbarian').change(store);
+            $('#map-zoom-value').change(store);
+            $('#center-pos-x').change(store);
+            $('#center-pos-y').change(store);
+        }
+        
+        $('#mapEditForm').on('submit', function (e) {
+            e.preventDefault();
+            store();
+        });
+        
+        function store(send, arrival) {
+            axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
+                .then((response) => {
+                    var elm = $('.active.map-show-content')[0];
+                    elm.style.widht = elm.clientWidth + "px";
+                    elm.style.height = elm.clientHeight + "px";
+                    $('.map-show-content').empty();
+                    $('.active.map-show-tab').trigger('click');
+                })
+                .catch((error) => {
+
+                });
         }
     </script>
 @endif
@@ -436,6 +465,10 @@
                     $('#'+targetID+'-img').click(function(e) {
                         mapClicked(e, this, targetID, sizeRoutes[targetID][2], sizeRoutes[targetID][3]);
                     });
+                    
+                    var elm = $('.active.map-show-content')[0];
+                    elm.style.widht = "";
+                    elm.style.height = "";
                 },
             });
         });

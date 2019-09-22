@@ -29,4 +29,9 @@ Attackcount: %ELEMENT_COUNT%
       ),
     ),
   ),
+  'map' => 
+  array (
+    'allySelectPlaceholder' => 'Select an ally',
+    'playerSelectPlaceholder' => 'Select a player',
+  ),
 );

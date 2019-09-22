@@ -50,9 +50,19 @@ class MapController extends BaseController
         }
     }
     
-    public function edit(Map $wantedMap){
-        $this->save($wantedMap);
+    public function modePost(Map $wantedMap, $action, $key){
+        BasicFunctions::local();
         
+        switch ($action) {
+            case 'save':
+                abort_unless($key == $wantedMap->edit_key, 403);
+                return $this->save($wantedMap);
+            default:
+                abort(404);
+        }
+    }
+    
+    public function edit(Map $wantedMap){
         $worldData = $wantedMap->world;
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -76,7 +86,7 @@ class MapController extends BaseController
     }
     
     public function save(Map $wantedMap) {
-        $getArray = \Illuminate\Support\Facades\Input::get();
+        $getArray = $_POST;
         
         if(isset($getArray['mark'])) {
             $wantedMap->setMarkers($getArray['mark']);
@@ -114,6 +124,8 @@ class MapController extends BaseController
             $wantedMap->setDimensions($xs, $xe, $ys, $ye);
         }
         $wantedMap->save();
+        
+        return "success";
     }
     
     private function getMapDimension(Map $mapModel) {
