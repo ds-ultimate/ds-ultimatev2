@@ -35,10 +35,10 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->skip(! DBController::updateNeeded())
             ->onSuccess(function (){
-                Log::debug('World -> Success');
+                Log::info('World -> Success');
             })
             ->onFailure(function (){
-                Log::debug('World -> Failture');
+                Log::critical('World -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
 
@@ -50,10 +50,10 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->skip(! DBController::cleanNeeded())
             ->onSuccess(function (){
-                Log::debug('Clean -> Success');
+                Log::info('Clean -> Success');
             })
             ->onFailure(function (){
-                Log::debug('Clean -> Failture');
+                Log::critical('Clean -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
             
@@ -64,10 +64,10 @@ class Kernel extends ConsoleKernel
             ->everyThirtyMinutes()
             ->withoutOverlapping()
             ->onSuccess(function (){
-                Log::debug('Conquer -> Erfolgreich');
+                Log::info('Conquer -> Erfolgreich');
             })
             ->onFailure(function (){
-                Log::debug('Conquer -> Fehlgeschlagen');
+                Log::critical('Conquer -> Fehlgeschlagen');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
 
