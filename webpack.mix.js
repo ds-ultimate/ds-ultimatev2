@@ -18,7 +18,18 @@ mix.sass('resources/sass/app.scss', 'public/css')
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: [/(flag-icon.*|col-.*|.*pagination.*|.*page.*)/],
+        whitelistPatterns: [
+            /(flag-icon.*|col-.*|.*pagination.*|.*page.*)/,
+            /.*popover.*/,
+        ],
+        whitelist: [
+            "arrow",
+            "fade",
+            "row",
+            "font-weight-bold",
+            "px-3",
+            "pr-3"
+        ],
     });
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
 
