@@ -11,7 +11,7 @@ return array (
         array (
           'body' => '[u][size=12][b]%TITLE%[/b][/size][/u]
 
-[b]Angriffsplan[/b]
+[b]Attackplann[/b]
 Attackcount: %ELEMENT_COUNT%
 [table]
 [**]ID[||]Typ[||]Unit[||]Start[||]Target[||]Send time[||]Place[/**]
@@ -28,6 +28,12 @@ Attackcount: %ELEMENT_COUNT%
         ),
       ),
     ),
+    'exportBB' => 'Export Forum',
+    'exportBBDesc' => 'Export for the Forum',
+    'exportIGM' => 'Export IGM',
+    'exportIGMDesc' => 'Export for IGM without Images',
+    'exportWB' => 'Export DSWorkbench',
+    'exportWBDesc' => 'Export for DSWorkbench',
   ),
   'map' => 
   array (

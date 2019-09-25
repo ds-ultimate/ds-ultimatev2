@@ -187,6 +187,7 @@ return array (
       'time' => 'TIme',
       'time_helper' => 'Arrival time of the attack',
       'unit_helper' => 'Slowest unit',
+      'errorKoord' => 'Start- and Targetvillage may not be the same',
     ),
   ),
   'unit' => 

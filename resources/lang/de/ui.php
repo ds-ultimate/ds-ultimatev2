@@ -163,6 +163,7 @@ return array (
       'attackTotal' => 'Angriffe Total',
       'attackStart_village' => 'Angreifende Dörfer',
       'attackTarget_village' => 'Ziel Dörfer',
+      'errorKoord' => 'Start- und Zieldoorf dürfen nicht gleich sein',
     ),
     'map' => 
     array (
