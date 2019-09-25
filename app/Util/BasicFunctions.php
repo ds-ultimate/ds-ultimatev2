@@ -11,6 +11,8 @@ use App\World;
 use App\Server;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 class BasicFunctions
 {
     /**
@@ -285,4 +287,53 @@ class BasicFunctions
     public static function sign( $number ) {
         return ( $number > 0 ) ? 1 : (( $number < 0 ) ? -1 : 0 );
     }
+
+    public static function modelHistoryCalc($newModel, $oldModel, $type, $invert = false){
+        if ($newModel->$type != $oldModel->$type){
+            if ($newModel->$type > $oldModel->$type){
+                $result = ($invert == false)?'up':'down';
+            }else{
+                $result = ($invert == true)?'up':'down';
+            }
+        }else{
+            $result = 'equals';
+        }
+        $icon = Icon::historyIconsTextColor($result);
+        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($oldModel->$type)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($newModel->$type)."</span>";
+    }
+
+    public static function historyCalc($new, $old, $type, $invert = false){
+        if ($new != $old){
+            if ($new > $old){
+                $result = ($invert == false)?'up':'down';
+            }else{
+                $result = ($invert == true)?'up':'down';
+            }
+        }else{
+            $result = 'equals';
+        }
+        $icon = Icon::historyIconsTextColor($result);
+        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
+    }
+
+    public static function thousandsCurrencyFormat($num) {
+
+        if($num>100000) {
+
+            $x = round($num);
+            $x_number_format = number_format($x);
+            $x_array = explode(',', $x_number_format);
+            $x_parts = array('k', 'm', 'b', 't');
+            $x_count_parts = count($x_array) - 1;
+            $x_display = $x;
+            $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '') . ((int) $x_array[1][1] !== 0 ? $x_array[1][1] : '');
+            $x_display .= $x_parts[$x_count_parts - 1];
+
+            return $x_display;
+
+        }
+
+        return self::numberConv($num);
+    }
+
 }

@@ -79,4 +79,16 @@ class Icon
             default: return asset('images/ds_images/wb/remove.gif');
         }
     }
+
+    public static function historyIconsTextColor($result){
+        switch ($result){
+            case 'up':
+                return ['color' => 'success', 'icon' => 'caret-up'];
+            case 'down':
+                return ['color' => 'danger', 'icon' => 'caret-down'];
+            case 'equals':
+                return ['color' => 'dark', 'icon' => 'grip-lines'];
+        }
+    }
+
 }

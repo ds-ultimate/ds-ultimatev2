@@ -11,6 +11,7 @@ use App\Conquer;
 use App\AllyChanges;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Resources\World as WorldResource;
 use App\Http\Resources\Ally as AllyResource;
@@ -362,4 +363,91 @@ class APIController extends Controller
         }
         return response()->json($converted);
     }
+
+    public function getPlayersHistory($server, $world, $day)
+    {
+        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+        $datas = $playerModel->newQuery();
+
+        return DataTables::eloquent($datas)
+            ->editColumn('rank', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'rank', true);
+            })
+            ->editColumn('name', function ($player){
+                return BasicFunctions::decodeName($player->name);
+            })
+            ->addColumn('ally', function ($player){
+                return ($player->ally_id != 0)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
+            })
+            ->editColumn('points', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'points', false);
+            })
+            ->editColumn('village_count', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'village_count', false);
+            })
+            ->addColumn('village_points', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                $new = ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
+                $old = ($playerOld->points == 0 || $playerOld->village_count == 0)? 0 : ($playerOld->points/$playerOld->village_count);
+                return BasicFunctions::historyCalc($new, $old, 'village_count', false);
+            })
+            ->editColumn('gesBash', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'gesBash', false);
+            })
+            ->editColumn('offBash', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'offBash', false);
+            })
+            ->editColumn('defBash', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
+            })
+            ->addColumn('utBash', function ($player) use($days){
+                $playerOld = $player->playerHistory($days);
+
+                if($playerOld == null){
+                    return 'NO DATA';
+                }
+                $new = $player->gesBash - $player->offBash - $player->defBash;
+                $old = $playerOld->gesBash - $playerOld->offBash - $playerOld->defBash;
+                return BasicFunctions::historyCalc($new, $old, 'utBash', false);
+            })
+            ->rawColumns(['rank','points','village_count','village_points','gesBash','offBash','defBash','utBash'])
+            ->toJson();
+    }
+
 }

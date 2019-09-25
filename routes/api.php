@@ -29,6 +29,7 @@ Route::get('/{server}/{world}/searchPlayer', 'APIController@getSearchPlayerByNam
 Route::get('/{server}/{world}/searchAlly', 'APIController@getSearchAllyByName')->name('searchAllyByName');
 
 Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('worldPlayer');
+Route::get('/{server}/{world}/players/{days}', 'APIController@getPlayersHistory')->name('worldPlayerHistory');
 Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('worldAlly');
 Route::get('/{server}/{world}/ally/{ally}', 'APIController@getAllyPlayer')->name('allyPlayer');
 Route::get('/{server}/{world}/player/{player}', 'APIController@getPlayerVillage')->name('playerVillage');

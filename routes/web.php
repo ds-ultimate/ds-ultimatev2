@@ -18,7 +18,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
-    return view("test");
+    return view('test');
 });
 
 Route::get('/setlocale/{locale}',function($lang){

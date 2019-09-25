@@ -4,6 +4,7 @@ namespace App;
 
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 
 class Player extends CustomModel
 {
@@ -158,4 +159,15 @@ class Player extends CustomModel
             
         return "{$world->url}/$guestPart.php?screen=info_player&id={$this->playerID}";
     }
+
+    public function playerHistory($days){
+        $tableNr = $this->playerID % config('dsUltimate.hash_player');
+        $dbName = explode('.', $this->getTable());
+
+        $playerModel = new Player();
+        $playerModel->setTable($dbName[0].'.player_'.$tableNr);
+        $timestamp = Carbon::now()->subDays($days);
+        return $playerModel->where('playerID', $this->playerID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
+    }
+
 }
