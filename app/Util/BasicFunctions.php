@@ -313,7 +313,7 @@ class BasicFunctions
             $result = 'equals';
         }
         $icon = Icon::historyIconsTextColor($result);
-        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
+        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
     }
 
     public static function thousandsCurrencyFormat($num) {
