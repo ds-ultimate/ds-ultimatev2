@@ -410,6 +410,13 @@
                     elm.style.height = elm.clientHeight + "px";
                     $('.map-show-content').empty();
                     $('.active.map-show-tab').trigger('click');
+                    
+                    mapDimensions = [
+                        response.data.xs,
+                        response.data.ys,
+                        response.data.w,
+                        response.data.h,
+                    ];
                 })
                 .catch((error) => {
 
@@ -473,12 +480,19 @@
             });
         });
         
+        var mapDimensions = [
+            {{$mapDimensions['xs']}},
+            {{$mapDimensions['ys']}},
+            {{$mapDimensions['w']}},
+            {{$mapDimensions['h']}},
+        ];
+        
         function mapClicked(e, that, targetID, xSize, ySize) {
             var xPerc = (e.pageX - $(that).offset().left) / xSize;
             var yPerc = (e.pageY - $(that).offset().top) / ySize;
             
-            var mapX = Math.floor( {{$mapDimensions['xs']}} + {{$mapDimensions['w']}}*xPerc );
-            var mapY = Math.floor( {{$mapDimensions['ys']}} + {{$mapDimensions['h']}}*yPerc );
+            var mapX = Math.floor( mapDimensions[0] + mapDimensions[2]*xPerc );
+            var mapY = Math.floor( mapDimensions[1] + mapDimensions[3]*yPerc );
             
             
             if($('#map-popup')[0]) {
@@ -503,8 +517,6 @@
                     
                     $('#map-popup')[0].style.left = xRel+"px";
                     $('#map-popup')[0].style.top = yRel+"px";
-                    
-                    console.log(data);
                 })
                 .catch((error) => {
                 });

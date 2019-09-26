@@ -125,7 +125,7 @@ class MapController extends BaseController
         }
         $wantedMap->save();
         
-        return "success";
+        return response()->json($this->getMapDimension($wantedMap));
     }
     
     private function getMapDimension(Map $mapModel) {
