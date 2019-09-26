@@ -218,4 +218,17 @@ return array (
     'guest' => 'Ingame (Guest access)',
     'normal' => 'Ingame (User access)',
   ),
+  'old' => 
+  array (
+    'defBash' => 'Old Defender',
+    'gesBash' => 'Old Total',
+    'member_count' => 'Old Members',
+    'offBash' => 'Old Attacker',
+    'player_points' => 'Old Points per Player',
+    'points' => 'Old Points',
+    'rank' => 'Old Rank',
+    'utBash' => 'Old Supporter',
+    'village_count' => 'Old Villages',
+    'village_points' => 'Old Point per player',
+  ),
 );

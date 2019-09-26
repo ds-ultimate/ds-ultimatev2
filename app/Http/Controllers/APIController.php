@@ -366,6 +366,7 @@ class APIController extends Controller
 
     public function getPlayersHistory($server, $world, $day)
     {
+        BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
@@ -452,6 +453,7 @@ class APIController extends Controller
 
     public function getAllysHistory($server, $world, $day)
     {
+        BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $allyModel = new Ally();
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');

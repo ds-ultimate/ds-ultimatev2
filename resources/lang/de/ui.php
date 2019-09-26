@@ -63,7 +63,7 @@ return array (
     'avgVillage' => 'Punkte pro Dorf',
     'conquer' => 'Eroberungen',
     'allyChanges' => 'Stammeswechsel',
-    'bashGes' => 'Insgesammt',
+    'bashGes' => 'Insgesamt',
     'bashOff' => 'Angreifer',
     'bashDeff' => 'Verteidiger',
     'date' => 'Datum',
@@ -217,5 +217,18 @@ return array (
   array (
     'normal' => 'Ingame (Normal)',
     'guest' => 'Ingame (Gastzugang)',
+  ),
+  'old' => 
+  array (
+    'rank' => 'Alter Rang',
+    'points' => 'Alte Punkte',
+    'member_count' => 'Alte Mitglieder',
+    'village_count' => 'Alte Dörfer',
+    'player_points' => 'Alte Punkte pro Spieler',
+    'gesBash' => 'Alte Insgesamt',
+    'offBash' => 'Alte Angreifer',
+    'defBash' => 'Alte Verteidiger',
+    'village_points' => 'Alte Punkte pro Dorf',
+    'utBash' => 'Alte Unterstützer',
   ),
 );

@@ -56,7 +56,7 @@ return array (
   'yes' => 'Ja',
   'youAreLoggedIn' => 'Sie sind angemeldet!',
   'yourAccountNeedsAdminApproval' => 'Your accounts needs an administrator approval in order to log in',
-  'submit' => 'Senden',
+  'submit' => 'Submit',
   'action' => 'Action',
   'action_id' => 'Action ID',
   'action_model' => 'Action Model',
