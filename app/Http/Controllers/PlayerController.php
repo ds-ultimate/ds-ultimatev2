@@ -98,4 +98,12 @@ class PlayerController extends Controller
         }
         return view('content.playerConquer', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
     }
+
+    public function rank($server, $world){
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+
+        return view('content.rankPlayer', compact('worldData', 'server'));
+    }
 }

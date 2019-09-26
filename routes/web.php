@@ -87,6 +87,7 @@ Route::get('/{server}/{world}', 'Controller@world')->name('world');
 
 Route::get('/{server}/{world}/allys', 'Controller@allys')->name('worldAlly');
 Route::get('/{server}/{world}/players', 'Controller@players')->name('worldPlayer');
+Route::get('/{server}/{world}/players/ranks', 'PlayerController@rank')->name('rankPlayer');
 Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');
 Route::get('/{server}/{world}/ally/{ally}', 'AllyController@ally')->name('ally');
 Route::get('/{server}/{world}/village/{village}', 'VillageController@village')->name('village');
