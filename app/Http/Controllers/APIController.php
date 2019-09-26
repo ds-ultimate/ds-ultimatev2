@@ -450,4 +450,90 @@ class APIController extends Controller
             ->toJson();
     }
 
+    public function getAllysHistory($server, $world, $day)
+    {
+        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
+        $allyModel = new Ally();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
+
+        $datas = $allyModel->newQuery();
+
+        return DataTables::eloquent($datas)
+            ->editColumn('rank', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'rank', true);
+            })
+            ->editColumn('name', function ($ally){
+                return BasicFunctions::decodeName($ally->name);
+            })
+            ->editColumn('tag', function ($ally){
+                return BasicFunctions::decodeName($ally->tag);
+            })
+            ->editColumn('points', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'points', false);
+            })
+            ->editColumn('member_count', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'member_count', false);
+            })
+            ->editColumn('village_count', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'village_count', false);
+            })
+            ->editColumn('player_points', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                $new = ($ally->points == 0 || $ally->member_count == 0)? 0 : ($ally->points/$ally->member_count);
+                $old = ($allyOld->points == 0 || $allyOld->member_count == 0)? 0 : ($allyOld->points/$allyOld->member_count);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::historyCalc($new, $old, 'player_points', false);
+            })
+            ->editColumn('gesBash', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'gesBash', false);
+            })
+            ->editColumn('offBash', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'offBash', false);
+            })
+            ->editColumn('defBash', function ($ally) use($days){
+                $allyOld = $ally->allyHistory($days);
+
+                if($allyOld == null){
+                    return 'NO DATA';
+                }
+                return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'defBash', false);
+            })
+            ->rawColumns(['rank','points','member_count','village_count','player_points','gesBash','offBash','defBash'])
+            ->toJson();
+    }
+
 }

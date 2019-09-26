@@ -106,4 +106,12 @@ class AllyController extends Controller
         }
         return view('content.allyConquer', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
     }
+
+    public function rank($server, $world){
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+
+        return view('content.rankAlly', compact('worldData', 'server'));
+    }
 }

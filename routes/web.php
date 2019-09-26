@@ -18,7 +18,6 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
-    return view('test');
 });
 
 Route::get('/setlocale/{locale}',function($lang){
@@ -86,6 +85,7 @@ Route::get('/{server}', 'Controller@server')->name('server');
 Route::get('/{server}/{world}', 'Controller@world')->name('world');
 
 Route::get('/{server}/{world}/allys', 'Controller@allys')->name('worldAlly');
+Route::get('/{server}/{world}/allys/ranks', 'AllyController@rank')->name('rankAlly');
 Route::get('/{server}/{world}/players', 'Controller@players')->name('worldPlayer');
 Route::get('/{server}/{world}/players/ranks', 'PlayerController@rank')->name('rankPlayer');
 Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');

@@ -5,6 +5,7 @@ namespace App;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Ally extends CustomModel
 {
@@ -134,5 +135,15 @@ class Ally extends CustomModel
         }
             
         return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->allyID}";
+    }
+
+    public function allyHistory($days){
+        $tableNr = $this->allyID % config('dsUltimate.hash_ally');
+        $dbName = explode('.', $this->getTable());
+
+        $playerModel = new Player();
+        $playerModel->setTable($dbName[0].'.ally_'.$tableNr);
+        $timestamp = Carbon::now()->subDays($days);
+        return $playerModel->where('allyID', $this->allyID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
     }
 }

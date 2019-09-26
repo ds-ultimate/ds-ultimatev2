@@ -210,6 +210,8 @@ return array (
   array (
     'stats' => 'Statistiken',
     'map' => 'Übersichtskarte',
+    'current' => 'Aktuell',
+    'history' => 'Verlauf',
   ),
   'ingame' => 
   array (

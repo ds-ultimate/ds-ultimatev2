@@ -210,6 +210,8 @@ return array (
   array (
     'stats' => 'Stats',
     'map' => 'Map',
+    'current' => 'Current',
+    'history' => 'History',
   ),
   'ingame' => 
   array (

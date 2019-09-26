@@ -1,12 +1,12 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->displayName().': '.__('ui.server.ranking').' '.__('ui.titel.player'))
+@section('titel', $worldData->displayName().': '.__('ui.server.ranking').' '.__('ui.titel.ally'))
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-                <h1 class="font-weight-normal">{{ $worldData->displayName() }}<br>{{ __('ui.server.ranking').' '.__('ui.tabletitel.player') }}</h1>
+                <h1 class="font-weight-normal">{{ $worldData->displayName() }}<br>{{ __('ui.server.ranking').' '.__('ui.tabletitel.ally') }}</h1>
             </div>
         </div>
         <div class="col-12">
@@ -21,14 +21,14 @@
                         <tr>
                             <th>{{ ucfirst(__('ui.table.rank')) }}</th>
                             <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.ally')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.tag')) }}</th>
                             <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.members')) }}</th>
                             <th>{{ ucfirst(__('ui.table.villages')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.avgVillage')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashGes')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashOff')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashDeff')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashUt')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,18 +55,18 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldPlayerHistory', [$worldData->server->code, $worldData->name, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
+                "ajax": "{{ route('api.worldAllyHistory', [$worldData->server->code, $worldData->name, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {if (value != "-"){return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}else{return value}}, "orderable": false},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                    { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
                     { "data": "points"},
+                    { "data": "member_count"},
                     { "data": "village_count"},
-                    { "data": "village_points", "orderable": false},
+                    { "data": "player_points", "orderable": false},
                     { "data": "gesBash"},
                     { "data": "offBash"},
                     { "data": "defBash"},
-                    { "data": "utBash", "orderable": false},
                 ],
                 responsive: true,
                 "drawCallback": function(settings, json) {
@@ -79,7 +79,7 @@
 
             $(document).on('change', '#date_picker', function (e) {
                 $('[data-toggle="popover"]').popover('disable');
-                table.ajax.url('{{ route('api.worldPlayer', [$worldData->server->code,$worldData->name]) }}/' + $(this).val()).load();
+                table.ajax.url('{{ route('api.worldAlly', [$worldData->server->code,$worldData->name]) }}/' + $(this).val()).load();
             });
 
             $('#table_id_wrapper').prepend('' +

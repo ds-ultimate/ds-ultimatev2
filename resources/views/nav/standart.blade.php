@@ -38,8 +38,10 @@
                     </a>
                     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
                         <li class="dropdown-item"><a href="{{ route('world', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tabletitel.top10')) }}</a></li>
-                        <li class="dropdown-item"><a href="{{ route('rankPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }}</a></li>
-                        <li class="dropdown-item"><a href="{{ route('worldAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }}</a></li>
+                        <li class="dropdown-item"><a href="{{ route('worldPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }} ({{ __('ui.nav.current') }})</a></li>
+                        <li class="dropdown-item"><a href="{{ route('rankPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }} ({{ __('ui.nav.history') }})</a></li>
+                        <li class="dropdown-item"><a href="{{ route('worldAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.current') }})</a></li>
+                        <li class="dropdown-item"><a href="{{ route('rankAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.history') }})</a></li>
                     </ul>
                 </li>
                     <li class="nav-item dropdown">
