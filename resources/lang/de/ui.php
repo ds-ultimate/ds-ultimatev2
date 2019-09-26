@@ -230,5 +230,6 @@ return array (
     'defBash' => 'Alte Verteidiger',
     'village_points' => 'Alte Punkte pro Dorf',
     'utBash' => 'Alte Unterstützer',
+    'nodata' => 'Keine Daten vorhanden',
   ),
 );

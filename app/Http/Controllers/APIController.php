@@ -377,7 +377,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'rank', true);
             })
@@ -391,7 +391,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'points', false);
             })
@@ -399,7 +399,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'village_count', false);
             })
@@ -407,7 +407,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 $new = ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
                 $old = ($playerOld->points == 0 || $playerOld->village_count == 0)? 0 : ($playerOld->points/$playerOld->village_count);
@@ -417,7 +417,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'gesBash', false);
             })
@@ -425,7 +425,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'offBash', false);
             })
@@ -433,7 +433,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
             })
@@ -441,7 +441,7 @@ class APIController extends Controller
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 $new = $player->gesBash - $player->offBash - $player->defBash;
                 $old = $playerOld->gesBash - $playerOld->offBash - $playerOld->defBash;
@@ -465,7 +465,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'rank', true);
             })
@@ -479,7 +479,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'points', false);
             })
@@ -487,7 +487,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'member_count', false);
             })
@@ -495,7 +495,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'village_count', false);
             })
@@ -506,7 +506,7 @@ class APIController extends Controller
                 $old = ($allyOld->points == 0 || $allyOld->member_count == 0)? 0 : ($allyOld->points/$allyOld->member_count);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::historyCalc($new, $old, 'player_points', false);
             })
@@ -514,7 +514,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'gesBash', false);
             })
@@ -522,7 +522,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'offBash', false);
             })
@@ -530,7 +530,7 @@ class APIController extends Controller
                 $allyOld = $ally->allyHistory($days);
 
                 if($allyOld == null){
-                    return 'NO DATA';
+                    return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'defBash', false);
             })

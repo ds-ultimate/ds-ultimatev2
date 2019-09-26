@@ -230,5 +230,6 @@ return array (
     'utBash' => 'Old Supporter',
     'village_count' => 'Old Villages',
     'village_points' => 'Old Point per player',
+    'nodata' => 'no data',
   ),
 );
