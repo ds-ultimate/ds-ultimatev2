@@ -41,6 +41,7 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script>
         $(document).ready( function () {
             var table = $('#table_id').DataTable({
@@ -73,6 +74,12 @@
                     $('[data-toggle="popover"]').popover({
                         html : true,
                     });
+                    $("#date_picker").datepicker({
+                        format:'yyyy-mm-dd',
+                        startDate:'{{ \Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}',
+                        endDate:'{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}',
+                        weekStart:1,
+                    })
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
@@ -88,7 +95,7 @@
                 '<div class="col-4">' +
                 '<div class="form-inline">' +
                 '<label class="control-label pr-3">Datum: </label>' +
-                '<input id="date_picker" class="form-control form-control-sm col-8" type="date" value="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" max="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" min="{{ \Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}">' +
+                '<input id="date_picker" class="form-control form-control-sm col-8" type="text" value="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" max="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" min="{{ \Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}" readonly>' +
                 '</div>' +
                 '<div class="col-4">' +
                 '</div>' +

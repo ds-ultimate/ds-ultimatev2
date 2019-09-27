@@ -29,6 +29,7 @@
     "dependencies": {
         "@ttskch/select2-bootstrap4-theme": "^1.2.3",
         "bootstrap-colorpicker": "^3.1.2",
+        "bootstrap-datepicker": "^1.9.0",
         "datatables.net": "^1.10.19",
         "datatables.net-bs4": "^1.10.19",
         "datatables.net-buttons": "^1.5.6",

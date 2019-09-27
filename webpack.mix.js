@@ -20,7 +20,7 @@ mix.sass('resources/sass/app.scss', 'public/css')
     .purgeCss({
         whitelistPatterns: [
             /(flag-icon.*|col-.*|.*pagination.*|.*page.*)/,
-            /.*popover.*/,
+            /.*popover.*/,/.*datepicker.*/,
         ],
         whitelist: [
             "arrow",
@@ -65,6 +65,11 @@ mix.copyDirectory('node_modules/@fonticonpicker/fonticonpicker/dist/fonts', 'pub
  */
 mix.copy('node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css', 'public/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css');
 mix.copy('node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js', 'public/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js');
+
+/*
+ *Date Picker
+ */
+mix.copy('node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js', 'public/plugin/bootstrap-datepicker/bootstrap-datepicker.min.js');
 
 /*
  * Select2 + theme
