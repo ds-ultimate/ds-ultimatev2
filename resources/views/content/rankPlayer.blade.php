@@ -75,6 +75,7 @@
                         html : true,
                     });
                     $("#date_picker").datepicker({
+                        language: 'all',
                         format:'yyyy-mm-dd',
                         startDate:'{{ \Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}',
                         endDate:'{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}',
@@ -83,6 +84,17 @@
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
+
+            $.fn.datepicker.dates['all'] = {
+                days: ["{{ __('datepicker.Sunday') }}", "{{ __('datepicker.Monday') }}", "{{ __('datepicker.Tuesday') }}", "{{ __('datepicker.Wednesday') }}", "{{ __('datepicker.Thursday') }}", "{{ __('datepicker.Friday') }}", "{{ __('datepicker.Saturday') }}"],
+                daysShort: ["{{ __('datepicker.Sun') }}", "{{ __('datepicker.Mon') }}", "{{ __('datepicker.Tue') }}", "{{ __('datepicker.Wed') }}", "{{ __('datepicker.Thu') }}", "{{ __('datepicker.Fri') }}", "{{ __('datepicker.Sat') }}"],
+                daysMin: ["{{ __('datepicker.Su') }}", "{{ __('datepicker.Mo') }}", "{{ __('datepicker.Tu') }}", "{{ __('datepicker.We') }}", "{{ __('datepicker.Th') }}", "{{ __('datepicker.Fr') }}", "{{ __('datepicker.Sa') }}"],
+                months: ["{{ __('datepicker.January') }}", "{{ __('datepicker.February') }}", "{{ __('datepicker.March') }}", "{{ __('datepicker.April') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.June') }}", "{{ __('datepicker.July') }}", "{{ __('datepicker.August') }}", "{{ __('datepicker.September') }}", "{{ __('datepicker.October') }}", "{{ __('datepicker.November') }}", "{{ __('datepicker.December') }}"],
+                monthsShort: ["{{ __('datepicker.Jan') }}", "{{ __('datepicker.Feb') }}", "{{ __('datepicker.Mar') }}", "{{ __('datepicker.Apr') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.Jun') }}", "{{ __('datepicker.Jul') }}", "{{ __('datepicker.Aug') }}", "{{ __('datepicker.Sep') }}", "{{ __('datepicker.Oct') }}", "{{ __('datepicker.Nov') }}", "{{ __('datepicker.Dec') }}"],
+                today: "{{ __('datepicker.Today') }}",
+                monthsTitle: "{{ __('datepicker.months') }}",
+                clear: "{{ __('datepicker.Clear') }}",
+            };
 
             $(document).on('change', '#date_picker', function (e) {
                 $('[data-toggle="popover"]').popover('disable');
@@ -94,7 +106,7 @@
                 '<div class="col-4"></div>' +
                 '<div class="col-4">' +
                 '<div class="form-inline">' +
-                '<label class="control-label pr-3">Datum: </label>' +
+                '<label class="control-label pr-3">{{ __('ui.table.date') }}: </label>' +
                 '<input id="date_picker" class="form-control form-control-sm col-8" type="text" value="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" max="{{ \Illuminate\Support\Carbon::now()->subDay()->toDateString() }}" min="{{ \Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}" readonly>' +
                 '</div>' +
                 '<div class="col-4">' +

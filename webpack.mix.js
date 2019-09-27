@@ -71,6 +71,7 @@ mix.copy('node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.j
  */
 mix.copy('node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js', 'public/plugin/bootstrap-datepicker/bootstrap-datepicker.min.js');
 
+
 /*
  * Select2 + theme
  */
