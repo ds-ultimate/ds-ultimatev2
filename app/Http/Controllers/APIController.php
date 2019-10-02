@@ -499,7 +499,7 @@ class APIController extends Controller
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'village_count', false);
             })
-            ->editColumn('player_points', function ($ally) use($days){
+            ->addColumn('player_points', function ($ally) use($days){
                 $allyOld = $ally->allyHistory($days);
 
                 $new = ($ally->points == 0 || $ally->member_count == 0)? 0 : ($ally->points/$ally->member_count);
