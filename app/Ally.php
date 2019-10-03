@@ -103,6 +103,7 @@ class Ally extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function allyDataChart($server, $world, $allyID){
+        $allyID = (int) $allyID;
         $tabelNr = $allyID % config('dsUltimate.hash_ally');
 
         $allyModel = new Ally();

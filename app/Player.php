@@ -104,7 +104,6 @@ class Player extends CustomModel
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
         return $playerModel->find($player);
-
     }
 
     /**
@@ -114,6 +113,7 @@ class Player extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function playerDataChart($server, $world, $playerID){
+        $playerID = (int) $playerID;
         $tabelNr = $playerID % config('dsUltimate.hash_player');
 
         $playerModel = new Player();

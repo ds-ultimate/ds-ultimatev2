@@ -58,6 +58,7 @@ class Village extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function villageDataChart($server, $world, $villageID){
+        $villageID = (int) $villageID;
         $tabelNr = $villageID % config('dsUltimate.hash_village');
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);

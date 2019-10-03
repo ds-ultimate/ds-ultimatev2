@@ -25,15 +25,17 @@ class PictureController extends Controller
             return "Invalid type";
         }
         
+        $allyData = Ally::ally($server, $world, $allyID);
+        if ($allyData == null) {
+            return "Ally not Found";
+        }
+        
         $rawStatData = Ally::allyDataChart($server, $world, $allyID);
-        
         $statData = array();
-        
         foreach ($rawStatData as $rawData){
             $statData[$rawData->get('timestamp')] = $rawData->get($type);
         }
         
-        $allyData = Ally::ally($server, $world, $allyID);
         $name = \App\Util\BasicFunctions::decodeName($allyData->name);
         $tag = \App\Util\BasicFunctions::decodeName($allyData->tag);
         $allyString = __('chart.who.ally') . ": $name [$tag]";
@@ -50,15 +52,17 @@ class PictureController extends Controller
             return "Invalid type";
         }
         
+        $playerData = Player::player($server, $world, $playerID);
+        if ($playerData == null) {
+            return "Player not Found";
+        }
+        
         $rawStatData = Player::playerDataChart($server, $world, $playerID);
-        
         $statData = array();
-        
         foreach ($rawStatData as $rawData){
             $statData[$rawData->get('timestamp')] = $rawData->get($type);
         }
         
-        $playerData = Player::player($server, $world, $playerID);
         $name = \App\Util\BasicFunctions::decodeName($playerData->name);
         $playerString = __('chart.who.player') . ": $name";
         
@@ -74,15 +78,17 @@ class PictureController extends Controller
             return "Invalid type";
         }
         
+        $villageData = Village::village($server, $world, $villageID);
+        if ($villageData == null) {
+            return "Village not Found";
+        }
+        
         $rawStatData = Village::villageDataChart($server, $world, $villageID);
-        
         $statData = array();
-        
         foreach ($rawStatData as $rawData){
             $statData[$rawData->get('timestamp')] = $rawData->get($type);
         }
         
-        $villageData = Village::village($server, $world, $villageID);
         $name = \App\Util\BasicFunctions::decodeName($villageData->name);
         $x = $villageData->x;
         $y = $villageData->y;
