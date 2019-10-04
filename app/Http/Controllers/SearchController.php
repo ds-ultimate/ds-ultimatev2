@@ -16,7 +16,7 @@ class SearchController extends Controller
     public function searchForm(Request $request, $server)
     {
         if ($request->search != null) {
-            return redirect()->route('search', [$server, urlencode($request->submit), urlencode($request->search)]);
+            return redirect()->route('search', [$server, rawurlencode($request->submit), rawurlencode($request->search)]);
         }else{
             return redirect()->back();
         }
