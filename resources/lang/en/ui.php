@@ -232,4 +232,9 @@ return array (
     'village_points' => 'Old Point per player',
     'nodata' => 'no data',
   ),
+  'own' => 
+  array (
+    'attackplanner' => 'Own attacklists',
+    'maps' => 'Own maps',
+  ),
 );

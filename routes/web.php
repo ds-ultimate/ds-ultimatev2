@@ -68,6 +68,10 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
 });
 
+Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middleware' => ['verified']], function () {
+    Route::get('overview', 'HomeController@overview')->name('overview');
+});
+
 Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");

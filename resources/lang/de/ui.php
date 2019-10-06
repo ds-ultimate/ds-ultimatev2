@@ -232,4 +232,9 @@ return array (
     'utBash' => 'Alte Unterstützer',
     'nodata' => 'Keine Daten vorhanden',
   ),
+  'own' => 
+  array (
+    'maps' => 'Eigene Karten',
+    'attackplanner' => 'Eigene Angriffspläne',
+  ),
 );

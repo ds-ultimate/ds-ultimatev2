@@ -97,4 +97,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany('App\BugreportComment');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user){
+            $profile = new Profile();
+            $profile->user_id = $user->id;
+            $profile->save();
+        });
+    }
 }

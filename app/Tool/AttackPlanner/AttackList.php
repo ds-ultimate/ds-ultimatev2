@@ -9,8 +9,10 @@
 namespace App\Tool\AttackPlanner;
 
 
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class AttackList extends Model
 {
@@ -40,6 +42,23 @@ class AttackList extends Model
     public function items()
     {
         return $this->hasMany('App\Tool\AttackPlanner\AttackListItem' )->orderBy('send_time');
+    }
+
+    public function nextAttack(){
+        $item = $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->first();
+        if (!isset($item->send_time)){
+            return '-';
+        }
+        $date = $item->send_time->locale(\App::getLocale());
+        return $date->isoFormat('L LT');
+    }
+
+    public function outdatedCount(){
+        return $this->items->where('send_time', '<', Carbon::createFromTimestamp(time()))->count();
+    }
+
+    public function attackCount(){
+        return $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->count();
     }
 
 }
