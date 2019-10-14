@@ -104,10 +104,27 @@ mix.styles([
     'node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css',
 ], 'public/css/datatables.min.css');
 
-/*mix.copy('node_modules/datatables.net/js/jquery.dataTables.min.js', 'public/plugin/datatables/jquery.datatables.min.js');
-mix.copy('node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js', 'public/plugin/datatables/datatables.bootstrap4.min.js');
-mix.copy('node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css', 'public/plugin/datatables/datatables.bootstrap4.min.css');
-mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.min.js', 'public/plugin/datatables/datatables.responsive.min.js');
-mix.copy('node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js', 'public/plugin/datatables/datatables.responsive.bootstrap4.min.js');
-mix.copy('node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css', 'public/plugin/datatables/datatables.responsive.bootstrap4.min.css');
-*/
+/*
+ * DrawerJS
+ */
+
+mix.copy([
+    'node_modules/drawerjs/dist/drawerJs.min.css',
+    'node_modules/drawerjs/dist/drawerJs.standalone.min.js'
+], 'public/plugin/drawerJS/');
+
+mix.copy([
+    'node_modules/drawerjs/dist/assets/border.gif',
+    'node_modules/drawerjs/dist/assets/border-dashed-bold.png',
+    'node_modules/drawerjs/dist/assets/border-dashed-thin.png',
+    'node_modules/drawerjs/dist/assets/border-solid-bold.png',
+    'node_modules/drawerjs/dist/assets/border-solid-thin.png',
+    'node_modules/drawerjs/dist/assets/cursor-fa-eraser.cur',
+    'node_modules/drawerjs/dist/assets/cursor-fa-eraser.png',
+    'node_modules/drawerjs/dist/assets/cursor-fa-pencil.cur',
+    'node_modules/drawerjs/dist/assets/cursor-fa-pencil.png',
+    'node_modules/drawerjs/dist/assets/cursor-fa-rotate-right.cur',
+    'node_modules/drawerjs/dist/assets/cursor-fa-rotate-right.png',
+    'node_modules/drawerjs/dist/assets/pencil-square-o.32.png',
+    'node_modules/drawerjs/dist/assets/transparent.png',
+], 'public/plugin/drawerJS/assets');
