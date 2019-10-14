@@ -237,4 +237,5 @@ return array (
     'maps' => 'Eigene Karten',
     'attackplanner' => 'Eigene Angriffspläne',
   ),
+  'noTitle' => 'Kein Titel',
 );

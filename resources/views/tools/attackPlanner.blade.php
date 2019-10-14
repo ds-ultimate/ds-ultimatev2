@@ -44,7 +44,14 @@
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
                         <form id="createItemForm">
-                            <div class="row pt-3">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <b id="title-show" class="h3 card-title">{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</b>
+                                    <input id="title-input" class="form-control mb-3" style="display:none" name="title" type="text">
+                                    <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
+                                    <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
+                                    <hr>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('ui.tool.attackPlanner.type') }}</label>
@@ -422,6 +429,30 @@
         }
 
         @if($mode == 'edit')
+        function titleEdit() {
+            var input = $('#title-input');
+            var title = $('#title-show');
+            var edit = $('#title-edit');
+            var save = $('#title-save');
+            title.hide();
+            edit.hide();
+            input.val(title.html());
+            input.show();
+            save.show();
+        }
+
+        function titleSave() {
+            var input = $('#title-input');
+            var title = $('#title-show');
+            var edit = $('#title-edit');
+            var save = $('#title-save');
+            input.hide();
+            save.hide();
+            title.html(input.val());
+            title.show();
+            edit.show();
+        }
+
         function destroy(id,key) {
             $.ajax(
                 {

@@ -237,4 +237,5 @@ return array (
     'attackplanner' => 'Own attacklists',
     'maps' => 'Own maps',
   ),
+  'noTitle' => 'No title',
 );

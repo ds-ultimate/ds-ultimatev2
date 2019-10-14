@@ -33,9 +33,16 @@
                             <div class="row mt-2">
                                 <div class="col-4">
                                     <div class="list-group" id="ownMaps" role="tablist">
-                                        @foreach($maps as $map)
-                                            <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home"><b>{{ $map->world->displayName() }}</b><span class="float-right">{{ ($map->title === null)? 'Kein Titel': $map->title }}</span></a>
-                                        @endforeach
+                                        @if (count($maps) > 0)
+                                            @foreach($maps as $map)
+                                                <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home">
+                                                    <b>{{ $map->world->displayName() }}</b>
+                                                    <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
+                                                </a>
+                                            @endforeach
+                                        @else
+                                            {{ __('ui.own.noMap') }}
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -88,27 +95,31 @@
                                                 </div>
                                             </div>
                                         </a>
-                                        @foreach($attackLists as $attackList)
-                                            <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}')" data-toggle="list" role="tab" aria-controls="home">
-                                                <div class="row">
-                                                    <div class="col-2">
-                                                        <b>{{ $attackList->world->displayName() }}</b>
+                                        @if (count($attackLists) > 0)
+                                            @foreach($attackLists as $attackList)
+                                                <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}')" data-toggle="list" role="tab" aria-controls="home">
+                                                    <div class="row">
+                                                        <div class="col-2">
+                                                            <b>{{ $attackList->world->displayName() }}</b>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <span class="badge badge-info badge-pill float-right text-white">{{ $attackList->nextAttack() }}</span>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <span class="badge badge-success badge-pill float-right">{{ $attackList->attackCount() }}</span>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <span class="badge badge-danger badge-pill float-right">{{ $attackList->outdatedCount() }}</span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-6">
-                                                        <span>{{ ($attackList->title === null)? 'Kein Titel': $attackList->title }}</span>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <span class="badge badge-info badge-pill float-right text-white">{{ $attackList->nextAttack() }}</span>
-                                                    </div>
-                                                    <div class="col-1">
-                                                        <span class="badge badge-success badge-pill float-right">{{ $attackList->attackCount() }}</span>
-                                                    </div>
-                                                    <div class="col-1">
-                                                        <span class="badge badge-danger badge-pill float-right">{{ $attackList->outdatedCount() }}</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        @endforeach
+                                                </a>
+                                            @endforeach
+                                        @else
+                                            {{ __('ui.own.noAttackplanner') }}
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-2">
