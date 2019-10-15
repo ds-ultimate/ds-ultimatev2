@@ -13,7 +13,7 @@
                 {{ ucfirst(__('ui.tabletitel.overview')).' von ' }}
             </h1>
             <h4>
-                {{ Auth::getName() }}
+                {{ Auth::user()->name }}
             </h4>
         </div>
         <!-- ENDE Titel für Tablet | PC -->

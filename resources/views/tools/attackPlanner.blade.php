@@ -47,9 +47,9 @@
                             <div class="row">
                                 <div class="col-12 text-center">
                                     <b id="title-show" class="h3 card-title">{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</b>
-                                    <input id="title-input" class="form-control mb-3" style="display:none" name="title" type="text">
+                                    <input id="title-input" onfocus="this.select();" class="form-control mb-3" style="display:none" name="title" type="text">
                                     <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
-                                    <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
+                                    <a id="title-save" onclick="titleSave({{ $attackList->id }}, '{{ $attackList->edit_key }}')" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
                                     <hr>
                                 </div>
                                 <div class="col-md-4">
@@ -434,23 +434,30 @@
             var title = $('#title-show');
             var edit = $('#title-edit');
             var save = $('#title-save');
+            var t = (title.html() === '{{ __('ui.noTitle') }}')? '': title.html();
             title.hide();
             edit.hide();
-            input.val(title.html());
-            input.show();
+            input.val(t).show().focus();
             save.show();
         }
 
-        function titleSave() {
+        function titleSave(id,key) {
             var input = $('#title-input');
             var title = $('#title-show');
             var edit = $('#title-edit');
             var save = $('#title-save');
-            input.hide();
-            save.hide();
-            title.html(input.val());
-            title.show();
-            edit.show();
+            var t = (input.val() === '')? '{{ __('ui.noTitle') }}': input.val();
+            axios.post('{{ route('index') }}/tools/attackPlanner/' + id + '/title/' + key + '/' + t, {
+            })
+                .then((response) => {
+                    input.hide();
+                    save.hide();
+                    title.html(t).show();
+                    edit.show();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
 
         function destroy(id,key) {

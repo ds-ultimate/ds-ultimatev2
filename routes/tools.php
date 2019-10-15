@@ -16,6 +16,7 @@ Route::get('/{server}/{world}/tools/distanceCalc', 'Tools\DistanceCalcController
 Route::get('/{server}/{world}/tools/attackPlanner', 'Tools\AttackPlannerController@index')->name('attackPlannerNew');
 
 Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');
+Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', 'Tools\AttackPlannerController@title')->name('attackPlannerTitle');
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
 Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemController', [
     'only' => ['store', 'destroy'],
