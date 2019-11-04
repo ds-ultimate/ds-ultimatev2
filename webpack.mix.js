@@ -67,7 +67,7 @@ mix.copy('node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.
 mix.copy('node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js', 'public/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js');
 
 /*
- *Date Picker
+ * Date Picker
  */
 mix.copy('node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js', 'public/plugin/bootstrap-datepicker/bootstrap-datepicker.min.js');
 
@@ -128,3 +128,12 @@ mix.copy([
     'node_modules/drawerjs/dist/assets/pencil-square-o.32.png',
     'node_modules/drawerjs/dist/assets/transparent.png',
 ], 'public/plugin/drawerJS/assets');
+
+
+/**
+ * Font awesome
+ */
+
+mix.sass('resources/sass/fontawesome.scss', 'public/css');
+
+mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/plugin/fontawesome/');
