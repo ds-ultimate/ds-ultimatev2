@@ -232,7 +232,7 @@ class AttackPlannerController extends BaseController
                         $unitArray = [];
                         foreach ($units as $unit) {
                             $unitSplit = explode('=', $unit, 2);
-                            $unitArray += [$unitSplit[0] => base64_decode(str_replace('/', '', $unitSplit[1]))];
+                            $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
                         }
                     }
                     self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), $send, date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
