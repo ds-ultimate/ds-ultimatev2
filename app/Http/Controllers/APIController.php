@@ -135,8 +135,7 @@ class APIController extends Controller
                 $query->where('new_ally_id', $allyID);
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
 
         return $this->doAllyChangeReturn($query);
@@ -154,8 +153,7 @@ class APIController extends Controller
                 $query->where('player_id', $playerID);
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         
         return $this->doAllyChangeReturn($query);
@@ -210,8 +208,7 @@ class APIController extends Controller
                 $query->whereIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers);
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
 
         return $this->doConquerReturn($query);
@@ -238,8 +235,7 @@ class APIController extends Controller
                 $query->where([['old_owner', "=", $playerID],['new_owner', '=', $playerID]]);
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         
         return $this->doConquerReturn($query);
@@ -257,8 +253,7 @@ class APIController extends Controller
                 $query->where('village_id', $villageID);
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         
         return $this->doConquerReturn($query);
