@@ -28,7 +28,8 @@ class HomeController extends Controller
 
         $maps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         $attackLists = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        $attackListsFollow = \Auth::user()->followAttackPlanner()->get();
 
-        return view('user.overview', compact('maps', 'attackLists'));
+        return view('user.overview', compact('maps', 'attackLists', 'attackListsFollow'));
     }
 }
