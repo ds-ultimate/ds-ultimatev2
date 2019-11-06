@@ -23,6 +23,8 @@ Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemCo
 ]);
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
+Route::post('/tools/follow', 'FollowController@createFollowTool')->name('follow');
+
 
 //Map Tool
 Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->name('mapNew');

@@ -44,6 +44,11 @@ class AttackList extends Model
         return $this->hasMany('App\Tool\AttackPlanner\AttackListItem' )->orderBy('send_time');
     }
 
+    public function follows(){
+        return $this->morphToMany('App\User', 'followable', 'follows');
+        //return $this->morphedByMany('App\Tool\AttackPlanner\AttackList', 'followable');
+    }
+
     public function nextAttack(){
         $item = $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->first();
         if (!isset($item->send_time)){

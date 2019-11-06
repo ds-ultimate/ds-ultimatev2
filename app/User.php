@@ -108,4 +108,10 @@ class User extends Authenticatable implements MustVerifyEmail
             $profile->save();
         });
     }
+
+    public function followAttackPlanner()
+    {
+        return $this->morphedByMany('App\Tool\AttackPlanner\AttackList', 'followable', 'follows');
+    }
+
 }

@@ -46,6 +46,7 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
+                                    @if (count($maps) > 0)
                                     <div class="tab-content" id="nav-tabContent">
                                         <div class="tab-pane fade show active" id="previewMap" role="tabpanel" aria-labelledby="list-home-list">
                                             <img id="imgMap" src="{{ route('api.map.show.sized', [$maps->get(0)->id, $maps->get(0)->show_key, 500, 500, 'png']) }}">
@@ -69,6 +70,7 @@
                                             <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -123,6 +125,7 @@
                                     </div>
                                 </div>
                                 <div class="col-2">
+                                    @if (count($attackLists) > 0)
                                     <a id="editButtonAttackPlanner" href="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
                                     <a id="deleteButtonAttackPlanner" href="" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
                                     <label class="mt-3">{{ __('ui.tool.map.editLink') }}:</label>
@@ -139,6 +142,7 @@
                                             <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlanner')"><i class="far fa-copy"></i></span>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

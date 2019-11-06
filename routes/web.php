@@ -18,6 +18,8 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
+    $f = new \App\Http\Controllers\FollowController();
+    $f->createFollowTool('AttackPlanner_AttackList', 3);
 });
 
 Route::get('/setlocale/{locale}',function($lang){
