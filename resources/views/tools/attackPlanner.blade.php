@@ -573,7 +573,7 @@
                             }
                         })
                         .catch((error) => {
-                            console.log('fail')
+                            
                         });
                 }
             @endif
