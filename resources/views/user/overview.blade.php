@@ -28,6 +28,9 @@
                             <a class="nav-link" id="myAttackplanner-tab" data-toggle="tab" href="#myAttackplanner" role="tab" aria-controls="myAttackplanner" aria-selected="false">{{ __('ui.own.attackplanner') }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="followMap-tab" data-toggle="tab" href="#followMap" role="tab" aria-controls="followMap" aria-selected="false">{{ __('ui.follow.map') }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="followAttackplanner-tab" data-toggle="tab" href="#followAttackplanner" role="tab" aria-controls="followAttackplanner" aria-selected="false">{{ __('ui.follow.attackplanner') }}</a>
                         </li>
                     </ul>
@@ -153,6 +156,45 @@
                             </div>
                         </div>
                         {{--end own AttackList--}}
+                        {{--start follow Map--}}
+                        <div class="tab-pane fade" id="followMap" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row mt-2">
+                                <div class="col-4">
+                                    <div class="list-group" id="ownMaps" role="tablist">
+                                        @if (count($mapsFollow) > 0)
+                                            @foreach($mapsFollow as $map)
+                                                <a class="list-group-item list-group-item-action {{ ($mapsFollow->get(0)->id === $map->id)? 'active ': '' }}" id="{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', null, '{{ $map->show_key }}', true)" href="#previewMap" role="tab" aria-controls="home">
+                                                    <b>{{ $map->world->displayName() }}</b>
+                                                    <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
+                                                </a>
+                                            @endforeach
+                                        @else
+                                            {{ __('ui.own.noMap') }}
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    @if (count($mapsFollow) > 0)
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="previewMap" role="tabpanel" aria-labelledby="list-home-list">
+                                                <img alt="map" id="imgMapFollow" src="{{ route('api.map.show.sized', [$mapsFollow->get(0)->id, $mapsFollow->get(0)->show_key, 500, 500, 'png']) }}">
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-2">
+                                    <a id="showButtonMapFollow" href="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('ui.tool.attackPlanner.show') }}</a>
+                                    <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
+                                    <div class="input-group mb-2">
+                                        <input id="showLinkMapFollow" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        {{--end follow Map--}}
                         {{--start follow AttackList--}}
                         <div class="tab-pane fade" id="followAttackplanner" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row mt-2">
@@ -179,7 +221,7 @@
                                         </a>
                                         @if (count($attackListsFollow) > 0)
                                             @foreach($attackListsFollow as $attackList)
-                                                <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
+                                                <a class="list-group-item list-group-item-action {{ ($attackListsFollow->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', null, '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
                                                     <div class="row">
                                                         <div class="col-2">
                                                             <b>{{ $attackList->world->displayName() }}</b>
@@ -206,15 +248,7 @@
                                 </div>
                                 <div class="col-2">
                                     @if (count($attackLists) > 0)
-                                        <a id="editButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'edit', $attackListsFollow->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                        <a id="deleteButtonAttackPlannerFollow" href="" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
-                                        <label class="mt-3">{{ __('ui.tool.map.editLink') }}:</label>
-                                        <div class="input-group mb-2">
-                                            <input id="editLinkAttackPlannerFollow" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'edit', $attackListsFollow->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkAttackPlanner')"><i class="far fa-copy"></i></span>
-                                            </div>
-                                        </div>
+                                        <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('ui.tool.attackPlanner.show') }}</a>
                                         <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="showLinkAttackPlannerFollow" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -236,19 +270,28 @@
 
 @section('js')
     <script>
-        function switchMap(id, edit_key, show_key) {
-            $('#imgMap').attr('src', '{{ route('index') }}/api/map/' + id + '/' + show_key + '/500-500.png');
-            $('#editButtonMap').attr('href', '{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
-            $('#editLinkMap').val('{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
-            $('#showLinkMap').val('{{ route('index') }}/tools/map/' + id + '/show/' + show_key);
+        function switchMap(id, edit_key, show_key, follow=false) {
+            if (follow){
+                $('#imgMapFollow').attr('src', '{{ route('index') }}/api/map/' + id + '/' + show_key + '/500-500.png');
+                $('#showButtonMapFollow').attr('href', '{{ route('index') }}/tools/map/' + id + '/show/' + show_key);
+                $('#showLinkMapFollow').val('{{ route('index') }}/tools/map/' + id + '/show/' + show_key);
+            } else {
+                $('#imgMap').attr('src', '{{ route('index') }}/api/map/' + id + '/' + show_key + '/500-500.png');
+                $('#editButtonMap').attr('href', '{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
+                $('#editLinkMap').val('{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
+                $('#showLinkMap').val('{{ route('index') }}/tools/map/' + id + '/show/' + show_key);
+            }
         }
 
         function switchAttackPlanner(id, edit_key, show_key, follow=false) {
-            var idName = follow ? 'AttackPlannerFollow' : 'AttackPlanner';
-
-            $('#editButton' + idName).attr('href', '{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
-            $('#editLink' + idName).val('{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
-            $('#showLink' + idName).val('{{ route('index') }}/tools/attackPlanner/' + id + '/show/' + show_key);
+            if (follow){
+                $('#showButtonAttackPlannerFollow').attr('href', '{{ route('index') }}/tools/attackPlanner/' + id + '/show/' + show_key);
+                $('#showLinkAttackPlannerFollow').val('{{ route('index') }}/tools/attackPlanner/' + id + '/show/' + show_key);
+            } else {
+                $('#editButtonAttackPlanner').attr('href', '{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
+                $('#editLinkAttackPlanner').val('{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
+                $('#showLinkAttackPlanner').val('{{ route('index') }}/tools/attackPlanner/' + id + '/show/' + show_key);
+            }
         }
 
         function copy(type) {

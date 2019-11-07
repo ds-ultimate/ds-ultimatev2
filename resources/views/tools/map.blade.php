@@ -221,6 +221,15 @@
         @endif
         <div class="col-12 mt-2">
             <div class="card">
+                @auth
+                    @if($wantedMap->user_id != Auth::user()->id)
+                        @if($wantedMap->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                            <div class="float-right position-absolute" style="right: 10px; top: 10px"><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning"></i></div>
+                        @else
+                            <div class="float-right position-absolute" style="right: 10px; top: 10px"><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted"></i></div>
+                        @endif
+                    @endif
+                @endauth
                 <ul class="nav nav-tabs" id="mapshowtabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active map-show-tab" id="size-1-tab" data-toggle="tab" href="#size-1" role="tab" aria-controls="size-1" aria-selected="true">{{ '1000x1000' }}</a>
@@ -410,13 +419,6 @@
                     elm.style.height = elm.clientHeight + "px";
                     $('.map-show-content').empty();
                     $('.active.map-show-tab').trigger('click');
-                    
-                    mapDimensions = [
-                        response.data.xs,
-                        response.data.ys,
-                        response.data.w,
-                        response.data.h,
-                    ];
                 })
                 .catch((error) => {
 
@@ -480,19 +482,12 @@
             });
         });
         
-        var mapDimensions = [
-            {{$mapDimensions['xs']}},
-            {{$mapDimensions['ys']}},
-            {{$mapDimensions['w']}},
-            {{$mapDimensions['h']}},
-        ];
-        
         function mapClicked(e, that, targetID, xSize, ySize) {
             var xPerc = (e.pageX - $(that).offset().left) / xSize;
             var yPerc = (e.pageY - $(that).offset().top) / ySize;
             
-            var mapX = Math.floor( mapDimensions[0] + mapDimensions[2]*xPerc );
-            var mapY = Math.floor( mapDimensions[1] + mapDimensions[3]*yPerc );
+            var mapX = Math.floor( {{$mapDimensions['xs']}} + {{$mapDimensions['w']}}*xPerc );
+            var mapY = Math.floor( {{$mapDimensions['ys']}} + {{$mapDimensions['h']}}*yPerc );
             
             
             if($('#map-popup')[0]) {
@@ -517,6 +512,8 @@
                     
                     $('#map-popup')[0].style.left = xRel+"px";
                     $('#map-popup')[0].style.top = yRel+"px";
+                    
+                    console.log(data);
                 })
                 .catch((error) => {
                 });
@@ -525,5 +522,28 @@
         $(function () {
             $('.active.map-show-tab').trigger('click');
         });
+
+        @auth
+            @if($wantedMap->user_id != Auth::user()->id)
+                function changeFollow() {
+                    var icon = $('#follow-icon');
+                    axios.post('{{ route('tools.follow') }}',{
+                        model: 'Map_Map',
+                        id: '{{ $wantedMap->id }}'
+                    })
+                        .then((response) => {
+                            if(icon.hasClass('far')){
+                                icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                            }else {
+                                icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                            }
+                        })
+                        .catch((error) => {
+
+                        });
+                }
+            @endif
+        @endauth
+
     </script>
 @endsection

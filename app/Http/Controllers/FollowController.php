@@ -14,10 +14,13 @@ class FollowController extends Controller
 
         $follow = $item->follows()->where('user_id', \Auth::user()->id)->first();
 
+        $modeltype = explode('\\', $model);
+        $function = 'follow'.$modeltype[1];
+
         if ($follow  == null){
-            \Auth::user()->followAttackPlanner()->save($item);
+            \Auth::user()->$function()->save($item);
         }else{
-            $follow->followAttackPlanner()->detach($item->id);
+            $follow->$function()->detach($item->id);
         }
 
 

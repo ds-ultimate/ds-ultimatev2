@@ -46,6 +46,10 @@ class Map extends Model
     public function world(){
         return $this->belongsTo('App\World', 'world_id');
     }
+
+    public function follows(){
+        return $this->morphToMany('App\User', 'followable', 'follows');
+    }
     
     /**
      * Save format: {type}:{id}:{colour (hex)};...;...
