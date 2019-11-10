@@ -15,3 +15,4 @@ _ide_helper.php
 /stats
 .htpasswd
 workspace.xml
+/storage/app
