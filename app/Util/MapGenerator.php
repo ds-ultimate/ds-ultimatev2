@@ -171,6 +171,15 @@ class MapGenerator extends PictureRender {
         $this->grabAlly();
         $this->grabPlayer();
         $this->grabVillage();
+        
+        //Finalize Ally grabbing
+        foreach($this->dataPlayer as $player) {
+            if(!isset($player['allyID'])) continue;
+            
+            $this->dataAlly[$player['allyID']]['villNum'] += $player['villNum'];
+            $this->dataAlly[$player['allyID']]['villX'] += $player['villX'];
+            $this->dataAlly[$player['allyID']]['villY'] += $player['villY'];
+        }
     }
     
     private function grabAlly() {
@@ -190,8 +199,8 @@ class MapGenerator extends PictureRender {
             
             if($evaluateModel) {
                 foreach($allyModel->get() as $ally) {
-                    $this->dataAlly[$ally->allyID]['name'] = $ally->name;
-                    $this->dataAlly[$ally->allyID]['tag'] = $ally->tag;
+                    $this->dataAlly[$ally->allyID]['name'] = BasicFunctions::decodeName($ally->name);
+                    $this->dataAlly[$ally->allyID]['tag'] = BasicFunctions::decodeName($ally->tag);
                 }
             }
         }
@@ -208,8 +217,12 @@ class MapGenerator extends PictureRender {
                 $this->dataPlayer[$player->playerID] = array(
                     "id" => (int) $player->playerID,
                     "colour" => $this->dataAlly[$player->ally_id]['colour'],
-                    "name" => $player->name,
+                    "name" => BasicFunctions::decodeName($player->name),
                     "showText" => false,
+                    "allyID" => $player->ally_id,
+                    "villNum" => 0,
+                    "villX" => 0,
+                    "villY" => 0,
                 );
             }
         }
@@ -223,16 +236,17 @@ class MapGenerator extends PictureRender {
             $evaluateModel = false;
             
             foreach($this->player as $player) {
+                $this->dataPlayer[$player['id']] = $player;
+                
                 if($player['showText']) {
                     $playerModel = $playerModel->orWhere('allyID', $player['id']);
                     $evaluateModel = true;
                 }
-                $this->dataPlayer[$player['id']] = $player;
             }
 
             if($evaluateModel) {
                 foreach($playerModel->get() as $player) {
-                    $this->dataPlayer[$player->playerID]['name'] = $player->name;
+                    $this->dataPlayer[$player->playerID]['name'] = BasicFunctions::decodeName($player->name);
                 }
             }
         }
@@ -298,6 +312,11 @@ class MapGenerator extends PictureRender {
                     $this->dataVillage['mark'][$village->villageID]['colour'] =
                             $this->dataPlayer[$village->owner]['colour'];
                     $this->dataVillage['mark'][$village->villageID]['marked'] = true;
+                    
+                    //add village to player weight
+                    $this->dataPlayer[$village->owner]['villNum']++;
+                    $this->dataPlayer[$village->owner]['villX'] += $village->x;
+                    $this->dataPlayer[$village->owner]['villY'] += $village->y;
                 } else if($village->owner != 0) {
                     $this->dataVillage['play'][$village->villageID] = $tmp;
                 } else {
@@ -401,7 +420,54 @@ class MapGenerator extends PictureRender {
     }
     
     private function renderText() {
-        //TODO for future
+        $white = imagecolorallocate($this->image, 255, 255, 255);
+        foreach($this->dataAlly as $ally) {
+            if(!$ally['showText']) continue;
+            if($ally['villNum'] <= 0) continue;
+            
+            $x = $ally['villX'] / $ally['villNum'];
+            $y = $ally['villY'] / $ally['villNum'];
+            $color = imagecolorallocate($this->image, $ally['colour'][0], $ally['colour'][1], $ally['colour'][2]);
+            $this->renderShadowedCenteredText($x, $y, $ally['name'], $color, $white);
+        }
+        
+        foreach($this->dataPlayer as $player) {
+            if(!$player['showText']) continue;
+            if($player['villNum'] <= 0) continue;
+            
+            $x = $player['villX'] / $player['villNum'];
+            $y = $player['villY'] / $player['villNum'];
+            $this->renderCenteredText($x, $y, $player['name'], $player['colour']);
+        }
+        
+        //TODO add for village Markers
+    }
+    
+    /*
+     * This function uses Map Coordinates not Picture!!
+     */
+    private function renderShadowedCenteredText($mapX, $mapY, $text, $col, $shadowCol) {
+        $x = ($mapX - $this->mapDimension['xs']) * $this->width / $this->mapDimension['w'];
+        $y = ($mapY - $this->mapDimension['ys']) * $this->height / $this->mapDimension['h'];
+        
+        //TODO use correct coordinate system
+        $this->renderCenteredText($x - 1, $y - 1, $text, $shadowCol);
+        $this->renderCenteredText($x - 1, $y + 1, $text, $shadowCol);
+        $this->renderCenteredText($x + 1, $y - 1, $text, $shadowCol);
+        $this->renderCenteredText($x + 1, $y + 1, $text, $shadowCol);
+        $this->renderCenteredText($x, $y, $text, $col);
+    }
+    
+    /*
+     * This function uses Picture coordinates
+     */
+    private function renderCenteredText($x, $y, $text, $color) {
+        $size = $this->fieldWidth * 5;
+        $box = imagettfbbox($size, 0, $this->font, $text);
+
+        $drawX = $x - ($box[6] + $box[2]) / 2;
+        $drawY = $y - ($box[7] + $box[3]) / 2;
+        imagettftext($this->image, $size, 0, $drawX, $drawY, $color, $this->font, $text);
     }
     
     private $skinCache = array();
@@ -426,6 +492,9 @@ class MapGenerator extends PictureRender {
             "id" => (int) $allyID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "villNum" => 0,
+            "villX" => 0,
+            "villY" => 0,
         );
         return $this;
     }
@@ -438,6 +507,9 @@ class MapGenerator extends PictureRender {
             "id" => (int) $playerID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "villNum" => 0,
+            "villX" => 0,
+            "villY" => 0,
         );
         return $this;
     }

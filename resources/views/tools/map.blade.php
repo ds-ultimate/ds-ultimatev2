@@ -31,9 +31,11 @@
                 if($defaultContent != null) {
                     $defName = $defaultContent['name'];
                     $defCol = $defaultContent['colour'];
+                    $defShowText = ($defaultContent['text'])?('checked="checked"'):("");
                 } else {
                     $defName = '';
                     $defCol = 'FFFFFF';
+                    $defShowText = "";
                 }?>
                 <div id="{{ "$type-mark-$id-div" }}" class="input-group mb-2 mr-sm-2">
                     <div class="colour-picker-map input-group-prepend">
@@ -46,6 +48,10 @@
                         <option value="{{ $defaultContent['id'] }}" selected="selected">{{ $defaultContent['name'] }}</option>
                         @endif
                     </select>
+                    <div class="form-check ml-2 mt-2">
+                        <input name="{{ "mark[$type][$id][textHere]" }}" type="hidden" value="true" />
+                        <input type="checkbox" class="form-check-input position-static showText-{{ $type }} showTextBox" name="{{ "mark[$type][$id][text]" }}" {{$defShowText}}>
+                    </div>
                 </div>
                 <?php
             } else if($type == 'village') {
@@ -110,7 +116,14 @@
                             <div class="row pt-3">
                                 @foreach(['ally', 'player', 'village'] as $type)
                                     <div id="main-{{$type}}" class="col-lg-4">
-                                        {{ ucfirst(__('ui.tool.map.'.$type)) }}
+                                        {{ ucfirst(__('ui.tool.map.'.$type)) }}<br>
+                                        @if($type != 'village')
+                                            <div class="form-check form-check-inline float-right mr-0">
+                                                <label class="form-check-label mr-2" for="showTextAll-{{ $type }}">{{ ucfirst(__('ui.tool.map.showAllText')) }}</label>
+                                                <input class="form-check-input change-all showTextBox" type="checkbox" aria-for="showText-{{ $type }}" id="showTextAll-{{ $type }}">
+                                            </div>
+                                        @endif
+                                        <br>
                                         @foreach($defaults[$type] as $num=>$defValues)
                                             {!! generateHTMLSelector($type, $num, $defValues) !!}
                                         @endforeach
@@ -295,7 +308,10 @@
                 checkPart(this, null);
             }
         });
-
+        
+        $('.change-all').change(function(e) {
+            $('.'+this.attributes['aria-for'].nodeValue).prop('checked', this.checked);
+        });
         addCustomLibs(null);
     });
 
@@ -412,6 +428,7 @@
         $('#map-zoom-value').change(store);
         $('#center-pos-x').change(store);
         $('#center-pos-y').change(store);
+        $('.showTextBox').change(store);
     }
 
     $('#mapEditForm').on('submit', function (e) {
@@ -419,7 +436,7 @@
         store();
     });
 
-    function store(send, arrival) {
+    function store() {
         axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
             .then((response) => {
                 mapDimensions = [
