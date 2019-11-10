@@ -1,5 +1,7 @@
 @extends('layouts.temp')
 
+@section('titel', ucfirst(__('ui.tabletitel.overview')).' von '.Auth::user()->name)
+
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->

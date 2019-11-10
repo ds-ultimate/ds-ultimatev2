@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -117,6 +119,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function followMap()
     {
         return $this->morphedByMany('App\Tool\Map\Map', 'followable', 'follows');
+    }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
+    public function avatarPath(){
+        $avatar = $this->profile->avatar;
+        if (Storage::disk('local')->exists($avatar)){
+            return Storage::url('app/'.$avatar);
+        }else{
+            return asset('images/default/user.png');
+        }
     }
 
 }

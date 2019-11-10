@@ -112,6 +112,7 @@
             <li class="nav-item">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ Auth::user()->avatarPath() }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
                         {{ Auth::user()->name }} <span class="caret"></span>
                     </button>
 
@@ -129,13 +130,14 @@
                                 {{ __('user.translations') }}
                             </a>
                         @endcan
-
+                        <a class="dropdown-item" href="{{ route('user.settings') }}">
+                            {{ __('ui.titel.settings') }}
+                        </a>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
                             {{ __('user.logout') }}
                         </a>
-
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>

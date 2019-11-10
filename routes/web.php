@@ -18,8 +18,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
-    $f = new \App\Http\Controllers\FollowController();
-    $f->createFollowTool('AttackPlanner_AttackList', 3);
+    Auth::user()->avatarPath();
 });
 
 Route::get('/setlocale/{locale}',function($lang){
@@ -72,6 +71,9 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
 
 Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middleware' => ['verified']], function () {
     Route::get('overview', 'HomeController@overview')->name('overview');
+    Route::get('settings', 'HomeController@settings')->name('settings');
+    Route::post('uploadeImage', 'SettingsController@imgUploade')->name('uploadeImage');
+    Route::post('destroyImage', 'SettingsController@imgDestroy')->name('destroyImage');
 });
 
 Route::get('/sitemap.xml', 'Controller@sitemap');
