@@ -58,7 +58,7 @@
                         <h2 class="h1-responsive font-weight-bold text-center my-5">Das DS-Ultimate Team</h2>
                         <!-- Section description -->
                         <p class="grey-text text-center w-responsive mx-auto mb-5">
-                            DS-Ultimate ist ein Porjekt das von uns in der Freizeit Weiterentwickelt und verbessert wird.
+                            DS-Ultimate ist ein Projekt das von uns in der Freizeit weiter entwickelt und verbessert wird.
                         </p>
                         <!-- Grid row -->
                         <div class="row mb-4">
@@ -81,7 +81,7 @@
                                             <div class="card-body">
                                                 <h4 class="font-weight-bold mt-1 mb-3">Dominik 'Valerius2101'</h4>
                                                 <p class="font-weight-bold dark-grey-text h5 mb-4">
-                                                    Initialisator (Funder)
+                                                    Initiator (Inaktiv)
                                                 </p>
                                                 <span class="flag-icon flag-icon-de rounded" style="width: 2.666666em; line-height: 2em;"></span>
                                                 <!-- Triggering button -->
