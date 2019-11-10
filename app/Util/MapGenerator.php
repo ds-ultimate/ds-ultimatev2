@@ -450,7 +450,6 @@ class MapGenerator extends PictureRender {
         $x = ($mapX - $this->mapDimension['xs']) * $this->width / $this->mapDimension['w'];
         $y = ($mapY - $this->mapDimension['ys']) * $this->height / $this->mapDimension['h'];
         
-        //TODO use correct coordinate system
         $this->renderCenteredText($x - 1, $y - 1, $text, $shadowCol);
         $this->renderCenteredText($x - 1, $y + 1, $text, $shadowCol);
         $this->renderCenteredText($x + 1, $y - 1, $text, $shadowCol);
