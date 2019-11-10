@@ -48,8 +48,12 @@ class MapGenerator extends PictureRender {
     public static $LAYER_PICTURE = 1;
     public static $LAYER_TEXT = 2;
     public static $LAYER_GRID = 3;
+    public static $LAYER_DRAWING = 4;
     private $layerOrder;
 
+    private $drawing_img = null;
+    private $drawing_dimensions = null;
+    
     /*
      * Variables that are holding Data got from Database
      */
@@ -74,6 +78,7 @@ class MapGenerator extends PictureRender {
         }
         $image = imagecreatetruecolor(round($img_width, 0), round($img_height, 0));
         imagealphablending($image, true); //needed to work with alpha values
+        imagesavealpha($image, true);
         
         if($image === false) die("Error");
 
@@ -110,7 +115,11 @@ class MapGenerator extends PictureRender {
         $this->fieldWidth = $this->width / $this->mapDimension['w'];
         $this->fieldHeight = $this->height / $this->mapDimension['h'];
         
-        $colour_bg = imagecolorallocate($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2]);
+        if(count($this->backgroundColour) > 3)
+            $colour_bg = imagecolorallocatealpha($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2], $this->backgroundColour[3]);
+        else
+            $colour_bg = imagecolorallocate($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2]);
+        
         imagefill($this->image, 0, 0, $colour_bg);
         
         foreach($this->layerOrder as $layer) {
@@ -133,6 +142,11 @@ class MapGenerator extends PictureRender {
                 
                 case MapGenerator::$LAYER_GRID:
                     $this->renderGrid();
+                    break;
+                    
+                case MapGenerator::$LAYER_DRAWING:
+                    $this->renderDrawing();
+                    break;
             }
         }
         
@@ -380,6 +394,12 @@ class MapGenerator extends PictureRender {
         }
     }
     
+    private function renderDrawing() {
+        $drawing_img=imagecreatefromstring($this->drawing_img);
+        
+        imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->width, $this->height, imagesx($drawing_img), imagesy($drawing_img));
+    }
+    
     private function renderText() {
         //TODO for future
     }
@@ -440,7 +460,7 @@ class MapGenerator extends PictureRender {
             return $this;
         }
         else if($this->show_errs) {
-            throw new InvalidArgumentException("Only alphanumeric Characters inside Skin allowed");
+            throw new \InvalidArgumentException("Only alphanumeric Characters inside Skin allowed");
         }
         return false;
     }
@@ -452,7 +472,7 @@ class MapGenerator extends PictureRender {
             return $this;
         }
         else if($this->show_errs) {
-            throw new InvalidArgumentException("Opaque needs to be between 0 and 100");
+            throw new \InvalidArgumentException("Opaque needs to be between 0 and 100");
         }
         return false;
     }
@@ -469,11 +489,12 @@ class MapGenerator extends PictureRender {
             if($layer == MapGenerator::$LAYER_MARK ||
                     $layer == MapGenerator::$LAYER_PICTURE ||
                     $layer == MapGenerator::$LAYER_TEXT ||
-                    $layer == MapGenerator::$LAYER_GRID) {
+                    $layer == MapGenerator::$LAYER_GRID ||
+                    ($layer == MapGenerator::$LAYER_DRAWING && $this->drawing_img != null && $this->drawing_img != "")) {
                 $tmp[] = $layer;
             }
             else if($this->show_errs) {
-                throw new InvalidArgumentException("Each Layer needs to be a valid Layer");
+                throw new \InvalidArgumentException("Each Layer needs to be a valid Layer");
             }
             else {
                 $retval = false;
@@ -496,22 +517,8 @@ class MapGenerator extends PictureRender {
      * ye: Row (y Position) where the map should end (exclusive)
      */
     public function setMapDimensions($dimensions) {
-        $tmp = array(
-            'xs' => (int) $dimensions['xs'],
-            'ys' => (int) $dimensions['ys'],
-            'xe' => (int) $dimensions['xe'],
-            'ye' => (int) $dimensions['ye'],
-        );
-        
-        $tmp['w'] = $tmp['xe'] - $tmp['xs'];
-        $tmp['h'] = $tmp['ye'] - $tmp['ys'];
-        if($tmp['w'] <= 0 || $tmp['h'] <= 0) {
-            if($this->show_errs) {
-                throw new \InvalidArgumentException("start / end need correct sorting or with / height is zero");
-            } else {
-                return false;
-            }
-        }
+        $tmp = $this->convertToInternalDimensions($dimensions);
+        if($tmp === false) return false;
         
         $this->mapDimension = $tmp;
         return $this;
@@ -540,6 +547,8 @@ class MapGenerator extends PictureRender {
             return false;
         } else {
             $this->backgroundColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+            if(count($col) > 3)
+                $this->backgroundColour[] = (int) $col[3];
         }
         return $this;
     }
@@ -552,5 +561,36 @@ class MapGenerator extends PictureRender {
     public function setAutoResize($value) {
         $this->autoResize = (boolean) $value;
         return $this;
+    }
+    
+    public function setDrawings($drawing_img, $drawing_dim) {
+        $this->drawing_img = $drawing_img;
+        
+        $tmp = $this->convertToInternalDimensions($drawing_dim);
+        if($tmp === false) return false;
+        
+        $this->drawing_dimensions = $tmp;
+        return $this;
+    }
+    
+    private function convertToInternalDimensions($dimensions) {
+        $tmp = array(
+            'xs' => (int) $dimensions['xs'],
+            'ys' => (int) $dimensions['ys'],
+            'xe' => (int) $dimensions['xe'],
+            'ye' => (int) $dimensions['ye'],
+        );
+        
+        $tmp['w'] = $tmp['xe'] - $tmp['xs'];
+        $tmp['h'] = $tmp['ye'] - $tmp['ys'];
+        if($tmp['w'] <= 0 || $tmp['h'] <= 0) {
+            if($this->show_errs) {
+                throw new \InvalidArgumentException("start / end need correct sorting or with / height is zero");
+            } else {
+                return false;
+            }
+        }
+        
+        return $tmp;
     }
 }

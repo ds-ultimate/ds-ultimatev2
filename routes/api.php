@@ -51,6 +51,7 @@ Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getV
  *  [**]-w-{width}
  *  [**]-h-{height}
  */
+Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', 'Tools\MapController@getOptionSizedMapByID')->name('map.options.sized');
 Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', 'Tools\MapController@getSizedMapByID')->name('map.show.sized');
 Route::get('/map/{wantedMap}/{token}/map.{ext}', 'Tools\MapController@getMapByID')->name('map.show');
 

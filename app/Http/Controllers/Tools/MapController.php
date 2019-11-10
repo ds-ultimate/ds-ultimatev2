@@ -45,6 +45,11 @@ class MapController extends BaseController
             case 'show':
                 abort_unless($key == $wantedMap->show_key, 403);
                 return $this->show($wantedMap);
+            case 'getCanvas':
+                abort_unless($key == $wantedMap->edit_key, 403);
+                if($wantedMap->drawing_obj == null)
+                    return "";
+                return $wantedMap->drawing_obj;
             default:
                 abort(404);
         }
@@ -57,6 +62,9 @@ class MapController extends BaseController
             case 'save':
                 abort_unless($key == $wantedMap->edit_key, 403);
                 return $this->save($wantedMap);
+            case 'saveCanvas':
+                abort_unless($key == $wantedMap->edit_key, 403);
+                return $this->saveCanvas($wantedMap);
             default:
                 abort(404);
         }
@@ -117,13 +125,39 @@ class MapController extends BaseController
             $cX = (int) $getArray['centerX'];
             $cY = (int) $getArray['centerY'];
             
-            $xs = ceil($cX - $zoom / 2);
-            $xe = ceil($cX + $zoom / 2);
-            $ys = ceil($cY - $zoom / 2);
-            $ye = ceil($cY + $zoom / 2);
-            $wantedMap->setDimensions($xs, $xe, $ys, $ye);
+            $wantedMap->setDimensions([
+                'xs' => ceil($cX - $zoom / 2),
+                'xe' => ceil($cX + $zoom / 2),
+                'ys' => ceil($cY - $zoom / 2),
+                'ye' => ceil($cY + $zoom / 2),
+            ]);
         }
         $wantedMap->save();
+        
+        return response()->json($this->getMapDimension($wantedMap));
+    }
+    
+    public function saveCanvas(Map $wantedMap) {
+        $getArray = $_POST;
+        
+        abort_unless(isset($getArray['type']), 404);
+        abort_unless(isset($getArray['data']), 404);
+        switch($getArray['type']) {
+            case "image":
+                if(!isset($wantedMap->dimensions) || $wantedMap->dimensions != null)
+                    $wantedMap->setDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
+                
+                $wantedMap->drawing_dim = $wantedMap->dimensions;
+                $wantedMap->drawing_png = \App\Util\PictureRender::base64ToPng($getArray['data']);
+                $wantedMap->save();
+                break;
+            case "object":
+                $wantedMap->drawing_obj = $getArray['data'];
+                $wantedMap->save();
+                break;
+            default:
+                abort(404);
+        }
         
         return response()->json($this->getMapDimension($wantedMap));
     }
@@ -137,14 +171,40 @@ class MapController extends BaseController
         return $dimensions;
     }
 
-    public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){
+    public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
-        
         $map = new MapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
         $wantedMap->prepareRendering($map);
+        
+        if($options != null) {
+            switch($options) {
+                case "noDrawing":
+                    $layers = $wantedMap->getLayerConfiguration();
+                    $final = array();
+                    foreach($layers as $layer)
+                        if($layer != MapGenerator::$LAYER_DRAWING)
+                            $final[] = $layer;
+                    
+                    $map->setLayerOrder($final);
+                    break;
+                case "pureDrawing":
+                    if(array_search(MapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
+                        $map->setLayerOrder([MapGenerator::$LAYER_DRAWING]);
+                    else
+                        $map->setLayerOrder([]);
+                    $map->setBackgroundColour([0,0,0,127]);
+                    break;
+                default:
+            }
+        }
+        
         $map->render();
         return $map->output($ext);
+    }
+
+    public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){
+        return $this->getOptionSizedMapByID($wantedMap, $token, null, $width, $height, $ext);
     }
     
     public function getMapByID(Map $wantedMap, $token, $ext) {
