@@ -2,6 +2,11 @@
 
 @section('titel', ucfirst(__('ui.titel.settings')).' von '.Auth::user()->name)
 
+@section('style')
+    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
+@stop
+
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
@@ -59,7 +64,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <img id="avatarImage" src="{{ Auth::user()->avatarPath() }}" class="rounded img-thumbnail" alt="" style="width: 200px; height: 200px">
+                                    <img id="avatarImage" src="{{ Auth::user()->avatarPath() }}" class="rounded img-thumbnail" alt="" style="max-width: 200px; max-height: 200px">
                                     <div id="avatar-errors" class="text-danger"></div>
                                 </div>
                                 <form>
@@ -105,6 +110,39 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
+                                <form>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label class="form-check-label" for="server">{{ __('ui.server.title') }}:</label>
+                                            <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                @foreach(\App\Server::all() as $serverSelect)
+                                                    <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-check-label" for="server">{{ __('ui.table.world') }}:</label>
+                                            <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                @foreach(\App\Server::all() as $serverSelect)
+                                                    <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-check-label" for="server">{{ __('ui.table.player') }}:</label>
+                                            <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                @foreach(\App\Server::all() as $serverSelect)
+                                                    <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Sign in</button>
+                                        </div>
+                                    </div>
+                                </form>
                                 @foreach($serversList as $list)
                                     <h5><span class="flag-icon flag-icon-{{ $list->flag }}"></span> <a href="{{$list->url}}">{{ $list->url }}</a></h5>
                                     <ul class="list-group mb-5">
@@ -135,6 +173,7 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script>
         $(document).ready(function () {
@@ -143,7 +182,27 @@
                 format:'dd.mm.yyyy',
                 weekStart:1,
             })
+
+            $("#server").select2({
+                templateResult: formatState
+            });
         });
+
+        $('#server').on('select2:select', function (e) {
+            console.log(e.params.data);
+            $('#serverFlag').attr('class', 'flag-icon flag-icon-' + e.params.data.title)
+        });
+
+        function formatState (state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var baseUrl = "/user/pages/images/flags";
+            var $state = $(
+                '<span><span class="flag-icon flag-icon-' + state.title + '"></span> ' + state.text + '</span>'
+            );
+            return $state;
+        };
 
         $.fn.datepicker.dates['all'] = {
             days: ["{{ __('datepicker.Sunday') }}", "{{ __('datepicker.Monday') }}", "{{ __('datepicker.Tuesday') }}", "{{ __('datepicker.Wednesday') }}", "{{ __('datepicker.Thursday') }}", "{{ __('datepicker.Friday') }}", "{{ __('datepicker.Saturday') }}"],

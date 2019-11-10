@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\User\SettingsController;
 use Auth;
 use Carbon\Carbon;
 use Hash;
@@ -127,6 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function avatarPath(){
+        SettingsController::existProfile();
         $avatar = $this->profile->avatar;
         if (Storage::disk('local')->exists($avatar)){
             return Storage::url('app/'.$avatar);

@@ -31,7 +31,7 @@ class HomeController extends Controller
         $attackListsFollow = \Auth::user()->followAttackPlanner()->get();
         $mapsFollow = \Auth::user()->followMap()->get();
 
-        return view('user.overview', compact('maps', 'attackLists', 'attackListsFollow', 'mapsFollow', 'worlds'));
+        return view('user.overview', compact('maps', 'attackLists', 'attackListsFollow', 'mapsFollow'));
     }
 
     public function settings(){

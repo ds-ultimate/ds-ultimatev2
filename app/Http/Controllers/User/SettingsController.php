@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Profile;
 use App\Util\BasicFunctions;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,7 +27,11 @@ class SettingsController extends Controller
     }
 
     public function imgDestroy(){
+        $avatar = \Auth::user()->profile->avatar;
         self::existProfile();
+        if (Storage::disk('local')->exists($avatar)) {
+            Storage::disk('local')->delete($avatar);
+        }
         \Auth::user()->profile()->update(['avatar' => null]);
     }
 
