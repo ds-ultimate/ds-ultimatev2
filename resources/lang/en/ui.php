@@ -214,4 +214,7 @@ return array (
     'maps' => 'Own maps',
   ),
   'noTitle' => 'No title',
+  'siteNotFound' => 'Site not found',
+  'notAllowed' => 'Forbidden',
+  'notAllowedDesc' => 'You are not allowed to view this Page',
 );

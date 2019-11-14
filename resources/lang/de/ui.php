@@ -214,4 +214,7 @@ return array (
     'attackplanner' => 'Eigene Angriffspläne',
   ),
   'noTitle' => 'Kein Titel',
+  'siteNotFound' => 'Seite nicht gefunden',
+  'notAllowed' => 'Unzulässig',
+  'notAllowedDesc' => 'Du darfst diese Seite nicht betreten',
 );
