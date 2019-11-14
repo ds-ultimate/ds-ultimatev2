@@ -48,8 +48,12 @@ class MapGenerator extends PictureRender {
     public static $LAYER_PICTURE = 1;
     public static $LAYER_TEXT = 2;
     public static $LAYER_GRID = 3;
+    public static $LAYER_DRAWING = 4;
     private $layerOrder;
 
+    private $drawing_img = null;
+    private $drawing_dimensions = null;
+    
     /*
      * Variables that are holding Data got from Database
      */
@@ -74,6 +78,7 @@ class MapGenerator extends PictureRender {
         }
         $image = imagecreatetruecolor(round($img_width, 0), round($img_height, 0));
         imagealphablending($image, true); //needed to work with alpha values
+        imagesavealpha($image, true);
         
         if($image === false) die("Error");
 
@@ -110,7 +115,11 @@ class MapGenerator extends PictureRender {
         $this->fieldWidth = $this->width / $this->mapDimension['w'];
         $this->fieldHeight = $this->height / $this->mapDimension['h'];
         
-        $colour_bg = imagecolorallocate($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2]);
+        if(count($this->backgroundColour) > 3)
+            $colour_bg = imagecolorallocatealpha($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2], $this->backgroundColour[3]);
+        else
+            $colour_bg = imagecolorallocate($this->image, $this->backgroundColour[0], $this->backgroundColour[1], $this->backgroundColour[2]);
+        
         imagefill($this->image, 0, 0, $colour_bg);
         
         foreach($this->layerOrder as $layer) {
@@ -133,6 +142,11 @@ class MapGenerator extends PictureRender {
                 
                 case MapGenerator::$LAYER_GRID:
                     $this->renderGrid();
+                    break;
+                    
+                case MapGenerator::$LAYER_DRAWING:
+                    $this->renderDrawing();
+                    break;
             }
         }
         
@@ -157,6 +171,15 @@ class MapGenerator extends PictureRender {
         $this->grabAlly();
         $this->grabPlayer();
         $this->grabVillage();
+        
+        //Finalize Ally grabbing
+        foreach($this->dataPlayer as $player) {
+            if(!isset($player['allyID'])) continue;
+            
+            $this->dataAlly[$player['allyID']]['villNum'] += $player['villNum'];
+            $this->dataAlly[$player['allyID']]['villX'] += $player['villX'];
+            $this->dataAlly[$player['allyID']]['villY'] += $player['villY'];
+        }
     }
     
     private function grabAlly() {
@@ -176,8 +199,8 @@ class MapGenerator extends PictureRender {
             
             if($evaluateModel) {
                 foreach($allyModel->get() as $ally) {
-                    $this->dataAlly[$ally->allyID]['name'] = $ally->name;
-                    $this->dataAlly[$ally->allyID]['tag'] = $ally->tag;
+                    $this->dataAlly[$ally->allyID]['name'] = BasicFunctions::decodeName($ally->name);
+                    $this->dataAlly[$ally->allyID]['tag'] = BasicFunctions::decodeName($ally->tag);
                 }
             }
         }
@@ -194,8 +217,12 @@ class MapGenerator extends PictureRender {
                 $this->dataPlayer[$player->playerID] = array(
                     "id" => (int) $player->playerID,
                     "colour" => $this->dataAlly[$player->ally_id]['colour'],
-                    "name" => $player->name,
+                    "name" => BasicFunctions::decodeName($player->name),
                     "showText" => false,
+                    "allyID" => $player->ally_id,
+                    "villNum" => 0,
+                    "villX" => 0,
+                    "villY" => 0,
                 );
             }
         }
@@ -209,16 +236,17 @@ class MapGenerator extends PictureRender {
             $evaluateModel = false;
             
             foreach($this->player as $player) {
+                $this->dataPlayer[$player['id']] = $player;
+                
                 if($player['showText']) {
                     $playerModel = $playerModel->orWhere('allyID', $player['id']);
                     $evaluateModel = true;
                 }
-                $this->dataPlayer[$player['id']] = $player;
             }
 
             if($evaluateModel) {
                 foreach($playerModel->get() as $player) {
-                    $this->dataPlayer[$player->playerID]['name'] = $player->name;
+                    $this->dataPlayer[$player->playerID]['name'] = BasicFunctions::decodeName($player->name);
                 }
             }
         }
@@ -284,6 +312,11 @@ class MapGenerator extends PictureRender {
                     $this->dataVillage['mark'][$village->villageID]['colour'] =
                             $this->dataPlayer[$village->owner]['colour'];
                     $this->dataVillage['mark'][$village->villageID]['marked'] = true;
+                    
+                    //add village to player weight
+                    $this->dataPlayer[$village->owner]['villNum']++;
+                    $this->dataPlayer[$village->owner]['villX'] += $village->x;
+                    $this->dataPlayer[$village->owner]['villY'] += $village->y;
                 } else if($village->owner != 0) {
                     $this->dataVillage['play'][$village->villageID] = $tmp;
                 } else {
@@ -380,8 +413,60 @@ class MapGenerator extends PictureRender {
         }
     }
     
+    private function renderDrawing() {
+        $drawing_img=imagecreatefromstring($this->drawing_img);
+        
+        imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->width, $this->height, imagesx($drawing_img), imagesy($drawing_img));
+    }
+    
     private function renderText() {
-        //TODO for future
+        $white = imagecolorallocate($this->image, 255, 255, 255);
+        foreach($this->dataAlly as $ally) {
+            if(!$ally['showText']) continue;
+            if($ally['villNum'] <= 0) continue;
+            
+            $x = $ally['villX'] / $ally['villNum'];
+            $y = $ally['villY'] / $ally['villNum'];
+            $color = imagecolorallocate($this->image, $ally['colour'][0], $ally['colour'][1], $ally['colour'][2]);
+            $this->renderShadowedCenteredText($x, $y, $ally['tag'], $color, $white);
+        }
+        
+        foreach($this->dataPlayer as $player) {
+            if(!$player['showText']) continue;
+            if($player['villNum'] <= 0) continue;
+            
+            $x = $player['villX'] / $player['villNum'];
+            $y = $player['villY'] / $player['villNum'];
+            $this->renderCenteredText($x, $y, $player['name'], $player['colour']);
+        }
+        
+        //TODO add for village Markers
+    }
+    
+    /*
+     * This function uses Map Coordinates not Picture!!
+     */
+    private function renderShadowedCenteredText($mapX, $mapY, $text, $col, $shadowCol) {
+        $x = ($mapX - $this->mapDimension['xs']) * $this->width / $this->mapDimension['w'];
+        $y = ($mapY - $this->mapDimension['ys']) * $this->height / $this->mapDimension['h'];
+        
+        $this->renderCenteredText($x - 1, $y - 1, $text, $shadowCol);
+        $this->renderCenteredText($x - 1, $y + 1, $text, $shadowCol);
+        $this->renderCenteredText($x + 1, $y - 1, $text, $shadowCol);
+        $this->renderCenteredText($x + 1, $y + 1, $text, $shadowCol);
+        $this->renderCenteredText($x, $y, $text, $col);
+    }
+    
+    /*
+     * This function uses Picture coordinates
+     */
+    private function renderCenteredText($x, $y, $text, $color) {
+        $size = $this->fieldWidth * 5;
+        $box = imagettfbbox($size, 0, $this->font, $text);
+
+        $drawX = $x - ($box[6] + $box[2]) / 2;
+        $drawY = $y - ($box[7] + $box[3]) / 2;
+        imagettftext($this->image, $size, 0, $drawX, $drawY, $color, $this->font, $text);
     }
     
     private $skinCache = array();
@@ -406,6 +491,9 @@ class MapGenerator extends PictureRender {
             "id" => (int) $allyID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "villNum" => 0,
+            "villX" => 0,
+            "villY" => 0,
         );
         return $this;
     }
@@ -418,6 +506,9 @@ class MapGenerator extends PictureRender {
             "id" => (int) $playerID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "villNum" => 0,
+            "villX" => 0,
+            "villY" => 0,
         );
         return $this;
     }
@@ -440,7 +531,7 @@ class MapGenerator extends PictureRender {
             return $this;
         }
         else if($this->show_errs) {
-            throw new InvalidArgumentException("Only alphanumeric Characters inside Skin allowed");
+            throw new \InvalidArgumentException("Only alphanumeric Characters inside Skin allowed");
         }
         return false;
     }
@@ -452,7 +543,7 @@ class MapGenerator extends PictureRender {
             return $this;
         }
         else if($this->show_errs) {
-            throw new InvalidArgumentException("Opaque needs to be between 0 and 100");
+            throw new \InvalidArgumentException("Opaque needs to be between 0 and 100");
         }
         return false;
     }
@@ -469,11 +560,12 @@ class MapGenerator extends PictureRender {
             if($layer == MapGenerator::$LAYER_MARK ||
                     $layer == MapGenerator::$LAYER_PICTURE ||
                     $layer == MapGenerator::$LAYER_TEXT ||
-                    $layer == MapGenerator::$LAYER_GRID) {
+                    $layer == MapGenerator::$LAYER_GRID ||
+                    ($layer == MapGenerator::$LAYER_DRAWING && $this->drawing_img != null && $this->drawing_img != "")) {
                 $tmp[] = $layer;
             }
             else if($this->show_errs) {
-                throw new InvalidArgumentException("Each Layer needs to be a valid Layer");
+                throw new \InvalidArgumentException("Each Layer needs to be a valid Layer");
             }
             else {
                 $retval = false;
@@ -496,22 +588,8 @@ class MapGenerator extends PictureRender {
      * ye: Row (y Position) where the map should end (exclusive)
      */
     public function setMapDimensions($dimensions) {
-        $tmp = array(
-            'xs' => (int) $dimensions['xs'],
-            'ys' => (int) $dimensions['ys'],
-            'xe' => (int) $dimensions['xe'],
-            'ye' => (int) $dimensions['ye'],
-        );
-        
-        $tmp['w'] = $tmp['xe'] - $tmp['xs'];
-        $tmp['h'] = $tmp['ye'] - $tmp['ys'];
-        if($tmp['w'] <= 0 || $tmp['h'] <= 0) {
-            if($this->show_errs) {
-                throw new \InvalidArgumentException("start / end need correct sorting or with / height is zero");
-            } else {
-                return false;
-            }
-        }
+        $tmp = $this->convertToInternalDimensions($dimensions);
+        if($tmp === false) return false;
         
         $this->mapDimension = $tmp;
         return $this;
@@ -540,6 +618,8 @@ class MapGenerator extends PictureRender {
             return false;
         } else {
             $this->backgroundColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+            if(count($col) > 3)
+                $this->backgroundColour[] = (int) $col[3];
         }
         return $this;
     }
@@ -552,5 +632,36 @@ class MapGenerator extends PictureRender {
     public function setAutoResize($value) {
         $this->autoResize = (boolean) $value;
         return $this;
+    }
+    
+    public function setDrawings($drawing_img, $drawing_dim) {
+        $this->drawing_img = $drawing_img;
+        
+        $tmp = $this->convertToInternalDimensions($drawing_dim);
+        if($tmp === false) return false;
+        
+        $this->drawing_dimensions = $tmp;
+        return $this;
+    }
+    
+    private function convertToInternalDimensions($dimensions) {
+        $tmp = array(
+            'xs' => (int) $dimensions['xs'],
+            'ys' => (int) $dimensions['ys'],
+            'xe' => (int) $dimensions['xe'],
+            'ye' => (int) $dimensions['ye'],
+        );
+        
+        $tmp['w'] = $tmp['xe'] - $tmp['xs'];
+        $tmp['h'] = $tmp['ye'] - $tmp['ys'];
+        if($tmp['w'] <= 0 || $tmp['h'] <= 0) {
+            if($this->show_errs) {
+                throw new \InvalidArgumentException("start / end need correct sorting or with / height is zero");
+            } else {
+                return false;
+            }
+        }
+        
+        return $tmp;
     }
 }

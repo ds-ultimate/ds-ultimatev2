@@ -48,39 +48,35 @@ class Map extends Model
     }
     
     /**
-     * Save format: {type}:{id}:{colour (hex)};...;...
+     * Save format: {type}:{id}:{colour (hex)}:{settings (t for text)};...;...
      * @param type $markerArray
      */
     public function setMarkers($markerArray) {
         $markerStr = "";
-        if(isset($markerArray['ally'])) {
-            foreach($markerArray['ally'] as $marker) {
+        
+        $types = [
+            array("ally", "a"),
+            array("player", "p"),
+            array("village", "v"),
+        ];
+        
+        foreach($types as $type) {
+            if(!isset($markerArray[$type[0]])) continue;
+            
+            foreach($markerArray[$type[0]] as $marker) {
                 if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
                     continue;
                 }
                 if(!isset($marker['id']) || $marker['id'] == 0) continue;
                 
-                $markerStr .= "a:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
-            }
-        }
-        if(isset($markerArray['player'])) {
-            foreach($markerArray['player'] as $marker) {
-                if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
-                    continue;
-                }
-                if(!isset($marker['id']) || $marker['id'] == 0) continue;
                 
-                $markerStr .= "p:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
-            }
-        }
-        if(isset($markerArray['village'])) {
-            foreach($markerArray['village'] as $marker) {
-                if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
-                    continue;
-                }
-                if(!isset($marker['id']) || $marker['id'] == 0) continue;
+                $markerStr .= $type[1] . ":". ((int) $marker['id']) . ":" . $marker['colour'];
                 
-                $markerStr .= "v:". ((int) $marker['id']) . ":" . $marker['colour'] . ";";
+                if(isset(($marker['textHere'])) && isset(($marker['text'])) && $marker['text'] == "on") {
+                    $markerStr .= ":t";
+                }
+                
+                $markerStr .= ";";
             }
         }
         
@@ -91,33 +87,39 @@ class Map extends Model
         $result = array();
         foreach(explode(";", $this->markers) as $marker) {
             $parts = explode(":", $marker);
-            if(count($parts) != 3) continue;
+            if(count($parts) < 3 || count($parts) > 4) continue;
             if($parts[0] != $filterBy) continue;
             
             switch($parts[0]) {
                 case 'a':
                     $ally = Ally::ally($world->server->code, $world->name, $parts[1]);
+                    if($ally == null) continue;
                     $result[] = [
                         'id' => $ally->allyID,
                         'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
                         'colour' => $parts[2],
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
                     ];
                     break;
                 case 'p':
                     $player = Player::player($world->server->code, $world->name, $parts[1]);
+                    if($player == null) continue;
                     $result[] = [
                         'id' => $player->playerID,
-                        'name' => BasicFunctions::outputName($player->name),
+                        'name' => BasicFunctions::decodeName($player->name),
                         'colour' => $parts[2],
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
                     ];
                     break;
                 case 'v':
                     $vil = Village::village($world->server->code, $world->name, $parts[1]);
+                    if($vil == null) continue;
                     $result[] = [
                         'id' => $vil->villageID,
                         'x' => $vil->x,
                         'y' => $vil->y,
                         'colour' => $parts[2],
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
                     ];
                     break;
             }
@@ -201,11 +203,11 @@ class Map extends Model
         return $parts[1] != "null";
     }
     
-    public function setDimensions($xs, $xe, $ys, $ye) {
-        $dim = "" . ((int) $xs) . ";";
-        $dim .= ((int) $xe) . ";";
-        $dim .= ((int) $ys) . ";";
-        $dim .= ((int) $ye);
+    public function setDimensions($array) {
+        $dim = "" . ((int) $array['xs']) . ";";
+        $dim .= ((int) $array['xe']) . ";";
+        $dim .= ((int) $array['ys']) . ";";
+        $dim .= ((int) $array['ye']);
         $this->dimensions = $dim;
     }
     
@@ -227,22 +229,22 @@ class Map extends Model
      * @param \App\Util\MapGenerator $generator Generator to Configure
      */
     public function prepareRendering(MapGenerator $generator) {
-        $generator->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
         if(isset($this->markers) && $this->markers != null) {
             foreach(explode(";", $this->markers) as $marker) {
                 $parts = explode(":", $marker);
-                if(count($parts) != 3) continue;
+                if(count($parts) < 3 || count($parts) > 4) continue;
 
                 $rgb = $this->hexToRGB($parts[2]);
+                $showText = count($parts) > 3 && strpos($parts[3], "t") !== false;
                 switch($parts[0]) {
                     case 'a':
-                        $generator->markAlly($parts[1], $rgb);
+                        $generator->markAlly($parts[1], $rgb, $showText);
                         break;
                     case 'p':
-                        $generator->markPlayer($parts[1], $rgb);
+                        $generator->markPlayer($parts[1], $rgb, $showText);
                         break;
                     case 'v':
-                        $generator->markVillage($parts[1], $rgb);
+                        $generator->markVillage($parts[1], $rgb, $showText);
                         break;
                 }
             }
@@ -285,6 +287,34 @@ class Map extends Model
                 ]);
             }
         }
+        
+        if(isset($this->drawing_dim) && $this->drawing_dim != null && $this->drawing_dim != "" &&
+                isset($this->drawing_png) && $this->drawing_png != null && $this->drawing_png != "" &&
+                isset($this->drawing_obj) && $this->drawing_obj != null && $this->drawing_obj != "") {
+            
+            $parts = explode(";", $this->drawing_dim);
+            if(count($parts) == 4) {
+                $drawing_dim = [
+                    'xs' => $parts[0],
+                    'xe' => $parts[1],
+                    'ys' => $parts[2],
+                    'ye' => $parts[3],
+                ];
+            }
+            $generator->setDrawings($this->drawing_png, $drawing_dim);
+        }
+        $generator->setLayerOrder($this->getLayerConfiguration());
+    }
+    
+    public function getLayerConfiguration() {
+        $layers = [MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID, MapGenerator::$LAYER_TEXT];
+        
+        if(isset($this->drawing_dim) && $this->drawing_dim != null && $this->drawing_dim != "" &&
+                isset($this->drawing_png) && $this->drawing_png != null && $this->drawing_png != "" &&
+                isset($this->drawing_obj) && $this->drawing_obj != null && $this->drawing_obj != "") {
+            $layers[] = MapGenerator::$LAYER_DRAWING;
+        }
+        return $layers;
     }
     
     private function checkHex($hex) {

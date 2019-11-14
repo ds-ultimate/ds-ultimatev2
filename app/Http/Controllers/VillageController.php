@@ -17,11 +17,8 @@ class VillageController extends Controller
         $worldData = World::getWorld($server, $world);
 
         $villageData = Village::village($server, $world, $village);
-        if ($villageData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über das Dorf mit der ID '$village' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
+                "auf der Welt '$server$world' vorhanden.");
 
         $datas = Village::villageDataChart($server, $world, $village);
         $chartJS = Chart::generateChart($datas, 'points');
@@ -36,19 +33,15 @@ class VillageController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $villageData = Village::village($server, $world, $villageID);
-        if ($villageData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über das Dorf mit der ID '$village' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
+                "auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
             case "all":
                 $typeName = ucfirst(__('ui.conquer.all'));
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         return view('content.villageConquer', compact('worldData', 'server', 'villageData', 'typeName', 'type'));
     }
