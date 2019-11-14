@@ -80,13 +80,13 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.tool.map.title')).' ['.$worldData->displayName().']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('tool.map.title')).' ['.$worldData->displayName().']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('ui.tool.map.title')).' ' }}
+                {{ ucfirst(__('tool.map.title')).' ' }}
             </h1>
             <h4>
                 {{ '['.$worldData->displayName().']' }}
@@ -99,16 +99,16 @@
                 <form id="mapEditForm">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('ui.tool.map.edit')) }}</a>
+                            <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('tool.map.edit')) }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="drawing-tab" data-toggle="tab" href="#drawing" role="tab" aria-controls="drawing" aria-selected="false">{{ ucfirst(__('ui.tool.map.drawing')) }}</a>
+                            <a class="nav-link" id="drawing-tab" data-toggle="tab" href="#drawing" role="tab" aria-controls="drawing" aria-selected="false">{{ ucfirst(__('tool.map.drawing')) }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{ ucfirst(__('ui.tool.map.settings')) }}</a>
+                            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{ ucfirst(__('tool.map.settings')) }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ ucfirst(__('ui.tool.map.links')) }}</a>
+                            <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ ucfirst(__('tool.map.links')) }}</a>
                         </li>
                     </ul>
                     <div class="card-body tab-content">
@@ -116,10 +116,10 @@
                             <div class="row pt-3">
                                 @foreach(['ally', 'player', 'village'] as $type)
                                     <div id="main-{{$type}}" class="col-lg-4">
-                                        {{ ucfirst(__('ui.tool.map.'.$type)) }}<br>
+                                        {{ ucfirst(__('tool.map.'.$type)) }}<br>
                                         @if($type != 'village')
                                             <div class="form-check form-check-inline float-right mr-0">
-                                                <label class="form-check-label mr-2" for="showTextAll-{{ $type }}">{{ ucfirst(__('ui.tool.map.showAllText')) }}</label>
+                                                <label class="form-check-label mr-2" for="showTextAll-{{ $type }}">{{ ucfirst(__('tool.map.showAllText')) }}</label>
                                                 <input class="form-check-input change-all showTextBox" type="checkbox" aria-for="showText-{{ $type }}" id="showTextAll-{{ $type }}">
                                             </div>
                                         @endif
@@ -144,7 +144,7 @@
                         <div class="tab-pane fade" id="drawing" role="tabpanel" aria-labelledby="drawing-tab">
                             <div class="row pt-3">
                                 <div class="form-group float-left" style="margin-left: calc(50% - 500px);">
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteDrawing()">{{ ucfirst(__('ui.tool.map.deleteDrawing')) }}</button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteDrawing()">{{ ucfirst(__('tool.map.deleteDrawing')) }}</button>
                                 </div>
                                 <div class="col-12 text-center">
                                     <img id="canvas-bg-img" src="">
@@ -158,25 +158,25 @@
                             <div class="row pt-3">
                                 <div class="col-12">
                                     <div class="form-group row">
-                                        <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.editLink')) }}</label>
+                                        <label class="control-label col-md-2">{{ ucfirst(__('tool.map.editLink')) }}</label>
                                         <div class="col-1">
-                                            <a class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>
+                                            <a class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('tool.map.copy')) }}</a>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'edit', $wantedMap->edit_key]) }}" />
-                                            <small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.editLinkDesc')) }}</small>
+                                            <small class="form-control-feedback">{{ ucfirst(__('tool.map.editLinkDesc')) }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group row">
-                                        <label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.showLink')) }}</label>
+                                        <label class="control-label col-md-2">{{ ucfirst(__('tool.map.showLink')) }}</label>
                                         <div class="col-1">
-                                            <a class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>
+                                            <a class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('tool.map.copy')) }}</a>
                                         </div>
                                         <div class="col-9">
                                             <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}" />
-                                            <small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.showLinkDesc')) }}</small>
+                                            <small class="form-control-feedback">{{ ucfirst(__('tool.map.showLinkDesc')) }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -188,39 +188,39 @@
                                     <span class='input-group-text colorpicker-input-addon'><i></i></span>
                                     <input name='default[background]' id="bg-colour" type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
                                 </div>
-                                <label class='form-control'>{{ __('ui.tool.map.defaultBackground') }}</label>
+                                <label class='form-control'>{{ __('tool.map.defaultBackground') }}</label>
                             </div>
                             <div class="form-inline mb-2">
                                 <div class="form-check col-lg-auto ml-auto">
                                     <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
                                     <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-show-player">{{ __('ui.tool.map.showPlayer') }}</label>
+                                    <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
                                 </div>
                                 <div id='default-player-div' class='col-lg-9 input-group'>
                                     <div class='colour-picker-map input-group-prepend'>
                                         <span class='input-group-text colorpicker-input-addon'><i></i></span>
                                         <input name='default[player]' id="player-colour" type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
                                     </div>
-                                    <label class='form-control'>{{ __('ui.tool.map.defaultPlayer') }}</label>
+                                    <label class='form-control'>{{ __('tool.map.defaultPlayer') }}</label>
                                 </div>
                             </div>
                             <div class="form-inline mb-2">
                                 <div class="form-check col-lg-auto ml-auto">
                                     <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
                                     <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-show-barbarian">{{ __('ui.tool.map.showBarbarian') }}</label>
+                                    <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
                                 </div>
                                 <div id='default-barbarian-div' class='col-lg-9 input-group'>
                                     <div class='colour-picker-map input-group-prepend'>
                                         <span class='input-group-text colorpicker-input-addon'><i></i></span>
                                         <input name='default[barbarian]' type='hidden' id="barbarian-colour" value='{{ $wantedMap->getDefBarbarianColour() }}'/>
                                     </div>
-                                    <label class='form-control'>{{ __('ui.tool.map.defaultBarbarian') }}</label>
+                                    <label class='form-control'>{{ __('tool.map.defaultBarbarian') }}</label>
                                 </div>
                             </div>
                             <div class="form-inline mb-2">
                                 <div class="col-lg-6 input-group">
-                                    <label for="map-zoom-value" class="col-lg-4">{{ __('ui.tool.map.zoom') }}</label>
+                                    <label for="map-zoom-value" class="col-lg-4">{{ __('tool.map.zoom') }}</label>
                                     <select class="form-control col-lg-2" id="map-zoom-value" name="zoomValue">
                                         <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
                                         <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
@@ -235,7 +235,7 @@
                                     </select>
                                 </div>
                                 <div id="center-pos-div" class="input-group col-lg-6 mb-2">
-                                    <label for="center-pos-x" class="col-lg-4">{{ __('ui.tool.map.center') }}</label>
+                                    <label for="center-pos-x" class="col-lg-4">{{ __('tool.map.center') }}</label>
                                     <input id="center-pos-x" name="centerX" class="form-control mr-1" placeholder="500" type="text" value="{{ $mapDimensions['cx'] }}"/>|
                                     <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
                                 </div>
@@ -496,11 +496,92 @@
         'TextColor',
         'TextBackgroundColor',
     ];
+    var drawer_local = {
+      'Add Drawer': '{{ __('tool.map.drawer.general.addDrawer') }}',
+      'Insert Drawer': '{{ __('tool.map.drawer.general.insertDrawer') }}',
+      'Insert': '{{ __('tool.map.drawer.general.insert') }}',
+      'Free drawing mode': '{{ __('tool.map.drawer.general.freeDrawing') }}',
+      'SimpleWhiteEraser': '{{ __('tool.map.drawer.general.simpleEraser') }}',
+      'Eraser': '{{ __('tool.map.drawer.general.eraser') }}',
+      'Delete this canvas': '{{ __('tool.map.drawer.general.deleteCanvas') }}',
+      'Are you sure want to delete this canvas?': '{{ __('tool.map.drawer.general.deleteCanvasConfirm') }}',
+
+      // canvas properties popup
+      'Size (px)': '{{ __('tool.map.drawer.canvas.size') }}',
+      'Position': '{{ __('tool.map.drawer.canvas.position') }}',
+      'Inline': '{{ __('tool.map.drawer.canvas.inline') }}',
+      'Left': '{{ __('tool.map.drawer.canvas.left') }}',
+      'Center': '{{ __('tool.map.drawer.canvas.center') }}',
+      'Right': '{{ __('tool.map.drawer.canvas.right') }}',
+      'Floating': '{{ __('tool.map.drawer.canvas.floating') }}',
+      'Canvas properties': '{{ __('tool.map.drawer.canvas.canvasProp') }}',
+      'Background': '{{ __('tool.map.drawer.canvas.background') }}',
+      'transparent': '{{ __('tool.map.drawer.canvas.transparent') }}',
+      'Cancel': '{{ __('tool.map.drawer.canvas.cancel') }}',
+      'Save': '{{ __('tool.map.drawer.canvas.save') }}',
+
+      // Fullscreen plugin
+      'Enter fullscreen mode': '{{ __('tool.map.drawer.fullscreen.enter') }}',
+      'Exit fullscreen mode': '{{ __('tool.map.drawer.fullscreen.exit') }}',
+
+      // shape context menu plugin
+      'Bring forward': '{{ __('tool.map.drawer.shape.bringForward') }}',
+      'Send backwards': '{{ __('tool.map.drawer.shape.bringBackwards') }}',
+      'Bring to front': '{{ __('tool.map.drawer.shape.bringFront') }}',
+      'Send to back': '{{ __('tool.map.drawer.shape.bringBack') }}',
+      'Duplicate': '{{ __('tool.map.drawer.shape.duplicate') }}',
+      'Remove': '{{ __('tool.map.drawer.shape.remove') }}',
+
+      // brush size plugin
+      'Size:': '{{ __('tool.map.drawer.brush.size') }}',
+
+      // colorpicker plugin
+      'Fill:': '{{ __('tool.map.drawer.color.fill') }}',
+      'Transparent': '{{ __('tool.map.drawer.color.transparent') }}',
+
+      // shape border plugin
+      'Border:': '{{ __('tool.map.drawer.border.border') }}',
+      'None': '{{ __('tool.map.drawer.border.none') }}',
+
+      // arrow plugin
+      'Draw an arrow': '{{ __('tool.map.drawer.arrow.drawSingle') }}',
+      'Draw a two-sided arrow': '{{ __('tool.map.drawer.arrow.drawTwo') }}',
+      'Lines and arrows': '{{ __('tool.map.drawer.arrow.tooltip') }}',
+
+      // circle plugin
+      'Draw a circle': '{{ __('tool.map.drawer.circle.tooltip') }}',
+
+      // line plugin
+      'Draw a line': '{{ __('tool.map.drawer.line.tooltip') }}',
+
+      // rectangle plugin
+      'Draw a rectangle': '{{ __('tool.map.drawer.rect.tooltip') }}',
+
+      // triangle plugin
+      'Draw a triangle': '{{ __('tool.map.drawer.triangle.tooltip') }}',
+
+      // polygon plugin
+      'Draw a Polygon': '{{ __('tool.map.drawer.polygon.tooltip') }}',
+      'Stop drawing a polygon': '{{ __('tool.map.drawer.polygon.stop') }}',
+      'Click to start a new line': '{{ __('tool.map.drawer.polygon.newLine') }}',
+
+      // text plugin
+      'Draw a text': '{{ __('tool.map.drawer.text.tooltip') }}',
+      'Click to place a text': '{{ __('tool.map.drawer.text.newText') }}',
+      'Font:': '{{ __('tool.map.drawer.text.font') }}',
+
+      // movable floating mode plugin
+      'Move canvas': '{{ __('tool.map.drawer.moveable.moveCanvas') }}',
+
+      // base shape
+      'Click to start drawing a ': '{{ __('tool.map.drawer.base.tooltip') }}'
+    };
+
 
     var drawer;
     $(function () {
         drawer = new DrawerJs.Drawer(null, {
-            //texts: customLocalization,
+            texts: drawer_local,
             plugins: drawerPlugins,
             corePlugins: null,
             basePath: '/plugin/drawerJS/',
@@ -631,13 +712,13 @@
             success: function(data){
                 $('#'+targetID).html(
                     '<div class="form-group row">' +
-                        '<label class="control-label col-md-2">{{ ucfirst(__('ui.tool.map.forumLink')) }}</label>' +
+                        '<label class="control-label col-md-2">{{ ucfirst(__('tool.map.forumLink')) }}</label>' +
                         '<div class="col-1">' +
-                            '<a class="btn btn-primary btn-sm" onclick="copy(\''+targetID+'\')">{{ ucfirst(__('ui.tool.map.copy')) }}</a>' +
+                            '<a class="btn btn-primary btn-sm" onclick="copy(\''+targetID+'\')">{{ ucfirst(__('tool.map.copy')) }}</a>' +
                         '</div>' +
                         '<div class="col-9">' +
                             '<input id="link-'+targetID+'" type="text" class="border form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
-                            '<small class="form-control-feedback">{{ ucfirst(__('ui.tool.map.forumLinkDesc')) }}</small>' +
+                            '<small class="form-control-feedback">{{ ucfirst(__('tool.map.forumLinkDesc')) }}</small>' +
                         '</div>' +
                     '</div>' +
                     '<img id="'+targetID+'-img" class="p-0" src="' + data + '" />'

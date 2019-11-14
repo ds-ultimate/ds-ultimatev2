@@ -165,30 +165,6 @@ return array (
       'attackTarget_village' => 'Ziel Dörfer',
       'errorKoord' => 'Start- und Zieldoorf dürfen nicht gleich sein',
     ),
-    'map' => 
-    array (
-      'title' => 'Weltkarte',
-      'edit' => 'Markierungen editieren',
-      'settings' => 'Generelle Einstellungen',
-      'links' => 'Links zum Teilen',
-      'editLink' => 'Editierungs Link',
-      'copy' => 'Kopieren',
-      'editLinkDesc' => 'Jeder der diesen Link hat kann die Map editieren. Sei daher vorsichtig und gib den Link nur Leuten denen du vertraust!',
-      'showLink' => 'Ansehen Link',
-      'showLinkDesc' => 'Mit diesem Link kann die Map angesehen werden, allerdings nicht editiert',
-      'showPlayer' => 'Spielerdörfer anzeigen',
-      'showBarbarian' => 'Barbarendörfer anzeigen',
-      'defaultPlayer' => 'Standardfarbe für Spielerdörfer (unmarkiert)',
-      'defaultBarbarian' => 'Standardfarbe für Barbarendörfer (unmarkiert)',
-      'defaultBackground' => 'Hintergrundfarbe',
-      'zoom' => 'Zoomstufe',
-      'center' => 'Mittelpunkt der Karte',
-      'ally' => 'Stamm markieren',
-      'player' => 'Spieler Markieren',
-      'village' => 'Dorf Markieren',
-      'forumLink' => 'Forums Link',
-      'forumLinkDesc' => 'MIt diesen BB-Codes kannst du die Map in ein Forum einbinden',
-    ),
   ),
   'unit' => 
   array (
@@ -232,4 +208,10 @@ return array (
     'utBash' => 'Alte Unterstützer',
     'nodata' => 'Keine Daten vorhanden',
   ),
+  'own' => 
+  array (
+    'maps' => 'Eigene Karten',
+    'attackplanner' => 'Eigene Angriffspläne',
+  ),
+  'noTitle' => 'Kein Titel',
 );
