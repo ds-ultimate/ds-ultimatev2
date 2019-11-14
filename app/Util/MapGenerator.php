@@ -428,7 +428,7 @@ class MapGenerator extends PictureRender {
             $x = $ally['villX'] / $ally['villNum'];
             $y = $ally['villY'] / $ally['villNum'];
             $color = imagecolorallocate($this->image, $ally['colour'][0], $ally['colour'][1], $ally['colour'][2]);
-            $this->renderShadowedCenteredText($x, $y, $ally['name'], $color, $white);
+            $this->renderShadowedCenteredText($x, $y, $ally['tag'], $color, $white);
         }
         
         foreach($this->dataPlayer as $player) {
