@@ -239,7 +239,7 @@ class MapGenerator extends PictureRender {
                 $this->dataPlayer[$player['id']] = $player;
                 
                 if($player['showText']) {
-                    $playerModel = $playerModel->orWhere('allyID', $player['id']);
+                    $playerModel = $playerModel->orWhere('playerID', $player['id']);
                     $evaluateModel = true;
                 }
             }
@@ -437,7 +437,8 @@ class MapGenerator extends PictureRender {
             
             $x = $player['villX'] / $player['villNum'];
             $y = $player['villY'] / $player['villNum'];
-            $this->renderCenteredText($x, $y, $player['name'], $player['colour']);
+            $color = imagecolorallocate($this->image, $player['colour'][0], $player['colour'][1], $player['colour'][2]);
+            $this->renderShadowedCenteredText($x, $y, $player['name'], $color, $white);
         }
         
         //TODO add for village Markers
@@ -461,7 +462,7 @@ class MapGenerator extends PictureRender {
      * This function uses Picture coordinates
      */
     private function renderCenteredText($x, $y, $text, $color) {
-        $size = $this->fieldWidth * 5;
+        $size = $this->width / 50 + $this->fieldWidth * 4;
         $box = imagettfbbox($size, 0, $this->font, $text);
 
         $drawX = $x - ($box[6] + $box[2]) / 2;

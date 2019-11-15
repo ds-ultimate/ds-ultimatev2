@@ -144,7 +144,7 @@ class MapController extends BaseController
         abort_unless(isset($getArray['data']), 404);
         switch($getArray['type']) {
             case "image":
-                if(!isset($wantedMap->dimensions) || $wantedMap->dimensions != null)
+                if(!isset($wantedMap->dimensions) || $wantedMap->dimensions == null)
                     $wantedMap->setDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
                 
                 $wantedMap->drawing_dim = $wantedMap->dimensions;
