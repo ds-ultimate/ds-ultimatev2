@@ -33,7 +33,7 @@ class VillageController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $villageData = Village::village($server, $world, $villageID);
-        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
+        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$villageID'" .
                 "auf der Welt '$server$world' vorhanden.");
 
         switch($type) {

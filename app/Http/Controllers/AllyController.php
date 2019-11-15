@@ -47,7 +47,7 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
                 " auf der Welt '$server$world' vorhanden.");
         
         switch($type) {
@@ -73,7 +73,7 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {

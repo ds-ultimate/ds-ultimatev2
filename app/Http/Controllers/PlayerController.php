@@ -47,7 +47,7 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
-        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
+        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
@@ -66,7 +66,7 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
-        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
+        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
