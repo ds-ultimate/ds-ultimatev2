@@ -242,7 +242,7 @@
                             </div>
                             <div class="form-inline mb-2 col-lg-6">
                                 <label for="markerFactor" class="col-lg-auto">{{ ucfirst(__('tool.map.markerFactor')) }}</label>
-                                <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="1" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
+                                <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
                                 <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
                             </div>
                             <div class="form-group float-right">

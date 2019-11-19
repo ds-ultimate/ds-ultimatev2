@@ -389,12 +389,15 @@ class MapGenerator extends PictureRender {
         $gridCol = imagecolorallocatealpha($this->image, $this->gridColour[0],
                 $this->gridColour[1], $this->gridColour[2], 90); //ca 30% deckkraft
         
+        $innerGrid = $this->mapDimension['w'] < 150 && $this->mapDimension['h'];
+        $thick = ($innerGrid)?(3):(0);
+        
         //draw vertical grid
         for($i = 1; $i <= 9; $i++) { //draw 9 lines (from 1 to 9)
             $x = intval($this->fieldWidth * ($i*100 - $this->mapDimension['xs']));
             if($x < 0 || $x > $this->width) continue; //ignore lines outside border
             
-            imageline($this->image, $x, 0, $x, $this->height, $gridCol);
+            imagefilledrectangle($this->image, $x-$thick, 0, $x+$thick, $this->height, $gridCol);
         }
         
         //draw horizontal grid
@@ -402,7 +405,7 @@ class MapGenerator extends PictureRender {
             $y = intval($this->fieldHeight * ($i*100 - $this->mapDimension['ys']));
             if($y < 0 || $y > $this->height) continue; //ignore lines outside border
             
-            imageline($this->image, 0, $y, $this->width, $y, $gridCol);
+            imagefilledrectangle($this->image, 0, $y-$thick, $this->width, $y+$thick, $gridCol);
         }
         
         for($i = 0; $i <= 9; $i++) {
@@ -417,6 +420,26 @@ class MapGenerator extends PictureRender {
                 $x = $xwanted - $box[2];
                 $y = $ywanted - $box[1];
                 imagettftext($this->image, $size, 0, $x, $y, $gridCol, $this->font, $txt);
+            }
+        }
+        
+        if($innerGrid) {
+            //draw vertical grid
+            for($i = 1; $i <= 99; $i++) { //draw 99 lines (from 1 to 99)
+                if($i % 10 == 0) continue;
+                $x = intval($this->fieldWidth * ($i*10 - $this->mapDimension['xs']));
+                if($x < 0 || $x > $this->width) continue; //ignore lines outside border
+
+                imagefilledrectangle($this->image, $x, 0, $x, $this->height, $gridCol);
+            }
+
+            //draw horizontal grid
+            for($i = 1; $i <= 99; $i++) { //draw 99 lines (from 1 to 99)
+                if($i % 10 == 0) continue;
+                $y = intval($this->fieldHeight * ($i*10 - $this->mapDimension['ys']));
+                if($y < 0 || $y > $this->height) continue; //ignore lines outside border
+
+                imagefilledrectangle($this->image, 0, $y, $this->width, $y, $gridCol);
             }
         }
     }
