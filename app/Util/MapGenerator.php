@@ -43,6 +43,7 @@ class MapGenerator extends PictureRender {
     private $fieldWidth;
     private $fieldHeight;
     private $autoResize;
+    private $markerFactor;
         
     public static $LAYER_MARK = 0;
     public static $LAYER_PICTURE = 1;
@@ -106,6 +107,7 @@ class MapGenerator extends PictureRender {
         $this -> setBarbarianColour(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
         $this -> setBackgroundColour(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
         $this -> setAutoResize(false);
+        $this -> setMarkerFactor(0.2);
     }
 
     public function render() {
@@ -352,7 +354,13 @@ class MapGenerator extends PictureRender {
             
             $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs']);
             $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys']);
-            imagefilledrectangle($this->image, intval($x), intval($y), intval($x + max($this->fieldWidth-1, 0)), intval($y + max($this->fieldHeight-1, 0)), $col);
+            
+            $factor = $this->markerFactor/2;
+            $xs = intval($x + $this->fieldWidth*$factor);
+            $xe = intval($x + max($this->fieldWidth*(1-$factor)-1, $this->fieldWidth*$factor));
+            $ys = intval($y + $this->fieldHeight*$factor);
+            $ye = intval($y + max($this->fieldHeight*(1-$factor)-1, $this->fieldHeight*$factor));
+            imagefilledrectangle($this->image, $xs, $ys, $xe, $ye, $col);
         }
     }
     
@@ -642,6 +650,15 @@ class MapGenerator extends PictureRender {
         if($tmp === false) return false;
         
         $this->drawing_dimensions = $tmp;
+        return $this;
+    }
+    
+    public function setMarkerFactor($factor) {
+        if($factor > 1 || $factor < 0) {
+            throw new \InvalidArgumentException("Factor can only be between 0 and 1");
+        }
+        
+        $this->markerFactor = $factor;
         return $this;
     }
     

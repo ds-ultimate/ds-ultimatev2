@@ -37,6 +37,11 @@ class Map extends Model
         'layers',
         'dimensions',
         'defaultColours',
+        'title',
+        'drawing_obj',
+        'drawing_dim',
+        'drawing_png',
+        'markerFactor',
     ];
 
     public function user(){
@@ -303,6 +308,11 @@ class Map extends Model
             }
             $generator->setDrawings($this->drawing_png, $drawing_dim);
         }
+        
+        if(isset($this->markerFactor)) {
+            $generator->setMarkerFactor($this->markerFactor);
+        }
+        
         $generator->setLayerOrder($this->getLayerConfiguration());
     }
     

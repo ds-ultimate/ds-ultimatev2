@@ -240,6 +240,11 @@
                                     <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
                                 </div>
                             </div>
+                            <div class="form-inline mb-2 col-lg-6">
+                                <label for="markerFactor" class="col-lg-auto">{{ ucfirst(__('tool.map.markerFactor')) }}</label>
+                                <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="1" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
+                                <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
+                            </div>
                             <div class="form-group float-right">
                                 <input type="submit" class="btn btn-sm btn-success">
                             </div>
@@ -429,14 +434,25 @@
         $('#center-pos-x').change(store);
         $('#center-pos-y').change(store);
         $('.showTextBox').change(store);
+        $('#markerFactor').change(store);
+        $('#markerFactor').on("input", function(slideEvt) {
+            $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
+        });
     }
 
     $('#mapEditForm').on('submit', function (e) {
         e.preventDefault();
         store();
     });
-
+    
+    var storing = false;
+    var storeNeeded = false;
     function store() {
+        if(storing) {
+            storeNeeded = true;
+            return;
+        }
+        storing = true;
         axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
             .then((response) => {
                 mapDimensions = [
@@ -446,6 +462,13 @@
                     response.data.h,
                 ];
                 
+                setTimeout(function() {
+                    if(storeNeeded) {
+                        storeNeeded = false
+                        store();
+                    }
+                }, 400);
+                storing = false;
                 reloadMap();
                 reloadDrawerBackground();
             })
@@ -454,7 +477,14 @@
             });
     }
     
+    var reloading = false;
+    var reloadNeeded = false;
     function reloadMap() {
+        if(reloading) {
+            reloadNeeded = true;
+            return;
+        }
+        reloading = true;
         var elm = $('.active.map-show-content')[0];
         elm.style.widht = elm.clientWidth + "px";
         elm.style.height = elm.clientHeight + "px";
@@ -732,7 +762,14 @@
                     var elm = $('.active.map-show-content')[0];
                     elm.style.widht = "";
                     elm.style.height = "";
-                }, 1000);
+                    @if($mode == 'edit')
+                        reloading = false;
+                        if(reloadNeeded) {
+                            reloadNeeded = false;
+                            reloadMap();
+                        }
+                    @endif
+                }, 500);
             },
         });
     });

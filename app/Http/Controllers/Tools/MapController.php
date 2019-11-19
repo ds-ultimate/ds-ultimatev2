@@ -132,6 +132,11 @@ class MapController extends BaseController
                 'ye' => ceil($cY + $zoom / 2),
             ]);
         }
+        
+        if(isset($getArray['markerFactor'])) {
+            $wantedMap->markerFactor = $getArray['markerFactor'];
+        }
+        
         $wantedMap->save();
         
         return response()->json($this->getMapDimension($wantedMap));
