@@ -389,8 +389,7 @@ class MapGenerator extends PictureRender {
         $gridCol = imagecolorallocatealpha($this->image, $this->gridColour[0],
                 $this->gridColour[1], $this->gridColour[2], 90); //ca 30% deckkraft
         
-        $innerGrid = $this->mapDimension['w'] < 150 && $this->mapDimension['h'];
-        $thick = ($innerGrid)?(3):(0);
+        $thick = intval($this->fieldWidth / 10);
         
         //draw vertical grid
         for($i = 1; $i <= 9; $i++) { //draw 9 lines (from 1 to 9)
@@ -423,7 +422,7 @@ class MapGenerator extends PictureRender {
             }
         }
         
-        if($innerGrid) {
+        if($thick > 0) {
             //draw vertical grid
             for($i = 1; $i <= 99; $i++) { //draw 99 lines (from 1 to 99)
                 if($i % 10 == 0) continue;

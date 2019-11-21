@@ -33,18 +33,22 @@ class Village extends JsonResource
             'y' => $this->y,
             'points' => $this->points,
             'owner' => $this->owner,
-            'ownerName' => ($this->owner == 0)? '-' : BasicFunctions::outputName($this->playerLatest->name),
-            'ownerNameRaw' => BasicFunctions::decodeName($this->name),
-            'ownerAlly' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::outputName($this->playerLatest->allyLatest->name),
-            'ownerAllyRaw' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::decodeName($this->playerLatest->allyLatest->name),
+            'ownerName' => ($this->owner == 0)? ucfirst(__('ui.player.barbarian')) : BasicFunctions::outputName($this->playerLatest->name),
+            'ownerNameRaw' => ($this->owner == 0)? ucfirst(__('ui.player.barbarian')) : BasicFunctions::decodeName($this->playerLatest->name),
+            'ownerAlly' => ($this->owner == 0)? 0 : BasicFunctions::outputName($this->playerLatest->ally_id),
+            'ownerAllyName' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::outputName($this->playerLatest->allyLatest->name),
+            'ownerAllyNameRaw' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::decodeName($this->playerLatest->allyLatest->name),
+            'ownerAllyTag' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::outputName($this->playerLatest->allyLatest->tag),
+            'ownerAllyTagRaw' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' : BasicFunctions::decodeName($this->playerLatest->allyLatest->tag),
             'bonus_id' => $this->bonus_id,
             'bonus' => $this->bonusText(),
             'continent' => $this->continentString(),
             'coordinates' => $this->coordinates(),
             'conquer' => BasicFunctions::linkWinLoose($worldData, $this->villageID, $conquer, 'villageConquer', '', true),
-            'ownerLink' => ($this->owner != 0)?BasicFunctions::linkPlayer($worldData, $this->owner, BasicFunctions::outputName($this->playerLatest->name), '', '', true) : ucfirst(__('ui.player.barbarian')),
-            'ownerAllyLink' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)? '-' :
-                    BasicFunctions::linkAlly($worldData, $this->playerLatest->ally_id, BasicFunctions::outputName($this->playerLatest->allyLatest->name.' ['.$this->playerLatest->allyLatest->tag.']'), '', '', true),
+            'selfLink' => route('village',[$worldData->server->code, $worldData->name, $this->villageID]),
+            'ownerLink' => ($this->owner != 0)?route('player',[$worldData->server->code, $worldData->name, $this->owner]):"",
+            'ownerAllyLink' => ($this->owner == 0 || $this->playerLatest->ally_id == 0)?"":
+                    route('ally',[$worldData->server->code, $worldData->name, $this->playerLatest->ally_id])
         ];
     }
 }

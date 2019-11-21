@@ -14,7 +14,7 @@
         }
         #map-popup {
             position: absolute;
-            background-color: #ffffff80;
+            background-color: #ffffff90;
             padding: 5px;
             pointer-events: none;
         }
@@ -800,14 +800,24 @@
                 var xRel = e.pageX - $($('#size-1')[0].parentElement.parentElement).offset().left;
                 var yRel = e.pageY - $($('#size-1')[0].parentElement.parentElement).offset().top;
 
-                $('#'+targetID).append("<div id='map-popup'>"+
-                    "{{ ucfirst(__('ui.table.name')) }}: "+data.name+"<br>"+
-                    "{{ ucfirst(__('ui.table.points')) }}: "+data.points+"<br>"+
-                    "{{ ucfirst(__('ui.table.coordinates')) }}: "+data.coordinates+"<br>"+
-                    "{{ ucfirst(__('ui.table.owner')) }}: "+data.ownerLink+"<br>"+
-                    "{{ ucfirst(__('ui.table.ally')) }}: "+data.ownerAllyLink+"<br>"+
-                    "{{ ucfirst(__('ui.table.conquer')) }}: "+data.conquer+"<br>"+
-                    "</div>");
+                var popupHTML = '<div id="map-popup">'+
+                    '{{ ucfirst(__('ui.table.name')) }}: <a href="'+data.selfLink+'" target="_blank">'+data.name+'</a><br>'+
+                    '{{ ucfirst(__('ui.table.points')) }}: '+data.points+'<br>'+
+                    '{{ ucfirst(__('ui.table.coordinates')) }}: '+data.coordinates+'<br>';
+                
+                if(data.owner != 0) {
+                    popupHTML += '{{ ucfirst(__('ui.table.owner')) }}: <a href="'+data.ownerLink+'" target="_blank">'+data.ownerName+'</a><br>';
+                } else {
+                    popupHTML += '{{ ucfirst(__('ui.table.owner')) }}: '+data.ownerName+'<br>';
+                }
+                if(data.ownerAlly != 0) {
+                    popupHTML += '{{ ucfirst(__('ui.table.ally')) }}: <a href="'+data.ownerAllyLink+'" target="_blank">'+data.ownerAllyName+
+                        '['+data.ownerAllyTag+']</a><br>';
+                } else {
+                    popupHTML += '{{ ucfirst(__('ui.table.ally')) }}: '+data.ownerAllyName+'<br>';
+                }
+                popupHTML += "{{ ucfirst(__('ui.table.conquer')) }}: "+data.conquer+"<br></div>";
+                $('#'+targetID).append(popupHTML);
 
                 $('#map-popup')[0].style.left = xRel+"px";
                 $('#map-popup')[0].style.top = yRel+"px";
