@@ -8,6 +8,9 @@
 @stop
 
 @section('content')
+    <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;">
+
+    </div>
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
@@ -33,9 +36,9 @@
                     </div>
                     <div class="card-body">
                         <div class="nav flex-column nav-pills" id="settings-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">{{ __('ui.personalSettings.profile') }}</a>
-                            <a class="nav-link" id="settings-account-tab" data-toggle="pill" href="#settings-account" role="tab" aria-controls="settings-account" aria-selected="false">{{ __('ui.personalSettings.account') }}</a>
-                            <a class="nav-link" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
+                            <a class="nav-link {{ ($page == 'settings-profile')? 'active' : '' }}" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">{{ __('ui.personalSettings.profile') }}</a>
+                            <a class="nav-link {{ ($page == 'settings-account')? 'active' : '' }}" id="settings-account-tab" data-toggle="pill" href="#settings-account" role="tab" aria-controls="settings-account" aria-selected="false">{{ __('ui.personalSettings.account') }}</a>
+                            <a class="nav-link {{ ($page == 'settings-connection')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
                         </div>
                     </div>
                 </div>
@@ -47,7 +50,7 @@
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="settings-tabContent">
-                            <div class="tab-pane fade show active" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab" data-title="{{ __('ui.personalSettings.profile') }}">
+                            <div class="tab-pane fade {{ ($page == 'settings-profile')? 'show active' : '' }}" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab" data-title="{{ __('ui.personalSettings.profile') }}">
                                 {{ __('ui.personalSettings.profile') }}
                                 <div class="text-center">
                                     <div class="btn-group position-absolute p-1" role="group">
@@ -95,8 +98,8 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="settings-account" role="tabpanel" aria-labelledby="settings-account-tab" data-title="{{ __('ui.personalSettings.account') }}">
-                                <form>
+                            <div class="tab-pane fade {{ ($page == 'settings-account')? 'show active' : '' }}" id="settings-account" role="tabpanel" aria-labelledby="settings-account-tab" data-title="{{ __('ui.personalSettings.account') }}">
+                                <form id="settings-account-form">
                                     <div class="form-group">
                                         <label for="skype">{{ __('ui.personalSettings.skype') }} <i class="fab fa-skype h3" style="color: #00AFF0;"></i></label>
                                         <input type="text" class="form-control" id="skype" placeholder="SkypeName" value="{{ Auth::user()->profile->skype }}">
@@ -107,63 +110,54 @@
                                         <input type="email" class="form-control" id="discord" placeholder="DiscordName#1234" value="{{ Auth::user()->profile->discord }}">
                                         <div id="discord-errors" class="text-danger"></div>
                                     </div>
+                                    <button type="submit" class="btn btn-primary float-right">{{ __('global.save') }}</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
-                                <form>
+                            <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
+                                <form id="connectionForm">
                                     <div class="form-group row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-2">
                                             <label class="form-check-label" for="server">{{ __('ui.server.title') }}:</label>
                                             <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                <option></option>
                                                 @foreach(\App\Server::all() as $serverSelect)
                                                     <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-sm-4">
-                                            <label class="form-check-label" for="server">{{ __('ui.table.world') }}:</label>
-                                            <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
-                                                @foreach(\App\Server::all() as $serverSelect)
-                                                    <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
-                                                @endforeach
+                                            <label class="form-check-label" for="world">{{ __('ui.table.world') }}:</label>
+                                            <select id="world" name="world" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                <option></option>
                                             </select>
                                         </div>
                                         <div class="col-sm-4">
-                                            <label class="form-check-label" for="server">{{ __('ui.table.player') }}:</label>
-                                            <select id="server" name="server" class="form-control mr-1 data-input-map select2-container--classic select2-single">
-                                                @foreach(\App\Server::all() as $serverSelect)
-                                                    <option value="{{ $serverSelect->id }}" title="{{ $serverSelect->flag }}">{{ strtoupper($serverSelect->code) }}</option>
-                                                @endforeach
+                                            <label class="form-check-label" for="player">{{ __('ui.table.player') }}:</label>
+                                            <select id="player" name="player" class="form-control mr-1 data-input-map select2-container--classic select2-single">
+                                                <option></option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary">Sign in</button>
+                                        <div class="col-sm-2">
+                                            <label class="form-check-label"> </label>
+                                            <button type="submit" class="btn btn-primary position-absolute" style="bottom: 0;">{{ __('global.add') }}</button>
                                         </div>
                                     </div>
                                 </form>
-                                @foreach($serversList as $list)
-                                    <h5><span class="flag-icon flag-icon-{{ $list->flag }}"></span> <a href="{{$list->url}}">{{ $list->url }}</a></h5>
-                                    <ul class="list-group mb-5">
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-3 my-auto text-center"><b>{{ __('ui.server.worlds') }}</b></div>
-                                                <div class="col-6 my-auto text-center"><b>{{ __('ui.table.player') }}</b></div>
-                                                <div class="col-3 text-center"><b>{{ __('global.action') }}</b></div>
-                                            </div>
-                                        </li>
-                                        @foreach($list->worlds()->where('active', '!=', null)->get() as $listWorld)
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-3 my-auto text-center">{{ $listWorld->displayName() }}</div>
-                                                    <div class="col-6 my-auto text-center"><b>skatecram</b></div>
-                                                    <div class="col-3 text-center"><button type="button" class="btn btn-success">{{ __('global.add') }}</button></div>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endforeach
+                                <div class="table-responsive">
+                                    <table id="connectionTable" class="table table-striped table-hover table-sm w-100">
+                                        <thead>
+                                        <tr>
+                                            <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.server.title')) }}</th>
+                                            <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.world')) }}</th>
+                                            <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.player')) }}</th>
+                                            <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('key')) }}</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -176,22 +170,86 @@
     <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script>
+        var worldTable = $("#world");
+        var playerTable = $("#player");
+        var connectionTable = $('#connectionTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "{{ route('user.DsConnection') }}",
+            "columns": [
+                { "data": "server" },
+                { "data": "world" },
+                { "data": "player" },
+                { "data": "key" },
+                { "data": "action" },
+            ],
+            responsive: true,
+            {!! \App\Util\Datatable::language() !!}
+        });
+
         $(document).ready(function () {
             $("#date_picker").datepicker({
                 language: 'all',
-                format:'dd.mm.yyyy',
-                weekStart:1,
+                format: 'dd.mm.yyyy',
+                weekStart: 1,
             })
 
             $("#server").select2({
-                templateResult: formatState
+                templateResult: formatState,
+                theme: "bootstrap4",
+                placeholder: "{{ __('ui.server.title') }}"
             });
-        });
 
-        $('#server').on('select2:select', function (e) {
-            console.log(e.params.data);
-            $('#serverFlag').attr('class', 'flag-icon flag-icon-' + e.params.data.title)
-        });
+            worldTable.select2({
+                theme: "bootstrap4",
+                placeholder: "{{ __('ui.table.world') }}",
+            });
+
+            playerTable.select2({
+                theme: "bootstrap4",
+                placeholder: "{{ __('ui.table.player') }}",
+            });
+
+            $('#server').on('select2:select', function (e) {
+                axios.get('{{ route('index') }}/api/' + e.params.data.text.toLowerCase() + '/activeWorlds')
+                    .then(function (response) {
+                        worldTable.empty().trigger("change");
+                        var option1 = new Option('{{ __('ui.table.world') }}', 0, false, false);
+                        worldTable.append(option1).trigger('change');
+                        var array = response.data;
+                        array.forEach(function (data) {
+                            var option = new Option(data.text, data.id, false, false);
+                            worldTable.val(null).trigger('change');
+                            worldTable.append(option).trigger('change');
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            });
+
+            $('#world').on('select2:select', function (e) {
+                var server = $('#server').find(':selected');
+                var world = $('#world').find(':selected');
+                playerTable.val(null).trigger('change');
+                playerTable.select2({
+                    ajax: {
+                        url: '{{ route('index') }}/api/' + server[0].text.toLowerCase() + '/' + world[0].value + '/searchPlayer',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public
+                            return query;
+                        }
+                    },
+                    allowClear: true,
+                    placeholder: '{{ ucfirst(__('tool.map.playerSelectPlaceholder')) }}',
+                    theme: "bootstrap4"
+                });
+            });
 
         function formatState (state) {
             if (!state.id) {
@@ -215,8 +273,15 @@
             clear: "{{ __('datepicker.Clear') }}",
         };
 
+        $('.nav-link').on("click", function (e) {
+            var href = $(this).attr("href");
+            history.pushState(null, null, href.replace('#', '/user/settings/'));
+            e.preventDefault();
+        });
+
+        })
+
         $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-            console.log($(this)) // newly activated tab
             $('#settings-card-title').html($($(this).attr('href')).data('title'))
         });
 
@@ -247,6 +312,80 @@
                 })
                 .catch((error) => {
                 });
+        }
+
+        $(document).on('submit', '#connectionForm', function (e) {
+            e.preventDefault();
+            axios.post('{{ route('user.addConnection') }}', {
+                'server': $('#server').val(),
+                'world': $('#world').val(),
+                'player': $('#player').val(),
+            })
+                .then((response) => {
+                    connectionTable.ajax.reload();
+                })
+                .catch((error) => {
+                });
+        })
+
+        function checkConnection(id) {
+            axios.post('{{ route('user.DsConnection') }}',{
+                'id': id,
+            })
+                .then((response) => {
+                    var data = response.data;
+                    createToast(data);
+                    connectionTable.ajax.reload();
+                })
+                .catch((error) => {
+                });
+        }
+
+        function destroyConnection(id, key) {
+            axios.post('{{ route('user.destroyConnection') }}',{
+                'id': id,
+                'key': key,
+            })
+                .then((response) => {
+                    var data = response.data;
+                    if (data['data'] === 'error'){
+                        createToast(data);
+                    }
+                    connectionTable.ajax.reload();
+                })
+                .catch((error) => {
+                });
+        }
+
+        function createToast(data) {
+            var int = Math.floor((Math.random() * 1000) + 1);
+            $('#toast-content').append('<div class="toast toast'+int+'" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">\n' +
+                '            <div class="toast-header">\n' +
+                '                <div class="mr-2"><i class="fas fa-sync"></i></div>\n' +
+                '                <strong class="mr-auto">{{ __('ui.personalSettings.connection') }}</strong>\n' +
+                '                <small class="text-muted">{{__('global.now')}}</small>\n' +
+                '                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>\n' +
+                '            <div class="toast-body">\n' +
+                data['msg'] +
+                '            </div>\n' +
+                '        </div>');
+            $('.toast'+int).toast('show');
+        }
+
+        $(document).on('submit', '#settings-account-form', function () {
+            //ToDo: save data
+        })
+
+        function copy(type) {
+            /* Get the text field */
+            var copyText = $("#" + type);
+            /* Select the text field */
+            copyText.select();
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
         }
     </script>
 @stop

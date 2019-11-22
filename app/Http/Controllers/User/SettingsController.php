@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\User;
 
+use App\DsConnection;
 use App\Http\Controllers\Controller;
 use App\Profile;
 use App\Util\BasicFunctions;
+use App\Village;
+use App\World;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SettingsController extends Controller
 {
@@ -42,5 +46,64 @@ class SettingsController extends Controller
                 'user_id' => $user->id
             ]);
         }
+    }
+
+    public function addConnection(Request $request){
+        $worldModel = new World();
+        $world = $worldModel->where('server_id', $request->get('server'))->where('name', $request->get('world'))->first();
+        if (DsConnection::where('user_id', \Auth::user()->id)->where('world_id', $world->id)->where('player_id', $request->get('player'))->count() == 0) {
+            DsConnection::create([
+                'user_id' => \Auth::user()->id,
+                'world_id' => $world->id,
+                'player_id' => $request->get('player'),
+                'key' => Str::random(32),
+            ]);
+        }
+    }
+
+    public function destroyConnection(Request $request){
+        $connection = DsConnection::find($request->get('id'));
+        \Log::warning($connection->key.'___'.$request->get('key'));
+        if ($connection->key === $request->get('key')){
+            $connection->delete();
+            return \Response::json(array(
+                'data' => 'success',
+                'msg' => __('ui.personalSettings.connectionDestroy'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('ui.personalSettings.connectionNiceTroll'),
+            ));
+        }
+
+    }
+
+    public function checkConnection(Request $request){
+        $connection = DsConnection::find($request->get('id'));
+        $world = $connection->world;
+        $villageModel = new Village();
+        $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+        $villageCount = $villageModel->where(['owner' => $connection->player_id, 'name' => $connection->key])->count();
+        if ($connection->created_at->floatDiffInHours($world->worldUpdated_at, false) < 0){
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('ui.personalSettings.connectionTooEarly'),
+            ));
+        }
+
+        if ($villageCount > 0){
+            $connection->verified = 1;
+            $connection->save();
+            return \Response::json(array(
+                'data' => 'success',
+                'msg' => __('ui.personalSettings.connectionSuccess'),
+            ));
+        }
+
+        return \Response::json(array(
+            'data' => 'error',
+            'msg' => __('ui.personalSettings.connectionError'),
+        ));
     }
 }

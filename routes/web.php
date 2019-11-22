@@ -70,10 +70,14 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
 });
 
 Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middleware' => ['verified']], function () {
-    Route::get('overview', 'HomeController@overview')->name('overview');
-    Route::get('settings', 'HomeController@settings')->name('settings');
+    Route::get('overview/{page}', 'HomeController@overview')->name('overview');
+    Route::get('settings/{page}', 'HomeController@settings')->name('settings');
     Route::post('uploadeImage', 'SettingsController@imgUploade')->name('uploadeImage');
     Route::post('destroyImage', 'SettingsController@imgDestroy')->name('destroyImage');
+    Route::post('addConnection', 'SettingsController@addConnection')->name('addConnection');
+    Route::post('destroyConnection', 'SettingsController@destroyConnection')->name('destroyConnection');
+    Route::get('/DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
+    Route::post('/DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
 });
 
 Route::get('/sitemap.xml', 'Controller@sitemap');

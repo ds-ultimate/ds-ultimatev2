@@ -117,7 +117,7 @@
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('user.overview') }}">
+                        <a class="dropdown-item" href="{{ route('user.overview', ['myMap']) }}">
                             {{ __('ui.titel.overview') }}
                         </a>
                         @can('dashboard_access')
@@ -130,7 +130,7 @@
                                 {{ __('user.translations') }}
                             </a>
                         @endcan
-                        <a class="dropdown-item" href="{{ route('user.settings') }}">
+                        <a class="dropdown-item" href="{{ route('user.settings', ['settings-profile']) }}">
                             {{ __('ui.titel.settings') }}
                         </a>
                         <a class="dropdown-item" href="{{ route('logout') }}"

@@ -137,4 +137,9 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    public function dsConnection()
+    {
+        return $this->hasMany('App\DsConnection');
+    }
+
 }

@@ -38,8 +38,7 @@ class World extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function server()
-    {
+    public function server(){
         return $this->belongsTo('App\Server','server_id');
     }
 

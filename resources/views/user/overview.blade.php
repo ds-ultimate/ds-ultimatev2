@@ -24,21 +24,21 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="myMap-tab" data-toggle="tab" href="#myMap" role="tab" aria-controls="home" aria-selected="true">{{ __('ui.own.maps') }}</a>
+                            <a class="nav-link {{ ($page == 'myMap')? 'active' : '' }}" id="myMap-tab" data-toggle="tab" href="#myMap" role="tab" aria-controls="home" aria-selected="true">{{ __('ui.own.maps') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="myAttackplanner-tab" data-toggle="tab" href="#myAttackplanner" role="tab" aria-controls="myAttackplanner" aria-selected="false">{{ __('ui.own.attackplanner') }}</a>
+                            <a class="nav-link {{ ($page == 'myAttackplanner')? 'active' : '' }}" id="myAttackplanner-tab" data-toggle="tab" href="#myAttackplanner" role="tab" aria-controls="myAttackplanner" aria-selected="false">{{ __('ui.own.attackplanner') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="followMap-tab" data-toggle="tab" href="#followMap" role="tab" aria-controls="followMap" aria-selected="false">{{ __('ui.follow.map') }}</a>
+                            <a class="nav-link {{ ($page == 'followMap')? 'active' : '' }}" id="followMap-tab" data-toggle="tab" href="#followMap" role="tab" aria-controls="followMap" aria-selected="false">{{ __('ui.follow.map') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="followAttackplanner-tab" data-toggle="tab" href="#followAttackplanner" role="tab" aria-controls="followAttackplanner" aria-selected="false">{{ __('ui.follow.attackplanner') }}</a>
+                            <a class="nav-link {{ ($page == 'followAttackplanner')? 'active' : '' }}" id="followAttackplanner-tab" data-toggle="tab" href="#followAttackplanner" role="tab" aria-controls="followAttackplanner" aria-selected="false">{{ __('ui.follow.attackplanner') }}</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         {{--start own Map--}}
-                        <div class="tab-pane fade show active" id="myMap" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="tab-pane fade {{ ($page == 'myMap')? 'show active' : '' }}" id="myMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
                                 <div class="col-4">
                                     <div class="list-group" id="ownMaps" role="tablist">
@@ -85,7 +85,7 @@
                         </div>
                         {{--end own Map--}}
                         {{--start own AttackList--}}
-                        <div class="tab-pane fade" id="myAttackplanner" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="tab-pane fade {{ ($page == 'myAttackplanner')? 'show active' : '' }}" id="myAttackplanner" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row mt-2">
                                 <div class="col-10">
                                     <div class="list-group" id="ownAttackList" role="tablist">
@@ -159,7 +159,7 @@
                         </div>
                         {{--end own AttackList--}}
                         {{--start follow Map--}}
-                        <div class="tab-pane fade" id="followMap" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="tab-pane fade {{ ($page == 'followMap')? 'show active' : '' }}" id="followMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
                                 <div class="col-4">
                                     <div class="list-group" id="ownMaps" role="tablist">
@@ -198,7 +198,7 @@
                         </div>
                         {{--end follow Map--}}
                         {{--start follow AttackList--}}
-                        <div class="tab-pane fade" id="followAttackplanner" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="tab-pane fade {{ ($page == 'followAttackplanner')? 'show active' : '' }}" id="followAttackplanner" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row mt-2">
                                 <div class="col-10">
                                     <div class="list-group" id="ownAttackList" role="tablist">
@@ -249,7 +249,7 @@
                                     </div>
                                 </div>
                                 <div class="col-2">
-                                    @if (count($attackLists) > 0)
+                                    @if (count($attackListsFollow) > 0)
                                         <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('ui.tool.attackPlanner.show') }}</a>
                                         <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
                                         <div class="input-group mb-2">
@@ -272,6 +272,14 @@
 
 @section('js')
     <script>
+        $(document).ready(function () {
+            $('.nav-link').on("click", function (e) {
+                var href = $(this).attr("href");
+                history.pushState(null, null, href.replace('#', '/user/overview/'));
+                e.preventDefault();
+            });
+        })
+
         function switchMap(id, edit_key, show_key, follow=false) {
             if (follow){
                 $('#imgMapFollow').attr('src', '{{ route('index') }}/api/map/' + id + '/' + show_key + '/500-500.png');
