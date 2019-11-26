@@ -75,9 +75,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::post('uploadeImage', 'SettingsController@imgUploade')->name('uploadeImage');
     Route::post('destroyImage', 'SettingsController@imgDestroy')->name('destroyImage');
     Route::post('addConnection', 'SettingsController@addConnection')->name('addConnection');
+    Route::post('saveSettingsAccount', 'SettingsController@saveSettingsAccount')->name('saveSettingsAccount');
     Route::post('destroyConnection', 'SettingsController@destroyConnection')->name('destroyConnection');
-    Route::get('/DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
-    Route::post('/DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
+    Route::get('DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
+    Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
 });
 
 Route::get('/sitemap.xml', 'Controller@sitemap');

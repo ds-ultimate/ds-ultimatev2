@@ -16,7 +16,6 @@ class SettingsController extends Controller
 {
     public function imgUploade(Request $request){
         BasicFunctions::local();
-        \Log::warning($request->all());
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
@@ -61,9 +60,19 @@ class SettingsController extends Controller
         }
     }
 
+    public function saveSettingsAccount(Request $request){
+        $account = \Auth::user()->profile;
+        $account->skype = $request->skype;
+        $account->discord = $request->discord;
+        $account->save();
+        return \Response::json(array(
+            'data' => 'success',
+            'msg' => __('ui.personalSettings.saveSettingsSuccess'),
+        ));
+    }
+
     public function destroyConnection(Request $request){
         $connection = DsConnection::find($request->get('id'));
-        \Log::warning($connection->key.'___'.$request->get('key'));
         if ($connection->key === $request->get('key')){
             $connection->delete();
             return \Response::json(array(

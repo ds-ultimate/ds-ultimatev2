@@ -102,12 +102,12 @@
                                 <form id="settings-account-form">
                                     <div class="form-group">
                                         <label for="skype">{{ __('ui.personalSettings.skype') }} <i class="fab fa-skype h3" style="color: #00AFF0;"></i></label>
-                                        <input type="text" class="form-control" id="skype" placeholder="SkypeName" value="{{ Auth::user()->profile->skype }}">
+                                        <input type="text" class="form-control" id="skype_name" placeholder="SkypeName" value="{{ Auth::user()->profile->skype }}">
                                         <div id="skype-errors" class="text-danger"></div>
                                     </div>
                                     <div class="form-group">
                                         <label for="discord">{{ __('ui.personalSettings.discord') }} <i class="fab fa-discord h3" style="color: #738ADB;"></i></label>
-                                        <input type="email" class="form-control" id="discord" placeholder="DiscordName#1234" value="{{ Auth::user()->profile->discord }}">
+                                        <input type="text" class="form-control" id="discord_name" placeholder="DiscordName#1234" value="{{ Auth::user()->profile->discord }}">
                                         <div id="discord-errors" class="text-danger"></div>
                                     </div>
                                     <button type="submit" class="btn btn-primary float-right">{{ __('global.save') }}</button>
@@ -348,9 +348,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    if (data['data'] === 'error'){
-                        createToast(data);
-                    }
+                    createToast(data);
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
@@ -375,8 +373,19 @@
             $('.toast'+int).toast('show');
         }
 
-        $(document).on('submit', '#settings-account-form', function () {
-            //ToDo: save data
+        $(document).on('submit', '#settings-account-form', function (e) {
+            e.preventDefault();
+            axios.post('{{ route('user.saveSettingsAccount') }}',{
+                'discord': $('#discord_name').val(),
+                'skype': $('#skype_name').val(),
+            })
+                .then((response) => {
+                    var data = response.data;
+                    createToast(data);
+                    connectionTable.ajax.reload();
+                })
+                .catch((error) => {
+                });
         })
 
         function copy(type) {
