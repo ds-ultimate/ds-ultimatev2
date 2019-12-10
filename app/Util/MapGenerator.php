@@ -356,10 +356,15 @@ class MapGenerator extends PictureRender {
             $y = $this->fieldHeight * ($village['y'] - $this->mapDimension['ys']);
             
             $factor = $this->markerFactor/2;
-            $xs = intval($x + $this->fieldWidth*$factor);
-            $xe = intval($x + max($this->fieldWidth*(1-$factor)-1, $this->fieldWidth*$factor));
-            $ys = intval($y + $this->fieldHeight*$factor);
-            $ye = intval($y + max($this->fieldHeight*(1-$factor)-1, $this->fieldHeight*$factor));
+            $indentWs = intval($this->fieldWidth*$factor + 0.5);
+            $indentWe = intval($this->fieldWidth*$factor);
+            $indentHs = intval($this->fieldHeight*$factor + 0.5);
+            $indentHe = intval($this->fieldHeight*$factor);
+            
+            $xs = intval($x + $indentWs);
+            $xe = intval($x + max($this->fieldWidth-$indentWe-1, $indentWs));
+            $ys = intval($y + $indentHs);
+            $ye = intval($y + max($this->fieldHeight-$indentHe-1, $indentHs));
             imagefilledrectangle($this->image, $xs, $ys, $xe, $ye, $col);
         }
     }

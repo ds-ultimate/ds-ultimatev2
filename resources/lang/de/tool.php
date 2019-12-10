@@ -34,6 +34,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
         ),
       ),
     ),
+    'show' => 'Angriffsplan anzeigen',
   ),
   'map' => 
   array (
@@ -162,5 +163,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
         'tooltip' => 'Klicken zum Zeichnen:',
       ),
     ),
+    'show' => 'Karte anzeigen',
+    'markerFactor' => 'Dorfabstand',
   ),
 );

@@ -11,7 +11,7 @@ return array (
         array (
           'body' => '[u][size=12][b]%TITLE%[/b][/size][/u]
 
-[b]Attackplann[/b]
+[b]Attackplan[/b]
 Attackcount: %ELEMENT_COUNT%
 [table]
 [**]ID[||]Typ[||]Unit[||]Start[||]Target[||]Send time[||]Place[/**]
@@ -34,6 +34,7 @@ Attackcount: %ELEMENT_COUNT%
     'exportIGMDesc' => 'Export for IGM without Images',
     'exportWB' => 'Export DSWorkbench',
     'exportWBDesc' => 'Export for DSWorkbench',
+    'show' => 'Show attackplann',
   ),
   'map' => 
   array (
@@ -162,5 +163,7 @@ Attackcount: %ELEMENT_COUNT%
         'tooltip' => 'Click to start drawing a',
       ),
     ),
+    'show' => 'Show map',
+    'markerFactor' => 'Village spacing',
   ),
 );
