@@ -18,11 +18,8 @@ class PlayerController extends Controller
         $worldData = World::getWorld($server, $world);
 
         $playerData = Player::player($server, $world, $player);
-        if ($playerData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Spieler mit der ID '$player' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
+                " auf der Welt '$server$world' vorhanden.");
 
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash', 'utBash'];
@@ -50,19 +47,15 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
-        if ($playerData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Spieler mit der ID '$playerID' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
+                " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
             case "all":
                 $typeName = ucfirst(__('ui.allyChanges.all'));
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         return view('content.playerAllyChange', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
     }
@@ -73,11 +66,8 @@ class PlayerController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $playerID);
-        if ($playerData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Spieler mit der ID '$playerID' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
+                " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
             case "all":
@@ -93,8 +83,7 @@ class PlayerController extends Controller
                 $typeName = ucfirst(__('ui.conquer.playerOwn'));
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         return view('content.playerConquer', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
     }

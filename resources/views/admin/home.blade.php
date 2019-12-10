@@ -24,7 +24,7 @@
             <div class="card card-inverse bg-warning">
                 <div class="box text-center p-3">
                     <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['maps']) }}</h1>
-                    <h6 class="text-white">{{ __('ui.tool.map.title') }}</h6>
+                    <h6 class="text-white">{{ __('tool.map.title') }}</h6>
                 </div>
             </div>
         </div>

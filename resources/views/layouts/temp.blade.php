@@ -15,8 +15,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
+    <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
     @if (config('app.debug') == false)
         <!-- Matomo -->
         <script type="text/javascript">
@@ -50,7 +49,6 @@
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="{{ asset('js/app.js') }}"></script>
-<script src="https://kit.fontawesome.com/d27d915b5f.js"></script>
 <script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>
 <style>

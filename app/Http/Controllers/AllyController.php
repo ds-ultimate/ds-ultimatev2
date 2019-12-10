@@ -19,12 +19,8 @@ class AllyController extends Controller
         $worldData = World::getWorld($server, $world);
 
         $allyData = Ally::ally($server, $world, $ally);
-        if ($allyData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Stamm mit der ID '$ally' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
-
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
+                " auf der Welt '$server$world' vorhanden.");
 
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash'];
@@ -51,11 +47,8 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
-        if ($allyData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Stamm mit der ID '$allyID' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
+                " auf der Welt '$server$world' vorhanden.");
         
         switch($type) {
             case "all":
@@ -68,8 +61,7 @@ class AllyController extends Controller
                 $typeName = ucfirst(__('ui.allyChanges.new'));
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
 
         return view('content.allyAllyChange', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
@@ -81,11 +73,8 @@ class AllyController extends Controller
 
         $worldData = World::getWorld($server, $world);
         $allyData = Ally::ally($server, $world, $allyID);
-        if ($allyData == null){
-            //TODO: View ergänzen für Fehlermeldungen
-            echo "Keine Daten über den Stamm mit der ID '$allyID' auf der Welt '$server$world' vorhanden.";
-            exit;
-        }
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
+                " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
             case "all":
@@ -101,8 +90,7 @@ class AllyController extends Controller
                 $typeName = ucfirst(__('ui.conquer.allyOwn'));
                 break;
             default:
-                // FIXME: create error view
-                return "Unknown type";
+                abort(404, "Unknown type");
         }
         return view('content.allyConquer', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
     }

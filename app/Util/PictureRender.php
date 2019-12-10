@@ -43,8 +43,17 @@ class PictureRender {
         $imagedata = ob_get_clean();
         imagedestroy($this->image);
         
-        $encodedData = "data:image/png;base64,".base64_encode($imagedata);
-        return response($encodedData, 200)
+        return response(PictureRender::pngToBase64($imagedata), 200)
                 ->header('Content-Type', 'image/base64');
+    }
+    
+    public static function pngToBase64($png) {
+        return "data:image/png;base64,".base64_encode($png);
+    }
+    
+    public static function base64ToPng($base64) {
+        if($base64 == "") return "";
+        $partial_raw = explode(",", $base64, 2)[1];
+        return base64_decode($partial_raw);
     }
 }

@@ -54,9 +54,7 @@ class World extends Model
             return true;
         }
 
-        //TODO: View ergänzen für Fehlermeldungen
-        echo "Keine Daten über diesen Server '$server' vorhanden.";
-        exit;
+        abort(404, "Keine Daten über diesen Server '$server' vorhanden.");
     }
 
     /**
@@ -72,9 +70,8 @@ class World extends Model
         if(World::where('name', $world)->get()->count() > 0){
             return true;
         }
-        //TODO: View ergänzen für Fehlermeldungen
-        echo "Keine Daten über diese Welt '$server$world' vorhanden.";
-        exit;
+        
+        abort(404, "Keine Daten über diese Welt '$server$world' vorhanden.");
     }
 
     /**
