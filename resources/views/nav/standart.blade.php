@@ -131,7 +131,7 @@
                             </a>
                         @endcan
                         <a class="dropdown-item" href="{{ route('user.settings', ['settings-profile']) }}">
-                            {{ __('ui.titel.settings') }}
+                            {{ __('ui.personalSettings.title') }}
                         </a>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault();

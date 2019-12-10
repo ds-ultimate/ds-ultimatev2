@@ -64,15 +64,15 @@
                                 </div>
                                 <div class="col-2">
                                     <a id="editButtonMap" href="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                    <a id="deleteButtonMap" href="" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
-                                    <label class="mt-3">{{ __('ui.tool.map.editLink') }}:</label>
+                                    <a id="deleteButtonMap" onclick="destroyMap()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
+                                    <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                     <div class="input-group mb-2">
                                         <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkMap')"><i class="far fa-copy"></i></span>
                                         </div>
                                     </div>
-                                    <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
+                                    <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                     <div class="input-group mb-2">
                                         <input id="showLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'show', $maps->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
@@ -138,15 +138,15 @@
                                 <div class="col-2">
                                     @if (count($attackLists) > 0)
                                         <a id="editButtonAttackPlanner" href="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                        <a id="deleteButtonAttackPlanner" href="" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
-                                        <label class="mt-3">{{ __('ui.tool.map.editLink') }}:</label>
+                                        <a id="deleteButtonAttackPlanner" onclick="destroyAttackPlanner()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
+                                        <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="editLinkAttackPlanner" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkAttackPlanner')"><i class="far fa-copy"></i></span>
                                             </div>
                                         </div>
-                                        <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
+                                        <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="showLinkAttackPlanner" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'show', $attackLists->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                             <div class="input-group-append">
@@ -184,12 +184,12 @@
                                         </div>
                                 </div>
                                 <div class="col-2">
-                                    <a id="showButtonMapFollow" href="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('ui.tool.attackPlanner.show') }}</a>
-                                    <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
+                                    <a id="showButtonMapFollow" href="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.map.show') }}</a>
+                                    <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                     <div class="input-group mb-2">
                                         <input id="showLinkMapFollow" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
-                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
+                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMapFollow')"><i class="far fa-copy"></i></span>
                                         </div>
                                     </div>
                                     @endif
@@ -250,12 +250,12 @@
                                 </div>
                                 <div class="col-2">
                                     @if (count($attackListsFollow) > 0)
-                                        <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('ui.tool.attackPlanner.show') }}</a>
-                                        <label class="mt-3">{{ __('ui.tool.map.showLink') }}:</label>
+                                        <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.attackPlanner.show') }}</a>
+                                        <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="showLinkAttackPlannerFollow" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
                                             <div class="input-group-append">
-                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlanner')"><i class="far fa-copy"></i></span>
+                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlannerFollow')"><i class="far fa-copy"></i></span>
                                             </div>
                                         </div>
                                     @endif
@@ -280,6 +280,11 @@
             });
         })
 
+        var mapId = '{{ $maps->get(0)->id }}';;
+        var mapKey = '{{ $maps->get(0)->edit_key }}';
+        var attackPlannerId = '{{ $attackLists->get(0)->id }}';
+        var attackPlannerKey = '{{ $attackLists->get(0)->edit_key }}';
+
         function switchMap(id, edit_key, show_key, follow=false) {
             if (follow){
                 $('#imgMapFollow').attr('src', '{{ route('index') }}/api/map/' + id + '/' + show_key + '/500-500.png');
@@ -290,6 +295,8 @@
                 $('#editButtonMap').attr('href', '{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
                 $('#editLinkMap').val('{{ route('index') }}/tools/map/' + id + '/edit/' + edit_key);
                 $('#showLinkMap').val('{{ route('index') }}/tools/map/' + id + '/show/' + show_key);
+                mapId = id;
+                mapKey = edit_key;
             }
         }
 
@@ -301,7 +308,17 @@
                 $('#editButtonAttackPlanner').attr('href', '{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
                 $('#editLinkAttackPlanner').val('{{ route('index') }}/tools/attackPlanner/' + id + '/edit/' + edit_key);
                 $('#showLinkAttackPlanner').val('{{ route('index') }}/tools/attackPlanner/' + id + '/show/' + show_key);
+                attackPlannerId = id;
+                attackPlannerKey = edit_key;
             }
+        }
+
+        function destroyMap() {
+            console.log(mapId + '____' + mapKey);
+        }
+
+        function destroyAttackPlanner() {
+            console.log(attackPlannerId + '____' + attackPlannerKey);
         }
 
         function copy(type) {

@@ -14,7 +14,7 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.settings')).' von '.Auth::user()->name }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('ui.personalSettings.title')).' von '.Auth::user()->name }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -46,7 +46,7 @@
             <div class="col-9">
                 <div class="card">
                     <div class="card-header">
-                        <h5 id="settings-card-title" class="card-title">{{ __('ui.personalSettings') }}</h5>
+                        <h5 id="settings-card-title" class="card-title">{{ __('ui.personalSettings.title') }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="settings-tabContent">
@@ -106,9 +106,25 @@
                                         <div id="skype-errors" class="text-danger"></div>
                                     </div>
                                     <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="skypeCheck" {{ (Auth::user()->profile->show_skype == 1)? 'checked' : '' }}>
+                                            <label class="form-check-label" for="skypeCheck">
+                                                {{ __('ui.personalSettings.skypeShow') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="discord">{{ __('ui.personalSettings.discord') }} <i class="fab fa-discord h3" style="color: #738ADB;"></i></label>
                                         <input type="text" class="form-control" id="discord_name" placeholder="DiscordName#1234" value="{{ Auth::user()->profile->discord }}">
                                         <div id="discord-errors" class="text-danger"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="discordCheck" {{ (Auth::user()->profile->show_discord == 1)? 'checked' : '' }}>
+                                            <label class="form-check-label" for="discordCheck">
+                                                {{ __('ui.personalSettings.discordShow') }}
+                                            </label>
+                                        </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary float-right">{{ __('global.save') }}</button>
                                 </form>
@@ -150,7 +166,7 @@
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.server.title')) }}</th>
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.world')) }}</th>
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.player')) }}</th>
-                                            <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('key')) }}</th>
+                                            <th>{{ ucfirst(__('key')) }}</th>
                                             <th>&nbsp;</th>
                                         </tr>
                                         </thead>
@@ -375,9 +391,23 @@
 
         $(document).on('submit', '#settings-account-form', function (e) {
             e.preventDefault();
+            var discord_show;
+            var skype_show;
+            if ($('#discordCheck').is(":checked")) {
+                discord_show = 1;
+            }else {
+                discord_show = 0;
+            }
+            if ($('#skypeCheck').is(":checked")) {
+                skype_show = 1;
+            }else {
+                skype_show = 0;
+            }
             axios.post('{{ route('user.saveSettingsAccount') }}',{
                 'discord': $('#discord_name').val(),
                 'skype': $('#skype_name').val(),
+                'discord_show': discord_show,
+                'skype_show': skype_show,
             })
                 .then((response) => {
                     var data = response.data;

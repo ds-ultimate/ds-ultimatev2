@@ -64,6 +64,8 @@ class SettingsController extends Controller
         $account = \Auth::user()->profile;
         $account->skype = $request->skype;
         $account->discord = $request->discord;
+        $account->show_skype = $request->skype_show;
+        $account->show_discord = $request->discord_show;
         $account->save();
         return \Response::json(array(
             'data' => 'success',
@@ -73,7 +75,8 @@ class SettingsController extends Controller
 
     public function destroyConnection(Request $request){
         $connection = DsConnection::find($request->get('id'));
-        if ($connection->key === $request->get('key')){
+        \Log::warning($connection->key.'______'.$request->get('key'));
+        if ($connection->key == $request->get('key')){
             $connection->delete();
             return \Response::json(array(
                 'data' => 'success',
