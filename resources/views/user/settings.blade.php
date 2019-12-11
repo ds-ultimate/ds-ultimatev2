@@ -99,35 +99,58 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade {{ ($page == 'settings-account')? 'show active' : '' }}" id="settings-account" role="tabpanel" aria-labelledby="settings-account-tab" data-title="{{ __('ui.personalSettings.account') }}">
-                                <form id="settings-account-form">
-                                    <div class="form-group">
-                                        <label for="skype">{{ __('ui.personalSettings.skype') }} <i class="fab fa-skype h3" style="color: #00AFF0;"></i></label>
-                                        <input type="text" class="form-control" id="skype_name" placeholder="SkypeName" value="{{ Auth::user()->profile->skype }}">
-                                        <div id="skype-errors" class="text-danger"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="skypeCheck" {{ (Auth::user()->profile->show_skype == 1)? 'checked' : '' }}>
-                                            <label class="form-check-label" for="skypeCheck">
-                                                {{ __('ui.personalSettings.skypeShow') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="discord">{{ __('ui.personalSettings.discord') }} <i class="fab fa-discord h3" style="color: #738ADB;"></i></label>
-                                        <input type="text" class="form-control" id="discord_name" placeholder="DiscordName#1234" value="{{ Auth::user()->profile->discord }}">
-                                        <div id="discord-errors" class="text-danger"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="discordCheck" {{ (Auth::user()->profile->show_discord == 1)? 'checked' : '' }}>
-                                            <label class="form-check-label" for="discordCheck">
-                                                {{ __('ui.personalSettings.discordShow') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary float-right">{{ __('global.save') }}</button>
-                                </form>
+                                <table class="table">
+                                    <tr>
+                                        <td><i class="fab fa-facebook h1 m-2" style="color: #4267B2"></i></td>
+                                        @if(isset(Auth::user()->profile->facebook_id))
+                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
+                                        @else
+                                            <td></td>
+                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'facebook') }}">{{ __('global.add') }}</a></td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fab fa-google-plus h1 m-2" style="color: #ea4335"></i></td>
+                                        @if(isset(Auth::user()->profile->google_id))
+                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
+                                        @else
+                                            <td></td>
+                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'google') }}">{{ __('global.add') }}</a></td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fab fa-github h1 m-2" style="color: #333333"></i></td>
+                                        @if(isset(Auth::user()->profile->github_id))
+                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
+                                        @else
+                                            <td></td>
+                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'github') }}">{{ __('global.add') }}</a></td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fab fa-twitter h1 m-2" style="color: #1da1f2"></i></td>
+                                        @if(isset(Auth::user()->profile->twitter_id))
+                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
+                                        @else
+                                            <td></td>
+                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'twitter') }}">{{ __('global.add') }}</a></td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fab fa-discord h1 m-2" style="color: #7289da"></i></td>
+                                        @if(isset(Auth::user()->profile->discord_id))
+                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
+                                        @else
+                                            <td></td>
+                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'discord') }}">{{ __('global.add') }}</a></td>
+                                        @endif
+                                    </tr>
+                                </table>
                             </div>
                             <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
                                 <form id="connectionForm">

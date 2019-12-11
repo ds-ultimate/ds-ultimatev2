@@ -8,15 +8,19 @@
                 <div class="card-header">{{ __('user.login') }}</div>
 
                 <div class="card-body">
+                    @if (session('status'))
+                        <div class="col-12 text-center mb-3">
+                            <span class="invalid-feedback d-block" role="alert">
+                                <strong>{{ session('status') }}</strong>
+                            </span>
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('user.mailAddress') }}</label>
-
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -30,7 +34,6 @@
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -65,9 +68,41 @@
                             </div>
                         </div>
                     </form>
+                    <div class="row">
+                        <div class="col-md-1 row-block"></div>
+                        <div class="col-md-2 row-block">
+                            <a href="{{ route('loginRedirect', 'facebook') }}" class="h1" style="color: #4267B2">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-2 row-block">
+                            <a href="{{ route('loginRedirect', 'google') }}" class="h1" style="color: #ea4335">
+                                <i class="fab fa-google-plus"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-2 row-block">
+                            <a href="{{ route('loginRedirect', 'github') }}" class="h1" style="color: #333333">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-2 row-block">
+                            <a href="{{ route('loginRedirect', 'twitter') }}" class="h1" style="color: #1da1f2">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-2 row-block">
+                            <a href="{{ route('loginRedirect', 'discord') }}" class="h1" style="color: #7289da">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@section('js')
+
+@stop

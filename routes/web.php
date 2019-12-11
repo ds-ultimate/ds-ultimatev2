@@ -81,6 +81,9 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
 });
 
+Route::get('redirect/{driver}', 'User\LoginController@redirectToProvider')->name('loginRedirect');
+Route::get('redirect/{driver}/callback', 'User\LoginController@handleProviderCallback');
+
 Route::get('/sitemap.xml', 'Controller@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");

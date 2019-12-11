@@ -17,8 +17,12 @@ class Profile extends Model
         'show_birthday',
         'skype',
         'show_skype',
-        'discord',
+        'discord_id',
         'show_discord',
+        'github_id',
+        'facebook_id',
+        'google_id',
+        'twitter_id',
         'created_at',
         'updated_at',
     ];
