@@ -336,7 +336,7 @@ class APIController extends Controller
     }
     
     private static function select2return(\Illuminate\Database\Eloquent\Model $model, $searchIn, callable $extractOne) {
-        $getArray = \Illuminate\Support\Facades\Input::get();
+        $getArray = \Illuminate\Support\Facades\Request::input();
         $perPage = 50;
         $search = (isset($getArray['search']))?('%'.BasicFunctions::likeSaveEscape(urlencode($getArray['search'])).'%'):('%');
         $page = (isset($getArray['page']))?($getArray['page']-1):(0);

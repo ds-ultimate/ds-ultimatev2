@@ -165,5 +165,8 @@ Attackcount: %ELEMENT_COUNT%
     ),
     'show' => 'Show map',
     'markerFactor' => 'Village spacing',
+    'showText' => 'Add marker',
+    'highlight' => 'Highlight this',
+    'highlightAll' => 'Highlight all',
   ),
 );

@@ -18,7 +18,6 @@ class MapGenerator extends PictureRender {
     private $village;
     private $skin;
     private $opaque;
-    private $highlight;
     
     
     private $playerColour;
@@ -101,7 +100,6 @@ class MapGenerator extends PictureRender {
             MapGenerator::$LAYER_GRID,
         ));
         $this -> setOpaque(100);
-        $this -> setHighlight(false);
         $this -> setMapDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
         $this -> setPlayerColour(MapGenerator::$DEFAULT_PLAYER_COLOUR);
         $this -> setBarbarianColour(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
@@ -221,6 +219,7 @@ class MapGenerator extends PictureRender {
                     "colour" => $this->dataAlly[$player->ally_id]['colour'],
                     "name" => BasicFunctions::decodeName($player->name),
                     "showText" => false,
+                    "highLight" => $this->dataAlly[$player->ally_id]['highLight'],
                     "allyID" => $player->ally_id,
                     "villNum" => 0,
                     "villX" => 0,
@@ -305,6 +304,7 @@ class MapGenerator extends PictureRender {
                     "points" => $village->points,
                     "bonus_id" => $village->bonus_id,
                     "showText" => false,
+                    "highLight" => false,
                     "marked" => false,
                 );
                 
@@ -314,6 +314,8 @@ class MapGenerator extends PictureRender {
                     $this->dataVillage['mark'][$village->villageID]['colour'] =
                             $this->dataPlayer[$village->owner]['colour'];
                     $this->dataVillage['mark'][$village->villageID]['marked'] = true;
+                    $this->dataVillage['mark'][$village->villageID]['highLight'] =
+                            $this->dataPlayer[$village->owner]['highLight'];
                     
                     //add village to player weight
                     $this->dataPlayer[$village->owner]['villNum']++;
@@ -344,7 +346,7 @@ class MapGenerator extends PictureRender {
             }
             $col = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-$this->opaque*127/100);
             
-            if($type == 'mark' && $this->highlight) {
+            if($type == 'mark' && $village['highLight']) {
                 $col2 = imagecolorallocatealpha($this->image, $village['colour'][0], $village['colour'][1], $village['colour'][2], 127-($this->opaque*0.75)*127/100);
 
                 $x = $this->fieldWidth * ($village['x'] - $this->mapDimension['xs'] + 0.5);
@@ -391,7 +393,11 @@ class MapGenerator extends PictureRender {
     }
     
     private function renderGrid() {
-        $gridCol = imagecolorallocatealpha($this->image, $this->gridColour[0],
+        $gridColBig = imagecolorallocatealpha($this->image, $this->gridColour[0],
+                $this->gridColour[1], $this->gridColour[2], 0); //ca 100% deckkraft
+        $gridColSmall = imagecolorallocatealpha($this->image, $this->gridColour[0],
+                $this->gridColour[1], $this->gridColour[2], 90); //ca 20% deckkraft
+        $gridColText = imagecolorallocatealpha($this->image, $this->gridColour[0],
                 $this->gridColour[1], $this->gridColour[2], 90); //ca 30% deckkraft
         
         $thick = intval($this->fieldWidth / 10);
@@ -401,7 +407,7 @@ class MapGenerator extends PictureRender {
             $x = intval($this->fieldWidth * ($i*100 - $this->mapDimension['xs']));
             if($x < 0 || $x > $this->width) continue; //ignore lines outside border
             
-            imagefilledrectangle($this->image, $x-$thick, 0, $x+$thick, $this->height, $gridCol);
+            imagefilledrectangle($this->image, $x-$thick, 0, $x+$thick, $this->height, $gridColBig);
         }
         
         //draw horizontal grid
@@ -409,7 +415,7 @@ class MapGenerator extends PictureRender {
             $y = intval($this->fieldHeight * ($i*100 - $this->mapDimension['ys']));
             if($y < 0 || $y > $this->height) continue; //ignore lines outside border
             
-            imagefilledrectangle($this->image, 0, $y-$thick, $this->width, $y+$thick, $gridCol);
+            imagefilledrectangle($this->image, 0, $y-$thick, $this->width, $y+$thick, $gridColBig);
         }
         
         for($i = 0; $i <= 9; $i++) {
@@ -423,18 +429,19 @@ class MapGenerator extends PictureRender {
                 
                 $x = $xwanted - $box[2];
                 $y = $ywanted - $box[1];
-                imagettftext($this->image, $size, 0, $x, $y, $gridCol, $this->font, $txt);
+                imagettftext($this->image, $size, 0, $x, $y, $gridColText, $this->font, $txt);
             }
         }
         
-        if($thick > 0) {
+        if($this->fieldWidth / 4 >= 1) {
+            
             //draw vertical grid
             for($i = 1; $i <= 99; $i++) { //draw 99 lines (from 1 to 99)
                 if($i % 10 == 0) continue;
                 $x = intval($this->fieldWidth * ($i*10 - $this->mapDimension['xs']));
                 if($x < 0 || $x > $this->width) continue; //ignore lines outside border
 
-                imagefilledrectangle($this->image, $x, 0, $x, $this->height, $gridCol);
+                imagefilledrectangle($this->image, $x, 0, $x, $this->height, $gridColSmall);
             }
 
             //draw horizontal grid
@@ -443,7 +450,7 @@ class MapGenerator extends PictureRender {
                 $y = intval($this->fieldHeight * ($i*10 - $this->mapDimension['ys']));
                 if($y < 0 || $y > $this->height) continue; //ignore lines outside border
 
-                imagefilledrectangle($this->image, 0, $y, $this->width, $y, $gridCol);
+                imagefilledrectangle($this->image, 0, $y, $this->width, $y, $gridColSmall);
             }
         }
     }
@@ -519,14 +526,17 @@ class MapGenerator extends PictureRender {
         return $this->skinCache[$name];
     }
     
-    public function markAlly($allyID, $colour, $showText=null) {
+    public function markAlly($allyID, $colour, $showText=null, $highLight=null) {
         $showText = (boolean) $showText;
         $showText = ($showText != null)?($showText):(false);
+        $highLight = (boolean) $highLight;
+        $highLight = ($highLight != null)?($highLight):(false);
         
         $this->ally[] = array(
             "id" => (int) $allyID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "highLight" => $highLight,
             "villNum" => 0,
             "villX" => 0,
             "villY" => 0,
@@ -534,7 +544,7 @@ class MapGenerator extends PictureRender {
         return $this;
     }
     
-    public function markPlayer($playerID, $colour, $showText=null) {
+    public function markPlayer($playerID, $colour, $showText=null, $highLight=null) {
         $showText = (boolean) $showText;
         $showText = ($showText != null)?($showText):(false);
         
@@ -542,6 +552,7 @@ class MapGenerator extends PictureRender {
             "id" => (int) $playerID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "highLight" => $highLight,
             "villNum" => 0,
             "villX" => 0,
             "villY" => 0,
@@ -549,14 +560,17 @@ class MapGenerator extends PictureRender {
         return $this;
     }
     
-    public function markVillage($villageID, $colour, $showText=null) {
+    public function markVillage($villageID, $colour, $showText=null, $highLight=null) {
         $showText = (boolean) $showText;
         $showText = ($showText != null)?($showText):(false);
+        $highLight = (boolean) $highLight;
+        $highLight = ($highLight != null)?($highLight):(false);
         
         $this->village[] = array(
             "id" => (int) $villageID,
             "colour" => array((int) $colour[0], (int) $colour[1], (int) $colour[2]),
             "showText" => $showText,
+            "highLight" => $highLight,
         );
         return $this;
     }
@@ -582,11 +596,6 @@ class MapGenerator extends PictureRender {
             throw new \InvalidArgumentException("Opaque needs to be between 0 and 100");
         }
         return false;
-    }
-    
-    public function setHighlight($highlight) {
-        $this->highlight = ($highlight === true)?(true):(false);
-        return $this;
     }
     
     public function setLayerOrder($layerOrder) {

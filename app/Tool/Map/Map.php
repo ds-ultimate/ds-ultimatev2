@@ -77,10 +77,17 @@ class Map extends Model
                 
                 $markerStr .= $type[1] . ":". ((int) $marker['id']) . ":" . $marker['colour'];
                 
+                $markerOptions = "";
                 if(isset(($marker['textHere'])) && isset(($marker['text'])) && $marker['text'] == "on") {
-                    $markerStr .= ":t";
+                    $markerOptions .= "t";
+                }
+                if(isset(($marker['hLightHere'])) && isset(($marker['hLight'])) && $marker['hLight'] == "on") {
+                    $markerOptions .= "h";
                 }
                 
+                if(strlen($markerOptions) > 0) {
+                    $markerStr .= ":" . $markerOptions;
+                }
                 $markerStr .= ";";
             }
         }
@@ -103,7 +110,8 @@ class Map extends Model
                         'id' => $ally->allyID,
                         'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
                         'colour' => $parts[2],
-                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false,
+                        'highlight' => count($parts) > 3 && strpos($parts[3], "h") !== false,
                     ];
                     break;
                 case 'p':
@@ -113,7 +121,8 @@ class Map extends Model
                         'id' => $player->playerID,
                         'name' => BasicFunctions::decodeName($player->name),
                         'colour' => $parts[2],
-                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false,
+                        'highlight' => count($parts) > 3 && strpos($parts[3], "h") !== false,
                     ];
                     break;
                 case 'v':
@@ -124,7 +133,8 @@ class Map extends Model
                         'x' => $vil->x,
                         'y' => $vil->y,
                         'colour' => $parts[2],
-                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false
+                        'text' => count($parts) > 3 && strpos($parts[3], "t") !== false,
+                        'highlight' => count($parts) > 3 && strpos($parts[3], "h") !== false,
                     ];
                     break;
             }
@@ -241,15 +251,16 @@ class Map extends Model
 
                 $rgb = $this->hexToRGB($parts[2]);
                 $showText = count($parts) > 3 && strpos($parts[3], "t") !== false;
+                $highlight = count($parts) > 3 && strpos($parts[3], "h") !== false;
                 switch($parts[0]) {
                     case 'a':
-                        $generator->markAlly($parts[1], $rgb, $showText);
+                        $generator->markAlly($parts[1], $rgb, $showText, $highlight);
                         break;
                     case 'p':
-                        $generator->markPlayer($parts[1], $rgb, $showText);
+                        $generator->markPlayer($parts[1], $rgb, $showText, $highlight);
                         break;
                     case 'v':
-                        $generator->markVillage($parts[1], $rgb, $showText);
+                        $generator->markVillage($parts[1], $rgb, $showText, $highlight);
                         break;
                 }
             }

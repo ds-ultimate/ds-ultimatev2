@@ -223,13 +223,13 @@ class MapController extends BaseController
         $map = new MapGenerator($world, $this->decodeDimensions($width, $height), $this->debug);
         switch($type) {
             case 'a':
-                $map->markAlly($id, [255, 255, 255]);
+                $map->markAlly($id, [255, 255, 255], false, true);
                 break;
             case 'p':
-                $map->markPlayer($id, [255, 255, 255]);
+                $map->markPlayer($id, [255, 255, 255], false, true);
                 break;
             case 'v':
-                $map->markVillage($id, [255, 255, 255]);
+                $map->markVillage($id, [255, 255, 255], false, true);
                 break;
             default:
                 abort(404, "Wrong diagram type $type");
@@ -242,7 +242,6 @@ class MapController extends BaseController
             'ye' => 1000,
         ]);
         $map->setOpaque(100);
-        $map->setHighlight(true);
         $map->setAutoResize(true);
         $map->render();
         return $map->output($ext);
@@ -282,7 +281,7 @@ class MapController extends BaseController
         $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
         $i = 0;
         foreach ($players as $player){
-            $map->markPlayer($player->playerID, $color[$i]);
+            $map->markPlayer($player->playerID, $color[$i], false, true);
             $i++;
         }
         $map->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
@@ -293,7 +292,6 @@ class MapController extends BaseController
             'ye' => 1000,
         ]);
         $map->setOpaque(100);
-        $map->setHighlight(true);
         $map->setAutoResize(true);
         $map->render();
         return $map->output('png');

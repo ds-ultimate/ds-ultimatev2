@@ -32,10 +32,12 @@
                     $defName = $defaultContent['name'];
                     $defCol = $defaultContent['colour'];
                     $defShowText = ($defaultContent['text'])?('checked="checked"'):("");
+                    $defHighLight = ($defaultContent['highlight'])?('checked="checked"'):("");
                 } else {
                     $defName = '';
                     $defCol = 'FFFFFF';
                     $defShowText = "";
+                    $defHighLight = "";
                 }?>
                 <div id="{{ "$type-mark-$id-div" }}" class="input-group mb-2 mr-sm-2">
                     <div class="colour-picker-map input-group-prepend">
@@ -50,7 +52,13 @@
                     </select>
                     <div class="form-check ml-2 mt-2">
                         <input name="{{ "mark[$type][$id][textHere]" }}" type="hidden" value="true" />
-                        <input type="checkbox" class="form-check-input position-static showText-{{ $type }} showTextBox" name="{{ "mark[$type][$id][text]" }}" {{$defShowText}}>
+                        <input type="checkbox" class="form-check-input position-static showText-{{ $type }} showTextBox" name="{{ "mark[$type][$id][text]" }}"
+                               data-toggle="tooltip" title="{{ ucfirst(__('tool.map.showText')) }}" {{$defShowText}}>
+                    </div>
+                    <div class="form-check ml-2 mt-2">
+                        <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
+                        <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
+                               data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlight')) }}" {{$defHighLight}}>
                     </div>
                 </div>
                 <?php
@@ -59,10 +67,12 @@
                     $defX = $defaultContent['x'];
                     $defY = $defaultContent['y'];
                     $defCol = $defaultContent['colour'];
+                    $defHighLight = ($defaultContent['highlight'])?('checked="checked"'):("");
                 } else {
                     $defX = '';
                     $defY = '';
                     $defCol = 'FFFFFF';
+                    $defHighLight = "";
                 }?>
                 <div id="{{ "$type-mark-$id-div" }}" class="input-group mb-2 mr-sm-2">
                     <div class="colour-picker-map input-group-prepend">
@@ -72,6 +82,11 @@
                     <input id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}" type="hidden"/>
                     <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defX }}"/>|
                     <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defY }}"/>
+                    <div class="form-check ml-2 mt-2">
+                        <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
+                        <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
+                               data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlight')) }}" {{$defHighLight}}>
+                    </div>
                 </div>
                 <?php
             }
@@ -120,7 +135,18 @@
                                         @if($type != 'village')
                                             <div class="form-check form-check-inline float-right mr-0">
                                                 <label class="form-check-label mr-2" for="showTextAll-{{ $type }}">{{ ucfirst(__('tool.map.showAllText')) }}</label>
-                                                <input class="form-check-input change-all showTextBox" type="checkbox" aria-for="showText-{{ $type }}" id="showTextAll-{{ $type }}">
+                                                /
+                                                <label class="form-check-label ml-2 mr-2" for="highlightAll-{{ $type }}">{{ ucfirst(__('tool.map.highlightAll')) }}</label>
+                                                <input class="form-check-input change-all showTextBox mr-2" type="checkbox" aria-for="showText-{{ $type }}"
+                                                       id="showTextAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.showAllText')) }}">
+                                                <input class="form-check-input change-all highlightBox ml-2" type="checkbox" aria-for="highlight-{{ $type }}"
+                                                       id="highlightAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlightAll')) }}">
+                                            </div>
+                                        @else
+                                            <div class="form-check form-check-inline float-right mr-0">
+                                                <label class="form-check-label mr-2" for="highlightAll-{{ $type }}">{{ ucfirst(__('tool.map.highlightAll')) }}</label>
+                                                <input class="form-check-input change-all highlightBox ml-2" type="checkbox" aria-for="highlight-{{ $type }}"
+                                                       id="highlightAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlightAll')) }}">
                                             </div>
                                         @endif
                                         <br>
@@ -434,6 +460,7 @@
         $('#center-pos-x').change(store);
         $('#center-pos-y').change(store);
         $('.showTextBox').change(store);
+        $('.highlightBox').change(store);
         $('#markerFactor').change(store);
         $('#markerFactor').on("input", function(slideEvt) {
             $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");

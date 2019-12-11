@@ -165,5 +165,8 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     ),
     'show' => 'Karte anzeigen',
     'markerFactor' => 'Dorfabstand',
+    'showText' => 'Markieren',
+    'highlight' => 'Hervorheben',
+    'highlightAll' => 'Alle hervorheben',
   ),
 );
