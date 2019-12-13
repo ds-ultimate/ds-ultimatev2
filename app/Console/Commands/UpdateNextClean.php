@@ -42,7 +42,7 @@ class UpdateNextClean extends Command
         \App\Util\BasicFunctions::ignoreErrs();
         if(! DBController::cleanNeeded()) {
             echo "No Clean needed\n";
-            return;
+            return 0;
         }
         $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
         $toDo = ceil($cnt/(config('dsUltimate.db_clean_every_hours') * 12));
@@ -60,5 +60,6 @@ class UpdateNextClean extends Command
             DBController::cleanOldEntries($world, 'p');
             DBController::cleanOldEntries($world, 'a');
         }
+        return 0;
     }
 }

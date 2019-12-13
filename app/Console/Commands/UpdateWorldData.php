@@ -57,6 +57,7 @@ class UpdateWorldData extends Command
                 }
             }
         }
+        return 0;
     }
     
     public static function updateWorldData($server, $world, $part) {

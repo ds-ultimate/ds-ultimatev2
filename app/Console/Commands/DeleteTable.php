@@ -51,5 +51,6 @@ class DeleteTable extends Command
             $bar->advance();
         }
         $bar->finish();
+        return 0;
     }
 }

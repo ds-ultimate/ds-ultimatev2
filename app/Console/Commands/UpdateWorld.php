@@ -40,5 +40,6 @@ class UpdateWorld extends Command
     {
         \App\Util\BasicFunctions::ignoreErrs();
         DBController::getWorld();
+        return 0;
     }
 }

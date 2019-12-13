@@ -40,6 +40,7 @@ class UpdateConquer extends Command
     public function handle()
     {
         UpdateConquer::updateConquer($this->argument('server'), $this->argument('world'), $this->output);
+        return 0;
     }
     
     public static function updateConquer($server, $world, $output) {

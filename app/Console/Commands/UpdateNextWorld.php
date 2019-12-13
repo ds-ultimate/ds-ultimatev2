@@ -42,7 +42,7 @@ class UpdateNextWorld extends Command
         \App\Util\BasicFunctions::ignoreErrs();
         if(! DBController::updateNeeded()) {
             echo "No Update needed\n";
-            return;
+            return 0;
         }
         
         $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
@@ -61,5 +61,6 @@ class UpdateNextWorld extends Command
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
         }
+        return 0;
     }
 }

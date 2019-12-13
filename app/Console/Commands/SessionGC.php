@@ -14,5 +14,6 @@ class SessionGc extends Command
         $session = $this->getLaravel()->make('session');
         $lifetime = Arr::get($session->getSessionConfig(), 'lifetime') * 60;
         $session->getHandler()->gc($lifetime);
+        return 0;
     }
 }
