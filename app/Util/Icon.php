@@ -29,18 +29,18 @@ class Icon
 
     public static function icons($icon){
         switch ($icon){
-            case '0': return asset('images/ds_images/unit/unit_spear.png');
-            case '1': return asset('images/ds_images/unit/unit_sword.png');
-            case '2': return asset('images/ds_images/unit/unit_axe.png');
-            case '3': return asset('images/ds_images/unit/unit_archer.png');
-            case '4': return asset('images/ds_images/unit/unit_spy.png');
-            case '5': return asset('images/ds_images/unit/unit_light.png');
-            case '6': return asset('images/ds_images/unit/unit_marcher.png');
-            case '7': return asset('images/ds_images/unit/unit_heavy.png');
-            case '8': return asset('images/ds_images/unit/unit_ram.png');
-            case '9': return asset('images/ds_images/unit/unit_catapult.png');
-            case '10': return asset('images/ds_images/unit/unit_knight.png');
-            case '11': return asset('images/ds_images/unit/unit_snob.png');
+            case '0': return asset('images/ds_images/unit/spear.png');
+            case '1': return asset('images/ds_images/unit/sword.png');
+            case '2': return asset('images/ds_images/unit/axe.png');
+            case '3': return asset('images/ds_images/unit/archer.png');
+            case '4': return asset('images/ds_images/unit/spy.png');
+            case '5': return asset('images/ds_images/unit/light.png');
+            case '6': return asset('images/ds_images/unit/marcher.png');
+            case '7': return asset('images/ds_images/unit/heavy.png');
+            case '8': return asset('images/ds_images/unit/ram.png');
+            case '9': return asset('images/ds_images/unit/catapult.png');
+            case '10': return asset('images/ds_images/unit/knight.png');
+            case '11': return asset('images/ds_images/unit/snob.png');
             case '12': return asset('images/ds_images/wb/def_cav.png');
             case '13': return asset('images/ds_images/wb/def_archer.png');
             case '14': return asset('images/ds_images/wb/fake.png');
@@ -59,22 +59,22 @@ class Icon
             case '27': return asset('images/ds_images/wb/checkbox.png');
             case '28': return asset('images/ds_images/wb/eye.png');
             case '29': return asset('images/ds_images/wb/eye_forbidden.png');
-            case '30': return asset('images/ds_images/wb/main.png');
-            case '31': return asset('images/ds_images/wb/barracks.png');
-            case '32': return asset('images/ds_images/wb/stable.png');
-            case '33': return asset('images/ds_images/wb/garage.png');
-            case '34': return asset('images/ds_images/wb/church.png');
-            case '35': return asset('images/ds_images/wb/ah.png');
-            case '36': return asset('images/ds_images/wb/smith.png');
-            case '37': return asset('images/ds_images/wb/place.png');
-            case '38': return asset('images/ds_images/wb/statue.png');
-            case '39': return asset('images/ds_images/wb/market.png');
-            case '40': return asset('images/ds_images/wb/wood.png');
-            case '41': return asset('images/ds_images/wb/stone.png');
-            case '42': return asset('images/ds_images/wb/iron.png');
-            case '43': return asset('images/ds_images/wb/farm.png');
-            case '44': return asset('images/ds_images/wb/storage.png');
-            case '45': return asset('images/ds_images/wb/wall.png');
+            case '30': return asset('images/ds_images/buildings/small/main.png');
+            case '31': return asset('images/ds_images/buildings/small/barracks.png');
+            case '32': return asset('images/ds_images/buildings/small/stable.png');
+            case '33': return asset('images/ds_images/buildings/small/garage.png');
+            case '34': return asset('images/ds_images/buildings/small/church.png');
+            case '35': return asset('images/ds_images/buildings/small/snob.png');
+            case '36': return asset('images/ds_images/buildings/small/smith.png');
+            case '37': return asset('images/ds_images/buildings/small/place.png');
+            case '38': return asset('images/ds_images/buildings/small/statue.png');
+            case '39': return asset('images/ds_images/buildings/small/market.png');
+            case '40': return asset('images/ds_images/buildings/small/wood.png');
+            case '41': return asset('images/ds_images/buildings/small/stone.png');
+            case '42': return asset('images/ds_images/buildings/small/iron.png');
+            case '43': return asset('images/ds_images/buildings/small/farm.png');
+            case '44': return asset('images/ds_images/buildings/small/storage.png');
+            case '45': return asset('images/ds_images/buildings/small/wall.png');
             case '46': return asset('images/ds_images/wb/def_fake.png');
             default: return asset('images/ds_images/wb/remove.gif');
         }
@@ -90,5 +90,34 @@ class Icon
                 return ['color' => 'dark', 'icon' => 'grip-lines'];
         }
     }
-
+    
+    const BUILDING_SIZE_SMALL = 1;
+    const BUILDING_SIZE_MEDIUM = 2;
+    const BUILDING_SIZE_BIG = 3;
+    public static function getBuildingImage($buildingName, $size=Icon::BUILDING_SIZE_SMALL, $level=1) {
+        if(!in_array($buildingName, Icon::getValidBuildingNames())) {
+            throw new \InvalidArgumentException("Invalid building name");
+        }
+        
+        if($size == Icon::BUILDING_SIZE_SMALL) {
+            return asset("images/ds_images/buildings/small/$buildingName.png");
+        }
+        else if($size == Icon::BUILDING_SIZE_MEDIUM) {
+            return asset("images/ds_images/buildings/mid/$buildingName$level.png");
+        }
+        else if($size == Icon::BUILDING_SIZE_BIG) {
+            return asset("images/ds_images/buildings/big/$buildingName$level.png");
+        }
+        else {
+            throw new \InvalidArgumentException("Invalid size");
+        }
+    }
+    
+    public static function getValidBuildingNames() {
+        return [
+            "barracks", "church", "farm", "garage", "iron", "main", "market",
+            "place", "smith", "snob", "stable", "statue", "stone", "storage",
+            "wall", "watchtower", "wood",
+        ];
+    }
 }
