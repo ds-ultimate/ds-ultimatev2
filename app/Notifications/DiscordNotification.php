@@ -32,9 +32,7 @@ class DiscordNotification extends Notification
 
     public function toDiscord($notifiable)
     {
-        if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === true) {
-            return DiscordMessage::create($this->message['content'], $this->message['embed']);
-        }
+        return DiscordMessage::create($this->message['content'], $this->message['embed']);
     }
 
     public function exception()

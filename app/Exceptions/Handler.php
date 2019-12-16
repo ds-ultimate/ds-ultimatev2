@@ -38,7 +38,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+        if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
+            Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+        }
         parent::report($exception);
     }
 
