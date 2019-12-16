@@ -44,7 +44,14 @@
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
                         <form id="createItemForm">
-                            <div class="row pt-3">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <b id="title-show" class="h3 card-title">{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</b>
+                                    <input id="title-input" onfocus="this.select();" class="form-control mb-3" style="display:none" name="title" type="text">
+                                    <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
+                                    <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
+                                    <hr>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('ui.tool.attackPlanner.type') }}</label>
@@ -404,6 +411,15 @@
                     exportIGM();
                     countdown();
                     popover();
+                    @auth
+                        @if($attackList->user_id != Auth::user()->id)
+                            @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                            $('#data1_wrapper .row div:eq(2)').html('<div class="float-right"><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning"></i></div>');
+                            @else
+                            $('#data1_wrapper .row div:eq(2)').html('<div class="float-right"><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted"></i></div>');
+                            @endif
+                        @endif
+                    @endauth
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
@@ -422,6 +438,37 @@
         }
 
         @if($mode == 'edit')
+        function titleEdit() {
+            var input = $('#title-input');
+            var title = $('#title-show');
+            var edit = $('#title-edit');
+            var save = $('#title-save');
+            var t = (title.html() === '{{ __('ui.noTitle') }}')? '': title.html();
+            title.hide();
+            edit.hide();
+            input.val(t).show().focus();
+            save.show();
+        }
+
+        function titleSave() {
+            var input = $('#title-input');
+            var title = $('#title-show');
+            var edit = $('#title-edit');
+            var save = $('#title-save');
+            var t = (input.val() === '')? '{{ __('ui.noTitle') }}': input.val();
+            axios.post('{{ route('index') }}/tools/attackPlanner/{{ $attackList->id }}/title/{{ $attackList->edit_key }}/' + t, {
+            })
+                .then((response) => {
+                    input.hide();
+                    save.hide();
+                    title.html(t).show();
+                    edit.show();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+
         function destroy(id,key) {
             $.ajax(
                 {
@@ -509,6 +556,28 @@
         });
 
         @endif
+
+        @auth
+            @if($attackList->user_id != Auth::user()->id)
+                function changeFollow() {
+                    var icon = $('#follow-icon');
+                    axios.post('{{ route('tools.follow') }}',{
+                        model: 'AttackPlanner_AttackList',
+                        id: '{{ $attackList->id }}'
+                    })
+                        .then((response) => {
+                            if(icon.hasClass('far')){
+                                icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                            }else {
+                                icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                            }
+                        })
+                        .catch((error) => {
+                            
+                        });
+                }
+            @endif
+        @endauth
 
         function exportWB() {
             axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->edit_key]) }}', {

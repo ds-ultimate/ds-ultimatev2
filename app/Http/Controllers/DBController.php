@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Ally;
 use App\Conquer;
+use App\Log;
+use App\Notifications\DiscordNotification;
 use App\Player;
 use App\Server;
 use App\AllyChanges;
@@ -13,6 +15,7 @@ use App\World;
 use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
 class DBController extends Controller
@@ -281,6 +284,12 @@ class DBController extends Controller
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'player.txt',
+                'url' => $worldUpdate->url.'/map/player.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
 
@@ -304,6 +313,12 @@ class DBController extends Controller
         $offs = gzfile("$worldUpdate->url/map/kill_att.txt.gz");
         if(!is_array($offs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_att.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'kill_att.txt',
+                'url' => $worldUpdate->url.'/map/kill_att.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
         foreach ($offs as $off){
@@ -317,6 +332,12 @@ class DBController extends Controller
         $defs = gzfile("$worldUpdate->url/map/kill_def.txt.gz");
         if(!is_array($defs)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_def.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'kill_def.txt',
+                'url' => $worldUpdate->url.'/map/kill_def.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
         foreach ($defs as $def){
@@ -330,6 +351,12 @@ class DBController extends Controller
         $tots = gzfile("$worldUpdate->url/map/kill_all.txt.gz");
         if(!is_array($tots)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'kill_all.txt',
+                'url' => $worldUpdate->url.'/map/kill_all.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
         foreach ($tots as $tot){
@@ -432,6 +459,12 @@ class DBController extends Controller
         $lines = gzfile("$worldUpdate->url/map/village.txt.gz");
         if (!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "village.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'village.txt',
+                'url' => $worldUpdate->url.'/map/village.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
         $villages = collect();
@@ -507,6 +540,12 @@ class DBController extends Controller
         $lines = gzfile("$worldUpdate->url/map/ally.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "ally.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'ally.txt',
+                'url' => $worldUpdate->url.'/map/ally.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
             return;
         }
 
@@ -643,12 +682,24 @@ class DBController extends Controller
             $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
             if (!is_array($lines)) {
                 BasicFunctions::createLog("ERROR_update[$server$world]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
+                $input =[
+                    'world' => $worldUpdate,
+                    'file' => 'conquer.txt',
+                    'url' => $worldUpdate->url.'/map/conquer.txt'
+                ];
+                Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
                 return;
             }
         } else {
             $lines = gzfile("$worldUpdate->url/interface.php?func=get_conquer&since=" . ($latest - 1));
             if (!is_array($lines)) {
                 BasicFunctions::createLog("ERROR_update[$server$world]", "interface.php?func=get_conquer konnte nicht ge&ouml;ffnet werden");
+                $input =[
+                    'world' => $worldUpdate,
+                    'file' => 'conquer interface',
+                    'url' => $worldUpdate->url.'/interface.php?func=get_conquer&since=' . ($latest - 1)
+                ];
+                Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
                 return;
             }
         }

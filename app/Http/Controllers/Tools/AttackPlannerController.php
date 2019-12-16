@@ -269,4 +269,10 @@ class AttackPlannerController extends BaseController
         $item->save();
     }
 
+    public static function title(AttackList $attackList, $key, $title){
+        abort_unless($attackList->edit_key == $key, 403);
+        $attackList->title = $title;
+        $attackList->save();
+    }
+
 }

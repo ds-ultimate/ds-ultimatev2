@@ -282,6 +282,15 @@
         @endif
         <div class="col-12 mt-2">
             <div class="card">
+                @auth
+                    @if($wantedMap->user_id != Auth::user()->id)
+                        @if($wantedMap->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                            <div class="float-right position-absolute" style="right: 10px; top: 10px"><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning"></i></div>
+                        @else
+                            <div class="float-right position-absolute" style="right: 10px; top: 10px"><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted"></i></div>
+                        @endif
+                    @endif
+                @endauth
                 <ul class="nav nav-tabs" id="mapshowtabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active map-show-tab" id="size-1-tab" data-toggle="tab" href="#size-1" role="tab" aria-controls="size-1" aria-selected="true">{{ '1000x1000' }}</a>

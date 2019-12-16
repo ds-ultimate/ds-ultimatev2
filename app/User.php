@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Http\Controllers\User\SettingsController;
+use Auth;
 use Carbon\Carbon;
 use Hash;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -9,6 +11,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -96,5 +99,51 @@ class User extends Authenticatable implements MustVerifyEmail
     public function BugreportComments()
     {
         return $this->hasMany('App\BugreportComment');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user){
+            $profile = new Profile();
+            $profile->user_id = $user->id;
+            $profile->save();
+        });
+    }
+
+    public function followAttackPlanner()
+    {
+        return $this->morphedByMany('App\Tool\AttackPlanner\AttackList', 'followable', 'follows');
+    }
+
+    public function followMap()
+    {
+        return $this->morphedByMany('App\Tool\Map\Map', 'followable', 'follows');
+    }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
+    public function avatarPath(){
+        SettingsController::existProfile();
+        $avatar = $this->profile->avatar;
+        if (Storage::disk('local')->exists($avatar)){
+            return Storage::url('app/'.$avatar);
+        }else{
+            return asset('images/default/user.png');
+        }
+    }
+
+    public function dsConnection()
+    {
+        return $this->hasMany('App\DsConnection');
+    }
+
+    public function routeNotificationForDiscord()
+    {
+        return $this->profile->discord_private_channel_id;
     }
 }

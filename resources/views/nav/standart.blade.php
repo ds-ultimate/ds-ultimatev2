@@ -63,76 +63,91 @@
                 </li>
             @endif
         </ul>
+        <ul class="navbar-nav">
         @if (isset($server))
-            <form class="form-inline my-2 my-lg-0" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
-                @csrf
-                <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
-                    value="{{ $search }}"
-                @endif>
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ __('ui.titel.search') }}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                        <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.player')) }}</button>
-                        <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.ally')) }}</button>
-                        <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.village')) }}</button>
+            <form class="form-inline" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
+                <li class="nav-item">
+                        @csrf
+                        <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
+                            value="{{ $search }}"
+                        @endif>
+                </li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('ui.titel.search') }}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                            <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.player')) }}</button>
+                            <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.ally')) }}</button>
+                            <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.village')) }}</button>
+                        </div>
                     </div>
-                </div>
+                </li>
             </form>
         @endif
-        <div class="dropdown">
-            <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ __('ui.language') }}
-            </button>
-            <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                <a class="dropdown-item" href="{{ route('locale', 'de') }}"><span class="flag-icon flag-icon-de"></span> Deutsch</a>
-                <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
-            </div>
-        </div>
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('ui.language') }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                        <a class="dropdown-item" href="{{ route('locale', 'de') }}"><span class="flag-icon flag-icon-de"></span> Deutsch</a>
+                        <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
+                    </div>
+                </div>
+            </li>
         @guest
-            @if (false)
-            <div class="dropdown">
-                <button class="btn btn-outline-dark dropdown-toggle form-control mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('user.login') }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
-                    <a class="nav-link" href="{{ route('login') }}">{{ __('user.login') }}</a>
-                    @if (Route::has('register'))
-                        <a class="nav-link" href="{{ route('register') }}">{{ __('user.register') }}</a>
-                    @endif
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('user.login') }}
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
+                        <a class="dropdown-item" href="{{ route('login') }}">{{ __('user.login') }}</a>
+                        @if (Route::has('register'))
+                            <a class="dropdown-item" href="{{ route('register') }}">{{ __('user.register') }}</a>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            @endif
+            </li>
         @else
-            <div class="dropdown">
-                <button class="btn btn-outline-dark dropdown-toggle form-control ml-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ Auth::user()->name }} <span class="caret"></span>
-                </button>
+            <li class="nav-item">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ Auth::user()->avatarPath() }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
+                        {{ Auth::user()->name }} <span class="caret"></span>
+                    </button>
 
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    @can('dashboard_access')
-                        <a class="dropdown-item" href="{{ route('admin.home') }}">
-                            {{ __('user.dashboard') }}
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('user.overview', ['myMap']) }}">
+                            {{ __('ui.titel.overview') }}
                         </a>
-                    @endcan
-                    @can('translation_access')
-                        <a class="dropdown-item" href="{{ route('index') }}/translations">
-                            {{ __('user.translations') }}
+                        @can('dashboard_access')
+                            <a class="dropdown-item" href="{{ route('admin.home') }}">
+                                {{ __('user.dashboard') }}
+                            </a>
+                        @endcan
+                        @can('translation_access')
+                            <a class="dropdown-item" href="{{ route('index') }}/translations">
+                                {{ __('user.translations') }}
+                            </a>
+                        @endcan
+                        <a class="dropdown-item" href="{{ route('user.settings', ['settings-profile']) }}">
+                            {{ __('ui.personalSettings.title') }}
                         </a>
-                    @endcan
-
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        {{ __('user.logout') }}
-                    </a>
-
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            {{ __('user.logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </li>
         @endauth
+        </ul>
     </div>
 </nav>

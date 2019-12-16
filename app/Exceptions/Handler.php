@@ -2,8 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Log;
+use App\Notifications\DiscordNotification;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class Handler extends ExceptionHandler
 {
@@ -34,6 +38,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
         parent::report($exception);
     }
 

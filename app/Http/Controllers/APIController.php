@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
+use App\DsConnection;
 use App\World;
 use App\Player;
 use App\Server;
@@ -10,7 +11,9 @@ use App\Village;
 use App\Conquer;
 use App\AllyChanges;
 use App\Util\BasicFunctions;
+use Auth;
 use Carbon\Carbon;
+use function GuzzleHttp\Promise\iter_for;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Resources\World as WorldResource;
@@ -313,6 +316,16 @@ class APIController extends Controller
         return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
     }
 
+    public static function getActiveWorldByServer($server){
+        $server = Server::getServerByCode($server);
+        $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
+        $array = [];
+        foreach ($worlds as $world){
+            $array[] = ['id' => $world->name, 'text' => $world->displayName()];
+        }
+        return $array;
+    }
+
     public static function getSearchPlayerByName($server, $world){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
@@ -531,6 +544,47 @@ class APIController extends Controller
             })
             ->rawColumns(['rank','points','member_count','village_count','player_points','gesBash','offBash','defBash'])
             ->toJson();
+    }
+
+    public function getDsConnection()
+    {
+
+            BasicFunctions::local();
+            $datas = Auth::user()->dsConnection();
+
+            return DataTables::eloquent($datas)
+                ->addColumn('server', function ($connection) {
+                    return "<span><span class=\"flag-icon flag-icon-" . $connection->world->server->flag . "\"></span>" . ucwords($connection->world->server->code) . "</span>";
+                })
+                ->addColumn('world', function ($connection) {
+                    return $connection->world->displayName();
+                })
+                ->addColumn('player', function ($connection) {
+                    $player = Player::player($connection->world->server->code, $connection->world->name, $connection->player_id);
+                    return BasicFunctions::decodeName($player->name);
+                })
+                ->editColumn('key', function ($connection) {
+                    if ($connection->verified == 0) {
+                        return'<div class="input-group mb-2">
+                                            <input id="key_'.$connection->id.'" type="text" class="form-control" value="'.$connection->key.'" aria-label="Recipient\'s username" aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy(\'key_'.$connection->id.'\')"><i class="far fa-copy"></i></span>
+                                            </div>
+                                        </div>';
+                    }
+                    return'<b>'.__('ui.personalSettings.connectionVerified').'</b>';
+                })
+                ->addColumn('action', function ($connection) {
+                    $button = '';
+                    if ($connection->verified == 0) {
+                        $button = '<a class="btn btn-success" style="cursor:pointer" onclick="checkConnection('.$connection->id.')"><i class="fas fa-sync text-white"></i></a> ';
+                    }
+                    $button .= '<a class="btn btn-danger" style="cursor:pointer" onclick="destroyConnection('.$connection->id.', \''.$connection->key.'\')"><i class="fas fa-times text-white"></i></a>';
+
+                    return $button;
+                })
+                ->rawColumns(['server', 'action','key'])
+                ->toJson();
     }
 
 }

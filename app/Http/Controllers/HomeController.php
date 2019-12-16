@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Util\BasicFunctions;
+
 class HomeController extends Controller
 {
     /**
