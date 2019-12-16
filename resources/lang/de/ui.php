@@ -217,4 +217,71 @@ return array (
   'siteNotFound' => 'Seite nicht gefunden',
   'notAllowed' => 'Unzulässig',
   'notAllowedDesc' => 'Du darfst diese Seite nicht betreten',
+  'personalSettings' => 
+  array (
+    'title' => 'Einstellungen',
+    'profile' => 'Profil',
+    'account' => 'Konto',
+    'connection' => 'Verbindung',
+    'birthday' => 'Geburtstag',
+    'skype' => 'Skype Name',
+    'discord' => 'Discord Name',
+    'connectionVerified' => 'Die Verbindung ist bestätigt',
+    'saveSettingsSuccess' => 'Die Änderungen sind erfolgreich übernommen worden',
+    'connectionDestroy' => 'Die Verbindung ist aufgelöst',
+    'connectionNiceTroll' => '<img src="https://www.kotzendes-einhorn.de/blog/wp-content/uploads/2014/02/Troll-face.png" height="200" width="200">',
+    'connectionTooEarly' => 'Warte auf die nächste Aktualisierung der Welt',
+    'connectionSuccess' => 'Die Verbindung ist erfolgreich bestätigt',
+    'connectionError' => 'Die Verbindung konnte nicht bestätigt werden, bitte überprüfe ob der Dorfname Richtig gesetzt ist',
+    'skypeShow' => 'Skype Name anzeigen',
+    'discordShow' => 'Discord Name anzeigen',
+    'uploadeImage' => 'Bild Hochladen',
+    'deleteImage' => 'Bild löschen',
+    'workInProgress' => 'Aktuell noch nicht möglich',
+    'account_help' => 'Hier kannst du dich mit anderen Konten verbinden.
+<br>
+Wenn du dich mit einem Konto verbunden hast, kannst du dich auch damit anmelden.
+<br>
+Falls du dich mit <b>Discord</b> verbindest, hast du die Möglichkeit unseren Discord Bot zu benutzen.
+<br>
+Es werden weitere Funktionen auf der Seite folgen, in denen wir den Bot mit ein beziehen werden.',
+    'connection_help' => 'Hier kannst du deine Stämme Konto verifizieren.
+(Diese Verifizierung ist nur pro Welt möglich) 
+<br>
+Um das zu machen musst du die Welt mit dem Spieler Namen angeben und der Liste hinzufügen.
+<br>
+Sobald die Verbindung in der Liste ist, generiert DS-Ultimate eine zufällige Zeichenkette.
+<br>
+Diese Zeichenkette muss dann als Dorfname gesetzt werden.
+<br>
+Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt kannst du die Verbindung bestätigen lassen.',
+    'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung Trennen',
+  ),
+  'follow' => 
+  array (
+    'map' => 'Gefolgte Karten',
+    'attackplanner' => 'Gefolgte Angriffspläne',
+  ),
+  'buildings' => 
+  array (
+    'main' => 'Hauptgebäude',
+    'stable' => 'Stall',
+    'garage' => 'Werkstatt',
+    'church' => 'Kirche',
+    'firstChurch' => 'Erste Kirche',
+    'watchtower' => 'Wachturm',
+    'snob' => 'Adelshof',
+    'smith' => 'Schmiede',
+    'place' => 'Versammlungsplatz',
+    'statue' => 'Statue',
+    'market' => 'Markt',
+    'wood' => 'Holzfäller',
+    'stone' => 'Lehmgrube',
+    'iron' => 'Eisenmine',
+    'farm' => 'Bauernhof',
+    'storage' => 'Speicher',
+    'hide' => 'Versteck',
+    'wall' => 'Wall',
+    'barracks' => 'Kaserne',
+  ),
 );

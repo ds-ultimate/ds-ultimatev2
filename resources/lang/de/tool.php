@@ -169,4 +169,8 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'highlight' => 'Hervorheben',
     'highlightAll' => 'Alle hervorheben',
   ),
+  'pointCalc' => 
+  array (
+    'title' => 'Punkterechner',
+  ),
 );

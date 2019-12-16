@@ -44,20 +44,23 @@
                         <li class="dropdown-item"><a href="{{ route('rankAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.history') }})</a></li>
                     </ul>
                 </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{__('ui.server.tools')}}
-                        </a>
-                        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
-                            @if($worldData->config != null && $worldData->units != null)
-                                <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
-                            @endif
-                            @if($worldData->units != null)
-                                <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.map.title')) }}</a></li>
-                            @endif
-                        </ul>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{__('ui.server.tools')}}
+                    </a>
+                    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
+                        @if($worldData->config != null && $worldData->units != null)
+                            <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
+                        @endif
+                        @if($worldData->units != null)
+                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.map.title')) }}</a></li>
+                        @endif
+                        @if($worldData->config != null && $worldData->buildings != null)
+                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.pointCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.pointCalc.title')) }}</a></li>
+                        @endif
+                    </ul>
+                </li>
             @endif
         </ul>
         @if (isset($server))

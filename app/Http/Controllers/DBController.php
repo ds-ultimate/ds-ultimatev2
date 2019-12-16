@@ -222,6 +222,8 @@ class DBController extends Controller
                 $worldNew->config = $txtConf;
                 $txtUnits = file_get_contents("$link/interface.php?func=get_unit_info");
                 $worldNew->units = $txtUnits;
+                $txtBuildings = file_get_contents("$link/interface.php?func=get_building_info");
+                $worldNew->buildings = $txtBuildings;
                 $worldNew->worldCheck_at = Carbon::createFromTimestamp(time());
 
                 if ($worldNew->save() !== true){

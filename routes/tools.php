@@ -30,3 +30,7 @@ Route::post('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@modePo
 
 Route::get('/{server}/{world}/maptop10', 'Tools\MapController@mapTop10')->name('top10');
 Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name('top10p');
+
+
+//Point calculator
+Route::get('/{server}/{world}/tools/pointCalc', 'Tools\PointCalcController@index')->name('pointCalc');

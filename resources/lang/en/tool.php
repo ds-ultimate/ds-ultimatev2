@@ -169,4 +169,8 @@ Attackcount: %ELEMENT_COUNT%
     'highlight' => 'Highlight this',
     'highlightAll' => 'Highlight all',
   ),
+  'pointCalc' => 
+  array (
+    'title' => 'Points Calculator',
+  ),
 );

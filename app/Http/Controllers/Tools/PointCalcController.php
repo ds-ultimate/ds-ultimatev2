@@ -13,7 +13,7 @@ use App\Util\BasicFunctions;
 use App\World;
 use Illuminate\Routing\Controller as BaseController;
 
-class DistanceCalcController extends BaseController
+class PointCalcController extends BaseController
 {
 
     public function index($server, $world){
@@ -25,15 +25,15 @@ class DistanceCalcController extends BaseController
             //TODO real error blade here
             return "Der Punkterechner ist für diese Welt nicht verfügbar";
         }
-        if($worldData->units == null) {
+        if($worldData->buildings == null) {
             //TODO real error blade here
-            return "Der Laufzeitenrechner ist für diese Welt nicht verfügbar";
+            return "Der Punkterechner ist für diese Welt nicht verfügbar";
         }
 
-        $unitConfig = simplexml_load_string($worldData->units);
+        $buildConfig = simplexml_load_string($worldData->buildings);
         $config = simplexml_load_string($worldData->config);
         
-        return view('tools.distanceCalc', compact('worldData', 'server', 'unitConfig', 'config'));
+        return view('tools.pointCalc', compact('worldData', 'server', 'buildConfig', 'config'));
 
     }
 
