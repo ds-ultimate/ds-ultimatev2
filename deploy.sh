@@ -22,6 +22,9 @@ php artisan config:clear
 # cache config
 php artisan config:cache
 
+# clear cached views
+php artisan view:clear
+
 # update database
 php artisan migrate --force
 	# --force		Required to run when in production.
