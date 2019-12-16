@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->displayName(),': '.__('ui.tool.attackPlanner.title'))
+@section('titel', $worldData->displayName(),': '.__('tool.map.title'))
 
 @section('style')
     <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">

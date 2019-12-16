@@ -33,7 +33,7 @@
             <div class="card card-primary bg-danger">
                 <div class="box text-center p-3">
                     <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['attackplaner']) }}</h1>
-                    <h6 class="text-white">{{ __('ui.tool.attackPlanner.title') }}</h6>
+                    <h6 class="text-white">{{ __('tool.attackPlanner.title') }}</h6>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
             <div class="card card-inverse bg-success">
                 <div class="box text-center p-3">
                     <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['attacks']) }}</h1>
-                    <h6 class="text-white">{{ __('ui.tool.attackPlanner.attackTotal') }}</h6>
+                    <h6 class="text-white">{{ __('tool.attackPlanner.attackTotal') }}</h6>
                 </div>
             </div>
         </div>

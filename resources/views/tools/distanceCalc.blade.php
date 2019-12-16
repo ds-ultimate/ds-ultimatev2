@@ -1,18 +1,18 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->displayName(),': '.__('ui.tool.distCalc.title'))
+@section('titel', $worldData->displayName(),': '.__('tool.distCalc.title'))
 
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.tool.distCalc.title')).' ['.$worldData->displayName().']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('tool.distCalc.title')).' ['.$worldData->displayName().']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('ui.tool.distCalc.title')).' ' }}
+                {{ ucfirst(__('tool.distCalc.title')).' ' }}
             </h1>
             <h4>
                 {{ '['.$worldData->displayName().']' }}
@@ -27,7 +27,7 @@
                     <form id="villageForm" method="POST" action="">
                         <table class="table table-bordered table-striped no-wrap">
                             <tr>
-                                <th>{{ __('ui.tool.distCalc.startVillage') }}</th>
+                                <th>{{ __('tool.distCalc.startVillage') }}</th>
                                 <td>
                                     <div class="form-inline">
                                         <input id="xStart" class="form-control mx-auto" type="text" placeholder="500" style="width: 70px" maxlength="3"> | <input id="yStart" class="form-control mx-auto" type="text" placeholder="500" style="width: 70px" maxlength="3">
@@ -35,7 +35,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>{{ __('ui.tool.distCalc.targetVillage') }}</th>
+                                <th>{{ __('tool.distCalc.targetVillage') }}</th>
                                 <td>
                                     <div class="form-inline">
                                         <input id="xTarget" class="form-control mx-auto" type="text" placeholder="500" style="width: 70px" maxlength="3"> | <input id="yTarget" class="form-control mx-auto" type="text" placeholder="500" style="width: 70px" maxlength="3">
@@ -50,7 +50,7 @@
                     <br>
                     <table id="startVillage" class="table table-striped table-bordered no-wrap">
                         <tr>
-                            <th width="150">{{ __('ui.tool.distCalc.startVillage') }}</th>
+                            <th width="150">{{ __('tool.distCalc.startVillage') }}</th>
                             <td>
                                 -
                             </td>
@@ -77,7 +77,7 @@
                     <br>
                     <table id="targetVillage" class="table table-striped table-bordered no-wrap">
                         <tr>
-                            <th width="150">{{ __('ui.tool.distCalc.targetVillage') }}</th>
+                            <th width="150">{{ __('tool.distCalc.targetVillage') }}</th>
                             <td>
                                 -
                             </td>
@@ -253,7 +253,7 @@
             var input3 = Math.floor(input2 / 60);
             var hour = input3 % 24;
             var day = Math.floor(input3 / 24);
-            return day + '{{ __('ui.tool.distCalc.days') }}' + '&nbsp;' + pad(hour) + ':' + pad(minutes) + ':' + pad(seconds);
+            return day + '{{ __('tool.distCalc.days') }}' + '&nbsp;' + pad(hour) + ':' + pad(minutes) + ':' + pad(seconds);
         }
 
         function calc(){

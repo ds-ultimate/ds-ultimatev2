@@ -49,9 +49,9 @@
                         {{__('ui.server.tools')}}
                     </a>
                     <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.distCalc.title')) }}</a></li>
+                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.distCalc.title')) }}</a></li>
                         @if($worldData->config != null && $worldData->units != null)
-                            <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tool.attackPlanner.title')) }}</a></li>
+                            <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.attackPlanner.title')) }}</a></li>
                         @endif
                         @if($worldData->units != null)
                             <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.map.title')) }}</a></li>

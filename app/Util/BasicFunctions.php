@@ -281,7 +281,7 @@ class BasicFunctions
         $hour = $input % 24;
         $day = floor($input / 24);
 
-        return $day.' '.__('ui.tool.distCalc.days').' '.str_pad($hour, 2, "0", STR_PAD_LEFT).':'.str_pad($minutes, 2, "0", STR_PAD_LEFT).':'.str_pad($seconds, 2, "0", STR_PAD_LEFT);
+        return $day.' '.__('tool.distCalc.days').' '.str_pad($hour, 2, "0", STR_PAD_LEFT).':'.str_pad($minutes, 2, "0", STR_PAD_LEFT).':'.str_pad($seconds, 2, "0", STR_PAD_LEFT);
     }
     
     public static function sign( $number ) {

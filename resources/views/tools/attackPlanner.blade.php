@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->displayName(),': '.__('ui.tool.attackPlanner.title'))
+@section('titel', $worldData->displayName(),': '.__('tool.attackPlanner.title'))
 
 @section('style')
     <link href="{{ asset('plugin/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
@@ -10,13 +10,13 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.tool.attackPlanner.title')).' ['.$worldData->displayName().']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('tool.attackPlanner.title')).' ['.$worldData->displayName().']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('ui.tool.attackPlanner.title')).' ' }}
+                {{ ucfirst(__('tool.attackPlanner.title')).' ' }}
             </h1>
             <h4>
                 {{ '['.$worldData->displayName().']' }}
@@ -32,13 +32,13 @@
                         <a class="nav-link active" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="true">{{ __('global.edit') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ __('ui.tool.attackPlanner.links') }}</a>
+                        <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ __('tool.attackPlanner.links') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="import-tab" data-toggle="tab" href="#import" role="tab" aria-controls="import" aria-selected="false">{{ __('ui.tool.attackPlanner.importExport') }}</a>
+                        <a class="nav-link" id="import-tab" data-toggle="tab" href="#import" role="tab" aria-controls="import" aria-selected="false">{{ __('tool.attackPlanner.importExport') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">{{ __('ui.tool.attackPlanner.statistics') }}</a>
+                        <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">{{ __('tool.attackPlanner.statistics') }}</a>
                     </li>
                 </ul>
                 <div class="card-body tab-content">
@@ -54,70 +54,70 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group row">
-                                        <label class="control-label col-3">{{ __('ui.tool.attackPlanner.type') }}</label>
+                                        <label class="control-label col-3">{{ __('tool.attackPlanner.type') }}</label>
                                         <div class="col-1">
                                             <img id="type_img" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
                                         </div>
                                         <div class="col-8">
                                             <select id="type" class="form-control form-control-sm">
-                                                <optgroup label="{{ __('ui.tool.attackPlanner.offensive') }}">
-                                                    <option value="8">{{ __('ui.tool.attackPlanner.attack') }}</option>
-                                                    <option value="11">{{ __('ui.tool.attackPlanner.conquest') }}</option>
-                                                    <option value="14">{{ __('ui.tool.attackPlanner.fake') }}</option>
-                                                    <option value="45">{{ __('ui.tool.attackPlanner.wallbreaker') }}</option>
+                                                <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
+                                                    <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
+                                                    <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
+                                                    <option value="14">{{ __('tool.attackPlanner.fake') }}</option>
+                                                    <option value="45">{{ __('tool.attackPlanner.wallbreaker') }}</option>
                                                 </optgroup>
-                                                <optgroup label="{{ __('ui.tool.attackPlanner.defensive') }}">
-                                                    <option value="0">{{ __('ui.tool.attackPlanner.support') }}</option>
-                                                    <option value="1">{{ __('ui.tool.attackPlanner.standSupport') }}</option>
-                                                    <option value="7">{{ __('ui.tool.attackPlanner.fastSupport') }}</option>
-                                                    <option value="46">{{ __('ui.tool.attackPlanner.fakeSupport') }}</option>
+                                                <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
+                                                    <option value="0">{{ __('tool.attackPlanner.support') }}</option>
+                                                    <option value="1">{{ __('tool.attackPlanner.standSupport') }}</option>
+                                                    <option value="7">{{ __('tool.attackPlanner.fastSupport') }}</option>
+                                                    <option value="46">{{ __('tool.attackPlanner.fakeSupport') }}</option>
                                                 </optgroup>
                                             </select>
-                                            <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.type_helper') }}</small>
+                                            <small class="form-control-feedback">{{ __('tool.attackPlanner.type_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-4">
                                     <div class="form-group row">
-                                        <label class="control-label col-4">{{ __('ui.tool.attackPlanner.startVillage') }}</label>
+                                        <label class="control-label col-4">{{ __('tool.attackPlanner.startVillage') }}</label>
                                         <div id="start" class="form-inline col-8">
                                             <input id="xStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
                                             |
                                             <input id="yStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                            <small id="villageStart" class="form-control-feedback ml-2">{{ __('ui.tool.attackPlanner.startVillage_helper') }}</small>
+                                            <small id="villageStart" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.startVillage_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-4">
                                     <div class="form-group row">
-                                        <label class="control-label col-4">{{ __('ui.tool.attackPlanner.targetVillage') }}</label>
+                                        <label class="control-label col-4">{{ __('tool.attackPlanner.targetVillage') }}</label>
                                         <div id="target" class="form-inline col-8">
                                             <input id="xTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
                                             |
                                             <input id="yTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
-                                            <small id="villageTarget" class="form-control-feedback ml-2">{{ __('ui.tool.attackPlanner.targetVillage_helper') }}</small>
+                                            <small id="villageTarget" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.targetVillage_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-4">
                                     <div class="form-group row">
-                                        <label class="control-label col-3">{{ __('ui.tool.attackPlanner.date') }}</label>
+                                        <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
                                         <div class="col-9">
                                             <input id="day" type="date" class="form-control form-control-sm" />
-                                            <small id="day_feedback" class="form-control-feedback">{{ __('ui.tool.attackPlanner.date_helper') }}</small>
+                                            <small id="day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-4">
                                     <div class="form-group row">
-                                        <label class="control-label col-4">{{ __('ui.tool.attackPlanner.time') }}</label>
+                                        <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
                                         <div class="col-8">
                                             <input id="time" type="time" step="1" class="form-control form-control-sm" />
-                                            <small id="time_feedback" class="form-control-feedback">{{ __('ui.tool.attackPlanner.time_helper') }}</small>
+                                            <small id="time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@
                                                 @endif
                                                 <option value="11">{{ __('ui.unit.snob') }}</option>
                                             </select>
-                                            <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.unit_helper') }}</small>
+                                            <small class="form-control-feedback">{{ __('tool.attackPlanner.unit_helper') }}</small>
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@
                                 <input id="start_village_id" type="hidden">
                                 <input id="target_village_id" type="hidden">
                                 <div class="col-12">
-                                    <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('ui.tool.attackPlanner.outdated') }}">
+                                    <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('tool.attackPlanner.outdated') }}">
                                     <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('global.submit') }}">
                                 </div>
                                 <!--/span-->
@@ -236,25 +236,25 @@
                         <div class="row pt-3">
                             <div class="col-12">
                                 <div class="form-group row">
-                                    <label class="control-label col-md-2">{{ __('ui.tool.attackPlanner.editLink') }}</label>
+                                    <label class="control-label col-md-2">{{ __('tool.attackPlanner.editLink') }}</label>
                                     <div class="col-md-1">
                                         <button class="btn btn-primary btn-sm" onclick="copy('link-edit')">{{ __('global.datatables.copy') }}</button>
                                     </div>
                                     <div class="col-md-9">
                                         <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'edit', $attackList->edit_key]) }}" />
-                                        <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.editLink_helper') }}</small>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.editLink_helper') }}</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
-                                    <label class="control-label col-md-2">{{ __('ui.tool.attackPlanner.showLink') }}</label>
+                                    <label class="control-label col-md-2">{{ __('tool.attackPlanner.showLink') }}</label>
                                     <div class="col-md-1">
                                         <button class="btn btn-primary btn-sm" onclick="copy('link-show')">{{ __('global.datatables.copy') }}</button>
                                     </div>
                                     <div class="col-md-9">
                                         <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'show', $attackList->show_key]) }}" />
-                                        <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.showLink_helper') }}</small>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.showLink_helper') }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -281,12 +281,12 @@
                                 <form id="importItemsForm">
                                     @csrf
                                     <div class="form-group">
-                                        <label class="control-label mr-3">{{ __('ui.tool.attackPlanner.import') }}</label>
+                                        <label class="control-label mr-3">{{ __('tool.attackPlanner.import') }}</label>
                                         <textarea id="importWB" class="form-control form-control-sm" style="height: 80px"></textarea>
-                                        <small class="form-control-feedback">{{ __('ui.tool.attackPlanner.import_helper') }}</small>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.import_helper') }}</small>
                                     </div>
                                     <div class="col-12">
-                                        <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('ui.tool.attackPlanner.import') }}">
+                                        <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('tool.attackPlanner.import') }}">
                                     </div>
                                 </form>
                             </div>
@@ -298,13 +298,13 @@
                             <div class="col-4">
                                 <h3>{{ __('ui.tabletitel.general') }}</h3>
                                 <div class="form-group">
-                                    {{ __('ui.tool.attackPlanner.attackTotal') }}: <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['total']) }}</b>
+                                    {{ __('tool.attackPlanner.attackTotal') }}: <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['total']) }}</b>
                                 </div>
                                 <div class="form-group">
-                                    {{ __('ui.tool.attackPlanner.attackStart_village') }}: <b id="attackStart_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['start_village']) }}</b>
+                                    {{ __('tool.attackPlanner.attackStart_village') }}: <b id="attackStart_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['start_village']) }}</b>
                                 </div>
                                 <div class="form-group">
-                                    {{ __('ui.tool.attackPlanner.attackTarget_village') }}: <b id="attackTarget_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['target_village']) }}</b>
+                                    {{ __('tool.attackPlanner.attackTarget_village') }}: <b id="attackTarget_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['target_village']) }}</b>
                                 </div>
                             </div>
                             <div class="col-1"></div>
@@ -320,7 +320,7 @@
                             </div>
                             <div class="col-1"></div>
                             <div class="col-2">
-                                <h3>{{ __('ui.tool.attackPlanner.type') }}</h3>
+                                <h3>{{ __('tool.attackPlanner.type') }}</h3>
                                 @if (isset($stats['type']))
                                     @foreach ($stats['type'] as $type)
                                         <div class="form-group">
@@ -344,15 +344,15 @@
                     <table id="data1" class="table table-bordered table-striped no-wrap w-100">
                         <thead>
                             <tr>
-                                <th>{{ __('ui.tool.attackPlanner.startVillage') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.attacker') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.targetVillage') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.defender') }}</th>
+                                <th>{{ __('tool.attackPlanner.startVillage') }}</th>
+                                <th>{{ __('tool.attackPlanner.attacker') }}</th>
+                                <th>{{ __('tool.attackPlanner.targetVillage') }}</th>
+                                <th>{{ __('tool.attackPlanner.defender') }}</th>
                                 <th>{{ __('global.unit') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.type') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.sendTime') }}</th>
-                                <th>{{ __('ui.tool.attackPlanner.arrivalTime') }}</th>
-                                <th width="95px">{{ __('ui.tool.attackPlanner.countdown') }}</th>
+                                <th>{{ __('tool.attackPlanner.type') }}</th>
+                                <th>{{ __('tool.attackPlanner.sendTime') }}</th>
+                                <th>{{ __('tool.attackPlanner.arrivalTime') }}</th>
+                                <th width="95px">{{ __('tool.attackPlanner.countdown') }}</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
@@ -633,9 +633,9 @@
                         var format = '%H:%M:%S';
                         if(event.offset.totalDays > 0) {
                             if (event.offset.totalDays > 1) {
-                                format = '%D {{ __('ui.tool.distCalc.days') }} ' + format;
+                                format = '%D {{ __('tool.distCalc.days') }} ' + format;
                             }else {
-                                format = '%D {{ __('ui.tool.distCalc.days') }} ' + format;
+                                format = '%D {{ __('tool.distCalc.days') }} ' + format;
                             }
                         }
                         $(this).html(event.strftime(format));
@@ -829,7 +829,7 @@
                     error += 1;
                 }
                 if (start == target){
-                    alert('{{ __('ui.tool.attackPlanner.errorKoord') }}');
+                    alert('{{ __('tool.attackPlanner.errorKoord') }}');
                     error += 1;
                 }
 

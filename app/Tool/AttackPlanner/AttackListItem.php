@@ -139,21 +139,21 @@ class AttackListItem extends CustomModel
     public function typeIDToName(){
         switch ($this->type) {
             case '8':
-                return __('ui.tool.attackPlanner.attack');
+                return __('tool.attackPlanner.attack');
             case '11':
-                return __('ui.tool.attackPlanner.conquest');
+                return __('tool.attackPlanner.conquest');
             case '14':
-                return __('ui.tool.attackPlanner.fake');
+                return __('tool.attackPlanner.fake');
             case '45':
-                return __('ui.tool.attackPlanner.wallbreaker');
+                return __('tool.attackPlanner.wallbreaker');
             case '0':
-                return __('ui.tool.attackPlanner.support');
+                return __('tool.attackPlanner.support');
             case '1':
-                return __('ui.tool.attackPlanner.standSupport');
+                return __('tool.attackPlanner.standSupport');
             case '7':
-                return __('ui.tool.attackPlanner.fastSupport');
+                return __('.tool.attackPlanner.fastSupport');
             case '46':
-                return __('ui.tool.attackPlanner.fakeSupport');
+                return __('tool.attackPlanner.fakeSupport');
         }
     }
 
