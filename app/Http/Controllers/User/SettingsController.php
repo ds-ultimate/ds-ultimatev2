@@ -9,7 +9,9 @@ use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class SettingsController extends Controller
@@ -61,16 +63,29 @@ class SettingsController extends Controller
     }
 
     public function saveSettingsAccount(Request $request){
-        $account = \Auth::user()->profile;
-        $account->skype = $request->skype;
-        $account->discord = $request->discord;
-        $account->show_skype = $request->skype_show;
-        $account->show_discord = $request->discord_show;
-        $account->save();
-        return \Response::json(array(
-            'data' => 'success',
-            'msg' => __('ui.personalSettings.saveSettingsSuccess'),
-        ));
+        $user = \Auth::user();
+        $validator = Validator::make(['name' => $request->name], [
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+        if ($validator->valid())
+        {
+            $user->name = $request->name;
+            $profile = $user->profile;
+            $dt = Carbon::parse($request->birthday);
+            $profile->birthday = $dt->format('Y-m-d');
+            \Log::warning($dt->format('Y-m-d'));
+            $user->save();
+            $profile->save();
+            return \Response::json(array(
+                'data' => 'success',
+                'msg' => __('ui.personalSettings.saveSettingsSuccess'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => $validator->errors()->first(),
+            ));
+        }
     }
 
     public function destroyConnection(Request $request){

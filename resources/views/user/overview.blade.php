@@ -50,7 +50,7 @@
                                                 </a>
                                             @endforeach
                                         @else
-                                            {{ __('ui.own.noMap') }}
+                                            {{ __('ui.old.nodata') }}
                                         @endif
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                                 </a>
                                             @endforeach
                                         @else
-                                            {{ __('ui.own.noAttackplanner') }}
+                                            {{ __('ui.old.nodata') }}
                                         @endif
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
                                                 </a>
                                             @endforeach
                                         @else
-                                            {{ __('ui.own.noMap') }}
+                                            {{ __('ui.old.nodata') }}
                                         @endif
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                                 </a>
                                             @endforeach
                                         @else
-                                            {{ __('ui.own.noAttackplanner') }}
+                                            {{ __('ui.old.nodata') }}
                                         @endif
                                     </div>
                                 </div>

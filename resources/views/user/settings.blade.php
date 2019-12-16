@@ -70,19 +70,16 @@
                                     <img id="avatarImage" src="{{ Auth::user()->avatarPath() }}" class="rounded img-thumbnail" alt="" style="max-width: 200px; max-height: 200px">
                                     <div id="avatar-errors" class="text-danger"></div>
                                 </div>
-                                <form>
+                                <form id="settings-account-form">
                                     <div class="form-group">
                                         <label for="name">{{ __('user.name') }}</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="name" placeholder="{{ Auth::user()->name }}" readonly>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text text-danger" id="basic-addon2">{{ __('ui.personalSettings.workInProgress') }}</span>
-                                            </div>
+                                            <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}">
                                             <div id="name-errors" class="text-danger"></div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">{{ __('user.mailAddress') }}</label>
+                                        <label for="email">{{ __('user.mailAddress') }}</label>
                                         <div class="input-group">
                                             <input type="email" class="form-control" id="email" placeholder="{{ Auth::user()->email }}" aria-describedby="basic-addon2" readonly>
                                             <div class="input-group-append">
@@ -93,8 +90,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="birthday">{{ __('ui.personalSettings.birthday') }}</label>
-                                        <input id="date_picker" name="birthday" class="form-control" type="text">
+                                        <input id="date_picker" name="birthday" class="form-control" type="text" value="{{ \Illuminate\Support\Carbon::parse(Auth::user()->profile->birthday)->format('d.m.Y') }}">
                                         <div id="birthday-errors" class="text-danger"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="btn btn-success float-right" type="submit" value="{{ __('global.save') }}">
                                     </div>
                                 </form>
                             </div>
@@ -389,28 +389,13 @@
 
         $(document).on('submit', '#settings-account-form', function (e) {
             e.preventDefault();
-            var discord_show;
-            var skype_show;
-            if ($('#discordCheck').is(":checked")) {
-                discord_show = 1;
-            }else {
-                discord_show = 0;
-            }
-            if ($('#skypeCheck').is(":checked")) {
-                skype_show = 1;
-            }else {
-                skype_show = 0;
-            }
             axios.post('{{ route('user.saveSettingsAccount') }}',{
-                'discord': $('#discord_name').val(),
-                'skype': $('#skype_name').val(),
-                'discord_show': discord_show,
-                'skype_show': skype_show,
+                'name': $('#name').val(),
+                'birthday': $('#date_picker').val(),
             })
                 .then((response) => {
                     var data = response.data;
                     createToast(data);
-                    connectionTable.ajax.reload();
                 })
                 .catch((error) => {
                 });
