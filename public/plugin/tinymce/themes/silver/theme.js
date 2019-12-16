@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.1.1 (2019-10-28)
+ * Version: 5.1.4 (2019-12-11)
  */
 (function (domGlobals) {
     'use strict';
@@ -1988,6 +1988,7 @@
     var touchstart = constant('touchstart');
     var touchmove = constant('touchmove');
     var touchend = constant('touchend');
+    var touchcancel = constant('touchcancel');
     var mousedown = constant('mousedown');
     var mousemove = constant('mousemove');
     var mouseout = constant('mouseout');
@@ -2011,7 +2012,9 @@
     var execute = constant('alloy.execute');
     var focusItem = constant('alloy.focus.item');
     var tap = alloy.tap;
-    var tapOrClick = detect$3().deviceType.isTouch() ? alloy.tap : click;
+    var tapOrClick = function () {
+      return detect$3().deviceType.isTouch() ? alloy.tap() : click();
+    };
     var longpress = constant('alloy.longpress');
     var sandboxClose = constant('alloy.sandbox.close');
     var typeaheadCancel = constant('alloy.typeahead.cancel');
@@ -2898,6 +2901,11 @@
             'alloy.base.behaviour',
             'item-type-events'
           ],
+          'touchstart': [
+            'focusing',
+            'alloy.base.behaviour',
+            'item-type-events'
+          ],
           'mouseover': [
             'item-type-events',
             'tooltipping'
@@ -3407,13 +3415,13 @@
     };
     var getBounds = function (_win) {
       var win = _win === undefined ? domGlobals.window : _win;
+      var doc = win.document;
+      var scroll = get$8(Element.fromDom(doc));
       var visualViewport = win['visualViewport'];
       if (visualViewport !== undefined) {
-        return bounds(visualViewport.pageLeft, visualViewport.pageTop, visualViewport.width, visualViewport.height);
+        return bounds(Math.max(visualViewport.pageLeft, scroll.left()), Math.max(visualViewport.pageTop, scroll.top()), visualViewport.width, visualViewport.height);
       } else {
-        var doc = Element.fromDom(win.document);
-        var html = win.document.documentElement;
-        var scroll = get$8(doc);
+        var html = doc.documentElement;
         var width = html.clientWidth;
         var height = html.clientHeight;
         return bounds(scroll.left(), scroll.top(), width, height);
@@ -3584,6 +3592,9 @@
     };
     var lift2 = function (oa, ob, f) {
       return oa.isSome() && ob.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie())) : Option.none();
+    };
+    var lift3 = function (oa, ob, oc, f) {
+      return oa.isSome() && ob.isSome() && oc.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie(), oc.getOrDie())) : Option.none();
     };
 
     var unknown$3 = 'unknown';
@@ -7703,6 +7714,28 @@
       state: SetupBehaviourCellState(false)
     });
 
+    var pointerEvents = function () {
+      return [
+        run(tapOrClick(), function (component, simulatedEvent) {
+          simulatedEvent.stop();
+          emitExecute(component);
+        }),
+        cutter(detect$3().deviceType.isTouch() ? touchstart() : mousedown())
+      ];
+    };
+    var events$7 = function (optAction) {
+      var executeHandler = function (action) {
+        return runOnExecute(function (component, simulatedEvent) {
+          action(component);
+          simulatedEvent.stop();
+        });
+      };
+      return derive(flatten([
+        optAction.map(executeHandler).toArray(),
+        pointerEvents()
+      ]));
+    };
+
     var hoverEvent = 'alloy.item-hover';
     var focusEvent = 'alloy.item-focus';
     var onHover = function (item) {
@@ -7741,12 +7774,10 @@
               initialValue: detail.data
             }
           }),
-          config('item-type-events', [
-            run(tapOrClick(), emitExecute),
-            cutter(mousedown()),
+          config('item-type-events', __spreadArrays(pointerEvents(), [
             run(mouseover(), onHover),
             run(focusItem(), Focusing.focus)
-          ])
+          ]))
         ]),
         components: detail.components,
         eventOrder: detail.eventOrder
@@ -8838,30 +8869,6 @@
     };
     var south$3 = function (anchor, element, bubbles) {
       return nu$7(middleX$1(anchor, element), southY$2(anchor, element), bubbles.innerSouth(), south(), 'layout-s');
-    };
-
-    var events$7 = function (optAction) {
-      var executeHandler = function (action) {
-        return run(execute(), function (component, simulatedEvent) {
-          action(component);
-          simulatedEvent.stop();
-        });
-      };
-      var onClick = function (component, simulatedEvent) {
-        simulatedEvent.stop();
-        emitExecute(component);
-      };
-      var onMousedown = function (component, simulatedEvent) {
-        simulatedEvent.cut();
-      };
-      var pointerEvents = detect$3().deviceType.isTouch() ? [run(tap(), onClick)] : [
-        run(click(), onClick),
-        run(mousedown(), onMousedown)
-      ];
-      return derive(flatten([
-        optAction.map(executeHandler).toArray(),
-        pointerEvents
-      ]));
     };
 
     var factory$1 = function (detail) {
@@ -10551,7 +10558,10 @@
           config('insert-table-picker-cell', [
             run(mouseover(), Focusing.focus),
             run(execute(), emitExecute),
-            run(tapOrClick(), emitExecute)
+            run(tapOrClick(), function (c, se) {
+              se.stop();
+              emitExecute(c);
+            })
           ]),
           Toggling.config({
             toggleClass: 'tox-insert-table-picker__selected',
@@ -12204,6 +12214,7 @@
         'touchstart',
         'touchmove',
         'touchend',
+        'touchcancel',
         'gesturestart'
       ] : [
         'mousedown',
@@ -12707,6 +12718,9 @@
     var getHeightSetting = function (editor) {
       return editor.getParam('height', Math.max(editor.getElement().offsetHeight, 200));
     };
+    var getWidthSetting = function (editor) {
+      return editor.getParam('width', global$7.DOM.getStyle(editor.getElement(), 'width'));
+    };
     var getMinWidthSetting = function (editor) {
       return Option.from(editor.settings.min_width).filter(isNumber);
     };
@@ -12764,6 +12778,7 @@
       ToolbarDrawer['default'] = '';
       ToolbarDrawer['floating'] = 'floating';
       ToolbarDrawer['sliding'] = 'sliding';
+      ToolbarDrawer['scrolling'] = 'scrolling';
     }(ToolbarDrawer || (ToolbarDrawer = {})));
     var getToolbarDrawer = function (editor) {
       return editor.getParam('toolbar_drawer', '', 'string');
@@ -12792,6 +12807,72 @@
     var isDraggableModal = function (editor) {
       return editor.getParam('draggable_modal', false, 'boolean');
     };
+
+    var SIGNIFICANT_MOVE$1 = 5;
+    var LONGPRESS_DELAY$1 = 400;
+    var getTouch$1 = function (event) {
+      if (event.touches === undefined || event.touches.length !== 1) {
+        return Option.none();
+      }
+      return Option.some(event.touches[0]);
+    };
+    var isFarEnough$1 = function (touch, data) {
+      var distX = Math.abs(touch.clientX - data.x());
+      var distY = Math.abs(touch.clientY - data.y());
+      return distX > SIGNIFICANT_MOVE$1 || distY > SIGNIFICANT_MOVE$1;
+    };
+    var setup$2 = function (editor) {
+      var startData = Cell(Option.none());
+      var longpressFired = Cell(false);
+      var debounceLongpress = last$2(function (e) {
+        editor.fire('longpress', __assign(__assign({}, e), { type: 'longpress' }));
+        longpressFired.set(true);
+      }, LONGPRESS_DELAY$1);
+      editor.on('touchstart', function (e) {
+        getTouch$1(e).each(function (touch) {
+          debounceLongpress.cancel();
+          var data = {
+            x: constant(touch.clientX),
+            y: constant(touch.clientY),
+            target: constant(e.target)
+          };
+          debounceLongpress.throttle(e);
+          longpressFired.set(false);
+          startData.set(Option.some(data));
+        });
+      }, true);
+      editor.on('touchmove', function (e) {
+        debounceLongpress.cancel();
+        getTouch$1(e).each(function (touch) {
+          startData.get().each(function (data) {
+            if (isFarEnough$1(touch, data)) {
+              startData.set(Option.none());
+              longpressFired.set(false);
+              editor.fire('longpresscancel');
+            }
+          });
+        });
+      }, true);
+      editor.on('touchend touchcancel', function (e) {
+        debounceLongpress.cancel();
+        if (e.type === 'touchcancel') {
+          return;
+        }
+        startData.get().filter(function (data) {
+          return data.target().isEqualNode(e.target);
+        }).each(function () {
+          if (longpressFired.get()) {
+            e.preventDefault();
+          } else {
+            var result = editor.fire('tap');
+            if (result.isDefaultPrevented()) {
+              e.preventDefault();
+            }
+          }
+        });
+      }, true);
+    };
+    var TouchEvents = { setup: setup$2 };
 
     var formChangeEvent = generate$1('form-component-change');
     var formCloseEvent = generate$1('form-close');
@@ -17575,6 +17656,9 @@
     var getFetch$1 = function (items, getButton, backstage) {
       var getMenuItemAction = function (item) {
         return function (api) {
+          var newValue = !api.isActive();
+          api.setActive(newValue);
+          item.storage.set(newValue);
           backstage.shared.getSink().each(function (sink) {
             getButton().getOpt(sink).each(function (orig) {
               focus$1(orig.element());
@@ -17584,9 +17668,6 @@
               });
             });
           });
-          var newValue = !api.isActive();
-          api.setActive(newValue);
-          item.storage.set(newValue);
         };
       };
       var getMenuItemSetup = function (item) {
@@ -19733,7 +19814,7 @@
         init: init$6
     });
 
-    var setup$2 = function (streamInfo, streamState) {
+    var setup$3 = function (streamInfo, streamState) {
       var sInfo = streamInfo.stream;
       var throttler = last$2(streamInfo.onStream, sInfo.delay);
       streamState.setTimer(throttler);
@@ -19750,7 +19831,7 @@
           strict$1('delay'),
           defaulted$1('stopEvent', true),
           output('streams', {
-            setup: setup$2,
+            setup: setup$3,
             state: throttle
           })
         ]
@@ -20632,7 +20713,7 @@
       var runOnItem = function (f) {
         return function (comp, se) {
           closest$3(se.event().target(), '[data-collection-item-value]').each(function (target) {
-            f(comp, target, get$2(target, 'data-collection-item-value'));
+            f(comp, se, target, get$2(target, 'data-collection-item-value'));
           });
         };
       };
@@ -20664,27 +20745,28 @@
         set(comp.element(), html.join(''));
       };
       var collectionEvents = [
-        run(mouseover(), runOnItem(function (comp, tgt) {
+        run(mouseover(), runOnItem(function (comp, se, tgt) {
           focus$1(tgt);
         })),
-        run(tapOrClick(), runOnItem(function (comp, tgt, itemValue) {
+        run(tapOrClick(), runOnItem(function (comp, se, tgt, itemValue) {
+          se.stop();
           emitWith(comp, formActionEvent, {
             name: spec.name,
             value: itemValue
           });
         })),
-        run(focusin(), runOnItem(function (comp, tgt, itemValue) {
+        run(focusin(), runOnItem(function (comp, se, tgt) {
           descendant$1(comp.element(), '.' + activeClass).each(function (currentActive) {
             remove$4(currentActive, activeClass);
           });
           add$2(tgt, activeClass);
         })),
-        run(focusout(), runOnItem(function (comp, tgt, itemValue) {
+        run(focusout(), runOnItem(function (comp) {
           descendant$1(comp.element(), '.' + activeClass).each(function (currentActive) {
             remove$4(currentActive, activeClass);
           });
         })),
-        runOnExecute(runOnItem(function (comp, tgt, itemValue) {
+        runOnExecute(runOnItem(function (comp, se, tgt, itemValue) {
           emitWith(comp, formActionEvent, {
             name: spec.name,
             value: itemValue
@@ -22436,6 +22518,8 @@
       }
     });
 
+    var toolbarHeightChange = constant(generate$1('toolbar-height-change'));
+
     var ReadOnlyChannel = 'silver.readonly';
     var ReadOnlyDataSchema = objOf([strictBoolean('readonly')]);
     var setDisabledAll = function (element, state) {
@@ -22494,8 +22578,6 @@
         }, _a)
       });
     };
-
-    var toolbarHeightChange = constant(generate$1('toolbar-height-change'));
 
     var renderToolbarGroupCommon = function (toolbarGroup) {
       var attributes = toolbarGroup.title.fold(function () {
@@ -22633,7 +22715,7 @@
         uid: toolbarSpec.uid,
         dom: {
           tag: 'div',
-          classes: ['tox-toolbar']
+          classes: ['tox-toolbar'].concat(toolbarSpec.type === ToolbarDrawer.scrolling ? ['tox-toolbar--scrolling'] : [])
         },
         components: [Toolbar.parts().groups({})],
         toolbarBehaviours: getToolbarbehaviours(toolbarSpec, modeName, constant(Option.none()))
@@ -23368,7 +23450,7 @@
       };
     };
 
-    var renderContextForm = function (ctx, backstage) {
+    var renderContextForm = function (toolbarType, ctx, backstage) {
       var inputAttributes = ctx.label.fold(function () {
         return {};
       }, function (label) {
@@ -23402,6 +23484,7 @@
       }));
       var commands = generate$7(memInput, ctx.commands, backstage.shared.providers);
       return renderToolbar({
+        type: toolbarType,
         uid: generate$1('context-toolbar'),
         initGroups: [
           {
@@ -24686,6 +24769,7 @@
       });
       var buildToolbar = function (ctx) {
         var buttons = editor.ui.registry.getAll().buttons;
+        var toolbarType = getToolbarDrawer(editor) === ToolbarDrawer.scrolling ? ToolbarDrawer.scrolling : ToolbarDrawer.default;
         var scopes = getScopes();
         return ctx.type === 'contexttoolbar' ? function () {
           var allButtons = merge(buttons, scopes.formNavigators);
@@ -24694,6 +24778,7 @@
             toolbar: ctx.items
           }, extras, Option.some(['form:']));
           return renderToolbar({
+            type: toolbarType,
             uid: generate$1('context-toolbar'),
             initGroups: initGroups,
             onEscape: Option.none,
@@ -24704,7 +24789,7 @@
             }
           });
         }() : function () {
-          return ContextForm.renderContextForm(ctx, extras.backstage);
+          return ContextForm.renderContextForm(toolbarType, ctx, extras.backstage);
         }();
       };
       editor.on(showContextToolbarEvent, function (e) {
@@ -24787,105 +24872,68 @@
     };
     var ContextToolbar = { register: register$4 };
 
-    var setup$3 = function (editor, mothership, uiMothership) {
-      var onMousedown = bind$3(Element.fromDom(domGlobals.document), 'mousedown', function (evt) {
+    var setup$4 = function (editor, mothership, uiMothership) {
+      var broadcastEvent = function (name, evt) {
         each([
           mothership,
           uiMothership
         ], function (ship) {
-          ship.broadcastOn([dismissPopups()], { target: evt.target() });
+          ship.broadcastEvent(name, evt);
         });
-      });
-      var onTouchstart = bind$3(Element.fromDom(domGlobals.document), 'touchstart', function (evt) {
+      };
+      var broadcastOn = function (channel, message) {
         each([
           mothership,
           uiMothership
         ], function (ship) {
-          ship.broadcastOn([dismissPopups()], { target: evt.target() });
+          ship.broadcastOn([channel], message);
         });
-      });
+      };
+      var fireDismissPopups = function (evt) {
+        return broadcastOn(dismissPopups(), { target: evt.target() });
+      };
+      var onTouchstart = bind$3(Element.fromDom(domGlobals.document), 'touchstart', fireDismissPopups);
       var onTouchmove = bind$3(Element.fromDom(domGlobals.document), 'touchmove', function (evt) {
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastEvent(documentTouchmove(), evt);
-        });
+        return broadcastEvent(documentTouchmove(), evt);
       });
       var onTouchend = bind$3(Element.fromDom(domGlobals.document), 'touchend', function (evt) {
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastEvent(documentTouchend(), evt);
-        });
+        return broadcastEvent(documentTouchend(), evt);
       });
+      var onMousedown = bind$3(Element.fromDom(domGlobals.document), 'mousedown', fireDismissPopups);
       var onMouseup = bind$3(Element.fromDom(domGlobals.document), 'mouseup', function (evt) {
         if (evt.raw().button === 0) {
-          each([
-            mothership,
-            uiMothership
-          ], function (ship) {
-            ship.broadcastOn([mouseReleased()], { target: evt.target() });
-          });
+          broadcastOn(mouseReleased(), { target: evt.target() });
         }
       });
-      var onContentMousedown = function (raw) {
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastOn([dismissPopups()], { target: Element.fromDom(raw.target) });
-        });
+      var onContentClick = function (raw) {
+        return broadcastOn(dismissPopups(), { target: Element.fromDom(raw.target) });
       };
       var onContentMouseup = function (raw) {
         if (raw.button === 0) {
-          each([
-            mothership,
-            uiMothership
-          ], function (ship) {
-            ship.broadcastOn([mouseReleased()], { target: Element.fromDom(raw.target) });
-          });
+          broadcastOn(mouseReleased(), { target: Element.fromDom(raw.target) });
         }
       };
       var onWindowScroll = function (evt) {
-        var sugarEvent = fromRawEvent$1(evt);
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastEvent(windowScroll(), sugarEvent);
-        });
+        return broadcastEvent(windowScroll(), fromRawEvent$1(evt));
       };
       var onWindowResize = function (evt) {
-        var sugarEvent = fromRawEvent$1(evt);
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastOn([repositionPopups()], {});
-          ship.broadcastEvent(windowResize(), sugarEvent);
-        });
+        broadcastOn(repositionPopups(), {});
+        broadcastEvent(windowResize(), fromRawEvent$1(evt));
       };
       var onEditorResize = function () {
-        each([
-          mothership,
-          uiMothership
-        ], function (ship) {
-          ship.broadcastOn([repositionPopups()], {});
-        });
+        return broadcastOn(repositionPopups(), {});
       };
       editor.on('PostRender', function () {
-        editor.on('mousedown', onContentMousedown);
-        editor.on('touchstart', onContentMousedown);
+        editor.on('click', onContentClick);
+        editor.on('tap', onContentClick);
         editor.on('mouseup', onContentMouseup);
         editor.on('ScrollWindow', onWindowScroll);
         editor.on('ResizeWindow', onWindowResize);
         editor.on('ResizeEditor', onEditorResize);
       });
       editor.on('remove', function () {
-        editor.off('mousedown', onContentMousedown);
-        editor.off('touchstart', onContentMousedown);
+        editor.off('click', onContentClick);
+        editor.off('tap', onContentClick);
         editor.off('mouseup', onContentMouseup);
         editor.off('ScrollWindow', onWindowScroll);
         editor.off('ResizeWindow', onWindowResize);
@@ -24903,7 +24951,10 @@
         uiMothership.destroy();
       });
     };
-    var Events$1 = { setup: setup$3 };
+    var Events$1 = { setup: setup$4 };
+
+    var parts$c = AlloyParts;
+    var partType$1 = PartType;
 
     var schema$q = constant([
       defaulted$1('shell', false),
@@ -24918,7 +24969,7 @@
       name: 'items',
       overrides: customListDetail
     });
-    var parts$c = constant([itemsPart]);
+    var parts$d = constant([itemsPart]);
     var name$2 = constant('CustomList');
 
     var factory$e = function (detail, components, spec, external) {
@@ -24967,7 +25018,7 @@
     var CustomList = composite$1({
       name: name$2(),
       configFields: schema$q(),
-      partFields: parts$c(),
+      partFields: parts$d(),
       factory: factory$e,
       apis: {
         setItems: function (apis, list, items) {
@@ -24975,9 +25026,6 @@
         }
       }
     });
-
-    var parts$d = AlloyParts;
-    var partType$1 = PartType;
 
     var getOrigin = function (element) {
       var isFixed = getRaw(element, 'position').is('fixed');
@@ -25189,9 +25237,10 @@
         return revertToOriginal(elem, dockInfo, box);
       });
     };
-    var morphToFixed = function (elem, dockInfo, viewport, scroll, origin) {
+    var morphToFixed = function (elem, dockInfo, viewport, scroll, lazyOrigin) {
       var box$1 = box(elem);
       if (!isVisibleForModes(dockInfo.modes, box$1, viewport)) {
+        var origin = lazyOrigin();
         var position = get$4(elem, 'position');
         setPrior(elem, dockInfo, box$1.x(), box$1.y(), position);
         var coord = absolute$3(box$1.x(), box$1.y());
@@ -25204,10 +25253,10 @@
         return Option.none();
       }
     };
-    var getMorph = function (component, dockInfo, viewport, scroll, origin) {
+    var getMorph = function (component, dockInfo, viewport, scroll, lazyOrigin) {
       var elem = component.element();
       var isDocked = getRaw(elem, 'position').is('fixed');
-      return isDocked ? morphToOriginal(elem, dockInfo, viewport) : morphToFixed(elem, dockInfo, viewport, scroll, origin);
+      return isDocked ? morphToOriginal(elem, dockInfo, viewport) : morphToFixed(elem, dockInfo, viewport, scroll, lazyOrigin);
     };
     var getMorphToOriginal = function (component, dockInfo) {
       var elem = component.element();
@@ -25257,20 +25306,22 @@
       var elem = component.element();
       var doc = owner(elem);
       var scroll = get$8(doc);
-      var origin = getOrigin(elem);
+      var lazyOrigin = cached(function () {
+        return getOrigin(elem);
+      });
       var isDocked = state.isDocked();
       if (isDocked) {
         updateVisibility(component, config, state, viewport);
       }
-      getMorph(component, config, viewport, scroll, origin).each(function (morph) {
+      getMorph(component, config, viewport, scroll, lazyOrigin).each(function (morph) {
         state.setDocked(!isDocked);
         morph.fold(function () {
           return morphToStatic(component, config);
         }, function (x, y) {
-          return morphToCoord(component, config, scroll, origin, absolute$3(x, y));
+          return morphToCoord(component, config, scroll, lazyOrigin(), absolute$3(x, y));
         }, function (x, y) {
           updateVisibility(component, config, state, viewport, true);
-          morphToCoord(component, config, scroll, origin, fixed$1(x, y));
+          morphToCoord(component, config, scroll, lazyOrigin(), fixed$1(x, y));
         });
       });
     };
@@ -25411,7 +25462,7 @@
     };
     var editorStickyOnClass = 'tox-tinymce--toolbar-sticky-on';
     var editorStickyOffClass = 'tox-tinymce--toolbar-sticky-off';
-    var updateContentFlow = function (header) {
+    var updateIframeContentFlow = function (header) {
       var elm = header.element();
       parent(elm).each(function (parentElem) {
         if (Docking.isDocked(header)) {
@@ -25467,13 +25518,16 @@
         });
       });
     };
-    var setup$4 = function (editor, lazyHeader) {
+    var setup$5 = function (editor, lazyHeader) {
       if (!editor.inline) {
         editor.on('ResizeWindow ResizeEditor ResizeContent', function () {
-          lazyHeader().each(updateContentFlow);
+          lazyHeader().each(updateIframeContentFlow);
         });
         editor.on('SkinLoaded', function () {
           lazyHeader().each(Docking.reset);
+        });
+        editor.on('FullscreenStateChanged', function () {
+          lazyHeader().each(Docking.refresh);
         });
       }
       editor.on('PostRender', function () {
@@ -25483,8 +25537,11 @@
     var isDocked$1 = function (lazyHeader) {
       return lazyHeader().map(Docking.isDocked).getOr(false);
     };
-    var getBehaviours$2 = function (editor, lazySink) {
+    var getIframeBehaviours = function () {
       var _a;
+      return [Receiving.config({ channels: (_a = {}, _a[toolbarHeightChange()] = { onReceive: updateIframeContentFlow }, _a) })];
+    };
+    var getBehaviours$2 = function (editor, lazySink) {
       var focusedElm = Cell(Option.none());
       var runOnSinkElement = function (f) {
         lazySink().each(function (sink) {
@@ -25493,7 +25550,7 @@
       };
       var onDockingSwitch = function (comp) {
         if (!editor.inline) {
-          updateContentFlow(comp);
+          updateIframeContentFlow(comp);
         }
         updateEditorClasses(editor, Docking.isDocked(comp));
         comp.getSystem().broadcastOn([repositionPopups()], {});
@@ -25501,7 +25558,9 @@
           return sink.getSystem().broadcastOn([repositionPopups()], {});
         });
       };
-      return [
+      var additionalBehaviours = editor.inline ? [] : getIframeBehaviours();
+      return __spreadArrays([
+        Focusing.config({}),
         Docking.config({
           leftAttr: 'data-dock-left',
           topAttr: 'data-dock-top',
@@ -25546,30 +25605,22 @@
           modes: ['top'],
           onDocked: onDockingSwitch,
           onUndocked: onDockingSwitch
-        }),
-        Focusing.config({}),
-        Receiving.config({
-          channels: (_a = {}, _a[toolbarHeightChange()] = {
-            onReceive: function (comp) {
-              updateContentFlow(comp);
-            }
-          }, _a)
         })
-      ];
+      ], additionalBehaviours);
     };
 
     var StickyHeader = /*#__PURE__*/Object.freeze({
-        setup: setup$4,
+        setup: setup$5,
         isDocked: isDocked$1,
         getBehaviours: getBehaviours$2
     });
 
-    var setup$5 = noop;
+    var setup$6 = noop;
     var isDocked$2 = never;
     var getBehaviours$3 = constant([]);
 
     var StaticHeader = /*#__PURE__*/Object.freeze({
-        setup: setup$5,
+        setup: setup$6,
         isDocked: isDocked$2,
         getBehaviours: getBehaviours$3
     });
@@ -25816,7 +25867,7 @@
       return asRaw('sidebar', sidebarSchema, spec);
     };
 
-    var setup$6 = function (editor) {
+    var setup$7 = function (editor) {
       var sidebars = editor.ui.registry.getAll().sidebars;
       each(keys(sidebars), function (name) {
         var spec = sidebars[name];
@@ -26051,7 +26102,7 @@
         components: []
       };
     };
-    var setup$7 = function (editor, lazyThrobber, sharedBackstage) {
+    var setup$8 = function (editor, lazyThrobber, sharedBackstage) {
       var throbberState = Cell(false);
       var timer = Cell(Option.none());
       var toggle = function (state) {
@@ -26077,67 +26128,67 @@
     var factory$g = function (detail, components, spec) {
       var apis = {
         getSocket: function (comp) {
-          return parts$d.getPart(comp, detail, 'socket');
+          return parts$c.getPart(comp, detail, 'socket');
         },
         setSidebar: function (comp, panelConfigs) {
-          parts$d.getPart(comp, detail, 'sidebar').each(function (sidebar) {
+          parts$c.getPart(comp, detail, 'sidebar').each(function (sidebar) {
             return setSidebar(sidebar, panelConfigs);
           });
         },
         toggleSidebar: function (comp, name) {
-          parts$d.getPart(comp, detail, 'sidebar').each(function (sidebar) {
+          parts$c.getPart(comp, detail, 'sidebar').each(function (sidebar) {
             return toggleSidebar(sidebar, name);
           });
         },
         whichSidebar: function (comp) {
-          return parts$d.getPart(comp, detail, 'sidebar').bind(whichSidebar).getOrNull();
+          return parts$c.getPart(comp, detail, 'sidebar').bind(whichSidebar).getOrNull();
         },
         getHeader: function (comp) {
-          return parts$d.getPart(comp, detail, 'header');
+          return parts$c.getPart(comp, detail, 'header');
         },
         getToolbar: function (comp) {
-          return parts$d.getPart(comp, detail, 'toolbar');
+          return parts$c.getPart(comp, detail, 'toolbar');
         },
         setToolbar: function (comp, groups) {
-          parts$d.getPart(comp, detail, 'toolbar').each(function (toolbar) {
+          parts$c.getPart(comp, detail, 'toolbar').each(function (toolbar) {
             toolbar.getApis().setGroups(toolbar, groups);
           });
         },
         setToolbars: function (comp, toolbars) {
-          parts$d.getPart(comp, detail, 'multiple-toolbar').each(function (mToolbar) {
+          parts$c.getPart(comp, detail, 'multiple-toolbar').each(function (mToolbar) {
             CustomList.setItems(mToolbar, toolbars);
           });
         },
         refreshToolbar: function (comp) {
-          var toolbar = parts$d.getPart(comp, detail, 'toolbar');
+          var toolbar = parts$c.getPart(comp, detail, 'toolbar');
           toolbar.each(function (toolbar) {
             return toolbar.getApis().refresh(toolbar);
           });
         },
         getMoreButton: function (comp) {
-          var toolbar = parts$d.getPart(comp, detail, 'toolbar');
+          var toolbar = parts$c.getPart(comp, detail, 'toolbar');
           return toolbar.bind(function (toolbar) {
             return toolbar.getApis().getMoreButton(toolbar);
           });
         },
         getThrobber: function (comp) {
-          return parts$d.getPart(comp, detail, 'throbber');
+          return parts$c.getPart(comp, detail, 'throbber');
         },
         focusToolbar: function (comp) {
-          var optToolbar = parts$d.getPart(comp, detail, 'toolbar').orThunk(function () {
-            return parts$d.getPart(comp, detail, 'multiple-toolbar');
+          var optToolbar = parts$c.getPart(comp, detail, 'toolbar').orThunk(function () {
+            return parts$c.getPart(comp, detail, 'multiple-toolbar');
           });
           optToolbar.each(function (toolbar) {
             Keying.focusIn(toolbar);
           });
         },
         setMenubar: function (comp, menus) {
-          parts$d.getPart(comp, detail, 'menubar').each(function (menubar) {
+          parts$c.getPart(comp, detail, 'menubar').each(function (menubar) {
             SilverMenubar.setMenus(menubar, menus);
           });
         },
         focusMenubar: function (comp) {
-          parts$d.getPart(comp, detail, 'menubar').each(function (menubar) {
+          parts$c.getPart(comp, detail, 'menubar').each(function (menubar) {
             SilverMenubar.focus(menubar);
           });
         }
@@ -26176,6 +26227,7 @@
               })]),
             makeItem: function () {
               return renderToolbar({
+                type: spec.split,
                 uid: generate$1('multiple-toolbar-item'),
                 backstage: spec.backstage,
                 cyclicKeying: false,
@@ -26204,6 +26256,7 @@
         sketch: function (spec) {
           var renderer = toolbarFactory(spec);
           var toolbarSpec = {
+            type: spec.split,
             uid: spec.uid,
             onEscape: function () {
               spec.onEscape();
@@ -26344,7 +26397,7 @@
       },
       table: {
         title: 'Table',
-        items: 'inserttable tableprops deletetable row column cell'
+        items: 'inserttable | cell row column | advtablesort | tableprops deletetable'
       },
       help: {
         title: 'Help',
@@ -26535,12 +26588,63 @@
     };
     var Iframe = { render: render };
 
+    var parseToInt = function (val) {
+      var re = /^[0-9\.]+(|px)$/i;
+      if (re.test('' + val)) {
+        return Option.some(parseInt('' + val, 10));
+      }
+      return Option.none();
+    };
+    var numToPx = function (val) {
+      return isNumber(val) ? val + 'px' : val;
+    };
+    var calcCappedSize = function (size, minSize, maxSize) {
+      var minOverride = minSize.filter(function (min) {
+        return size < min;
+      });
+      var maxOverride = maxSize.filter(function (max) {
+        return size > max;
+      });
+      return minOverride.or(maxOverride).getOr(size);
+    };
+    var Utils = {
+      calcCappedSize: calcCappedSize,
+      parseToInt: parseToInt,
+      numToPx: numToPx
+    };
+
+    var getHeight$1 = function (editor) {
+      var baseHeight = getHeightSetting(editor);
+      var minHeight = getMinHeightSetting(editor);
+      var maxHeight = getMaxHeightSetting(editor);
+      return Utils.parseToInt(baseHeight).map(function (height) {
+        return Utils.calcCappedSize(height, minHeight, maxHeight);
+      });
+    };
+    var getHeightWithFallback = function (editor) {
+      var height = getHeight$1(editor);
+      return height.getOr(getHeightSetting(editor));
+    };
+    var getWidth$1 = function (editor) {
+      var baseWidth = getWidthSetting(editor);
+      var minWidth = getMinWidthSetting(editor);
+      var maxWidth = getMaxWidthSetting(editor);
+      return Utils.parseToInt(baseWidth).map(function (width) {
+        return Utils.calcCappedSize(width, minWidth, maxWidth);
+      });
+    };
+    var getWidthWithFallback = function (editor) {
+      var width = getWidth$1(editor);
+      return width.getOr(getWidthSetting(editor));
+    };
+
     var render$1 = function (editor, uiComponents, rawUiConfig, backstage, args) {
       var floatContainer;
       var DOM = global$7.DOM;
       var useFixedToolbarContainer = useFixedContainer(editor);
       var isSticky = isStickyToolbar(editor);
       var targetElm = Element.fromDom(args.targetNode);
+      var editorMaxWidthOpt = getMaxWidthSetting(editor).or(getWidth$1(editor));
       var splitSetting = getToolbarDrawer(editor);
       var split = splitSetting === ToolbarDrawer.sliding || splitSetting === ToolbarDrawer.floating;
       inline(editor);
@@ -26557,6 +26661,11 @@
           top: Math.round(top) + 'px',
           left: Math.round(location.left()) + 'px'
         });
+        var maxWidth = editorMaxWidthOpt.getOrThunk(function () {
+          var bodyMargin = Utils.parseToInt(get$4(body(), 'margin-left')).getOr(0);
+          return get$7(body()) - location.left() + bodyMargin;
+        });
+        set$2(floatContainer.element(), 'max-width', maxWidth + 'px');
       };
       var updateChromeUi = function (resetDocking) {
         if (resetDocking === void 0) {
@@ -27061,7 +27170,7 @@
     };
     var ComplexControls = { register: register$a };
 
-    var setup$8 = function (editor, backstage) {
+    var setup$9 = function (editor, backstage) {
       AlignmentButtons.register(editor);
       SimpleControls.register(editor);
       ComplexControls.register(editor, backstage);
@@ -27070,7 +27179,7 @@
       VisualAid.register(editor);
       IndentOutdent.register(editor);
     };
-    var FormatControls = { setup: setup$8 };
+    var FormatControls = { setup: setup$9 };
 
     var nu$d = function (x, y) {
       return {
@@ -27381,7 +27490,7 @@
     var isNativeOverrideKeyEvent = function (editor, e) {
       return e.ctrlKey && !Settings$1.shouldNeverUseNative(editor);
     };
-    var setup$9 = function (editor, lazySink, backstage) {
+    var setup$a = function (editor, lazySink, backstage) {
       var detection = detect$3();
       var isTouch = detection.deviceType.isTouch;
       var contextmenu = build$1(InlineView.sketch({
@@ -27424,25 +27533,10 @@
         initAndShow$2(editor, e, buildMenu, backstage, contextmenu, isTriggeredByKeyboardEvent);
       };
       editor.on('init', function () {
-        var hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : 'ResizeWindow');
+        var hideEvents = 'ResizeEditor ScrollContent ScrollWindow longpresscancel' + (isTouch() ? '' : ' ResizeWindow');
         editor.on(hideEvents, hideContextMenu);
         editor.on(isTouch() ? 'longpress' : 'longpress contextmenu', showContextMenu);
       });
-    };
-
-    var parseToInt = function (val) {
-      var re = /^[0-9\.]+(|px)$/i;
-      if (re.test('' + val)) {
-        return Option.some(parseInt(val, 10));
-      }
-      return Option.none();
-    };
-    var numToPx = function (val) {
-      return isNumber(val) ? val + 'px' : val;
-    };
-    var Utils = {
-      parseToInt: parseToInt,
-      numToPx: numToPx
     };
 
     var initialAttribute = 'data-initial-z-index';
@@ -27472,6 +27566,22 @@
     var discard = function (blocker) {
       resetZIndex(blocker);
       blocker.getSystem().removeFromGui(blocker);
+    };
+    var createComponent = function (component, blockerClass, blockerEvents) {
+      return component.getSystem().build(Container.sketch({
+        dom: {
+          styles: {
+            'left': '0px',
+            'top': '0px',
+            'width': '100%',
+            'height': '100%',
+            'position': 'fixed',
+            'z-index': '1000000000000000'
+          },
+          classes: [blockerClass]
+        },
+        events: blockerEvents
+      }));
     };
 
     var get$d = function (component, snapsInfo) {
@@ -27576,27 +27686,14 @@
     };
 
     var getCurrentCoord = function (target) {
-      return getRaw(target, 'left').bind(function (left) {
-        return getRaw(target, 'top').bind(function (top) {
-          return getRaw(target, 'position').map(function (position) {
-            var nu = position === 'fixed' ? fixed$1 : offset;
-            return nu(parseInt(left, 10), parseInt(top, 10));
-          });
-        });
+      return lift3(getRaw(target, 'left'), getRaw(target, 'top'), getRaw(target, 'position'), function (left, top, position) {
+        var nu = position === 'fixed' ? fixed$1 : offset;
+        return nu(parseInt(left, 10), parseInt(top, 10));
       }).getOrThunk(function () {
         var location = absolute(target);
         return absolute$3(location.left(), location.top());
       });
     };
-    var calcStartData = function (dragConfig, comp) {
-      return {
-        bounds: dragConfig.getBounds(),
-        height: getOuter$1(comp.element()),
-        width: getOuter$2(comp.element()),
-        comp: comp
-      };
-    };
-
     var clampCoords = function (component, coords, scroll, origin, startData) {
       var bounds = startData.bounds;
       var absoluteCoord = asAbsolute(coords, scroll, origin);
@@ -27641,6 +27738,32 @@
       dragConfig.onDrag(component, target, delta);
     };
 
+    var calcStartData = function (dragConfig, comp) {
+      return {
+        bounds: dragConfig.getBounds(),
+        height: getOuter$1(comp.element()),
+        width: getOuter$2(comp.element())
+      };
+    };
+    var move$1 = function (component, dragConfig, dragState, dragMode, event) {
+      var delta = dragState.update(dragMode, event);
+      var dragStartData = dragState.getStartData().getOrThunk(function () {
+        return calcStartData(dragConfig, component);
+      });
+      delta.each(function (dlt) {
+        dragBy(component, dragConfig, dragStartData, dlt);
+      });
+    };
+    var stop = function (component, blocker, dragConfig, dragState) {
+      blocker.each(discard);
+      dragConfig.snaps.each(function (snapInfo) {
+        stopDrag(component, snapInfo);
+      });
+      var target = dragConfig.getTarget(component.element());
+      dragState.reset();
+      dragConfig.onDrop(component, target);
+    };
+
     var SnapSchema = optionObjOf('snaps', [
       strict$1('getSnapPoints'),
       onHandler('onSensor'),
@@ -27678,58 +27801,31 @@
         dragState.setStartData(calcStartData(dragConfig, comp));
       };
       return derive([
-        run(windowScroll(), updateStartState),
+        run(windowScroll(), function (comp) {
+          dragState.getStartData().each(function () {
+            return updateStartState(comp);
+          });
+        }),
         run(mousedown(), function (component, simulatedEvent) {
           var raw = simulatedEvent.event().raw();
           if (raw.button !== 0) {
             return;
           }
           simulatedEvent.stop();
+          var stop$1 = function () {
+            return stop(component, Option.some(blocker), dragConfig, dragState);
+          };
+          var delayDrop = DelayedFunction(stop$1, 200);
           var dragApi = {
-            drop: function () {
-              stop();
-            },
-            delayDrop: function () {
-              delayDrop.schedule();
-            },
-            forceDrop: function () {
-              stop();
-            },
+            drop: stop$1,
+            delayDrop: delayDrop.schedule,
+            forceDrop: stop$1,
             move: function (event) {
               delayDrop.cancel();
-              var delta = dragState.update(MouseData, event);
-              var dragStartData = dragState.getStartData().getOrThunk(function () {
-                return calcStartData(dragConfig, component);
-              });
-              delta.each(function (dlt) {
-                dragBy(component, dragConfig, dragStartData, dlt);
-              });
+              move$1(component, dragConfig, dragState, MouseData, event);
             }
           };
-          var blocker = component.getSystem().build(Container.sketch({
-            dom: {
-              styles: {
-                'left': '0px',
-                'top': '0px',
-                'width': '100%',
-                'height': '100%',
-                'position': 'fixed',
-                'z-index': '1000000000000000'
-              },
-              classes: [dragConfig.blockerClass]
-            },
-            events: init$c(dragApi)
-          }));
-          var stop = function () {
-            discard(blocker);
-            dragConfig.snaps.each(function (snapInfo) {
-              stopDrag(component, snapInfo);
-            });
-            var target = dragConfig.getTarget(component.element());
-            dragState.reset();
-            dragConfig.onDrop(component, target);
-          };
-          var delayDrop = DelayedFunction(stop, 200);
+          var blocker = createComponent(component, dragConfig.blockerClass, init$c(dragApi));
           var start = function () {
             updateStartState(component);
             instigate(component, blocker);
@@ -27750,6 +27846,17 @@
       output('dragger', { handlers: handlers })
     ];
 
+    var init$d = function (dragApi) {
+      return derive([
+        run(touchstart(), dragApi.forceDrop),
+        run(touchend(), dragApi.drop),
+        run(touchcancel(), dragApi.drop),
+        run(touchmove(), function (comp, simulatedEvent) {
+          dragApi.move(simulatedEvent.event());
+        })
+      ]);
+    };
+
     var getDataFrom = function (touches) {
       var touch = touches[0];
       return Option.some(Position(touch.clientX, touch.clientY));
@@ -27769,45 +27876,56 @@
     });
 
     var handlers$1 = function (dragConfig, dragState) {
+      var blockerCell = Cell(Option.none());
       var updateStartState = function (comp) {
         dragState.setStartData(calcStartData(dragConfig, comp));
       };
       return derive([
-        run(windowScroll(), updateStartState),
+        run(windowScroll(), function (comp) {
+          dragState.getStartData().each(function () {
+            return updateStartState(comp);
+          });
+        }),
         run(touchstart(), function (component, simulatedEvent) {
-          updateStartState(component);
           simulatedEvent.stop();
-        }),
-        run(documentTouchmove(), function (component, simulatedEvent) {
-          dragState.getStartData().each(function (startData) {
-            if (eq(startData.comp.element(), component.element())) {
-              simulatedEvent.stop();
-              var delta = dragState.update(TouchData, simulatedEvent.event());
-              var dragStartData_1 = dragState.getStartData().getOrThunk(function () {
-                return calcStartData(dragConfig, component);
-              });
-              delta.each(function (dlt) {
-                dragBy(component, dragConfig, dragStartData_1, dlt);
-              });
+          var stop$1 = function () {
+            stop(component, blockerCell.get(), dragConfig, dragState);
+            blockerCell.set(Option.none());
+          };
+          var dragApi = {
+            drop: stop$1,
+            delayDrop: function () {
+            },
+            forceDrop: stop$1,
+            move: function (event) {
+              move$1(component, dragConfig, dragState, TouchData, event);
             }
-          });
+          };
+          var blocker = createComponent(component, dragConfig.blockerClass, init$d(dragApi));
+          blockerCell.set(Option.some(blocker));
+          var start = function () {
+            updateStartState(component);
+            instigate(component, blocker);
+          };
+          start();
         }),
-        run(documentTouchend(), function (component, simulatedEvent) {
-          dragState.getStartData().each(function (startData) {
-            if (eq(startData.comp.element(), component.element())) {
-              dragConfig.snaps.each(function (snapInfo) {
-                stopDrag(component, snapInfo);
-              });
-              var target = dragConfig.getTarget(component.element());
-              dragState.reset();
-              dragConfig.onDrop(component, target);
-            }
-          });
+        run(touchmove(), function (component, simulatedEvent) {
+          simulatedEvent.stop();
+          move$1(component, dragConfig, dragState, TouchData, simulatedEvent.event());
+        }),
+        run(touchend(), function (component) {
+          stop(component, blockerCell.get(), dragConfig, dragState);
+          blockerCell.set(Option.none());
+        }),
+        run(touchcancel(), function (component) {
+          stop(component, blockerCell.get(), dragConfig, dragState);
+          blockerCell.set(Option.none());
         })
       ]);
     };
     var schema$t = [
       defaulted$1('useFixed', never),
+      strict$1('blockerClass'),
       defaulted$1('getTarget', identity),
       defaulted$1('onDrag', noop),
       defaulted$1('repositionTarget', true),
@@ -27825,7 +27943,7 @@
         touch: touch
     });
 
-    var init$d = function () {
+    var init$e = function () {
       var previous = Option.none();
       var startData = Option.none();
       var reset = function () {
@@ -27861,7 +27979,7 @@
     };
 
     var DragState = /*#__PURE__*/Object.freeze({
-        init: init$d
+        init: init$e
     });
 
     var snapTo$1 = function (component, dragConfig, _state, snap) {
@@ -27901,27 +28019,198 @@
       apis: DraggingApis
     });
 
+    var platform$2 = detect$3();
+    var snapWidth = 40;
+    var snapOffset = snapWidth / 2;
+    var calcSnap = function (selectorOpt, td, x, y, width, height) {
+      return selectorOpt.fold(function () {
+        return Dragging.snap({
+          sensor: absolute$3(x - snapOffset, y - snapOffset),
+          range: Position(width, height),
+          output: absolute$3(Option.some(x), Option.some(y)),
+          extra: { td: td }
+        });
+      }, function (selectorHandle) {
+        var sensorLeft = x - snapOffset;
+        var sensorTop = y - snapOffset;
+        var sensorWidth = snapWidth;
+        var sensorHeight = snapWidth;
+        var rect = selectorHandle.element().dom().getBoundingClientRect();
+        return Dragging.snap({
+          sensor: absolute$3(sensorLeft, sensorTop),
+          range: Position(sensorWidth, sensorHeight),
+          output: absolute$3(Option.some(x - rect.width / 2), Option.some(y - rect.height / 2)),
+          extra: { td: td }
+        });
+      });
+    };
+    var getSnapsConfig = function (getSnapPoints, cell, onChange) {
+      var isSameCell = function (cellOpt, td) {
+        return cellOpt.exists(function (currentTd) {
+          return eq(currentTd, td);
+        });
+      };
+      return {
+        getSnapPoints: getSnapPoints,
+        leftAttr: 'data-drag-left',
+        topAttr: 'data-drag-top',
+        onSensor: function (component, extra) {
+          var td = extra.td;
+          if (!isSameCell(cell.get(), td)) {
+            cell.set(Option.some(td));
+            onChange(td);
+          }
+        },
+        mustSnap: true
+      };
+    };
+    var createSelector = function (snaps) {
+      return record(Button.sketch({
+        dom: {
+          tag: 'div',
+          classes: ['tox-selector']
+        },
+        buttonBehaviours: derive$1([
+          Dragging.config({
+            mode: platform$2.deviceType.isTouch() ? 'touch' : 'mouse',
+            blockerClass: 'blocker',
+            snaps: snaps
+          }),
+          Unselecting.config({})
+        ]),
+        eventOrder: {
+          mousedown: [
+            'dragging',
+            'alloy.base.behaviour'
+          ],
+          touchstart: [
+            'dragging',
+            'alloy.base.behaviour'
+          ]
+        }
+      }));
+    };
+    var setup$b = function (editor, sink) {
+      var tlTds = Cell([]);
+      var brTds = Cell([]);
+      var isVisible = Cell(false);
+      var startCell = Cell(Option.none());
+      var finishCell = Cell(Option.none());
+      var getTopLeftSnap = function (td) {
+        var box = absolute$1(td);
+        return calcSnap(memTopLeft.getOpt(sink), td, box.x(), box.y(), box.width(), box.height());
+      };
+      var getTopLeftSnaps = function () {
+        return map(tlTds.get(), function (td) {
+          return getTopLeftSnap(td);
+        });
+      };
+      var getBottomRightSnap = function (td) {
+        var box = absolute$1(td);
+        return calcSnap(memBottomRight.getOpt(sink), td, box.right(), box.bottom(), box.width(), box.height());
+      };
+      var getBottomRightSnaps = function () {
+        return map(brTds.get(), function (td) {
+          return getBottomRightSnap(td);
+        });
+      };
+      var topLeftSnaps = getSnapsConfig(getTopLeftSnaps, startCell, function (start) {
+        finishCell.get().each(function (finish) {
+          editor.fire('TableSelectorChange', {
+            start: start,
+            finish: finish
+          });
+        });
+      });
+      var bottomRightSnaps = getSnapsConfig(getBottomRightSnaps, finishCell, function (finish) {
+        startCell.get().each(function (start) {
+          editor.fire('TableSelectorChange', {
+            start: start,
+            finish: finish
+          });
+        });
+      });
+      var memTopLeft = createSelector(topLeftSnaps);
+      var memBottomRight = createSelector(bottomRightSnaps);
+      var topLeft = build$1(memTopLeft.asSpec());
+      var bottomRight = build$1(memBottomRight.asSpec());
+      var showOrHideHandle = function (selector, cell, isAbove, isBelow) {
+        var cellRect = cell.dom().getBoundingClientRect();
+        remove$6(selector.element(), 'display');
+        var viewportHeight = defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
+        var aboveViewport = isAbove(cellRect);
+        var belowViewport = isBelow(cellRect, viewportHeight);
+        if (aboveViewport || belowViewport) {
+          set$2(selector.element(), 'display', 'none');
+        }
+      };
+      var snapTo = function (selector, cell, getSnapConfig, pos) {
+        var snap = getSnapConfig(cell);
+        Dragging.snapTo(selector, snap);
+        var isAbove = function (rect) {
+          return rect[pos] < 0;
+        };
+        var isBelow = function (rect, viewportHeight) {
+          return rect[pos] > viewportHeight;
+        };
+        showOrHideHandle(selector, cell, isAbove, isBelow);
+      };
+      var snapTopLeft = function (cell) {
+        return snapTo(topLeft, cell, getTopLeftSnap, 'top');
+      };
+      var snapLastTopLeft = function () {
+        return startCell.get().each(snapTopLeft);
+      };
+      var snapBottomRight = function (cell) {
+        return snapTo(bottomRight, cell, getBottomRightSnap, 'bottom');
+      };
+      var snapLastBottomRight = function () {
+        return finishCell.get().each(snapBottomRight);
+      };
+      if (platform$2.deviceType.isTouch()) {
+        editor.on('TableSelectionChange', function (e) {
+          if (!isVisible.get()) {
+            attach$1(sink, topLeft);
+            attach$1(sink, bottomRight);
+            isVisible.set(true);
+          }
+          startCell.set(Option.some(e.start));
+          finishCell.set(Option.some(e.finish));
+          e.otherCells.each(function (otherCells) {
+            tlTds.set(otherCells.upOrLeftCells);
+            brTds.set(otherCells.downOrRightCells);
+            snapTopLeft(e.start);
+            snapBottomRight(e.finish);
+          });
+        });
+        editor.on('resize ScrollContent', function () {
+          snapLastTopLeft();
+          snapLastBottomRight();
+        });
+        editor.on('TableSelectionClear', function () {
+          if (isVisible.get()) {
+            detach(topLeft);
+            detach(bottomRight);
+            isVisible.set(false);
+          }
+          startCell.set(Option.none());
+          finishCell.set(Option.none());
+        });
+      }
+    };
+    var TableSelectorHandles = { setup: setup$b };
+
     var ResizeTypes;
     (function (ResizeTypes) {
       ResizeTypes[ResizeTypes['None'] = 0] = 'None';
       ResizeTypes[ResizeTypes['Both'] = 1] = 'Both';
       ResizeTypes[ResizeTypes['Vertical'] = 2] = 'Vertical';
     }(ResizeTypes || (ResizeTypes = {})));
-    var calcCappedSize = function (originalSize, delta, minSize, maxSize) {
-      var newSize = originalSize + delta;
-      var minOverride = minSize.filter(function (min) {
-        return newSize < min;
-      });
-      var maxOverride = maxSize.filter(function (max) {
-        return newSize > max;
-      });
-      return minOverride.or(maxOverride).getOr(newSize);
-    };
     var getDimensions = function (editor, deltas, resizeType, originalHeight, originalWidth) {
       var dimensions = {};
-      dimensions.height = calcCappedSize(originalHeight, deltas.top(), getMinHeightSetting(editor), getMaxHeightSetting(editor));
+      dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top(), getMinHeightSetting(editor), getMaxHeightSetting(editor));
       if (resizeType === ResizeTypes.Both) {
-        dimensions.width = calcCappedSize(originalWidth, deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
+        dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left(), getMinWidthSetting(editor), getMaxWidthSetting(editor));
       }
       return dimensions;
     };
@@ -28180,275 +28469,7 @@
       };
     };
 
-    var platform$2 = detect$3();
-    var snapWidth = 40;
-    var snapOffset = snapWidth / 2;
-    var setup$a = function (editor, sink) {
-      var tlTds = Cell([]);
-      var brTds = Cell([]);
-      var getTopLeftSnap = function (td) {
-        var box = absolute$1(td);
-        return memTopLeft.getOpt(sink).fold(function () {
-          return Dragging.snap({
-            sensor: absolute$3(box.x() - snapOffset, box.y() - snapOffset),
-            range: Position(box.width(), box.height()),
-            output: absolute$3(Option.some(box.x()), Option.some(box.y())),
-            extra: { td: td }
-          });
-        }, function (selectorHandle) {
-          var sensorLeft = box.x() - snapOffset;
-          var sensorTop = box.y() - snapOffset;
-          var sensorWidth = snapWidth;
-          var sensorHeight = snapWidth;
-          var rect = selectorHandle.element().dom().getBoundingClientRect();
-          return Dragging.snap({
-            sensor: absolute$3(sensorLeft, sensorTop),
-            range: Position(sensorWidth, sensorHeight),
-            output: absolute$3(Option.some(box.x() - rect.width / 2), Option.some(box.y() - rect.height / 2)),
-            extra: { td: td }
-          });
-        });
-      };
-      var getTopLeftSnaps = function () {
-        return map(tlTds.get(), function (td) {
-          return getTopLeftSnap(td);
-        });
-      };
-      var getBottomRightSnap = function (td) {
-        var box = absolute$1(td);
-        return memBottomRight.getOpt(sink).fold(function () {
-          return Dragging.snap({
-            sensor: absolute$3(box.x() - snapOffset, box.y() - snapOffset),
-            range: Position(box.width(), box.height()),
-            output: absolute$3(Option.some(box.right()), Option.some(box.bottom())),
-            extra: { td: td }
-          });
-        }, function (selectorHandle) {
-          var sensorLeft = box.right() - snapOffset;
-          var sensorTop = box.bottom() - snapOffset;
-          var sensorWidth = snapWidth;
-          var sensorHeight = snapWidth;
-          var rect = selectorHandle.element().dom().getBoundingClientRect();
-          return Dragging.snap({
-            sensor: absolute$3(sensorLeft, sensorTop),
-            range: Position(sensorWidth, sensorHeight),
-            output: absolute$3(Option.some(box.right() - rect.width / 2), Option.some(box.bottom() - rect.height / 2)),
-            extra: { td: td }
-          });
-        });
-      };
-      var getBottomRightSnaps = function () {
-        return map(brTds.get(), function (td) {
-          return getBottomRightSnap(td);
-        });
-      };
-      var topLeftSnaps = {
-        getSnapPoints: getTopLeftSnaps,
-        leftAttr: 'data-drag-left',
-        topAttr: 'data-drag-top',
-        onSensor: function (component, extra) {
-          startCell.set(extra.td);
-          editor.fire('tableselectorchange', {
-            start: startCell.get(),
-            finish: finishCell.get()
-          });
-        },
-        mustSnap: true
-      };
-      var bottomRightSnaps = {
-        getSnapPoints: getBottomRightSnaps,
-        leftAttr: 'data-drag-left',
-        topAttr: 'data-drag-top',
-        onSensor: function (component, extra) {
-          finishCell.set(extra.td);
-          editor.fire('tableselectorchange', {
-            start: startCell.get(),
-            finish: finishCell.get()
-          });
-        },
-        mustSnap: true
-      };
-      var memTopLeft = record(Button.sketch({
-        dom: {
-          tag: 'div',
-          classes: ['tox-selector']
-        },
-        buttonBehaviours: derive$1([
-          Dragging.config(platform$2.deviceType.isTouch() ? {
-            mode: 'touch',
-            snaps: topLeftSnaps
-          } : {
-            mode: 'mouse',
-            blockerClass: 'blocker',
-            snaps: topLeftSnaps
-          }),
-          Unselecting.config({})
-        ]),
-        eventOrder: {
-          mousedown: [
-            'dragging',
-            'alloy.base.behaviour'
-          ]
-        }
-      }));
-      var memBottomRight = record(Button.sketch({
-        dom: {
-          tag: 'div',
-          classes: ['tox-selector']
-        },
-        buttonBehaviours: derive$1([
-          Dragging.config(platform$2.deviceType.isTouch() ? {
-            mode: 'touch',
-            snaps: bottomRightSnaps
-          } : {
-            mode: 'mouse',
-            blockerClass: 'blocker',
-            snaps: bottomRightSnaps
-          }),
-          Unselecting.config({})
-        ]),
-        eventOrder: {
-          mousedown: [
-            'dragging',
-            'alloy.base.behaviour'
-          ]
-        }
-      }));
-      var topLeft = build$1(memTopLeft.asSpec());
-      var bottomRight = build$1(memBottomRight.asSpec());
-      var isVisible = Cell(false);
-      var startCell = Cell(null);
-      var finishCell = Cell(null);
-      var showOrHideHandle = function (selector, cell, isAbove, isBelow) {
-        var cellRect = cell.dom().getBoundingClientRect();
-        remove$6(selector.element(), 'display');
-        var viewportHeight = defaultView(Element.fromDom(editor.getBody())).dom().innerHeight;
-        var aboveViewport = isAbove(cellRect);
-        var belowViewport = isBelow(cellRect, viewportHeight);
-        if (aboveViewport || belowViewport) {
-          set$2(selector.element(), 'display', 'none');
-        }
-      };
-      var snapLastTopLeft = function () {
-        var cell = startCell.get();
-        snapTopLeft(cell);
-      };
-      var snapTopLeft = function (cell) {
-        var snap = getTopLeftSnap(cell);
-        Dragging.snapTo(topLeft, snap);
-        var isAbove = function (rect) {
-          return rect.top < 0;
-        };
-        var isBelow = function (rect, viewportHeight) {
-          return rect.top > viewportHeight;
-        };
-        showOrHideHandle(topLeft, cell, isAbove, isBelow);
-      };
-      var snapLastBottomRight = function () {
-        var cell = finishCell.get();
-        snapBottomRight(cell);
-      };
-      var snapBottomRight = function (cell) {
-        var firstSnap = getBottomRightSnap(cell);
-        Dragging.snapTo(bottomRight, firstSnap);
-        var isAbove = function (rect) {
-          return rect.bottom < 0;
-        };
-        var isBelow = function (rect, viewportHeight) {
-          return rect.bottom > viewportHeight;
-        };
-        showOrHideHandle(bottomRight, cell, isAbove, isBelow);
-      };
-      if (platform$2.deviceType.isTouch()) {
-        editor.on('tableselectionchange', function (e) {
-          if (!isVisible.get()) {
-            attach$1(sink, topLeft);
-            attach$1(sink, bottomRight);
-            isVisible.set(true);
-          }
-          startCell.set(e.start);
-          finishCell.set(e.finish);
-          e.otherCells.each(function (otherCells) {
-            tlTds.set(otherCells.upOrLeftCells);
-            brTds.set(otherCells.downOrRightCells);
-            snapTopLeft(e.start);
-            snapBottomRight(e.finish);
-          });
-        });
-        editor.on('resize ScrollContent', function () {
-          snapLastTopLeft();
-          snapLastBottomRight();
-        });
-        editor.on('tableselectionclear', function () {
-          if (isVisible.get()) {
-            detach(topLeft);
-            detach(bottomRight);
-            isVisible.set(false);
-          }
-        });
-      }
-    };
-    var TableSelectorHandles = { setup: setup$a };
-
-    var SIGNIFICANT_MOVE$1 = 5;
-    var LONGPRESS_DELAY$1 = 400;
-    var getTouch$1 = function (event) {
-      if (event.touches === undefined || event.touches.length !== 1) {
-        return Option.none();
-      }
-      return Option.some(event.touches[0]);
-    };
-    var isFarEnough$1 = function (touch, data) {
-      var distX = Math.abs(touch.clientX - data.x());
-      var distY = Math.abs(touch.clientY - data.y());
-      return distX > SIGNIFICANT_MOVE$1 || distY > SIGNIFICANT_MOVE$1;
-    };
-    var setupLongpress = function (editor) {
-      var startData = Cell(Option.none());
-      var longpressFired = Cell(false);
-      var debounceLongpress = last$2(function (e) {
-        editor.fire('longpress', __assign(__assign({}, e), { type: 'longpress' }));
-        longpressFired.set(true);
-      }, LONGPRESS_DELAY$1);
-      editor.on('touchstart', function (e) {
-        getTouch$1(e).each(function (touch) {
-          debounceLongpress.cancel();
-          var data = {
-            x: constant(touch.clientX),
-            y: constant(touch.clientY),
-            target: constant(e.target)
-          };
-          debounceLongpress.throttle(e);
-          longpressFired.set(false);
-          startData.set(Option.some(data));
-        });
-      }, true);
-      editor.on('touchmove', function (e) {
-        debounceLongpress.cancel();
-        getTouch$1(e).each(function (touch) {
-          startData.get().each(function (data) {
-            if (isFarEnough$1(touch, data)) {
-              startData.set(Option.none());
-              longpressFired.set(false);
-              editor.fire('longpresscancel');
-            }
-          });
-        });
-      }, true);
-      editor.on('touchend touchcancel', function (e) {
-        debounceLongpress.cancel();
-        if (e.type === 'touchend' && longpressFired.get()) {
-          startData.get().filter(function (data) {
-            return data.target().isEqualNode(e.target);
-          }).map(function () {
-            e.preventDefault();
-          });
-        }
-      }, true);
-    };
-    var TouchEvents = { setupLongpress: setupLongpress };
-
-    var setup$b = function (editor) {
+    var setup$c = function (editor) {
       var isInline = editor.inline;
       var mode = isInline ? Inline : Iframe;
       var header = isStickyToolbar(editor) ? StickyHeader : StaticHeader;
@@ -28518,9 +28539,7 @@
           editor.focus();
         }
       });
-      var toolbarDrawer = function (editor) {
-        return getToolbarDrawer(editor);
-      };
+      var toolbarDrawer = getToolbarDrawer(editor);
       var partToolbar = OuterContainer.parts().toolbar({
         dom: {
           tag: 'div',
@@ -28531,7 +28550,7 @@
         onEscape: function () {
           editor.focus();
         },
-        split: toolbarDrawer(editor),
+        split: toolbarDrawer,
         lazyToolbar: lazyToolbar,
         lazyMoreButton: lazyMoreButton,
         lazyHeader: function () {
@@ -28544,7 +28563,8 @@
           classes: ['tox-toolbar-overlord']
         },
         onEscape: function () {
-        }
+        },
+        split: toolbarDrawer
       });
       var partSocket = OuterContainer.parts().socket({
         dom: {
@@ -28580,12 +28600,8 @@
       var hasMultipleToolbar = isMultipleToolbars(editor);
       var hasToolbar = isToolbarEnabled(editor);
       var hasMenubar = isMenubarEnabled(editor);
-      var hasToolbarDrawer = toolbarDrawer(editor) !== ToolbarDrawer.default;
       var getPartToolbar = function () {
         if (hasMultipleToolbar) {
-          if (hasToolbarDrawer) {
-            domGlobals.console.warn('Toolbar drawer cannot be applied when multiple toolbars are active');
-          }
           return [partMultipleToolbar];
         } else if (hasToolbar) {
           return [partToolbar];
@@ -28654,7 +28670,7 @@
       var mothership = takeover(outerContainer);
       var uiMothership = takeover(sink);
       Events$1.setup(editor, mothership, uiMothership);
-      TouchEvents.setupLongpress(editor);
+      TouchEvents.setup(editor);
       var getUi = function () {
         var channels = {
           broadcastAll: uiMothership.broadcast,
@@ -28664,31 +28680,15 @@
         };
         return { channels: channels };
       };
-      var setEditorSize = function (elm) {
-        var DOM = global$7.DOM;
-        var baseWidth = editor.getParam('width', DOM.getStyle(elm, 'width'));
-        var baseHeight = getHeightSetting(editor);
-        var minWidth = getMinWidthSetting(editor);
-        var minHeight = getMinHeightSetting(editor);
-        var parsedWidth = Utils.parseToInt(baseWidth).bind(function (w) {
-          return Utils.numToPx(minWidth.map(function (mw) {
-            return Math.max(w, mw);
-          }));
-        }).getOr(Utils.numToPx(baseWidth));
-        var parsedHeight = Utils.parseToInt(baseHeight).bind(function (h) {
-          return minHeight.map(function (mh) {
-            return Math.max(h, mh);
-          });
-        }).getOr(baseHeight);
-        var stringWidth = Utils.numToPx(parsedWidth);
-        var widthProperty = editor.inline ? 'max-width' : 'width';
-        if (isValidValue('div', widthProperty, stringWidth)) {
-          set$2(outerContainer.element(), widthProperty, stringWidth);
-        }
+      var setEditorSize = function () {
+        var parsedHeight = Utils.numToPx(getHeightWithFallback(editor));
+        var parsedWidth = Utils.numToPx(getWidthWithFallback(editor));
         if (!editor.inline) {
-          var stringHeight = Utils.numToPx(parsedHeight);
-          if (isValidValue('div', 'height', stringHeight)) {
-            set$2(outerContainer.element(), 'height', stringHeight);
+          if (isValidValue('div', 'width', parsedWidth)) {
+            set$2(outerContainer.element(), 'width', parsedWidth);
+          }
+          if (isValidValue('div', 'height', parsedHeight)) {
+            set$2(outerContainer.element(), 'height', parsedHeight);
           } else {
             set$2(outerContainer.element(), 'height', '200px');
           }
@@ -28698,9 +28698,9 @@
       var renderUI = function () {
         header.setup(editor, lazyHeader);
         FormatControls.setup(editor, backstage);
-        setup$9(editor, lazySink, backstage);
-        setup$6(editor);
-        setup$7(editor, lazyThrobber, backstage.shared);
+        setup$a(editor, lazySink, backstage);
+        setup$7(editor);
+        setup$8(editor, lazyThrobber, backstage.shared);
         var _a = editor.ui.registry.getAll(), buttons = _a.buttons, menuItems = _a.menuItems, contextToolbars = _a.contextToolbars, sidebars = _a.sidebars;
         var toolbarOpt = getMultipleToolbarsSetting(editor);
         var rawUiConfig = {
@@ -28718,7 +28718,7 @@
         ContextToolbar.register(editor, contextToolbars, sink, { backstage: backstage });
         TableSelectorHandles.setup(editor, sink);
         var elm = editor.getElement();
-        var height = setEditorSize(elm);
+        var height = setEditorSize();
         var uiComponents = {
           mothership: mothership,
           uiMothership: uiMothership,
@@ -28738,7 +28738,7 @@
         getUi: getUi
       };
     };
-    var Render = { setup: setup$b };
+    var Render = { setup: setup$c };
 
     var describedBy = function (describedElement, describeElement) {
       var describeId = Option.from(get$2(describedElement, 'id')).fold(function () {
@@ -29717,76 +29717,101 @@
         }
       }));
     };
-    var getMaxTabviewHeight = function (dialog, dialogBody) {
+    var getMaxTabviewHeight = function (dialog, tabview, tablist) {
+      var documentElement$1 = documentElement(dialog).dom();
       var rootElm = ancestor$1(dialog, '.tox-dialog-wrap').getOr(dialog);
       var isFixed = get$4(rootElm, 'position') === 'fixed';
       var maxHeight;
       if (isFixed) {
-        maxHeight = Math.max(domGlobals.document.documentElement.clientHeight, domGlobals.window.innerHeight);
+        maxHeight = Math.max(documentElement$1.clientHeight, domGlobals.window.innerHeight);
       } else {
-        maxHeight = Math.max(domGlobals.document.documentElement.offsetHeight, domGlobals.document.documentElement.scrollHeight);
+        maxHeight = Math.max(documentElement$1.offsetHeight, documentElement$1.scrollHeight);
       }
-      var dialogChrome = dialog.dom().getBoundingClientRect().height - dialogBody.dom().getBoundingClientRect().height;
-      return maxHeight - dialogChrome;
+      var tabviewHeight = get$6(tabview);
+      var isTabListBeside = tabview.dom().offsetLeft >= tablist.dom().offsetLeft + get$7(tablist);
+      var currentTabHeight = isTabListBeside ? Math.max(get$6(tablist), tabviewHeight) : tabviewHeight;
+      var dialogTopMargin = parseInt(get$4(dialog, 'margin-top'), 10) || 0;
+      var dialogBottomMargin = parseInt(get$4(dialog, 'margin-bottom'), 10) || 0;
+      var dialogHeight = get$6(dialog) + dialogTopMargin + dialogBottomMargin;
+      var chromeHeight = dialogHeight - currentTabHeight;
+      return maxHeight - chromeHeight;
     };
     var showTab = function (allTabs, comp) {
       head(allTabs).each(function (tab) {
         return TabSection.showTab(comp, tab.value);
       });
     };
+    var setTabviewHeight = function (tabview, height) {
+      set$2(tabview, 'height', height + 'px');
+      if (!detect$3().browser.isIE()) {
+        set$2(tabview, 'flex-basis', height + 'px');
+      } else {
+        remove$6(tabview, 'flex-basis');
+      }
+    };
     var updateTabviewHeight = function (dialogBody, tabview, maxTabHeight) {
       ancestor$1(dialogBody, '[role="dialog"]').each(function (dialog) {
-        maxTabHeight.get().map(function (height) {
-          set$2(tabview, 'height', '0');
-          return Math.min(height, getMaxTabviewHeight(dialog, dialogBody));
-        }).each(function (height) {
-          set$2(tabview, 'height', height + 'px');
+        descendant$1(dialog, '[role="tablist"]').each(function (tablist) {
+          maxTabHeight.get().map(function (height) {
+            set$2(tabview, 'height', '0');
+            set$2(tabview, 'flex-basis', '0');
+            return Math.min(height, getMaxTabviewHeight(dialog, tabview, tablist));
+          }).each(function (height) {
+            setTabviewHeight(tabview, height);
+          });
         });
       });
+    };
+    var getTabview = function (dialog) {
+      return descendant$1(dialog, '[role="tabpanel"]');
     };
     var setMode = function (allTabs) {
       var smartTabHeight = function () {
         var maxTabHeight = Cell(Option.none());
         var extraEvents = [
           runOnAttached(function (comp) {
-            descendant$1(comp.element(), '[role="tabpanel"]').each(function (tabview) {
+            var dialog = comp.element();
+            getTabview(dialog).each(function (tabview) {
               set$2(tabview, 'visibility', 'hidden');
               comp.getSystem().getByDom(tabview).toOption().each(function (tabviewComp) {
                 var heights = measureHeights(allTabs, tabview, tabviewComp);
                 var maxTabHeightOpt = getMaxHeight(heights);
                 maxTabHeight.set(maxTabHeightOpt);
               });
-              updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+              updateTabviewHeight(dialog, tabview, maxTabHeight);
               remove$6(tabview, 'visibility');
               showTab(allTabs, comp);
               global$2.requestAnimationFrame(function () {
-                updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+                updateTabviewHeight(dialog, tabview, maxTabHeight);
               });
             });
           }),
           run(windowResize(), function (comp) {
-            descendant$1(comp.element(), '[role="tabpanel"]').each(function (tabview) {
-              updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+            var dialog = comp.element();
+            getTabview(dialog).each(function (tabview) {
+              updateTabviewHeight(dialog, tabview, maxTabHeight);
             });
           }),
           run(formResizeEvent, function (comp, se) {
-            descendant$1(comp.element(), '[role="tabpanel"]').each(function (tabview) {
+            var dialog = comp.element();
+            getTabview(dialog).each(function (tabview) {
               var oldFocus = active();
               set$2(tabview, 'visibility', 'hidden');
               var oldHeight = getRaw(tabview, 'height').map(function (h) {
                 return parseInt(h, 10);
               });
               remove$6(tabview, 'height');
+              remove$6(tabview, 'flex-basis');
               var newHeight = tabview.dom().getBoundingClientRect().height;
               var hasGrown = oldHeight.forall(function (h) {
                 return newHeight > h;
               });
               if (hasGrown) {
                 maxTabHeight.set(Option.from(newHeight));
-                updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+                updateTabviewHeight(dialog, tabview, maxTabHeight);
               } else {
                 oldHeight.each(function (h) {
-                  set$2(tabview, 'height', h + 'px');
+                  setTabviewHeight(tabview, h);
                 });
               }
               remove$6(tabview, 'visibility');
@@ -30679,6 +30704,97 @@
       };
     };
 
+    var renderInlineDialog = function (dialogInit, extra, backstage, ariaAttrs) {
+      var _a, _b;
+      var dialogLabelId = generate$1('dialog-label');
+      var dialogContentId = generate$1('dialog-content');
+      var updateState = function (_comp, incoming) {
+        return Option.some(incoming);
+      };
+      var memHeader = record(renderInlineHeader({
+        title: dialogInit.internalDialog.title,
+        draggable: true
+      }, dialogLabelId, backstage.shared.providers));
+      var memBody = record(renderInlineBody({ body: dialogInit.internalDialog.body }, dialogContentId, backstage, ariaAttrs));
+      var storagedMenuButtons = mapMenuButtons(dialogInit.internalDialog.buttons);
+      var objOfCells = extractCellsToObject(storagedMenuButtons);
+      var memFooter = record(renderInlineFooter({ buttons: storagedMenuButtons }, backstage));
+      var dialogEvents = SilverDialogEvents.initDialog(function () {
+        return instanceApi;
+      }, {
+        onBlock: function () {
+        },
+        onUnblock: function () {
+        },
+        onClose: function () {
+          return extra.closeWindow();
+        }
+      });
+      var dialog = build$1({
+        dom: {
+          tag: 'div',
+          classes: [
+            'tox-dialog',
+            'tox-dialog-inline'
+          ],
+          attributes: (_a = { role: 'dialog' }, _a['aria-labelledby'] = dialogLabelId, _a['aria-describedby'] = '' + dialogContentId, _a)
+        },
+        eventOrder: (_b = {}, _b[receive()] = [
+          Reflecting.name(),
+          Receiving.name()
+        ], _b[execute()] = ['execute-on-form'], _b[attachedToDom()] = [
+          'reflecting',
+          'execute-on-form'
+        ], _b),
+        behaviours: derive$1([
+          Keying.config({
+            mode: 'cyclic',
+            onEscape: function (c) {
+              emit(c, formCloseEvent);
+              return Option.some(true);
+            },
+            useTabstopAt: function (elem) {
+              return !NavigableObject.isPseudoStop(elem) && (name(elem) !== 'button' || get$2(elem, 'disabled') !== 'disabled');
+            }
+          }),
+          Reflecting.config({
+            channel: dialogChannel,
+            updateState: updateState,
+            initialData: dialogInit
+          }),
+          Focusing.config({}),
+          config('execute-on-form', dialogEvents.concat([runOnSource(focusin(), function (comp, se) {
+              Keying.focusIn(comp);
+            })])),
+          RepresentingConfigs.memory({})
+        ]),
+        components: [
+          memHeader.asSpec(),
+          memBody.asSpec(),
+          memFooter.asSpec()
+        ]
+      });
+      var instanceApi = getDialogApi({
+        getRoot: function () {
+          return dialog;
+        },
+        getFooter: function () {
+          return memFooter.get(dialog);
+        },
+        getBody: function () {
+          return memBody.get(dialog);
+        },
+        getFormWrapper: function () {
+          var body = memBody.get(dialog);
+          return Composing.getCurrent(body).getOr(body);
+        }
+      }, extra.redial, objOfCells);
+      return {
+        dialog: dialog,
+        instanceApi: instanceApi
+      };
+    };
+
     var global$g = tinymce.util.Tools.resolve('tinymce.util.URI');
 
     var getUrlDialogApi = function (root) {
@@ -30838,98 +30954,7 @@
       };
     };
 
-    var renderInlineDialog = function (dialogInit, extra, backstage, ariaAttrs) {
-      var _a, _b;
-      var dialogLabelId = generate$1('dialog-label');
-      var dialogContentId = generate$1('dialog-content');
-      var updateState = function (_comp, incoming) {
-        return Option.some(incoming);
-      };
-      var memHeader = record(renderInlineHeader({
-        title: dialogInit.internalDialog.title,
-        draggable: true
-      }, dialogLabelId, backstage.shared.providers));
-      var memBody = record(renderInlineBody({ body: dialogInit.internalDialog.body }, dialogContentId, backstage, ariaAttrs));
-      var storagedMenuButtons = mapMenuButtons(dialogInit.internalDialog.buttons);
-      var objOfCells = extractCellsToObject(storagedMenuButtons);
-      var memFooter = record(renderInlineFooter({ buttons: storagedMenuButtons }, backstage));
-      var dialogEvents = SilverDialogEvents.initDialog(function () {
-        return instanceApi;
-      }, {
-        onBlock: function () {
-        },
-        onUnblock: function () {
-        },
-        onClose: function () {
-          return extra.closeWindow();
-        }
-      });
-      var dialog = build$1({
-        dom: {
-          tag: 'div',
-          classes: [
-            'tox-dialog',
-            'tox-dialog-inline'
-          ],
-          attributes: (_a = { role: 'dialog' }, _a['aria-labelledby'] = dialogLabelId, _a['aria-describedby'] = '' + dialogContentId, _a)
-        },
-        eventOrder: (_b = {}, _b[receive()] = [
-          Reflecting.name(),
-          Receiving.name()
-        ], _b[execute()] = ['execute-on-form'], _b[attachedToDom()] = [
-          'reflecting',
-          'execute-on-form'
-        ], _b),
-        behaviours: derive$1([
-          Keying.config({
-            mode: 'cyclic',
-            onEscape: function (c) {
-              emit(c, formCloseEvent);
-              return Option.some(true);
-            },
-            useTabstopAt: function (elem) {
-              return !NavigableObject.isPseudoStop(elem) && (name(elem) !== 'button' || get$2(elem, 'disabled') !== 'disabled');
-            }
-          }),
-          Reflecting.config({
-            channel: dialogChannel,
-            updateState: updateState,
-            initialData: dialogInit
-          }),
-          Focusing.config({}),
-          config('execute-on-form', dialogEvents.concat([runOnSource(focusin(), function (comp, se) {
-              Keying.focusIn(comp);
-            })])),
-          RepresentingConfigs.memory({})
-        ]),
-        components: [
-          memHeader.asSpec(),
-          memBody.asSpec(),
-          memFooter.asSpec()
-        ]
-      });
-      var instanceApi = getDialogApi({
-        getRoot: function () {
-          return dialog;
-        },
-        getFooter: function () {
-          return memFooter.get(dialog);
-        },
-        getBody: function () {
-          return memBody.get(dialog);
-        },
-        getFormWrapper: function () {
-          var body = memBody.get(dialog);
-          return Composing.getCurrent(body).getOr(body);
-        }
-      }, extra.redial, objOfCells);
-      return {
-        dialog: dialog,
-        instanceApi: instanceApi
-      };
-    };
-
-    var setup$c = function (extras) {
+    var setup$d = function (extras) {
       var sharedBackstage = extras.backstage.shared;
       var open = function (message, callback) {
         var closeDialog = function () {
@@ -30967,7 +30992,7 @@
       return { open: open };
     };
 
-    var setup$d = function (extras) {
+    var setup$e = function (extras) {
       var sharedBackstage = extras.backstage.shared;
       var open = function (message, callback) {
         var closeDialog = function (state) {
@@ -31046,23 +31071,16 @@
             leftAttr: 'data-dock-left',
             topAttr: 'data-dock-top',
             positionAttr: 'data-dock-pos',
-            modes: ['top'],
-            lazyViewport: function () {
-              var win$1 = win();
-              var headerEle = descendant$1(Element.fromDom(editor.getContainer()), '.tox-editor-header').getOrDie();
-              var headerBounds = absolute$1(headerEle);
-              var topBounds = Math.max(win$1.y(), headerBounds.bottom());
-              return bounds$1(win$1.x(), topBounds, win$1.width(), win$1.bottom() - topBounds);
-            }
+            modes: ['top']
           })];
       }
     };
-    var setup$e = function (extras) {
+    var setup$f = function (extras) {
       var backstage = extras.backstage;
       var editor = extras.editor;
       var isStickyToolbar$1 = isStickyToolbar(editor);
-      var alertDialog = setup$c(extras);
-      var confirmDialog = setup$d(extras);
+      var alertDialog = setup$d(extras);
+      var confirmDialog = setup$e(extras);
       var open = function (config, params, closeWindow) {
         if (params !== undefined && params.inline === 'toolbar') {
           return openInlineDialog(config, backstage.shared.anchors.toolbar(), closeWindow, params.ariaAttrs);
@@ -31176,7 +31194,7 @@
         confirm: confirm
       };
     };
-    var WindowManager = { setup: setup$e };
+    var WindowManager = { setup: setup$f };
 
     function Theme () {
       global$1.add('silver', function (editor) {
