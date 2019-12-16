@@ -21,7 +21,7 @@ class Constants
             
             'church'=> [0, 10, 2, 2],
             
-            'firstChurch'=> [0, 10],
+            'church_f'=> [0, 10],
             
             'watchtower'=> [0, 42, 8, 10, 13, 14, 18, 20, 25, 31, 36, 43, 52,
                 62, 75, 90, 108, 130, 155, 186, 224],
@@ -83,7 +83,7 @@ class Constants
         __("ui.buildings.stable");
         __("ui.buildings.garage");
         __("ui.buildings.church");
-        __("ui.buildings.firstChurch");
+        __("ui.buildings.church_f");
         __("ui.buildings.watchtower");
         __("ui.buildings.snob");
         __("ui.buildings.smith");
