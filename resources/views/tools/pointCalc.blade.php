@@ -1,6 +1,6 @@
 @extends('layouts.temp')
 
-@section('titel', $worldData->displayName(),': '.__('ui.tool.distCalc.title'))
+@section('titel', $worldData->displayName(),': '.__('tool.distCalc.title'))
 
 @section('content')
     <div class="row justify-content-center">
@@ -26,57 +26,47 @@
         <tr>
             <th><img src="{{ \App\Util\Icon::getBuildingImage($name) }}"/> {{ ucfirst(__("ui.buildings." . $name)) }}</th>
             <td>
-                <select id="{{ $name }}-level" class="input-calc">
+                <select id="{{ $name }}-level" class="input-calc form-control form-control-sm">
                     @for ($i = intval($conf->min_level); $i <= intval($conf->max_level); $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
                     @endfor
                 </select>
             </td>
             <td><div id="{{ $name }}-time">?????</div></td>
-            <td><div id="{{ $name }}-farm">?????</div></td>
-            <td><div id="{{ $name }}-points">?????</div></td>
+            <td><div id="{{ $name }}-farm" class="text-right">?????</div></td>
+            <td><div id="{{ $name }}-points" class="text-right">?????</div></td>
         </tr>
         <?php
         }
         ?>
         <div class="col-12 col-md-6 mt-2">
-            <table>
-                <thead class="stek-center">
-                <tr>
-                    <th>Geb&auml;ude</th>
-                    <th>Stufe</th>
-                    <th> Bauzeit</th>
-                    <th style="width: 100px;"> Einwohner</th>
-                    <th style="width: 100px;"> Punkte</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($buildConfig as $name => $value)
-                    {!! generateBuildingEntry($name, $value) !!}
-                @endforeach
-                <tr>
-                    <th></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Punkte</th>
-                    <td></td>
-                    <td></td>
-                    <td style="font-weight: bold;" class="" id="ges-farm">0</td>
-                    <td style="font-weight: bold;" class="" id="ges-points">0</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table w-100">
+                        <thead>
+                        <tr>
+                            <th>Geb&auml;ude</th>
+                            <th>Stufe</th>
+                            <th>Bauzeit</th>
+                            <th class="text-right" style="width: 100px;"> Einwohner</th>
+                            <th class="text-right" style="width: 100px;"> Punkte</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($buildConfig as $name => $value)
+                            {!! generateBuildingEntry($name, $value) !!}
+                        @endforeach
+                        <tr>
+                            <th>Punkte</th>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right" style="font-weight: bold;" class="" id="ges-farm">0</td>
+                            <td class="text-right" style="font-weight: bold;" class="" id="ges-points">0</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <!-- ENDE Building Card -->
     </div>

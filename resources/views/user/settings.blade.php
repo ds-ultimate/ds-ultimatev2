@@ -29,7 +29,7 @@
         <!-- ENDE Titel für Tablet | PC -->
     </div>
     <div class="row justify-content-center">
-            <div class="col-3">
+            <div class="col-12 col-lg-3 mt-2">
                 <div class="card">
                     <div class="card-header">
                         {{ __('ui.personalSettings.title') }}
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-9">
+            <div class="col-12 col-lg-9 mt-2">
                 <div class="card">
                     <div class="card-header">
                         <h5 id="settings-card-title" class="card-title my-1">{{ __('ui.personalSettings.title') }}</h5>
