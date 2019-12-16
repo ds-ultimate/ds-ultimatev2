@@ -26,4 +26,10 @@ class Profile extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function checkOauth($driver){
+        $name = $driver.'_id';
+        return isset($this->$name);
+    }
+
 }

@@ -142,4 +142,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\DsConnection');
     }
 
+    public function routeNotificationForDiscord()
+    {
+        return $this->profile->discord_private_channel_id;
+    }
 }

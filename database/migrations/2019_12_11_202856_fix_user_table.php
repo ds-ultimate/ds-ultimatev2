@@ -22,6 +22,7 @@ class FixUserTable extends Migration
             $table->string('facebook_id')->nullable()->change();
             $table->string('google_id')->nullable()->change();
             $table->string('twitter_id')->nullable()->change();
+            $table->string('discord_private_channel_id')->nullable()->after('discord_id');
         });
     }
 

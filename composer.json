@@ -15,6 +15,7 @@
         "doctrine/dbal": "~2.",
         "google/recaptcha": "^1.2",
         "khill/lavacharts": "3.1.*",
+        "laravel-notification-channels/discord": "^1.1",
         "laravel/framework": "6.6.*",
         "laravel/socialite": "^4.3",
         "rap2hpoutre/laravel-log-viewer": "^1.3",

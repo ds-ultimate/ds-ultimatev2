@@ -46,7 +46,7 @@
             <div class="col-9">
                 <div class="card">
                     <div class="card-header">
-                        <h5 id="settings-card-title" class="card-title">{{ __('ui.personalSettings.title') }}</h5>
+                        <h5 id="settings-card-title" class="card-title my-1">{{ __('ui.personalSettings.title') }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="settings-tabContent">
@@ -99,60 +99,35 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade {{ ($page == 'settings-account')? 'show active' : '' }}" id="settings-account" role="tabpanel" aria-labelledby="settings-account-tab" data-title="{{ __('ui.personalSettings.account') }}">
+                                <p class="col-12 text-center">
+                                    {!!  __('ui.personalSettings.account_help') !!}
+                                </p>
+                                @if (session('status'))
+                                    <div class="col-12 text-center mb-3">
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ session('status') }}</strong>
+                                        </span>
+                                    </div>
+                                @endif
                                 <table class="table">
-                                    <tr>
-                                        <td><i class="fab fa-facebook h1 m-2" style="color: #4267B2"></i></td>
-                                        @if(isset(Auth::user()->profile->facebook_id))
-                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
-                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
-                                        @else
-                                            <td></td>
-                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'facebook') }}">{{ __('global.add') }}</a></td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fab fa-google-plus h1 m-2" style="color: #ea4335"></i></td>
-                                        @if(isset(Auth::user()->profile->google_id))
-                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
-                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
-                                        @else
-                                            <td></td>
-                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'google') }}">{{ __('global.add') }}</a></td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fab fa-github h1 m-2" style="color: #333333"></i></td>
-                                        @if(isset(Auth::user()->profile->github_id))
-                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
-                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
-                                        @else
-                                            <td></td>
-                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'github') }}">{{ __('global.add') }}</a></td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fab fa-twitter h1 m-2" style="color: #1da1f2"></i></td>
-                                        @if(isset(Auth::user()->profile->twitter_id))
-                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
-                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
-                                        @else
-                                            <td></td>
-                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'twitter') }}">{{ __('global.add') }}</a></td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fab fa-discord h1 m-2" style="color: #7289da"></i></td>
-                                        @if(isset(Auth::user()->profile->discord_id))
-                                            <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
-                                            <td><a class="btn btn-danger m-2 float-right">{{ __('global.delete') }}</a></td>
-                                        @else
-                                            <td></td>
-                                            <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', 'discord') }}">{{ __('global.add') }}</a></td>
-                                        @endif
-                                    </tr>
+                                    @foreach(\App\Http\Controllers\User\LoginController::getDriver() as $driver)
+                                        <tr>
+                                            <td><i class="{{ $driver['icon'] }} h1 m-2" style="color:{{ $driver['color'] }}"></i></td>
+                                            @if(Auth::user()->profile->checkOauth($driver['name']))
+                                                <td><b>{{ __('ui.personalSettings.connectionVerified') }}</b></td>
+                                                <td><a class="btn btn-danger m-2 float-right" href="{{ route('user.socialiteDestroy', $driver['name']) }}">{{ __('global.delete') }}</a></td>
+                                            @else
+                                                <td></td>
+                                                <td><a class="btn btn-primary m-2 float-right" href="{{ route('loginRedirect', $driver['name']) }}">{{ __('global.add') }}</a></td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
                                 </table>
                             </div>
                             <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
+                                <p class="col-12 text-center">
+                                    {!!  __('ui.personalSettings.connection_help') !!}
+                                </p>
                                 <form id="connectionForm">
                                     <div class="form-group row">
                                         <div class="col-sm-2">
@@ -189,7 +164,7 @@
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.server.title')) }}</th>
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.world')) }}</th>
                                             <th style="max-width: 50px; min-width: 50px">{{ ucfirst(__('ui.table.player')) }}</th>
-                                            <th>{{ ucfirst(__('key')) }}</th>
+                                            <th>{{ ucfirst(__('ui.table.village')) }}</th>
                                             <th>&nbsp;</th>
                                         </tr>
                                         </thead>

@@ -280,10 +280,14 @@
             });
         })
 
+        @if (count($maps) > 0)
         var mapId = '{{ $maps->get(0)->id }}';;
         var mapKey = '{{ $maps->get(0)->edit_key }}';
+        @endif
+        @if (count($attackLists) > 0)
         var attackPlannerId = '{{ $attackLists->get(0)->id }}';
         var attackPlannerKey = '{{ $attackLists->get(0)->edit_key }}';
+        @endif
 
         function switchMap(id, edit_key, show_key, follow=false) {
             if (follow){

@@ -75,7 +75,6 @@ class SettingsController extends Controller
 
     public function destroyConnection(Request $request){
         $connection = DsConnection::find($request->get('id'));
-        \Log::warning($connection->key.'______'.$request->get('key'));
         if ($connection->key == $request->get('key')){
             $connection->delete();
             return \Response::json(array(

@@ -11,6 +11,8 @@
 |
 */
 
+use App\Notifications\DiscordNotification;
+
 Route::get('/', 'Controller@index')->name('index');
 
 Auth::routes(['verify' => true]);
@@ -18,7 +20,7 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home')->middleware('verified');
 
 Route::get('/test', function () {
-    Auth::user()->avatarPath();
+    dieMethodeGibtsNet();
 });
 
 Route::get('/setlocale/{locale}',function($lang){
@@ -79,6 +81,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::post('destroyConnection', 'SettingsController@destroyConnection')->name('destroyConnection');
     Route::get('DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
     Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
+    Route::get('socialite/destroy/{driver}', 'LoginController@destroyDriver')->name('socialiteDestroy');
 });
 
 Route::get('redirect/{driver}', 'User\LoginController@redirectToProvider')->name('loginRedirect');

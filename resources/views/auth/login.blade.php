@@ -68,33 +68,14 @@
                             </div>
                         </div>
                     </form>
-                    <div class="row">
-                        <div class="col-md-1 row-block"></div>
-                        <div class="col-md-2 row-block">
-                            <a href="{{ route('loginRedirect', 'facebook') }}" class="h1" style="color: #4267B2">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-2 row-block">
-                            <a href="{{ route('loginRedirect', 'google') }}" class="h1" style="color: #ea4335">
-                                <i class="fab fa-google-plus"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-2 row-block">
-                            <a href="{{ route('loginRedirect', 'github') }}" class="h1" style="color: #333333">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-2 row-block">
-                            <a href="{{ route('loginRedirect', 'twitter') }}" class="h1" style="color: #1da1f2">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-2 row-block">
-                            <a href="{{ route('loginRedirect', 'discord') }}" class="h1" style="color: #7289da">
-                                <i class="fab fa-discord"></i>
-                            </a>
-                        </div>
+                    <div class="row justify-content-center mt-3">
+                        @foreach(\App\Http\Controllers\User\LoginController::getDriver() as $driver)
+                            <div class="col-md-2 col-4 text-center">
+                                <a href="{{ route('loginRedirect', $driver['name']) }}" class="h1" style="color:{{ $driver['color'] }}">
+                                    <i class="{{ $driver['icon'] }}"></i>
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
