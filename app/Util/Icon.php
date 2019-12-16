@@ -98,6 +98,7 @@ class Icon
         if(!in_array($buildingName, Icon::getValidBuildingNames())) {
             throw new \InvalidArgumentException("Invalid building name");
         }
+        if($buildingName == "church_f") $buildingName = "church";
         
         if($size == Icon::BUILDING_SIZE_SMALL) {
             return asset("images/ds_images/buildings/small/$buildingName.png");
@@ -115,9 +116,9 @@ class Icon
     
     public static function getValidBuildingNames() {
         return [
-            "barracks", "church", "farm", "garage", "iron", "main", "market",
-            "place", "smith", "snob", "stable", "statue", "stone", "storage",
-            "wall", "watchtower", "wood",
+            "barracks", "church", "church_f", "farm", "garage", "iron",
+            "main", "market", "place", "smith", "snob", "stable", "statue",
+            "stone", "storage", "hide", "wall", "watchtower", "wood",
         ];
     }
 }
