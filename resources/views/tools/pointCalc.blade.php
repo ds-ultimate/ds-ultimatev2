@@ -76,28 +76,21 @@
 <script>
 var buildConf = {
     @foreach ($buildConfig as $name => $value)
+        <?php $pointsBuild = \App\Util\Constants::buildingPoints($config, $name) ?>
         "{{ $name }}": {
             "pop": "{{ $value->pop }}",
             "pop_factor": "{{ $value->pop_factor }}",
             "build_time": "{{ $value->build_time }}",
             "build_time_factor": "{{ $value->build_time_factor }}",
+            "points": "{{ $pointsBuild['points']}}",
+            "points_factor": "{{ $pointsBuild['points_factor'] }}",
         },
     @endforeach
 }
 
-var mainFactor = 0.952191414;
+var mainFactor = 1.05;
 
 var worldSpeed = {{ $config->speed }};
-
-var pointsConst = {
-    @foreach (\App\Util\Constants::gesBuildingPoints($config) as $name => $value)
-        "{{ $name }}": [
-            @foreach ($value as $points)
-                {{ $points }},
-            @endforeach
-        ],
-    @endforeach
-};
 
 $(function () {
     $('.input-calc').change(recalculate);
@@ -113,11 +106,12 @@ function recalculate() {
                 data['build_time_factor'], $('#' + index + '-level').val());
         $('#' + index + '-time').text(toTime(buildTime));
         
-        var farmSpace = calculateFarmLevel(data['pop'], data['pop_factor'],
+        var farmSpace = calculateExponentialLevel(data['pop'], data['pop_factor'],
                 $('#' + index + '-level').val());
         $('#' + index + '-farm').text(farmSpace);
         
-        var points = pointsConst[index][$('#' + index + '-level').val()];
+        var points = calculateExponentialLevel(data['points'], data['points_factor'],
+                $('#' + index + '-level').val());
         $('#' + index + '-points').text(points);
         
         gesPoints += points;
@@ -128,17 +122,20 @@ function recalculate() {
     $('#ges-points').text(gesPoints);
 }
 
-function calculateFarmLevel(baseVal, factor, level) {
+function calculateTimeLevel(baseVal, factor, level) {
+    if(level < 1) return 0;
+    if(level < 3)
+        return Math.round(baseVal*1.18*Math.pow(factor, -13) * 
+                Math.pow(mainFactor, -$('#main-level').val()) / worldSpeed);
+    
+    return Math.round(baseVal*1.18*Math.pow(factor, level - 1 - 14/(level-1) ) *
+            Math.pow(mainFactor, -$('#main-level').val()) / worldSpeed);
+}
+
+function calculateExponentialLevel(baseVal, factor, level) {
     if(level < 1) return 0;
     
     return Math.round(Math.pow(factor, level-1) * baseVal);
-}
-
-function calculateTimeLevel(baseVal, factor, level) {
-    if(level < 1) return 0;
-    
-    return Math.round((Math.pow(factor, level-1) - Math.pow(factor, level-2))
-            * baseVal * Math.pow(mainFactor, $('#main-level').val()) / worldSpeed);
 }
 
 function toTime(seconds) {

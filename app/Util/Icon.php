@@ -95,8 +95,8 @@ class Icon
     const BUILDING_SIZE_MEDIUM = 2;
     const BUILDING_SIZE_BIG = 3;
     public static function getBuildingImage($buildingName, $size=Icon::BUILDING_SIZE_SMALL, $level=1) {
-        if(!in_array($buildingName, Icon::getValidBuildingNames())) {
-            throw new \InvalidArgumentException("Invalid building name");
+        if(!Constants::validBuilding($buildingName)) {
+            return Icon::icons(-1);
         }
         if($buildingName == "church_f") $buildingName = "church";
         
@@ -112,13 +112,5 @@ class Icon
         else {
             throw new \InvalidArgumentException("Invalid size");
         }
-    }
-    
-    public static function getValidBuildingNames() {
-        return [
-            "barracks", "church", "church_f", "farm", "garage", "iron",
-            "main", "market", "place", "smith", "snob", "stable", "statue",
-            "stone", "storage", "hide", "wall", "watchtower", "wood",
-        ];
     }
 }
