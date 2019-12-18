@@ -103,7 +103,7 @@ class MapController extends BaseController
             $wantedMap->setDefaultColours(
                     (isset($getArray['default']['background']))?($getArray['default']['background']):(null),
                     (isset($getArray['default']['player']))?($getArray['default']['player']):(null),
-                    (isset($getArray['default']['barbarian']))?($getArray['default']['barbarian']):(null),
+                    (isset($getArray['default']['barbarian']))?($getArray['default']['barbarian']):(null)
             );
         }
         //do this after setting Default Colours as it modifies the same Property
@@ -315,5 +315,11 @@ class MapController extends BaseController
         }
 
         return view('content.mapTop10', compact('worldData', 'server', 'ps'));
+    }
+
+    public static function title(Map $wantedMap, $key, $title){
+        abort_unless($wantedMap->edit_key == $key, 403);
+        $wantedMap->title = $title;
+        $wantedMap->save();
     }
 }

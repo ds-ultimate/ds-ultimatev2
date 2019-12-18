@@ -28,6 +28,7 @@ Route::post('/tools/follow', 'FollowController@createFollowTool')->name('follow'
 
 //Map Tool
 Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->name('mapNew');
+Route::post('/tools/map/{wantedMap}/title/{key}/{title}', 'Tools\MapController@title')->name('mapTitle');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@mode')->name('mapToolMode');
 Route::post('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@modePost')->name('mapToolMode.post');
 

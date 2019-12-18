@@ -96,6 +96,9 @@
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('tool.map.title')).' ['.$worldData->displayName().']' }}</h1>
+            @if($mode == 'show')
+                <h3 class="font-weight-normal">{{ $wantedMap->title }}</h3>
+            @endif
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -128,6 +131,13 @@
                     </ul>
                     <div class="card-body tab-content">
                         <div class="tab-pane fade show active" id="edit" role="tabpanel" aria-labelledby="edit-tab">
+                            <div class="col-12 text-center">
+                                <b id="title-show" class="h3 card-title">{{ ($wantedMap->title === null)? __('ui.noTitle'): $wantedMap->title }}</b>
+                                <input id="title-input" onfocus="this.select();" class="form-control mb-3" style="display:none" name="title" type="text">
+                                <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
+                                <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
+                                <hr>
+                            </div>
                             <div class="row pt-3">
                                 @foreach(['ally', 'player', 'village'] as $type)
                                     <div id="main-{{$type}}" class="col-lg-4">
@@ -321,6 +331,37 @@
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
 <script>
+    function titleEdit() {
+        var input = $('#title-input');
+        var title = $('#title-show');
+        var edit = $('#title-edit');
+        var save = $('#title-save');
+        var t = (title.html() === '{{ __('ui.noTitle') }}')? '': title.html();
+        title.hide();
+        edit.hide();
+        input.val(t).show().focus();
+        save.show();
+    }
+
+    function titleSave() {
+        var input = $('#title-input');
+        var title = $('#title-show');
+        var edit = $('#title-edit');
+        var save = $('#title-save');
+        var t = (input.val() === '')? '{{ __('ui.noTitle') }}': input.val();
+        axios.post('{{ route('index') }}/tools/map/{{ $wantedMap->id }}/title/{{ $wantedMap->edit_key }}/' + t, {
+        })
+            .then((response) => {
+                input.hide();
+                save.hide();
+                title.html(t).show();
+                edit.show();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     function copy(type) {
         /* Get the text field */
         var copyText = $("#link-" + type);

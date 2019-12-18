@@ -11,6 +11,9 @@
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('tool.attackPlanner.title')).' ['.$worldData->displayName().']' }}</h1>
+            @if($mode == 'show')
+                <h3 class="font-weight-normal">{{ $attackList->title }}</h3>
+            @endif
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -56,7 +59,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('tool.attackPlanner.type') }}</label>
                                         <div class="col-1">
-                                            <img id="type_img" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
+                                            <img id="type_img" src="{{ \App\Util\Icon::icons(8) }}">
                                         </div>
                                         <div class="col-8">
                                             <select id="type" class="form-control form-control-sm">
@@ -126,7 +129,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('global.unit') }}</label>
                                         <div class="col-1">
-                                            <img id="unit_img" src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
+                                            <img id="unit_img" src="{{ \App\Util\Icon::icons(0) }}">
                                         </div>
                                         <div class="col-8">
                                             <select id="slowest_unit" class="form-control form-control-sm">
@@ -156,57 +159,57 @@
                                 <div class="col-12">
                                     <div class="form-inline">
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_spear" class="pr-2" src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
+                                            <img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}">
                                             <input id="spear" name="spear" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_sword" class="pr-2" src="{{ asset('images/ds_images/unit/unit_sword.png') }}">
+                                            <img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}">
                                             <input id="sword" name="sword" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_axe" class="pr-2" src="{{ asset('images/ds_images/unit/unit_axe.png') }}">
+                                            <img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}">
                                             <input id="axe" name="axe" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @if ($config->game->archer == 1)
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_archer" class="pr-2" src="{{ asset('images/ds_images/unit/unit_archer.png') }}">
+                                            <img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}">
                                             <input id="archer" name="archer" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @endif
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_spy" class="pr-2" src="{{ asset('images/ds_images/unit/unit_spy.png') }}">
+                                            <img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}">
                                             <input id="spy" name="spy" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_light" class="pr-2" src="{{ asset('images/ds_images/unit/unit_light.png') }}">
+                                            <img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}">
                                             <input id="light" name="light" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @if ($config->game->archer == 1)
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_marcher" class="pr-2" src="{{ asset('images/ds_images/unit/unit_marcher.png') }}">
+                                            <img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}">
                                             <input id="marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @endif
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_heavy" class="pr-2" src="{{ asset('images/ds_images/unit/unit_heavy.png') }}">
+                                            <img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}">
                                             <input id="heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_ram" class="pr-2" src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
+                                            <img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}">
                                             <input id="ram" name="ram" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_catapult" class="pr-2" src="{{ asset('images/ds_images/unit/unit_catapult.png') }}">
+                                            <img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}">
                                             <input id="catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @if ($config->game->knight > 0)
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_knight" class="pr-2" src="{{ asset('images/ds_images/unit/unit_knight.png') }}">
+                                            <img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}">
                                             <input id="knight" name="knight" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                         @endif
                                         <div class="form-group col-2 pb-3">
-                                            <img id="unit_snob" class="pr-2" src="{{ asset('images/ds_images/unit/unit_snob.png') }}">
+                                            <img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}">
                                             <input id="snob" name="snob" class="form-control form-control-sm col-9" type="number">
                                         </div>
                                     </div>
