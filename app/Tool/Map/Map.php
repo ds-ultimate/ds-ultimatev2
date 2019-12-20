@@ -73,7 +73,7 @@ class Map extends Model
             if(!isset($markerArray[$type[0]])) continue;
             
             foreach($markerArray[$type[0]] as $marker) {
-                if(strlen($marker['colour']) != 6 || ! $this->checkHex($marker['colour'])) {
+                if(strlen($marker['colour']) != 6 || ! Map::checkHex($marker['colour'])) {
                     continue;
                 }
                 if(!isset($marker['id']) || $marker['id'] == 0) continue;
@@ -152,37 +152,37 @@ class Map extends Model
     public function getDefPlayerColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
-            if(count($parts) == 3 && $this->checkHex($parts[1])) {
+            if(count($parts) == 3 && Map::checkHex($parts[1])) {
                 return $parts[1];
             }
         }
-        return $this->RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
+        return Map::RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
     
     public function getDefBarbarianColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
-            if(count($parts) == 3 && $this->checkHex($parts[2])) {
+            if(count($parts) == 3 && Map::checkHex($parts[2])) {
                 return $parts[2];
             }
         }
-        return $this->RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+        return Map::RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
     
     public function getBackgroundColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
-            if(count($parts) == 3 && $this->checkHex($parts[0])) {
+            if(count($parts) == 3 && Map::checkHex($parts[0])) {
                 return $parts[0];
             }
         }
-        return $this->RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+        return Map::RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
     
     public function setDefaultColours($background, $player, $barbarian) {
-        $defCol = (($this->checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
-        $defCol .= (($this->checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
-        $defCol .= (($this->checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
+        $defCol = ((Map::checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
         $this->defaultColours = $defCol;
     }
     
@@ -253,7 +253,7 @@ class Map extends Model
                 $parts = explode(":", $marker);
                 if(count($parts) < 3 || count($parts) > 4) continue;
 
-                $rgb = $this->hexToRGB($parts[2]);
+                $rgb = Map::hexToRGB($parts[2]);
                 $showText = count($parts) > 3 && strpos($parts[3], "t") !== false;
                 $highlight = count($parts) > 3 && strpos($parts[3], "h") !== false;
                 switch($parts[0]) {
@@ -273,12 +273,12 @@ class Map extends Model
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
             if(count($parts) == 3) {
-                $rgb = $this->hexToRGB($parts[0]);
+                $rgb = Map::hexToRGB($parts[0]);
                 if($rgb != null) {
                     $generator->setBackgroundColour($rgb);
                 }
                 
-                $rgb = $this->hexToRGB($parts[1]);
+                $rgb = Map::hexToRGB($parts[1]);
                 if($rgb != null) {
                     $generator->setPlayerColour($rgb);
                 }
@@ -286,7 +286,7 @@ class Map extends Model
                     $generator->setPlayerColour(null);
                 }
                 
-                $rgb = $this->hexToRGB($parts[2]);
+                $rgb = Map::hexToRGB($parts[2]);
                 if($rgb != null) {
                     $generator->setBarbarianColour($rgb);
                 }
@@ -342,7 +342,7 @@ class Map extends Model
         return $layers;
     }
     
-    private function checkHex($hex) {
+    public static function checkHex($hex) {
         if(!ctype_alnum($hex)) return false;
         if(strlen($hex) != 6) return false;
         $validHex = "0123456789ABCDEF";
@@ -355,8 +355,8 @@ class Map extends Model
         return true;
     }
     
-    private function hexToRGB($hex) {
-        if(! $this->checkHex($hex)) return null;
+    public static function hexToRGB($hex) {
+        if(! Map::checkHex($hex)) return null;
         if(strlen($hex) != 6) return null;
         $hexChars = "0123456789ABCDEF";
         
@@ -366,7 +366,7 @@ class Map extends Model
             strpos($hexChars, $hex[4]) * 16 + strpos($hexChars, $hex[5]),
         ];
     }
-    private function RGBToHex($rgb) {
+    public static function RGBToHex($rgb) {
         if(count($rgb) != 3) return null;
         $hexChars = "0123456789ABCDEF";
         

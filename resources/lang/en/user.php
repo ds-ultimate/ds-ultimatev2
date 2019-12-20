@@ -38,6 +38,7 @@ return array (
     'title' => 'Report Problem',
     'url' => 'URL',
     'url_help' => 'If it concerns a specific page, we can faster take care of it  if we get a link to it.',
+    'successMessage' => 'Your error message was submitted successfully.',
   ),
   'applog' => 'App Log',
 );

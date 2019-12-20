@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\DsConnection;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Tools\MapController;
 use App\Server;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\Map\Map;
@@ -31,12 +32,14 @@ class HomeController extends Controller
         $attackLists = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         $attackListsFollow = \Auth::user()->followAttackPlanner()->get();
         $mapsFollow = \Auth::user()->followMap()->get();
-
+        
         return view('user.overview', compact('page', 'maps', 'attackLists', 'attackListsFollow', 'mapsFollow'));
     }
 
     public function settings($page){
         $connections = DsConnection::where('user_id', \Auth::user()->id);
-        return view('user.settings', compact('page', 'connections'));
+        $mapDimensions = MapController::getMapDimension(\Auth::user()->profile->getDimensions());
+        
+        return view('user.settings', compact('page', 'connections', 'mapDimensions'));
     }
 }

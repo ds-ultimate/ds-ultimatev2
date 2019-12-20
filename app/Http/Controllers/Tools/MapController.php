@@ -28,6 +28,12 @@ class MapController extends BaseController
         $mapModel->world_id = $worldData->id;
         if (\Auth::user()){
             $mapModel->user_id = \Auth::user()->id;
+            $profile = \Auth::user()->profile;
+            if($profile != null) {
+                if(isset($profile->map_dimensions)) $mapModel->dimensions = $profile->map_dimensions;
+                if(isset($profile->map_defaultColours)) $mapModel->defaultColours = $profile->map_defaultColours;
+                if(isset($profile->map_markerFactor)) $mapModel->markerFactor = $profile->map_markerFactor;
+            }
         }
         $mapModel->edit_key = Str::random(40);
         $mapModel->show_key = Str::random(40);
@@ -79,7 +85,7 @@ class MapController extends BaseController
         ];
         $mode = 'edit';
         $server = $worldData->server->code;
-        $mapDimensions = $this->getMapDimension($wantedMap);
+        $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         
         return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions'));
     }
@@ -88,7 +94,7 @@ class MapController extends BaseController
         $worldData = $wantedMap->world;
         $mode = 'show';
         $server = $worldData->server->code;
-        $mapDimensions = $this->getMapDimension($wantedMap);
+        $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         
         return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'mapDimensions'));
     }
@@ -139,7 +145,7 @@ class MapController extends BaseController
         
         $wantedMap->save();
         
-        return response()->json($this->getMapDimension($wantedMap));
+        return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
     
     public function saveCanvas(Map $wantedMap) {
@@ -164,11 +170,10 @@ class MapController extends BaseController
                 abort(404);
         }
         
-        return response()->json($this->getMapDimension($wantedMap));
+        return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
     
-    private function getMapDimension(Map $mapModel) {
-        $dimensions = $mapModel->getDimensions();
+    public static function getMapDimension($dimensions) {
         $dimensions['w'] = $dimensions['xe'] - $dimensions['xs'];
         $dimensions['h'] = $dimensions['ye'] - $dimensions['ys'];
         $dimensions['cx'] = intval(($dimensions['xs'] + $dimensions['xe']) / 2);

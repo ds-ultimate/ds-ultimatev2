@@ -37,6 +37,7 @@ return array (
     'worldOverview' => 'Weltenübersicht',
     'overview' => 'Übersicht',
     'searchLimited' => 'Es werden nur die ersten $limit Einträge angezeigt, weil ihre suche zu viele Ergebnisse lieferte',
+    'settings' => 'Einstellungen',
   ),
   'tabletitel' => 
   array (
@@ -200,6 +201,7 @@ Diese Zeichenkette muss dann als Dorfname gesetzt werden.
 <br>
 Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt kannst du die Verbindung bestätigen lassen.',
     'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung Trennen',
+    'map' => 'Welkartenvorlage',
   ),
   'follow' => 
   array (
@@ -212,7 +214,6 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
     'stable' => 'Stall',
     'garage' => 'Werkstatt',
     'church' => 'Kirche',
-    'firstChurch' => 'Erste Kirche',
     'watchtower' => 'Wachturm',
     'snob' => 'Adelshof',
     'smith' => 'Schmiede',
@@ -227,5 +228,6 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
     'hide' => 'Versteck',
     'wall' => 'Wall',
     'barracks' => 'Kaserne',
+    'church_f' => 'Erste Kirche',
   ),
 );

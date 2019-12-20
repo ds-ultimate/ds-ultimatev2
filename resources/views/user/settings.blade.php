@@ -5,6 +5,7 @@
 @section('style')
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
 @stop
 
 @section('content')
@@ -39,6 +40,7 @@
                             <a class="nav-link {{ ($page == 'settings-profile')? 'active' : '' }}" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">{{ __('ui.personalSettings.profile') }}</a>
                             <a class="nav-link {{ ($page == 'settings-account')? 'active' : '' }}" id="settings-account-tab" data-toggle="pill" href="#settings-account" role="tab" aria-controls="settings-account" aria-selected="false">{{ __('ui.personalSettings.account') }}</a>
                             <a class="nav-link {{ ($page == 'settings-connection')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
+                            <a class="nav-link {{ ($page == 'settings-map')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-map" role="tab" aria-controls="settings-map" aria-selected="false">{{ __('ui.personalSettings.map') }}</a>
                         </div>
                     </div>
                 </div>
@@ -50,6 +52,7 @@
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="settings-tabContent">
+                            <!-- START settings-profile -->
                             <div class="tab-pane fade {{ ($page == 'settings-profile')? 'show active' : '' }}" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab" data-title="{{ __('ui.personalSettings.profile') }}">
                                 {{ __('ui.personalSettings.profile') }}
                                 <div class="text-center">
@@ -98,6 +101,8 @@
                                     </div>
                                 </form>
                             </div>
+                            <!-- ENDE settings-profile -->
+                            <!-- START settings-account -->
                             <div class="tab-pane fade {{ ($page == 'settings-account')? 'show active' : '' }}" id="settings-account" role="tabpanel" aria-labelledby="settings-account-tab" data-title="{{ __('ui.personalSettings.account') }}">
                                 <p class="col-12 text-center">
                                     {!!  __('ui.personalSettings.account_help') !!}
@@ -124,6 +129,8 @@
                                     @endforeach
                                 </table>
                             </div>
+                            <!-- ENDE settings-account -->
+                            <!-- START settings-connection -->
                             <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
                                 <p class="col-12 text-center">
                                     {!!  __('ui.personalSettings.connection_help') !!}
@@ -173,6 +180,78 @@
                                     </table>
                                 </div>
                             </div>
+                            <!-- ENDE settings-connection -->
+                            <!-- START settings-map -->
+                            <div class="tab-pane fade {{ ($page == 'settings-map')? 'show active' : '' }}" id="settings-map" role="tabpanel" aria-labelledby="settings-map-tab" data-title="{{ __('ui.personalSettings.map') }}">
+                            <form id="mapSettingsForm">
+                                <div id='default-background-div' class='col-12 input-group mb-2 mr-sm-2'>
+                                    <div class='colour-picker-map input-group-prepend'>
+                                        <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                        <input name='default[background]' id="bg-colour" type='hidden' value='{{ Auth::user()->profile->getBackgroundColour() }}'/>
+                                    </div>
+                                    <label class='form-control'>{{ __('tool.map.defaultBackground') }}</label>
+                                </div>
+                                <div class="form-inline mb-2">
+                                    <div class="form-check col-lg-auto ml-auto">
+                                        <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
+                                        <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input map-settings-input" {{ (Auth::user()->profile->playerEnabled())?('checked="checked"'):('') }}/>
+                                        <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
+                                    </div>
+                                    <div id='default-player-div' class='col-lg-9 input-group'>
+                                        <div class='colour-picker-map input-group-prepend'>
+                                            <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                            <input name='default[player]' id="player-colour" type='hidden' value='{{ Auth::user()->profile->getDefPlayerColour() }}'/>
+                                        </div>
+                                        <label class='form-control'>{{ __('tool.map.defaultPlayer') }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-inline mb-2">
+                                    <div class="form-check col-lg-auto ml-auto">
+                                        <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
+                                        <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input map-settings-input" {{ (Auth::user()->profile->barbarianEnabled())?('checked="checked"'):('') }}/>
+                                        <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
+                                    </div>
+                                    <div id='default-barbarian-div' class='col-lg-9 input-group'>
+                                        <div class='colour-picker-map input-group-prepend'>
+                                            <span class='input-group-text colorpicker-input-addon'><i></i></span>
+                                            <input name='default[barbarian]' type='hidden' id="barbarian-colour" value='{{ Auth::user()->profile->getDefBarbarianColour() }}'/>
+                                        </div>
+                                        <label class='form-control'>{{ __('tool.map.defaultBarbarian') }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-inline mb-2">
+                                    <div class="col-lg-6 input-group">
+                                        <label for="map-zoom-value" class="col-lg-4">{{ __('tool.map.zoom') }}</label>
+                                        <select class="form-control col-lg-2 map-settings-input" id="map-zoom-value" name="zoomValue">
+                                            <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
+                                            <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
+                                            <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
+                                            <option value="215"{{ ($mapDimensions['w'] == 215)?(' selected="selected"'):('') }}>3</option>
+                                            <option value="129"{{ ($mapDimensions['w'] == 129)?(' selected="selected"'):('') }}>4</option>
+                                            <option value="77"{{ ($mapDimensions['w'] == 77)?(' selected="selected"'):('') }}>5</option>
+                                            <option value="46"{{ ($mapDimensions['w'] == 46)?(' selected="selected"'):('') }}>6</option>
+                                            <option value="28"{{ ($mapDimensions['w'] == 28)?(' selected="selected"'):('') }}>7</option>
+                                            <option value="16"{{ ($mapDimensions['w'] == 16)?(' selected="selected"'):('') }}>8</option>
+                                            <option value="10"{{ ($mapDimensions['w'] == 10)?(' selected="selected"'):('') }}>9</option>
+                                        </select>
+                                    </div>
+                                    <div id="center-pos-div" class="input-group col-lg-6 mb-2">
+                                        <label for="center-pos-x" class="col-lg-4">{{ __('tool.map.center') }}</label>
+                                        <input id="center-pos-x" name="centerX" class="form-control mr-1 map-settings-input" placeholder="500" type="text" value="{{ $mapDimensions['cx'] }}"/>|
+                                        <input id="center-pos-y" name="centerY" class="form-control ml-1 map-settings-input" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
+                                    </div>
+                                </div>
+                                <div class="form-inline mb-2 col-lg-6">
+                                    <label for="markerFactor" class="col-lg-auto">{{ ucfirst(__('tool.map.markerFactor')) }}</label>
+                                    <input type="range" class="custom-range w-auto flex-lg-fill map-settings-input" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ Auth::user()->profile->map_makerFactor }}" name="markerFactor">
+                                    <div id="markerFactorText" class="ml-4">{{ intval(Auth::user()->profile->map_markerFactor*100) }}%</div>
+                                </div>
+                                <div class="form-group float-right">
+                                    <input type="submit" class="btn btn-sm btn-success" value='{{ ucfirst(__('global.save')) }}'>
+                                </div>
+                            </form>
+                            </div>
+                            <!-- ENDE settings-map -->
                         </div>
                     </div>
                 </div>
@@ -183,6 +262,7 @@
 @section('js')
     <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
     <script>
         var worldTable = $("#world");
         var playerTable = $("#player");
@@ -201,7 +281,7 @@
             {!! \App\Util\Datatable::language() !!}
         });
 
-        $(document).ready(function () {
+        $(function () {
             $("#date_picker").datepicker({
                 language: 'all',
                 format: 'dd.mm.yyyy',
@@ -265,35 +345,34 @@
                 });
             });
 
-        function formatState (state) {
-            if (!state.id) {
-                return state.text;
-            }
-            var baseUrl = "/user/pages/images/flags";
-            var $state = $(
-                '<span><span class="flag-icon flag-icon-' + state.title + '"></span> ' + state.text + '</span>'
-            );
-            return $state;
-        };
+            function formatState (state) {
+                if (!state.id) {
+                    return state.text;
+                }
+                var baseUrl = "/user/pages/images/flags";
+                var $state = $(
+                    '<span><span class="flag-icon flag-icon-' + state.title + '"></span> ' + state.text + '</span>'
+                );
+                return $state;
+            };
 
-        $.fn.datepicker.dates['all'] = {
-            days: ["{{ __('datepicker.Sunday') }}", "{{ __('datepicker.Monday') }}", "{{ __('datepicker.Tuesday') }}", "{{ __('datepicker.Wednesday') }}", "{{ __('datepicker.Thursday') }}", "{{ __('datepicker.Friday') }}", "{{ __('datepicker.Saturday') }}"],
-            daysShort: ["{{ __('datepicker.Sun') }}", "{{ __('datepicker.Mon') }}", "{{ __('datepicker.Tue') }}", "{{ __('datepicker.Wed') }}", "{{ __('datepicker.Thu') }}", "{{ __('datepicker.Fri') }}", "{{ __('datepicker.Sat') }}"],
-            daysMin: ["{{ __('datepicker.Su') }}", "{{ __('datepicker.Mo') }}", "{{ __('datepicker.Tu') }}", "{{ __('datepicker.We') }}", "{{ __('datepicker.Th') }}", "{{ __('datepicker.Fr') }}", "{{ __('datepicker.Sa') }}"],
-            months: ["{{ __('datepicker.January') }}", "{{ __('datepicker.February') }}", "{{ __('datepicker.March') }}", "{{ __('datepicker.April') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.June') }}", "{{ __('datepicker.July') }}", "{{ __('datepicker.August') }}", "{{ __('datepicker.September') }}", "{{ __('datepicker.October') }}", "{{ __('datepicker.November') }}", "{{ __('datepicker.December') }}"],
-            monthsShort: ["{{ __('datepicker.Jan') }}", "{{ __('datepicker.Feb') }}", "{{ __('datepicker.Mar') }}", "{{ __('datepicker.Apr') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.Jun') }}", "{{ __('datepicker.Jul') }}", "{{ __('datepicker.Aug') }}", "{{ __('datepicker.Sep') }}", "{{ __('datepicker.Oct') }}", "{{ __('datepicker.Nov') }}", "{{ __('datepicker.Dec') }}"],
-            today: "{{ __('datepicker.Today') }}",
-            monthsTitle: "{{ __('datepicker.months') }}",
-            clear: "{{ __('datepicker.Clear') }}",
-        };
+            $.fn.datepicker.dates['all'] = {
+                days: ["{{ __('datepicker.Sunday') }}", "{{ __('datepicker.Monday') }}", "{{ __('datepicker.Tuesday') }}", "{{ __('datepicker.Wednesday') }}", "{{ __('datepicker.Thursday') }}", "{{ __('datepicker.Friday') }}", "{{ __('datepicker.Saturday') }}"],
+                daysShort: ["{{ __('datepicker.Sun') }}", "{{ __('datepicker.Mon') }}", "{{ __('datepicker.Tue') }}", "{{ __('datepicker.Wed') }}", "{{ __('datepicker.Thu') }}", "{{ __('datepicker.Fri') }}", "{{ __('datepicker.Sat') }}"],
+                daysMin: ["{{ __('datepicker.Su') }}", "{{ __('datepicker.Mo') }}", "{{ __('datepicker.Tu') }}", "{{ __('datepicker.We') }}", "{{ __('datepicker.Th') }}", "{{ __('datepicker.Fr') }}", "{{ __('datepicker.Sa') }}"],
+                months: ["{{ __('datepicker.January') }}", "{{ __('datepicker.February') }}", "{{ __('datepicker.March') }}", "{{ __('datepicker.April') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.June') }}", "{{ __('datepicker.July') }}", "{{ __('datepicker.August') }}", "{{ __('datepicker.September') }}", "{{ __('datepicker.October') }}", "{{ __('datepicker.November') }}", "{{ __('datepicker.December') }}"],
+                monthsShort: ["{{ __('datepicker.Jan') }}", "{{ __('datepicker.Feb') }}", "{{ __('datepicker.Mar') }}", "{{ __('datepicker.Apr') }}", "{{ __('datepicker.May') }}", "{{ __('datepicker.Jun') }}", "{{ __('datepicker.Jul') }}", "{{ __('datepicker.Aug') }}", "{{ __('datepicker.Sep') }}", "{{ __('datepicker.Oct') }}", "{{ __('datepicker.Nov') }}", "{{ __('datepicker.Dec') }}"],
+                today: "{{ __('datepicker.Today') }}",
+                monthsTitle: "{{ __('datepicker.months') }}",
+                clear: "{{ __('datepicker.Clear') }}",
+            };
 
-        $('.nav-link').on("click", function (e) {
-            var href = $(this).attr("href");
-            history.pushState(null, null, href.replace('#', '/user/settings/'));
-            e.preventDefault();
+            $('.nav-link').on("click", function (e) {
+                var href = $(this).attr("href");
+                history.pushState(null, null, href.replace('#', '/user/settings/'));
+                e.preventDefault();
+            });
         });
-
-        })
 
         $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
             $('#settings-card-title').html($($(this).attr('href')).data('title'))
@@ -348,7 +427,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data);
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
@@ -362,19 +441,19 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data);
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
                 });
         }
 
-        function createToast(data) {
+        function createToast(data, title) {
             var int = Math.floor((Math.random() * 1000) + 1);
             $('#toast-content').append('<div class="toast toast'+int+'" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">\n' +
                 '            <div class="toast-header">\n' +
                 '                <div class="mr-2"><i class="fas fa-sync"></i></div>\n' +
-                '                <strong class="mr-auto">{{ __('ui.personalSettings.connection') }}</strong>\n' +
+                '                <strong class="mr-auto">' + title + '</strong>\n' +
                 '                <small class="text-muted">{{__('global.now')}}</small>\n' +
                 '                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
                 '                    <span aria-hidden="true">&times;</span>\n' +
@@ -395,7 +474,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data);
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
                 })
                 .catch((error) => {
                 });
@@ -408,6 +487,50 @@
             copyText.select();
             /* Copy the text inside the text field */
             document.execCommand("copy");
+        }
+    </script>
+    <script>
+        /* Map settings */
+        $(function() {
+            $('.colour-picker-map').colorpicker({
+                useHashPrefix: false
+            });
+            
+            $('.colour-picker-map').on('colorpickerHide', storeMapSettings);
+            $('.map-settings-input').change(storeMapSettings);
+            $('#markerFactor').on("input", function(slideEvt) {
+                $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
+            });
+            $('#mapSettingsForm').on('submit', function (e) {
+                e.preventDefault();
+                storeMapSettings();
+            });
+        });
+        
+        var storingMap = false;
+        var storeMapNeeded = false;
+        function storeMapSettings() {
+            if(storingMap) {
+                storeMapNeeded = true;
+                return;
+            }
+            storingMap = true;
+            axios.post('{{ route('user.saveMapSettings') }}', $('#mapSettingsForm').serialize())
+                .then((response) => {
+                    setTimeout(function() {
+                        if(storeMapNeeded) {
+                            storeMapNeeded = false
+                            store();
+                        }
+                    }, 400);
+                    storingMap = false;
+                    
+                    var data = response.data;
+                    createToast(data, "{{ __('ui.personalSettings.map') }}");
+                })
+                .catch((error) => {
+
+                });
         }
     </script>
 @stop

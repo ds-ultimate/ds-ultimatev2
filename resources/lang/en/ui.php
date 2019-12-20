@@ -93,6 +93,7 @@ return array (
     'player' => 'Player',
     'worldOverview' => 'World overview',
     'searchLimited' => 'Only the first $limit entries are displayed because your search yielded too many results',
+    'settings' => 'Settings',
   ),
   'footer' => 
   array (
@@ -183,6 +184,7 @@ return array (
     'uploadeImage' => 'Uploade Image',
     'workInProgress' => 'Currently not possible',
     'noPassword' => 'A password must be set before you disconnect',
+    'map' => 'map template',
   ),
   'follow' => 
   array (
@@ -194,7 +196,6 @@ return array (
     'barracks' => 'barracks',
     'church' => 'church',
     'farm' => 'farm',
-    'firstChurch' => 'first church',
     'garage' => 'garage',
     'hide' => 'hide',
     'iron' => 'iron',
@@ -210,5 +211,6 @@ return array (
     'wall' => 'wall',
     'watchtower' => 'watchtower',
     'wood' => 'wood',
+    'church_f' => 'first church',
   ),
 );

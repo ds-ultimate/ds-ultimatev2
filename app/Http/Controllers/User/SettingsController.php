@@ -73,7 +73,6 @@ class SettingsController extends Controller
             $profile = $user->profile;
             $dt = Carbon::parse($request->birthday);
             $profile->birthday = $dt->format('Y-m-d');
-            \Log::warning($dt->format('Y-m-d'));
             $user->save();
             $profile->save();
             return \Response::json(array(
@@ -86,6 +85,55 @@ class SettingsController extends Controller
                 'msg' => $validator->errors()->first(),
             ));
         }
+    }
+
+    public function saveMapSettings(Request $request){
+        $user = \Auth::user();
+        $profile = $user->profile;
+        
+        if(isset($request->default)) {
+            $profile->setDefaultColours(
+                    (isset($request->default['background']))?($request->default['background']):(null),
+                    (isset($request->default['player']))?($request->default['player']):(null),
+                    (isset($request->default['barbarian']))?($request->default['barbarian']):(null)
+            );
+        }
+        //do this after setting Default Colours as it modifies the same Property
+        if(isset($request->showBarbarianHere)) {
+            if(!isset($request->showBarbarian)) {
+                $profile->disableBarbarian();
+            }
+        }
+        if(isset($request->showPlayerHere)) {
+            if(!isset($request->showPlayer)) {
+                $profile->disablePlayer();
+            }
+        }
+        
+        if(isset($request->zoomValue) &&
+                isset($request->centerX) &&
+                isset($request->centerY)) {
+            $zoom = (int) $request->zoomValue;
+            $cX = (int) $request->centerX;
+            $cY = (int) $request->centerY;
+            
+            $profile->setDimensions([
+                'xs' => ceil($cX - $zoom / 2),
+                'xe' => ceil($cX + $zoom / 2),
+                'ys' => ceil($cY - $zoom / 2),
+                'ye' => ceil($cY + $zoom / 2),
+            ]);
+        }
+        
+        if(isset($request->markerFactor)) {
+            $profile->map_markerFactor = $request->markerFactor;
+        }
+        $profile->save();
+        
+        return \Response::json(array(
+            'data' => 'success',
+            'msg' => __('ui.personalSettings.saveSettingsSuccess'),
+        ));
     }
 
     public function destroyConnection(Request $request){
