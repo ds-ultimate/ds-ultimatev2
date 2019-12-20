@@ -359,7 +359,7 @@
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 50px">&nbsp;</th>
+                                    <th style="min-width: 25px">&nbsp;</th>
                                 @endif
                             </tr>
                         </thead>
