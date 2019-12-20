@@ -32,7 +32,7 @@
                     @endfor
                 </select>
             </td>
-            <td><div id="{{ $name }}-time">?????</div></td>
+            {{-- <td><div id="{{ $name }}-time">?????</div></td> --}}
             <td><div id="{{ $name }}-farm" class="text-right">?????</div></td>
             <td><div id="{{ $name }}-points" class="text-right">?????</div></td>
         </tr>
@@ -40,6 +40,9 @@
         }
         ?>
         <div class="col-12 col-md-6 mt-2">
+            <div class="card mb-4 p-3"><p>
+                Derzeit gibt es noch keine Werte für die Bauzeiten, weil die Formel nicht bekannt ist. Solltest du mithelfen wollen / die Formel kennen so kontaktire uns bitte über <a href="https://discord.gg/JcDAmPm">Discord</a>
+            </p></div>
             <div class="card">
                 <div class="card-body">
                     <table class="table w-100">
@@ -47,7 +50,7 @@
                         <tr>
                             <th>Geb&auml;ude</th>
                             <th>Stufe</th>
-                            <th>Bauzeit</th>
+                            {{-- <th>Bauzeit</th> --}}
                             <th class="text-right" style="width: 100px;"> Einwohner</th>
                             <th class="text-right" style="width: 100px;"> Punkte</th>
                         </tr>
@@ -59,7 +62,7 @@
                         <tr>
                             <th>Punkte</th>
                             <td></td>
-                            <td></td>
+                            {{-- <td></td> --}}
                             <td class="text-right" style="font-weight: bold;" class="" id="ges-farm">0</td>
                             <td class="text-right" style="font-weight: bold;" class="" id="ges-points">0</td>
                         </tr>
@@ -102,9 +105,9 @@ function recalculate() {
     var gesFarm = 0;
     
     $.each(buildConf, function(index, data) {
-        var buildTime = calculateTimeLevel(data['build_time'],
+        /*var buildTime = calculateTimeLevel(data['build_time'],
                 data['build_time_factor'], $('#' + index + '-level').val());
-        $('#' + index + '-time').text(toTime(buildTime));
+        $('#' + index + '-time').text(toTime(buildTime));*/
         
         var farmSpace = calculateExponentialLevel(data['pop'], data['pop_factor'],
                 $('#' + index + '-level').val());
