@@ -87,7 +87,7 @@ class AttackPlannerItemController extends BaseController
                 return $attackListItem->send_time->format('d.m.y H:i:s');
             })
             ->addColumn('arrival_time', function (AttackListItem $attackListItem) {
-                return $attackListItem->arrival_time->format('d.m.y H:i:s').'<input type="hidden" id="'.$attackListItem->id.'_day" value="'.$attackListItem->send_time->format('Y-m-d').'"/><input type="hidden" id="'.$attackListItem->id.'_time" value="'.$attackListItem->send_time->format('H:i:s').'"/>';
+                return $attackListItem->arrival_time->format('d.m.y H:i:s');
             })
             ->addColumn('time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time;
@@ -106,9 +106,7 @@ class AttackPlannerItemController extends BaseController
                 return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&mode=command&target='.$attackListItem->target_village_id.'&type=0&spear='.$attackListItem->spear.'&sword='.$attackListItem->sword.'&axe='.$attackListItem->axe.'&archer='.$attackListItem->archer.'&spy='.$attackListItem->spy.'&light='.$attackListItem->light.'&marcher='.$attackListItem->marcher.'&heavy='.$attackListItem->heavy.'&ram='.$attackListItem->ram.'&catapult='.$attackListItem->catapult.'&knight='.$attackListItem->knight.'&snob='.$attackListItem->snob.'"><i class="fas fa-play-circle"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){
-                $startVillage =$attackListItem->start_village;
-                $targetVillage =$attackListItem->target_village;
-                return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fas fa-edit"></i></a> <a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
+                return '<h4 class="mb-0"><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
             ->rawColumns(['type', 'arrival_time', 'slowest_unit', 'info', 'action', 'delete'])
             ->make(true);

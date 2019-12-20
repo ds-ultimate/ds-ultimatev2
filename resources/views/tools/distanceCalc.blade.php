@@ -117,7 +117,7 @@
                         </tr>
                         <tr>
                             <td width="200">
-                                <img src="{{ asset('images/ds_images/unit/unit_spear.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(0) }}">
                                 {{ __('ui.unit.spear') }}
                             </td>
                             <td id="spearTime">
@@ -126,7 +126,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_sword.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(1) }}">
                                 {{ __('ui.unit.sword') }}
                             </td>
                             <td id="swordTime">
@@ -135,7 +135,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_axe.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(2) }}">
                                 {{ __('ui.unit.axe') }}
                             </td>
                             <td id="axeTime">
@@ -145,7 +145,7 @@
                         @if ($config->game->archer == 1)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('images/ds_images/unit/unit_archer.png') }}">
+                                    <img src="{{ \App\Util\Icon::icons(3) }}">
                                     {{ __('ui.unit.archer') }}
                                 </td>
                                 <td id="archerTime">
@@ -155,7 +155,7 @@
                         @endif
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_spy.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(4) }}">
                                 {{ __('ui.unit.spy') }}
                             </td>
                             <td id="spyTime">
@@ -164,7 +164,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_light.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(5) }}">
                                 {{ __('ui.unit.light') }}
                             </td>
                             <td id="lightTime">
@@ -174,7 +174,7 @@
                         @if ($config->game->archer == 1)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('images/ds_images/unit/unit_marcher.png') }}">
+                                    <img src="{{ \App\Util\Icon::icons(6) }}">
                                     {{ __('ui.unit.marcher') }}
                                 </td>
                                 <td id="marcherTime">
@@ -184,7 +184,7 @@
                         @endif
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_heavy.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(7) }}">
                                 {{ __('ui.unit.heavy') }}
                             </td>
                             <td id="heavyTime">
@@ -193,7 +193,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_ram.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(8) }}">
                                 {{ __('ui.unit.ram') }}
                             </td>
                             <td id="ramTime">
@@ -202,7 +202,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_catapult.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(9) }}">
                                 {{ __('ui.unit.catapult') }}
                             </td>
                             <td id="catapultTime">
@@ -212,7 +212,7 @@
                         @if ($config->game->knight > 0)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('images/ds_images/unit/unit_knight.png') }}">
+                                    <img src="{{ \App\Util\Icon::icons(10) }}">
                                     {{ __('ui.unit.knight') }}
                                 </td>
                                 <td id="knightTime">
@@ -222,7 +222,7 @@
                         @endif
                         <tr>
                             <td>
-                                <img src="{{ asset('images/ds_images/unit/unit_snob.png') }}">
+                                <img src="{{ \App\Util\Icon::icons(11) }}">
                                 {{ __('ui.unit.snob') }}
                             </td>
                             <td id="snobTime">

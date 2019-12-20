@@ -371,51 +371,6 @@
         </div>
         <!-- ENDE Unit Card -->
     </div>
-    <!-- START Modal -->
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="editItemForm">
-                    <div class="modal-body">
-                        <div class="row justify-content-md-center">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
-                                    <div class="col-9">
-                                        <input id="edit_day" type="date" class="form-control form-control-sm" />
-                                        <small id="edit_day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">{{ __('tool.attackPlanner.time') }}</label>
-                                    <div class="col-9">
-                                        <input id="edit_time" type="time" step="1" class="form-control form-control-sm" />
-                                        <small id="edit_time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('global.close') }}</button>
-                        <button type="submit" class="btn btn-info">{{ __('global.save') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- ENDE Modal -->
 @endsection
 
 @section('js')
@@ -647,18 +602,6 @@
                 store(dateUnixSend, dateUnixArrival);
             }
         });
-
-        $(document).on('submit', '#editItemForm', function (e) {
-            //TODO: ______
-            e.preventDefault();
-            console.log($('#edit_day').val());
-            console.log($('#edit_time').val());
-        });
-
-        function edit(id) {
-            $('#edit_day').val($('#' + id + '_day').val());
-            $('#edit_time').val($('#' + id + '_time').val());
-        }
 
         @endif
 
