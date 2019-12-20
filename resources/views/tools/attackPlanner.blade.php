@@ -109,7 +109,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
                                         <div class="col-9">
-                                            <input id="day" type="date" class="form-control form-control-sm" />
+                                            <input id="day" type="date" class="form-control form-control-sm" value="{{ date('Y-m-d', time()) }}" />
                                             <small id="day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
                                         <div class="col-8">
-                                            <input id="time" type="time" step="1" class="form-control form-control-sm" />
+                                            <input id="time" type="time" step="1" class="form-control form-control-sm" value="{{ date('H:i:s', time()+3600) }}" />
                                             <small id="time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
                                         </div>
                                     </div>
@@ -359,7 +359,7 @@
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 25px">&nbsp;</th>
+                                    <th style="min-width: 50px">&nbsp;</th>
                                 @endif
                             </tr>
                         </thead>
@@ -371,6 +371,51 @@
         </div>
         <!-- ENDE Unit Card -->
     </div>
+    <!-- START Modal -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editItemForm">
+                    <div class="modal-body">
+                        <div class="row justify-content-md-center">
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
+                                    <div class="col-9">
+                                        <input id="edit_day" type="date" class="form-control form-control-sm" />
+                                        <small id="edit_day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">{{ __('tool.attackPlanner.time') }}</label>
+                                    <div class="col-9">
+                                        <input id="edit_time" type="time" step="1" class="form-control form-control-sm" />
+                                        <small id="edit_time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('global.close') }}</button>
+                        <button type="submit" class="btn btn-info">{{ __('global.save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- ENDE Modal -->
 @endsection
 
 @section('js')
@@ -557,6 +602,63 @@
             e.preventDefault();
             importWB();
         });
+
+        $(document).on('submit', '#createItemForm', function (e) {
+            e.preventDefault();
+            var start = $('#start_village_id').val();
+            var target = $('#target_village_id').val();
+            var day = $('#day').val();
+            var time = $('#time').val();
+
+            var xStart = $('#xStart');
+            var yStart = $('#yStart');
+            var xTarget = $('#xTarget');
+            var yTarget = $('#yTarget');
+
+            $('#day').attr('class', 'form-control form-control-sm');
+            $('#time').attr('class', 'form-control form-control-sm');
+
+            var error = 0;
+
+            if (day == ''){
+                $('#day').attr('class', 'form-control form-control-sm is-invalid');
+                error += 1;
+            }
+            if (time == ''){
+                $('#time').attr('class', 'form-control form-control-sm is-invalid');
+                error += 1;
+            }
+            if (start == ''){
+                error += 1;
+            }
+            if (target == ''){
+                error += 1;
+            }
+            if (start == target){
+                alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                error += 1;
+            }
+
+            if (error == 0){
+                var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
+                var slow = $('#slowest_unit').val();
+                var dateUnixArrival = new Date(day + ' ' + time).getTime();
+                var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*1000);
+                store(dateUnixSend, dateUnixArrival);
+            }
+        });
+
+        $(document).on('submit', '#editItemForm', function (e) {
+            //TODO: ______
+            e.preventDefault();
+            console.log($('#edit_day').val());
+            console.log($('#edit_time').val());
+        });
+
+        function edit(id) {
+            $('#edit_day').val($('#' + id + '_day').val());
+            $('#edit_time').val($('#' + id + '_time').val());
+        }
 
         @endif
 
@@ -756,7 +858,13 @@
             $("#xStart").bind('paste', function(e) {
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
-                $("#yStart").val(coords[1].substring(0, 3));
+                if (coords.length === 2) {
+                    x = coords[0].substring(0, 3);
+                    y = coords[1].substring(0, 3);
+                    $("#xStart").val(coords[0].substring(0, 3));
+                    $("#yStart").val(coords[1].substring(0, 3));
+                    village(x, y, 'Start')
+                }
             });
 
             $("#xTarget").keyup(function () {
@@ -768,7 +876,13 @@
             $("#xTarget").bind('paste', function(e) {
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
-                $("#yTarget").val(coords[1].substring(0, 3));
+                if (coords.length === 2) {
+                    x = coords[0].substring(0, 3);
+                    y = coords[1].substring(0, 3);
+                    $("#xTarget").val(coords[0].substring(0, 3));
+                    $("#yTarget").val(coords[1].substring(0, 3));
+                    village(x, y, 'Target')
+                }
             });
 
             $('.koord').change(function (e) {
@@ -776,74 +890,27 @@
                 var type = input.substring(0, 1).toUpperCase() + input.substring(1);
                 var x = $('#x' + type).val();
                 var y = $('#y' + type).val();
-                if (x != '' && y != ''){
-                    village(x, y, type)
-                }
+                village(x, y, type)
             });
 
             function village(x, y, input) {
-                axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ x + '/' + y, {
-
-                })
-                    .then((response) =>{
-                        const data = response.data.data;
-                        $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
-                        $('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
-                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
-                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
-                    })
-                    .catch((error) =>{
-                        $('#village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
-                        $('#' + input.toLowerCase() + '_village_id').val('');
-                        $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
-                        $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
-                    });
+                if (x != '' && y != '') {
+                    axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/' + x + '/' + y, {})
+                        .then((response) => {
+                            const data = response.data.data;
+                            $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
+                            $('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
+                            $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
+                            $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
+                        })
+                        .catch((error) => {
+                            $('#village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
+                            $('#' + input.toLowerCase() + '_village_id').val('');
+                            $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
+                            $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
+                        });
+                }
             }
-
-            $(document).on('submit', '#createItemForm', function (e) {
-                e.preventDefault();
-                var start = $('#start_village_id').val();
-                var target = $('#target_village_id').val();
-                var day = $('#day').val();
-                var time = $('#time').val();
-
-                var xStart = $('#xStart');
-                var yStart = $('#yStart');
-                var xTarget = $('#xTarget');
-                var yTarget = $('#yTarget');
-
-                $('#day').attr('class', 'form-control form-control-sm');
-                $('#time').attr('class', 'form-control form-control-sm');
-
-                var error = 0;
-
-                if (day == ''){
-                    $('#day').attr('class', 'form-control form-control-sm is-invalid');
-                    error += 1;
-                }
-                if (time == ''){
-                    $('#time').attr('class', 'form-control form-control-sm is-invalid');
-                    error += 1;
-                }
-                if (start == ''){
-                    error += 1;
-                }
-                if (target == ''){
-                    error += 1;
-                }
-                if (start == target){
-                    alert('{{ __('tool.attackPlanner.errorKoord') }}');
-                    error += 1;
-                }
-
-                if (error == 0){
-                    var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
-                    var slow = $('#slowest_unit').val();
-                    var dateUnixArrival = new Date(day + ' ' + time).getTime();
-                    var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*1000);
-                    store(dateUnixSend, dateUnixArrival);
-                }
-            });
 
         })
     </script>
