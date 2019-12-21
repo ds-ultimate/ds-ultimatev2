@@ -9,6 +9,7 @@
 namespace App\Tool\AttackPlanner;
 
 
+use App\World;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,6 +35,9 @@ class AttackList extends Model
         'deleted_at',
     ];
 
+    /**
+     * @return World
+     */
     public function world()
     {
         return $this->belongsTo('App\World');

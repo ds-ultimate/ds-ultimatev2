@@ -19,7 +19,7 @@ Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPla
 Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', 'Tools\AttackPlannerController@title')->name('attackPlannerTitle');
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
 Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemController', [
-    'only' => ['store', 'destroy'],
+    'only' => ['store', 'destroy', 'update'],
 ]);
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
