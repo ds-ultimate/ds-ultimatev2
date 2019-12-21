@@ -4,12 +4,12 @@
 
 @section('content')
     <div class="row justify-content-center">
-        <!-- Titel für Tablet | PC -->
+        <!-- Titel fÃ¼r Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('ui.tabletitel.overview')).' von '.Auth::user()->name }}</h1>
         </div>
-        <!-- ENDE Titel für Tablet | PC -->
-        <!-- Titel für Mobile Geräte -->
+        <!-- ENDE Titel fÃ¼r Tablet | PC -->
+        <!-- Titel fÃ¼r Mobile GerÃ¤te -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
                 {{ ucfirst(__('ui.tabletitel.overview')).' von ' }}
@@ -18,7 +18,7 @@
                 {{ Auth::user()->name }}
             </h4>
         </div>
-        <!-- ENDE Titel für Tablet | PC -->
+        <!-- ENDE Titel fÃ¼r Tablet | PC -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-2">
                                     <a id="editButtonMap" href="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                    <a id="deleteButtonMap" onclick="destroyMap()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
+                                    {{--<a id="deleteButtonMap" onclick="destroyMap()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>--}}
                                     <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                     <div class="input-group mb-2">
                                         <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -138,7 +138,7 @@
                                 <div class="col-2">
                                     @if (count($attackLists) > 0)
                                         <a id="editButtonAttackPlanner" href="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                        <a id="deleteButtonAttackPlanner" onclick="destroyAttackPlanner()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
+                                        {{--<a id="deleteButtonAttackPlanner" onclick="destroyAttackPlanner()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>--}}
                                         <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="editLinkAttackPlanner" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
