@@ -4,12 +4,12 @@
 
 @section('content')
     <div class="row justify-content-center">
-        <!-- Titel fÃ¼r Tablet | PC -->
+        <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('ui.tabletitel.overview')).' von '.Auth::user()->name }}</h1>
         </div>
-        <!-- ENDE Titel fÃ¼r Tablet | PC -->
-        <!-- Titel fÃ¼r Mobile GerÃ¤te -->
+        <!-- ENDE Titel für Tablet | PC -->
+        <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
                 {{ ucfirst(__('ui.tabletitel.overview')).' von ' }}
@@ -18,7 +18,7 @@
                 {{ Auth::user()->name }}
             </h4>
         </div>
-        <!-- ENDE Titel fÃ¼r Tablet | PC -->
+        <!-- ENDE Titel für Geräte | PC -->
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
