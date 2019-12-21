@@ -31,6 +31,7 @@ Route::get('/setlocale/{locale}',function($lang){
     return redirect()->back();
 })->name('locale');
 
+
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['dashboard']], function () {
     Route::get('/', 'HomeController@index')->name('home');
 

@@ -38,3 +38,9 @@ Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name
 
 //Point calculator
 Route::get('/{server}/{world}/tools/pointCalc', 'Tools\PointCalcController@index')->name('pointCalc');
+
+
+//Data Collection
+Route::get('/tools/datacollectionHQ/index', 'Tools\collectDataController@index')->name('collectData');
+Route::get('/tools/datacollectionHQ/stats', 'Tools\collectDataController@stats')->name('collectDataStats');
+Route::post('/tools/datacollectionHQ/post/{pServer}', 'Tools\collectDataController@post')->name('collectData.post');
