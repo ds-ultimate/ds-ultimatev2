@@ -46,6 +46,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 col-lg-3 col-xlg-3">
+            <div class="card card-inverse bg-info">
+                <div class="box text-center p-3">
+                    <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['users']) }}</h1>
+                    <h6 class="text-white">{{ __('cruds.user.title') }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 col-xlg-3">
+            <div class="card card-inverse bg-warning">
+                <div class="box text-center p-3">
+                    <h1 class="font-light text-white">
+                    @foreach (\App\Http\Controllers\User\LoginController::getDriver() as $driver)
+                            <i class="{{ $driver['icon'] }} h3" style="color: {{ $driver['color'] }}"></i> {{ $counter[$driver['name']] }}
+                    @endforeach
+                    </h1>
+                    <h6 class="text-white">{{ __('ui.personalSettings.account') }}</h6>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
