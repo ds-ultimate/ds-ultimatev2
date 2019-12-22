@@ -687,12 +687,12 @@
         function store() {
             axios.post('{{ route('tools.attackListItem.store') }}', {
                 'attack_list_id' : $('#attack_list_id').val(),
-                'type' : $('#type option:selected' ).val(),
+                'type' : $('#type').val(),
                 'xStart' : $('#xStart').val(),
                 'yStart' : $('#yStart').val(),
                 'xTarget' : $('#xTarget').val(),
                 'yTarget' : $('#yTarget').val(),
-                'slowest_unit' : $('#slowest_unit option:selected').val(),
+                'slowest_unit' : $('#slowest_unit').val(),
                 'note' : $('#note').val(),
                 'day' : $('#day').val(),
                 'time' : $('#time').val(),
@@ -723,12 +723,12 @@
         function update() {
             axios.patch('{{ route('index') }}/tools/attackPlanner/attackListItem/' + $('#attack_list_item').val(), {
                 'attack_list_id' : $('#attack_list_id').val(),
-                'type' : $('#edit_type option:selected' ).val(),
+                'type' : $('#edit_type').val(),
                 'xStart' : $('#edit_xStart').val(),
                 'yStart' : $('#edit_yStart').val(),
                 'xTarget' : $('#edit_xTarget').val(),
                 'yTarget' : $('#edit_yTarget').val(),
-                'slowest_unit' : $('#edit_slowest_unit option:selected').val(),
+                'slowest_unit' : $('#edit_slowest_unit').val(),
                 'note' : $('#edit_note').val(),
                 'day' : $('#edit_day').val(),
                 'time' : $('#edit_time').val(),
