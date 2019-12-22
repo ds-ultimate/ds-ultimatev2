@@ -8,6 +8,8 @@
 |
 */
 
+Route::post('/tools/follow', 'FollowController@createFollowTool')->name('follow');
+
 //Distance calculator
 Route::get('/{server}/{world}/tools/distanceCalc', 'Tools\DistanceCalcController@index')->name('distanceCalc');
 
@@ -22,8 +24,6 @@ Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemCo
     'only' => ['store', 'destroy', 'update'],
 ]);
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
-
-Route::post('/tools/follow', 'FollowController@createFollowTool')->name('follow');
 
 
 //Map Tool

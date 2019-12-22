@@ -22,8 +22,5 @@ class FollowController extends Controller
         }else{
             $follow->$function()->detach($item->id);
         }
-
-
-
     }
 }

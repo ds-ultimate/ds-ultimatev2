@@ -906,5 +906,27 @@
     $(function () {
         $('.active.map-show-tab').trigger('click');
     });
+    
+    @auth
+        @if($wantedMap->user_id != Auth::user()->id)
+            function changeFollow() {
+                var icon = $('#follow-icon');
+                axios.post('{{ route('tools.follow') }}',{
+                    model: 'Map_Map',
+                    id: '{{ $wantedMap->id }}'
+                })
+                    .then((response) => {
+                        if(icon.hasClass('far')){
+                            icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                        }else {
+                            icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                        }
+                    })
+                    .catch((error) => {
+
+                    });
+            }
+        @endif
+    @endauth
 </script>
 @endsection
