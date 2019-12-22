@@ -7,7 +7,7 @@ use App\BuildTime;
 use App\BuildTimeRaw;
 use Illuminate\Routing\Controller as BaseController;
 
-class collectDataController extends BaseController
+class CollectDataController extends BaseController
 {
     /**
      * Create a new controller instance.
@@ -234,18 +234,18 @@ class collectDataController extends BaseController
             $timeMinWithoutConf = ($time - 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
             $timeMaxWithoutConf = ($time + 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
             
-            if(!isset($result[$data->building])) {
-                $result[$data->building] = array();
+            if(!isset($results[$data->building])) {
+                $results[$data->building] = array();
             }
-            if(isset($result[$data->building][$data->level])) {
-                if($timeMinWithoutConf > $result[$data->building][$data->level]['min']) {
-                    $result[$data->building][$data->level]['min'] = $timeMinWithoutConf;
+            if(isset($results[$data->building][$data->level])) {
+                if($timeMinWithoutConf > $results[$data->building][$data->level]['min']) {
+                    $results[$data->building][$data->level]['min'] = $timeMinWithoutConf;
                 }
-                if($timeMaxWithoutConf < $result[$data->building][$data->level]['max']) {
-                    $result[$data->building][$data->level]['max'] = $timeMaxWithoutConf;
+                if($timeMaxWithoutConf < $results[$data->building][$data->level]['max']) {
+                    $results[$data->building][$data->level]['max'] = $timeMaxWithoutConf;
                 }
             } else {
-                $result[$data->building][$data->level] = [
+                $results[$data->building][$data->level] = [
                     "min" => $timeMinWithoutConf,
                     "max" => $timeMaxWithoutConf,
                 ];
@@ -253,7 +253,7 @@ class collectDataController extends BaseController
         }
         
         $finalRes = array();
-        foreach($result as $name => $val) {
+        foreach($results as $name => $val) {
             $finalRes[$name] = array();
             foreach($val as $lv => $data) {
                 $min = floor($data['min']);

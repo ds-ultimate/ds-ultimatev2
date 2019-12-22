@@ -41,6 +41,6 @@ Route::get('/{server}/{world}/tools/pointCalc', 'Tools\PointCalcController@index
 
 
 //Data Collection
-Route::get('/tools/datacollectionHQ/index', 'Tools\collectDataController@index')->name('collectData');
-Route::get('/tools/datacollectionHQ/stats', 'Tools\collectDataController@stats')->name('collectDataStats');
-Route::post('/tools/datacollectionHQ/post/{pServer}', 'Tools\collectDataController@post')->name('collectData.post');
+Route::get('/tools/datacollectionHQ/index', 'Tools\CollectDataController@index')->name('collectData');
+Route::get('/tools/datacollectionHQ/stats', 'Tools\CollectDataController@stats')->name('collectDataStats');
+Route::post('/tools/datacollectionHQ/post/{pServer}', 'Tools\CollectDataController@post')->name('collectData.post');
