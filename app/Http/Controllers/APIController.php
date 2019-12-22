@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Ally;
-use App\DsConnection;
 use App\World;
 use App\Player;
 use App\Server;
@@ -13,8 +12,6 @@ use App\AllyChanges;
 use App\Util\BasicFunctions;
 use Auth;
 use Carbon\Carbon;
-use function GuzzleHttp\Promise\iter_for;
-use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Resources\World as WorldResource;
 use App\Http\Resources\Ally as AllyResource;
@@ -509,13 +506,14 @@ class APIController extends Controller
             })
             ->addColumn('player_points', function ($ally) use($days){
                 $allyOld = $ally->allyHistory($days);
+                
+                if($allyOld == null){
+                    return __('ui.old.nodata');
+                }
 
                 $new = ($ally->points == 0 || $ally->member_count == 0)? 0 : ($ally->points/$ally->member_count);
                 $old = ($allyOld->points == 0 || $allyOld->member_count == 0)? 0 : ($allyOld->points/$allyOld->member_count);
 
-                if($allyOld == null){
-                    return __('ui.old.nodata');
-                }
                 return BasicFunctions::historyCalc($new, $old, 'player_points', false);
             })
             ->editColumn('gesBash', function ($ally) use($days){

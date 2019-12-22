@@ -52,11 +52,12 @@ class ImageChart extends PictureRender {
         //preparation & settings specification
         ksort($data);
         if(count($data)<= 1) {
-            echo "No / Not enough Data";
-
             imagecolorallocate($this->image, 255, 255, 255); #Hintergrund
-            $this->outputPNG();
-            die();
+            $color_black = imagecolorallocate($this->image, 0, 0, 0);
+            $font_size = $this->height / 20;
+            $box = imagettfbbox($font_size, 0, $this->font, $identification_str);
+            imagettftext($this->image, $font_size, 0, 10, -$box[5], $color_black, $this->font, "No / Not enough Data");
+            return;
         }
 
         $data_keys = array_keys($data);
