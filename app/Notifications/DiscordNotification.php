@@ -49,12 +49,20 @@ class DiscordNotification extends Notification
             'Discord responded with an HTTP error: 429: You are being rate limited.',
             'Keine Daten über diesen Server \'js\' vorhanden.',
             'Unauthenticated.',
-            'CSRF token mismatch.'
+            'CSRF token mismatch.',
+            'Undefined offset: 1'
         ];
+
+        if (config('app.debug')){
+            $server = 'Test';
+        }else{
+            $server = 'Produktiv';
+        }
+
         if (!in_array($eMessage, $ignore)) {
             $trace = explode('#', $input->getTraceAsString());
             $this->message = [
-                'content' => '**'.$eMessage.'**',
+                'content' => '``'.$server.'`` '.$eMessage,
                 'embed' => null,
             ];
 //          $this->message = [
