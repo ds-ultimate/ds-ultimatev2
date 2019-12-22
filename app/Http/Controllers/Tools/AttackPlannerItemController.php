@@ -36,8 +36,13 @@ class AttackPlannerItemController extends BaseController
 
         $item = new AttackListItem();
         $item->attack_list_id = $request->attack_list_id;
+        if (!$item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('ui.villageNotExist'),
+            ));
+        }
         $item->type = $request->type;
-        $item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget);
         $item->slowest_unit = $request->slowest_unit;
         $item->note = $request->note;
         $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
@@ -162,7 +167,12 @@ class AttackPlannerItemController extends BaseController
         }
 
         $attackListItem->type = $request->type;
-        $attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget);
+        if (!$attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('ui.villageNotExist'),
+            ));
+        }
         $attackListItem->slowest_unit = $request->slowest_unit;
         $attackListItem->note = $request->note;
         $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);

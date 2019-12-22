@@ -648,7 +648,7 @@
                     edit.show();
                 })
                 .catch((error) => {
-                    console.log(error);
+
                 });
         }
 
@@ -685,10 +685,6 @@
         }
 
         function store() {
-            console.log($('#xStart').val());
-            console.log($('#yStart').val());
-            console.log($('#xTarget').val());
-            console.log($('#yTarget').val());
             axios.post('{{ route('tools.attackListItem.store') }}', {
                 'attack_list_id' : $('#attack_list_id').val(),
                 'type' : $('#type option:selected' ).val(),
@@ -1089,7 +1085,6 @@
                 var type = input.substring(0, 1).toUpperCase() + input.substring(1);
                 var x = $('#' + target + 'x' + type).val();
                 var y = $('#' + target + 'y' + type).val();
-                console.log(type);
                 village(x, y, type, target)
             });
 

@@ -212,29 +212,28 @@ class AttackPlannerController extends BaseController
         $unitConfig = simplexml_load_string($world->units);
         $imports = explode(PHP_EOL, $request->import);
         foreach ($imports as $import){
-            if ($import == '') continue;
+            if ($import != '') {
 
-            $list = explode('&', $import);
-            if (count($list) < 7)
-            
-            $villageModel = new Village();
-            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
-            $start = $villageModel->find($list[0]);
-            $target = $villageModel->find($list[1]);
+                $list = explode('&', $import);
+                $villageModel = new Village();
+                $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
+                $start = $villageModel->find($list[0]);
+                $target = $villageModel->find($list[1]);
 
-            if ($start != null && $target != null) {
-                $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
-                $arrival = (int)$list[3];
-                $unit = $list[2];
-                if (isset($list[7]) && $list[7] != '') {
-                    $units = explode('/', $list[7]);
-                    $unitArray = [];
-                    foreach ($units as $unit) {
-                        $unitSplit = explode('=', $unit, 2);
-                        $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
+                if ($start != null && $target != null) {
+                    $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
+                    $arrival = (int)$list[3];
+                    $unit = $list[2];
+                    if ($list[7] != '') {
+                        $units = explode('/', $list[7]);
+                        $unitArray = [];
+                        foreach ($units as $unit) {
+                            $unitSplit = explode('=', $unit, 2);
+                            $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
+                        }
                     }
+                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
                 }
-                self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
             }
         }
 
@@ -249,6 +248,15 @@ class AttackPlannerController extends BaseController
     }
 
     public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
+        $attackplaner = AttackList::find($attack_list_id);
+        $startVillage = Village::village($attackplaner->world->server->code, $attackplaner->world->name, $start_village_id);
+        $targetVillage = Village::village($attackplaner->world->server->code, $attackplaner->world->name, $start_village_id);
+        if(!isset($startVillage) || !isset($targetVillage)){
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('ui.villageNotExist'),
+            ));
+        }
         $item = new AttackListItem();
         $item->attack_list_id = $attack_list_id;
         $item->start_village_id = $start_village_id;

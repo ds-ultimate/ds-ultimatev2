@@ -184,6 +184,9 @@ class AttackListItem extends CustomModel
     public function setVillageID($xStart, $yStart, $xTarget, $yTarget){
         $this->start_village_id = $this->getVillageID($xStart, $yStart);
         $this->target_village_id = $this->getVillageID($xTarget, $yTarget);
+        if ($this->start_village_id === null || $this->target_village_id === null){
+            return false;
+        }
         return true;
     }
 
@@ -191,7 +194,7 @@ class AttackListItem extends CustomModel
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($this->list->world->server->code, $this->list->world->name).'.village_latest');
         $village = $villageModel->where(['x' => $x, 'y' => $y])->first();
-        return $village->villageID;
+        return isset($village->villageID)? $village->villageID : null;
     }
 
 }
