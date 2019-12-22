@@ -185,6 +185,23 @@ return array (
     'workInProgress' => 'Currently not possible',
     'noPassword' => 'A password must be set before you disconnect',
     'map' => 'map template',
+    'account_help' => 'Here you can connect to other accounts.
+<br>
+If you have connected an account, you can also use it to log in.
+<br>
+If you connect to <b> Discord </b>, you have the option to use our Discord Bot.
+<br>
+There will be more features on the page that will include the bot.',
+    'connection_help' => 'Here you can verify your tribal account.
+(This verification is only possible per world)
+<br>
+To do that you have to enter the world with the player name and add it to the list.
+<br>
+Once the connection is in the list, DS-Ultimate generates a random string.
+<br>
+This string must then be set as the village name.
+<br>
+It is not specified which village you have to give the name to, but it must belong to the added player. After the next update of the world you can have the connection confirmed.',
   ),
   'follow' => 
   array (
