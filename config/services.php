@@ -72,8 +72,10 @@ return [
         'client_id' => env('DISCORD_CLIENT_ID'),
         'client_secret' => env('DISCORD_CLIENT_SECRET'),
         'redirect' => env('APP_URL').'/redirect/discord/callback',
+        
         'token' => env('DISCORD_BOT_TOKEN'),
-        'active' => env('DISCORD_BOT')
+        'bot_channel' => env('DISCORD_BOT_CHANNEL'),
+        'active' => env('DISCORD_BOT'),
     ],
 
 ];

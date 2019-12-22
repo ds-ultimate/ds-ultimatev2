@@ -43,15 +43,10 @@ class DiscordNotification extends Notification
         $input = $this->input;
         $eMessage = $input->getMessage();
 
-
-        if (config('app.debug')){
-            $server = 'Test';
-        }else{
-            $server = 'Produktiv';
-        }
+        $class = get_class($this->input);
         $trace = explode('#', $input->getTraceAsString());
         $this->message = [
-            'content' => '``'.$server.'`` '.$eMessage,
+            'content' => '``'.$class.'`` '.$eMessage,
             'embed' => null,
         ];
 //      $this->message = [

@@ -8,6 +8,6 @@ class Log extends Model
 {
     public function routeNotificationFor()
     {
-        return '655007873574633472';
+        return config('services.discord.bot_channel');
     }
 }
