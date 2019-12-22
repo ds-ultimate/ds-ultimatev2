@@ -109,7 +109,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
                                         <div class="col-9">
-                                            <input id="day" type="date" class="form-control form-control-sm" value="{{ date('Y-m-d', time()) }}" />
+                                            <input id="day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" />
                                             <small id="day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
                                         <div class="col-8">
-                                            <input id="time" type="time" step="1" class="form-control form-control-sm" value="{{ date('H:i:s', time()+3600) }}" />
+                                            <input id="time" type="time" step="1" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" />
                                             <small id="time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
                                         </div>
                                     </div>
@@ -374,7 +374,7 @@
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">{{ __('global.edit') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -436,7 +436,7 @@
                                 <div class="form-group row">
                                     <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
                                     <div class="col-9">
-                                        <input id="edit_day" type="date" class="form-control form-control-sm" value="{{ date('Y-m-d', time()) }}" />
+                                        <input id="edit_day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-target="edit_" />
                                         <small id="edit_day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
                                     </div>
                                 </div>
@@ -446,7 +446,7 @@
                                 <div class="form-group row">
                                     <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
                                     <div class="col-8">
-                                        <input id="edit_time" type="time" step="1" class="form-control form-control-sm" value="{{ date('H:i:s', time()+3600) }}" />
+                                        <input id="edit_time" type="time" step="1" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-target="edit_" />
                                         <small id="edit_time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
                                     </div>
                                 </div>
@@ -555,7 +555,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('global.close') }}</button>
-                        <button type="submit" class="btn btn-info">{{ __('global.save') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('global.save') }}</button>
                     </div>
                 </form>
             </div>
@@ -600,9 +600,11 @@
                     }
                 ],
                 "drawCallback": function(settings, json) {
+                    @if($mode == 'edit')
                     exportWB();
                     exportBB();
                     exportIGM();
+                    @endif
                     countdown();
                     popover();
                     @auth
@@ -749,7 +751,7 @@
                 'snob': $('#edit_snob').val() != 0 ? $('#edit_snob').val() : 0,
             })
                 .then((response) => {
-
+                    $('.bd-example-modal-xl').modal('hide');
                     table.ajax.reload();
 
                 })

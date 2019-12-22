@@ -49,7 +49,7 @@ class AttackListItem extends CustomModel
         'deleted_at',
     ];
 
-    private $unit = [
+    private static $unit = [
         0 => 'spear',
         1 => 'sword',
         2 => 'axe',
@@ -93,6 +93,10 @@ class AttackListItem extends CustomModel
 
     public function unitIDToName(){
         return $this->unit[$this->slowest_unit];
+    }
+
+    public static function unitNameToID($input){
+        return array_search($input, self::$unit);
     }
 
     public function typeIDToName(){
@@ -160,9 +164,8 @@ class AttackListItem extends CustomModel
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
-        $unit = $this->unit[$this->slowest_unit];
+        $unit = self::$unit[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
-        \Log::warning($runningTime);
         return $this->arrival_time->subSeconds($runningTime);
     }
 

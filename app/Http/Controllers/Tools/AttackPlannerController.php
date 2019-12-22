@@ -19,7 +19,6 @@ use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AttackPlannerController extends BaseController
@@ -225,8 +224,6 @@ class AttackPlannerController extends BaseController
                     $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
                     $arrival = (int)$list[3];
                     $unit = $list[2];
-                    $time = $arrival-$unitConfig->$unit->speed * 60 * $dist*1000;
-                    $send = date( 'Y-m-d H:i:s' , $time/1000);
                     if ($list[7] != '') {
                         $units = explode('/', $list[7]);
                         $unitArray = [];
@@ -235,7 +232,7 @@ class AttackPlannerController extends BaseController
                             $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
                         }
                     }
-                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), $send, date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
+                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
                 }
             }
         }
@@ -250,14 +247,14 @@ class AttackPlannerController extends BaseController
         return ['success' => true, 'message' => 'destroy !!'];
     }
 
-    public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $send_time, $arrival_time, $type, $units){
+    public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
         $item = new AttackListItem();
         $item->attack_list_id = $attack_list_id;
         $item->start_village_id = $start_village_id;
         $item->target_village_id = $target_village_id;
         $item->slowest_unit = $slowest_unit;
-        $item->send_time = $send_time;
         $item->arrival_time = $arrival_time;
+        $item->send_time = $item->calcSend();
         $item->type = $type;
         if ($units != null) {
             foreach ($units as $key => $unit) {

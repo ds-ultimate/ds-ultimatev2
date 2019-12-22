@@ -101,10 +101,10 @@ class AttackPlannerItemController extends BaseController
                 return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name);
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {
-                return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'">';
+                return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->typeIDToName().'">';
             })
             ->editColumn('slowest_unit', function (AttackListItem $attackListItem) {
-                return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'">';
+                return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->unitIDToNameOutput().'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
                 return $attackListItem->attackerName();
@@ -113,10 +113,10 @@ class AttackPlannerItemController extends BaseController
                 return $attackListItem->defenderName();
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
-                return $attackListItem->send_time->format('d.m.y H:i:s');
+                return $attackListItem->send_time->format('d.m.Y H:i:s');
             })
             ->addColumn('arrival_time', function (AttackListItem $attackListItem) {
-                return $attackListItem->arrival_time->format('d.m.y H:i:s');
+                return $attackListItem->arrival_time->format('d.m.Y H:i:s');
             })
             ->addColumn('time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time;
