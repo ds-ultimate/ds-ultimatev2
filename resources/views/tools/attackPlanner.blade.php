@@ -62,7 +62,7 @@
                                             <img id="type_img" src="{{ \App\Util\Icon::icons(8) }}">
                                         </div>
                                         <div class="col-8">
-                                            <select id="type" class="form-control form-control-sm">
+                                            <select id="type" class="form-control form-control-sm type">
                                                 <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
                                                     <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
                                                     <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
@@ -85,9 +85,9 @@
                                     <div class="form-group row">
                                         <label class="control-label col-4">{{ __('tool.attackPlanner.startVillage') }}</label>
                                         <div id="start" class="form-inline col-8">
-                                            <input id="xStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <input id="xStart" class="form-control form-control-sm mx-auto col-5 koord xStart" type="text" placeholder="500" maxlength="3" />
                                             |
-                                            <input id="yStart" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <input id="yStart" class="form-control form-control-sm mx-auto col-5 koord yStart" type="text" placeholder="500" maxlength="3" />
                                             <small id="villageStart" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.startVillage_helper') }}</small>
                                         </div>
                                     </div>
@@ -97,9 +97,9 @@
                                     <div class="form-group row">
                                         <label class="control-label col-4">{{ __('tool.attackPlanner.targetVillage') }}</label>
                                         <div id="target" class="form-inline col-8">
-                                            <input id="xTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <input id="xTarget" class="form-control form-control-sm mx-auto col-5 koord xTarget" type="text" placeholder="500" maxlength="3" />
                                             |
-                                            <input id="yTarget" class="form-control form-control-sm mx-auto col-5 koord" type="text" placeholder="500" maxlength="3" />
+                                            <input id="yTarget" class="form-control form-control-sm mx-auto col-5 koord yTarget" type="text" placeholder="500" maxlength="3" />
                                             <small id="villageTarget" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.targetVillage_helper') }}</small>
                                         </div>
                                     </div>
@@ -109,7 +109,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
                                         <div class="col-9">
-                                            <input id="day" type="date" class="form-control form-control-sm" value="{{ date('Y-m-d', time()) }}" />
+                                            <input id="day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" />
                                             <small id="day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
                                         </div>
                                     </div>
@@ -119,7 +119,7 @@
                                     <div class="form-group row">
                                         <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
                                         <div class="col-8">
-                                            <input id="time" type="time" step="1" class="form-control form-control-sm" value="{{ date('H:i:s', time()+3600) }}" />
+                                            <input id="time" type="time" step="1" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" />
                                             <small id="time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@
                                             <img id="unit_img" src="{{ \App\Util\Icon::icons(0) }}">
                                         </div>
                                         <div class="col-8">
-                                            <select id="slowest_unit" class="form-control form-control-sm">
+                                            <select id="slowest_unit" class="form-control form-control-sm slowest_unit">
                                                 <option value="0">{{ __('ui.unit.spear') }}</option>
                                                 <option value="1">{{ __('ui.unit.sword') }}</option>
                                                 <option value="2">{{ __('ui.unit.axe') }}</option>
@@ -225,11 +225,9 @@
                                 </div>
                                 @csrf
                                 <input id="attack_list_id" type="hidden" value="{{ $attackList->id }}">
-                                <input id="start_village_id" type="hidden">
-                                <input id="target_village_id" type="hidden">
                                 <div class="col-12">
                                     <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('tool.attackPlanner.outdated') }}">
-                                    <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('global.submit') }}">
+                                    <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('global.save') }}">
                                 </div>
                                 <!--/span-->
                             </div>
@@ -359,7 +357,7 @@
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 25px">&nbsp;</th>
+                                    <th style="min-width: 50px">&nbsp;</th>
                                 @endif
                             </tr>
                         </thead>
@@ -371,6 +369,199 @@
         </div>
         <!-- ENDE Unit Card -->
     </div>
+    <!-- START Modal -->
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ __('global.edit') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editItemForm">
+                    <div class="modal-body">
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">{{ __('tool.attackPlanner.type') }}</label>
+                                    <div class="col-1">
+                                        <img id="edit_type_img" src="{{ \App\Util\Icon::icons(8) }}">
+                                    </div>
+                                    <div class="col-8">
+                                        <select id="edit_type" class="form-control form-control-sm type" data-target="edit_">
+                                            <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
+                                                <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
+                                                <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
+                                                <option value="14">{{ __('tool.attackPlanner.fake') }}</option>
+                                                <option value="45">{{ __('tool.attackPlanner.wallbreaker') }}</option>
+                                            </optgroup>
+                                            <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
+                                                <option value="0">{{ __('tool.attackPlanner.support') }}</option>
+                                                <option value="1">{{ __('tool.attackPlanner.standSupport') }}</option>
+                                                <option value="7">{{ __('tool.attackPlanner.fastSupport') }}</option>
+                                                <option value="46">{{ __('tool.attackPlanner.fakeSupport') }}</option>
+                                            </optgroup>
+                                        </select>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.type_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-4">{{ __('tool.attackPlanner.startVillage') }}</label>
+                                    <div id="start" class="form-inline col-8">
+                                        <input id="edit_xStart" class="form-control form-control-sm mx-auto col-5 koord xStart" data-target="edit_" type="text" placeholder="500" maxlength="3" />
+                                        |
+                                        <input id="edit_yStart" class="form-control form-control-sm mx-auto col-5 koord yStart" data-target="edit_" type="text" placeholder="500" maxlength="3" />
+                                        <small id="edit_villageStart" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.startVillage_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-4">{{ __('tool.attackPlanner.targetVillage') }}</label>
+                                    <div id="target" class="form-inline col-8">
+                                        <input id="edit_xTarget" class="form-control form-control-sm mx-auto col-5 koord xTarget" data-target="edit_" type="text" placeholder="500" maxlength="3" />
+                                        |
+                                        <input id="edit_yTarget" class="form-control form-control-sm mx-auto col-5 koord yTarget" data-target="edit_" type="text" placeholder="500" maxlength="3" />
+                                        <small id="edit_villageTarget" class="form-control-feedback ml-2">{{ __('tool.attackPlanner.targetVillage_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">{{ __('tool.attackPlanner.date') }}</label>
+                                    <div class="col-9">
+                                        <input id="edit_day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-target="edit_" />
+                                        <small id="edit_day_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.date_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-4">{{ __('tool.attackPlanner.time') }}</label>
+                                    <div class="col-8">
+                                        <input id="edit_time" type="time" step="1" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-target="edit_" />
+                                        <small id="edit_time_feedback" class="form-control-feedback">{{ __('tool.attackPlanner.time_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">{{ __('global.unit') }}</label>
+                                    <div class="col-1">
+                                        <img id="edit_unit_img" src="{{ \App\Util\Icon::icons(0) }}">
+                                    </div>
+                                    <div class="col-8">
+                                        <select id="edit_slowest_unit" class="form-control form-control-sm slowest_unit" data-target="edit_">
+                                            <option value="0">{{ __('ui.unit.spear') }}</option>
+                                            <option value="1">{{ __('ui.unit.sword') }}</option>
+                                            <option value="2">{{ __('ui.unit.axe') }}</option>
+                                            @if ($config->game->archer == 1)
+                                                <option value="3">{{ __('ui.unit.archer') }}</option>
+                                            @endif
+                                            <option value="4">{{ __('ui.unit.spy') }}</option>
+                                            <option value="5">{{ __('ui.unit.light') }}</option>
+                                            @if ($config->game->archer == 1)
+                                                <option value="6">{{ __('ui.unit.marcher') }}</option>
+                                            @endif
+                                            <option value="7">{{ __('ui.unit.heavy') }}</option>
+                                            <option value="8">{{ __('ui.unit.ram') }}</option>
+                                            <option value="9">{{ __('ui.unit.catapult') }}</option>
+                                            @if ($config->game->knight > 0)
+                                                <option value="10">{{ __('ui.unit.knight') }}</option>
+                                            @endif
+                                            <option value="11">{{ __('ui.unit.snob') }}</option>
+                                        </select>
+                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.unit_helper') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}">
+                                        <input id="edit_spear" name="edit_spear" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}">
+                                        <input id="edit_sword" name="edit_sword" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}">
+                                        <input id="edit_axe" name="edit_axe" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    @if ($config->game->archer == 1)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}">
+                                            <input id="edit_archer" name="edit_archer" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}">
+                                        <input id="edit_spy" name="edit_spy" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}">
+                                        <input id="edit_light" name="edit_light" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    @if ($config->game->archer == 1)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}">
+                                            <input id="edit_marcher" name="edit_marcher" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}">
+                                        <input id="edit_heavy" name="edit_heavy" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}">
+                                        <input id="edit_ram" name="edit_ram" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}">
+                                        <input id="edit_catapult" name="edit_catapult" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                    @if ($config->game->knight > 0)
+                                        <div class="form-group col-2 pb-3">
+                                            <img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}">
+                                            <input id="edit_knight" name="edit_knight" class="form-control form-control-sm col-9" type="number">
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-2 pb-3">
+                                        <img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}">
+                                        <input id="edit_snob" name="edit_snob" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="control-label col-3">Notizen</label>
+                                    <div class="col-12">
+                                        <textarea id="edit_note" class="form-control form-control-sm"  rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <input id="attack_list_item" type="hidden">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('global.close') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('global.save') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- ENDE Modal -->
 @endsection
 
 @section('js')
@@ -409,9 +600,11 @@
                     }
                 ],
                 "drawCallback": function(settings, json) {
+                    @if($mode == 'edit')
                     exportWB();
                     exportBB();
                     exportIGM();
+                    @endif
                     countdown();
                     popover();
                     @auth
@@ -426,19 +619,6 @@
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
-
-        function typ_img(input){
-            switch (input) {
-                case 8: return '{{ \App\Util\Icon::icons(8) }}';
-                case 11: return '{{ \App\Util\Icon::icons(11) }}';
-                case 14: return '{{ \App\Util\Icon::icons(14) }}';
-                case 45: return '{{ \App\Util\Icon::icons(45) }}';
-                case 0: return '{{ \App\Util\Icon::icons(0) }}';
-                case 1: return '{{ \App\Util\Icon::icons(1) }}';
-                case 7: return '{{ \App\Util\Icon::icons(7) }}';
-                case 46: return '{{ \App\Util\Icon::icons(46) }}';
-            }
-        }
 
         @if($mode == 'edit')
         function titleEdit() {
@@ -504,16 +684,22 @@
                 });
         }
 
-        function store(send, arrival) {
+        function store() {
+            console.log($('#xStart').val());
+            console.log($('#yStart').val());
+            console.log($('#xTarget').val());
+            console.log($('#yTarget').val());
             axios.post('{{ route('tools.attackListItem.store') }}', {
                 'attack_list_id' : $('#attack_list_id').val(),
                 'type' : $('#type option:selected' ).val(),
-                'start_village_id' : $('#start_village_id').val(),
-                'target_village_id' : $('#target_village_id').val(),
+                'xStart' : $('#xStart').val(),
+                'yStart' : $('#yStart').val(),
+                'xTarget' : $('#xTarget').val(),
+                'yTarget' : $('#yTarget').val(),
                 'slowest_unit' : $('#slowest_unit option:selected').val(),
                 'note' : $('#note').val(),
-                'send_time' : send,
-                'arrival_time' : arrival,
+                'day' : $('#day').val(),
+                'time' : $('#time').val(),
                 'key' : '{{ $attackList->edit_key }}',
                 'spear': $('#spear').val() != 0 ? $('#spear').val() : 0,
                 'sword': $('#sword').val() != 0 ? $('#sword').val() : 0,
@@ -535,6 +721,42 @@
                 })
                 .catch((error) => {
                     
+                });
+        }
+
+        function update() {
+            axios.patch('{{ route('index') }}/tools/attackPlanner/attackListItem/' + $('#attack_list_item').val(), {
+                'attack_list_id' : $('#attack_list_id').val(),
+                'type' : $('#edit_type option:selected' ).val(),
+                'xStart' : $('#edit_xStart').val(),
+                'yStart' : $('#edit_yStart').val(),
+                'xTarget' : $('#edit_xTarget').val(),
+                'yTarget' : $('#edit_yTarget').val(),
+                'slowest_unit' : $('#edit_slowest_unit option:selected').val(),
+                'note' : $('#edit_note').val(),
+                'day' : $('#edit_day').val(),
+                'time' : $('#edit_time').val(),
+                'key' : '{{ $attackList->edit_key }}',
+                'spear': $('#edit_spear').val() != 0 ? $('#edit_spear').val() : 0,
+                'sword': $('#edit_sword').val() != 0 ? $('#edit_sword').val() : 0,
+                'axe': $('#edit_axe').val() != 0 ? $('#edit_axe').val() : 0,
+                'archer': $('#edit_archer').val() != 0 ? $('#edit_archer').val() : 0,
+                'spy': $('#edit_spy').val() != 0 ? $('#edit_spy').val() : 0,
+                'light': $('#edit_light').val() != 0 ? $('#edit_light').val() : 0,
+                'marcher': $('#edit_marcher').val() != 0 ? $('#edit_marcher').val() : 0,
+                'heavy': $('#edit_heavy').val() != 0 ? $('#edit_heavy').val() : 0,
+                'ram': $('#edit_ram').val() != 0 ? $('#edit_ram').val() : 0,
+                'catapult': $('#edit_catapult').val() != 0 ? $('#edit_catapult').val() : 0,
+                'knight': $('#edit_knight').val() != 0 ? $('#edit_knight').val() : 0,
+                'snob': $('#edit_snob').val() != 0 ? $('#edit_snob').val() : 0,
+            })
+                .then((response) => {
+                    $('.bd-example-modal-xl').modal('hide');
+                    table.ajax.reload();
+
+                })
+                .catch((error) => {
+
                 });
         }
 
@@ -560,29 +782,10 @@
 
         $(document).on('submit', '#createItemForm', function (e) {
             e.preventDefault();
-            var start = $('#start_village_id').val();
-            var target = $('#target_village_id').val();
-            var day = $('#day').val();
-            var time = $('#time').val();
-
-            var xStart = $('#xStart');
-            var yStart = $('#yStart');
-            var xTarget = $('#xTarget');
-            var yTarget = $('#yTarget');
-
-            $('#day').attr('class', 'form-control form-control-sm');
-            $('#time').attr('class', 'form-control form-control-sm');
+            var start = $('#xStart').val() + '|' + $('#yStart').val();
+            var target = $('#xTarget').val() + '|' + $('#yTarget').val();
 
             var error = 0;
-
-            if (day == ''){
-                $('#day').attr('class', 'form-control form-control-sm is-invalid');
-                error += 1;
-            }
-            if (time == ''){
-                $('#time').attr('class', 'form-control form-control-sm is-invalid');
-                error += 1;
-            }
             if (start == ''){
                 error += 1;
             }
@@ -595,41 +798,85 @@
             }
 
             if (error == 0){
-                var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
-                var slow = $('#slowest_unit').val();
-                var dateUnixArrival = new Date(day + ' ' + time).getTime();
-                var dateUnixSend = new Date(day + ' ' + time).getTime() - (slowest_unit(slow, dis)*1000);
-                store(dateUnixSend, dateUnixArrival);
+                store();
             }
         });
 
-        @endif
+        $(document).on('submit', '#editItemForm', function (e) {
+            e.preventDefault();
+            var start = $('#edit_xStart').val() + '|' + $('#edit_yStart').val();
+            var target = $('#edit_xTarget').val() + '|' + $('#edit_yTarget').val();
 
-        @auth
-            @if($attackList->user_id != Auth::user()->id)
-                function changeFollow() {
-                    var icon = $('#follow-icon');
-                    axios.post('{{ route('tools.follow') }}',{
-                        model: 'AttackPlanner_AttackList',
-                        id: '{{ $attackList->id }}'
+            var error = 0;
+            if (start == ''){
+                error += 1;
+            }
+            if (target == ''){
+                error += 1;
+            }
+            if (start == target){
+                alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                error += 1;
+            }
+
+            if (error == 0){
+                update();
+            }
+        });
+
+        function edit(id) {
+            var data = table.row('#' + id).data();
+            var rowData = data.DT_RowData;
+            $('#attack_list_item').val(data.id);
+            $('#edit_type').val(rowData.type);
+            $('#edit_xStart').val(rowData.xStart);
+            $('#edit_yStart').val(rowData.yStart);
+            $('#edit_xTarget').val(rowData.xTarget);
+            $('#edit_yTarget').val(rowData.yTarget);
+            $('#edit_day').val(rowData.day);
+            $('#edit_time').val(rowData.time);
+            $('#edit_slowest_unit').val(rowData.slowest_unit);
+            $('#edit_spear').val(data.spear);
+            $('#edit_sword').val(data.sword);
+            $('#edit_axe').val(data.axe);
+            $('#edit_archer').val(data.archer);
+            $('#edit_spy').val(data.spy);
+            $('#edit_light').val(data.light);
+            $('#edit_marcher').val(data.marcher);
+            $('#edit_heavy').val(data.heavy);
+            $('#edit_ram').val(data.ram);
+            $('#edit_catapult').val(data.catapult);
+            $('#edit_knight').val(data.knight);
+            $('#edit_snob').val(data.snob);
+            $('#edit_note').val(data.note);
+            $('#edit_unit_img').attr('src', slowest_unit_img(rowData.slowest_unit));
+            $('#edit_type_img').attr('src', typ_img(rowData.type));
+            village(rowData.xStart, rowData.yStart, 'Start', 'edit_');
+            village(rowData.xTarget, rowData.yTarget, 'Target', 'edit_');
+        }
+
+        function village(x, y, input, target = null) {
+            if (x != '' && y != '') {
+                axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/' + x + '/' + y, {})
+                    .then((response) => {
+                        const data = response.data.data;
+                        $('#' + target + 'village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
+                        //$('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
+                        $('#' + target + 'x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
+                        $('#' + target + 'y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
                     })
-                        .then((response) => {
-                            if(icon.hasClass('far')){
-                                icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
-                            }else {
-                                icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
-                            }
-                        })
-                        .catch((error) => {
-                            
-                        });
-                }
-            @endif
-        @endauth
+                    .catch((error) => {
+                        $('#' + target + 'village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
+                        //$('#' + input.toLowerCase() + '_village_id').val('');
+                        $('#' + target + 'x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
+                        $('#' + target + 'y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
+                    });
+            }
+        }
 
         function exportWB() {
             axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->edit_key]) }}', {
-              })
+            })
                 .then((response) => {
                     $('#exportWB').html(response.data);
                 })
@@ -659,6 +906,30 @@
 
                 });
         }
+
+        @endif
+
+        @auth
+            @if($attackList->user_id != Auth::user()->id)
+                function changeFollow() {
+                    var icon = $('#follow-icon');
+                    axios.post('{{ route('tools.follow') }}',{
+                        model: 'AttackPlanner_AttackList',
+                        id: '{{ $attackList->id }}'
+                    })
+                        .then((response) => {
+                            if(icon.hasClass('far')){
+                                icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                            }else {
+                                icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                            }
+                        })
+                        .catch((error) => {
+                            
+                        });
+                }
+            @endif
+        @endauth
 
         function copy(type) {
             /* Get the text field */
@@ -699,62 +970,33 @@
                 return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
             };
 
-
-        function slowest_unit(unit, dis){
+        function slowest_unit_img(unit){
             switch (unit) {
-                case '0':
-                    return Math.round('{{ round((float)$unitConfig->spear->speed * 60) }}' * dis);
-                case '1':
-                    return Math.round('{{ round((float)$unitConfig->sword->speed * 60) }}' * dis);
-                case '2':
-                    return Math.round('{{ round((float)$unitConfig->axe->speed * 60) }}' * dis);
-                case '3':
-                    return Math.round('{{ round((float)$unitConfig->archer->speed * 60) }}' * dis);
-                case '4':
-                    return Math.round('{{ round((float)$unitConfig->spy->speed * 60) }}' * dis);
-                case '5':
-                    return Math.round('{{ round((float)$unitConfig->light->speed * 60) }}' * dis);
-                case '6':
-                    return Math.round('{{ round((float)$unitConfig->marcher->speed * 60) }}' * dis);
-                case '7':
-                    return Math.round('{{ round((float)$unitConfig->heavy->speed * 60) }}' * dis);
-                case '8':
-                    return Math.round('{{ round((float)$unitConfig->ram->speed * 60) }}' * dis);
-                case '9':
-                    return Math.round('{{ round((float)$unitConfig->catapult->speed * 60) }}' * dis);
-                case '10':
-                    return Math.round('{{ round((float)$unitConfig->knight->speed * 60) }}' * dis);
-                case '11':
-                    return Math.round('{{ round((float)$unitConfig->snob->speed * 60) }}' * dis);
+                case '0': return '{{ \App\Util\Icon::icons(0) }}';
+                case '1': return '{{ \App\Util\Icon::icons(1) }}';
+                case '2': return '{{ \App\Util\Icon::icons(2) }}';
+                case '3': return '{{ \App\Util\Icon::icons(3) }}';
+                case '4': return '{{ \App\Util\Icon::icons(4) }}';
+                case '5': return '{{ \App\Util\Icon::icons(5) }}';
+                case '6': return '{{ \App\Util\Icon::icons(6) }}';
+                case '7': return '{{ \App\Util\Icon::icons(7) }}';
+                case '8': return '{{ \App\Util\Icon::icons(8) }}';
+                case '9': return '{{ \App\Util\Icon::icons(9) }}';
+                case '10': return '{{ \App\Util\Icon::icons(10) }}';
+                case '11': return '{{ \App\Util\Icon::icons(11) }}';
             }
         }
 
-        function slowest_unit_img(unit){
-            switch (unit) {
-                case '0':
-                    return '{{ \App\Util\Icon::icons(0) }}';
-                case '1':
-                    return '{{ \App\Util\Icon::icons(1) }}';
-                case '2':
-                    return '{{ \App\Util\Icon::icons(2) }}';
-                case '3':
-                    return '{{ \App\Util\Icon::icons(3) }}';
-                case '4':
-                    return '{{ \App\Util\Icon::icons(4) }}';
-                case '5':
-                    return '{{ \App\Util\Icon::icons(5) }}';
-                case '6':
-                    return '{{ \App\Util\Icon::icons(6) }}';
-                case '7':
-                    return '{{ \App\Util\Icon::icons(7) }}';
-                case '8':
-                    return '{{ \App\Util\Icon::icons(8) }}';
-                case '9':
-                    return '{{ \App\Util\Icon::icons(9) }}';
-                case '10':
-                    return '{{ \App\Util\Icon::icons(10) }}';
-                case '11':
-                    return '{{ \App\Util\Icon::icons(11) }}';
+        function typ_img(input){
+            switch (input) {
+                case '8': return '{{ \App\Util\Icon::icons(8) }}';
+                case '11': return '{{ \App\Util\Icon::icons(11) }}';
+                case '14': return '{{ \App\Util\Icon::icons(14) }}';
+                case '45': return '{{ \App\Util\Icon::icons(45) }}';
+                case '0': return '{{ \App\Util\Icon::icons(0) }}';
+                case '1': return '{{ \App\Util\Icon::icons(1) }}';
+                case '7': return '{{ \App\Util\Icon::icons(7) }}';
+                case '46': return '{{ \App\Util\Icon::icons(46) }}';
             }
         }
 
@@ -769,14 +1011,18 @@
 
         $(document).ready(function (e) {
 
-            $('#type').change(function (e) {
-                var img = $('#type_img');
-                var input = parseInt($(this).val());
+            $('.type').change(function (e) {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
+                var img = $('#' + target + 'type_img');
+                var input = $(this).val();
                 img.attr('src', typ_img(input));
             });
 
-            $('#slowest_unit').change(function (e) {
-                var img = $('#unit_img');
+            $('.slowest_unit').change(function (e) {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
+                var img = $('#' + target + 'unit_img');
                 var input = $(this).val();
 
                 img.attr('src', slowest_unit_img(input));
@@ -792,68 +1038,60 @@
                 }
             });
 
-            $("#xStart").keyup(function () {
+            $(".xStart").keyup(function () {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
                 if (this.value.length == this.maxLength) {
-                    $(this).next('#yStart').focus();
+                    $(this).next('#' + target + 'yStart').focus();
                 }
             });
 
-            $("#xStart").bind('paste', function(e) {
+            $(".xStart").bind('paste', function(e) {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
                 if (coords.length === 2) {
                     x = coords[0].substring(0, 3);
                     y = coords[1].substring(0, 3);
-                    $("#xStart").val(coords[0].substring(0, 3));
-                    $("#yStart").val(coords[1].substring(0, 3));
-                    village(x, y, 'Start')
+                    $('#' + target + 'xStart').val(coords[0].substring(0, 3));
+                    $('#' + target + 'yStart').val(coords[1].substring(0, 3));
+                    village(x, y, 'Start', target)
                 }
             });
 
-            $("#xTarget").keyup(function () {
+            $(".xTarget").keyup(function () {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
                 if (this.value.length == this.maxLength) {
-                    $(this).next('#yTarget').focus();
+                    $(this).next('#' + target + 'yTarget').focus();
                 }
             });
 
-            $("#xTarget").bind('paste', function(e) {
+            $(".xTarget").bind('paste', function(e) {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
                 if (coords.length === 2) {
                     x = coords[0].substring(0, 3);
                     y = coords[1].substring(0, 3);
-                    $("#xTarget").val(coords[0].substring(0, 3));
-                    $("#yTarget").val(coords[1].substring(0, 3));
-                    village(x, y, 'Target')
+                    $('#' + target + 'xTarget').val(coords[0].substring(0, 3));
+                    $('#' + target + 'yTarget').val(coords[1].substring(0, 3));
+                    village(x, y, 'Target', target)
                 }
             });
 
             $('.koord').change(function (e) {
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
                 var input = $('#' + this.id).parent().attr('id');
                 var type = input.substring(0, 1).toUpperCase() + input.substring(1);
-                var x = $('#x' + type).val();
-                var y = $('#y' + type).val();
-                village(x, y, type)
+                var x = $('#' + target + 'x' + type).val();
+                var y = $('#' + target + 'y' + type).val();
+                console.log(type);
+                village(x, y, type, target)
             });
-
-            function village(x, y, input) {
-                if (x != '' && y != '') {
-                    axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/' + x + '/' + y, {})
-                        .then((response) => {
-                            const data = response.data.data;
-                            $('#village' + input).html(data['name'].trunc(25) + ' <b>' + x + '|' + y + '</b>  [' + data['continent'] + ']').attr('class', 'form-control-feedback ml-2 valid-feedback');
-                            $('#' + input.toLowerCase() + '_village_id').val(data['villageID']);
-                            $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
-                            $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-valid').attr('style', 'background-position-y: 0.4em;');
-                        })
-                        .catch((error) => {
-                            $('#village' + input).html('{{ __('ui.villageNotExist') }}').attr('class', 'form-control-feedback ml-2 invalid-feedback');
-                            $('#' + input.toLowerCase() + '_village_id').val('');
-                            $('#x' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
-                            $('#y' + input).attr('class', 'form-control form-control-sm mx-auto col-5 koord is-invalid').attr('style', 'background-position-y: 0.4em;');
-                        });
-                }
-            }
 
         })
     </script>

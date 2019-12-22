@@ -49,6 +49,21 @@ class AttackListItem extends CustomModel
         'deleted_at',
     ];
 
+    private static $unit = [
+        0 => 'spear',
+        1 => 'sword',
+        2 => 'axe',
+        3 => 'archer',
+        4 => 'spy',
+        5 => 'light',
+        6 => 'marcher',
+        7 => 'heavy',
+        8 => 'ram',
+        9 => 'catapult',
+        10 => 'knight',
+        11 => 'snob',
+    ];
+
     /**
      * @return AttackList
      */
@@ -64,7 +79,6 @@ class AttackListItem extends CustomModel
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
 
         return $this->mybelongsTo('App\Village', 'start_village_id', 'villageID', $dbName.'.village_latest');
-
     }
 
     /**
@@ -75,65 +89,14 @@ class AttackListItem extends CustomModel
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
 
         return $this->mybelongsTo('App\Village', 'target_village_id', 'villageID', $dbName.'.village_latest');
-
     }
 
     public function unitIDToName(){
-        switch ($this->slowest_unit) {
-            case '0':
-                return 'spear';
-            case '1':
-                return 'sword';
-            case '2':
-                return 'axe';
-            case '3':
-                return 'archer';
-            case '4':
-                return 'spy';
-            case '5':
-                return 'light';
-            case '6':
-                return 'marcher';
-            case '7':
-                return 'heavy';
-            case '8':
-                return 'ram';
-            case '9':
-                return 'catapult';
-            case '10':
-                return 'knight';
-            case '11':
-                return 'snob';
-        }
+        return $this->unit[$this->slowest_unit];
     }
 
     public static function unitNameToID($input){
-        switch ($input) {
-            case 'spear':
-                return '0';
-            case 'sword':
-                return '1';
-            case 'axe':
-                return '2';
-            case 'archer':
-                return '3';
-            case 'spy':
-                return '4';
-            case 'light':
-                return '5';
-            case 'marcher':
-                return '6';
-            case 'heavy':
-                return '7';
-            case 'ram':
-                return '8';
-            case 'catapult':
-                return '9';
-            case 'knight':
-                return '10';
-            case 'snob':
-                return '11';
-        }
+        return array_search($input, self::$unit);
     }
 
     public function typeIDToName(){
@@ -196,6 +159,39 @@ class AttackListItem extends CustomModel
         if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
         if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
         return BasicFunctions::decodeName($this->target_village->playerLatest->name);
+    }
+
+    public function calcSend(){
+        $unitConfig = $this->list->world->unitConfig();
+        $dist = $this->calcDistance();
+        $unit = self::$unit[$this->slowest_unit];
+        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+        return $this->arrival_time->subSeconds($runningTime);
+    }
+
+    public function calcArrival(){
+        $unitConfig = $this->list->world->unitConfig();
+        $dist = $this->calcDistance();
+        $unit = $this->unit[$this->slowest_unit];
+        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+        return $this->start_time->addSeconds($runningTime);
+    }
+
+    public function calcDistance(){
+        return sqrt(pow($this->start_village->x - $this->target_village->x, 2) + pow($this->start_village->y - $this->target_village->y, 2));
+    }
+
+    public function setVillageID($xStart, $yStart, $xTarget, $yTarget){
+        $this->start_village_id = $this->getVillageID($xStart, $yStart);
+        $this->target_village_id = $this->getVillageID($xTarget, $yTarget);
+        return true;
+    }
+
+    private function getVillageID($x, $y){
+        $villageModel = new Village();
+        $villageModel->setTable(BasicFunctions::getDatabaseName($this->list->world->server->code, $this->list->world->name).'.village_latest');
+        $village = $villageModel->where(['x' => $x, 'y' => $y])->first();
+        return $village->villageID;
     }
 
 }

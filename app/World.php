@@ -180,4 +180,8 @@ class World extends Model
             return ucfirst(__('ui.world.normal'));
         }
     }
+
+    public function unitConfig(){
+        return simplexml_load_string($this->units);
+    }
 }
