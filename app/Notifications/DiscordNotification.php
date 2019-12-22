@@ -42,47 +42,34 @@ class DiscordNotification extends Notification
          */
         $input = $this->input;
         $eMessage = $input->getMessage();
-        if ($eMessage == ''){
-            exit;
-        }
-        $ignore = [
-            'Discord responded with an HTTP error: 429: You are being rate limited.',
-            'Keine Daten über diesen Server \'js\' vorhanden.',
-            'Unauthenticated.',
-            'CSRF token mismatch.',
-            'Undefined offset: 1'
-        ];
+
 
         if (config('app.debug')){
             $server = 'Test';
         }else{
             $server = 'Produktiv';
         }
-
-        if (!in_array($eMessage, $ignore)) {
-            $trace = explode('#', $input->getTraceAsString());
-            $this->message = [
-                'content' => '``'.$server.'`` '.$eMessage,
-                'embed' => null,
-            ];
-//          $this->message = [
-//              'content' => null,
-//              'embed' => [
-//                  'title' => nl2br($input->getMessage()),
-//                  'description' => '#'.$trace[1].'
-//                  #'.$trace[2].'
-//                  #'.$trace[3].'
-//                  ...',
-//                  'color' => 13632027,
-//                  'timestamp' => Carbon::now()->format('c'),
-//                  'footer' => [
-//                      'text' => '#ErrorException',
-//                  ],
+        $trace = explode('#', $input->getTraceAsString());
+        $this->message = [
+            'content' => '``'.$server.'`` '.$eMessage,
+            'embed' => null,
+        ];
+//      $this->message = [
+//          'content' => null,
+//          'embed' => [
+//              'title' => nl2br($input->getMessage()),
+//              'description' => '#'.$trace[1].'
+//              #'.$trace[2].'
+//              #'.$trace[3].'
+//              ...',
+//              'color' => 13632027,
+//              'timestamp' => Carbon::now()->format('c'),
+//              'footer' => [
+//                  'text' => '#ErrorException',
 //              ],
-//          ];
-        }else{
-            exit;
-        }
+//          ],
+//      ];
+
     }
 
     public function worldUpdate(){

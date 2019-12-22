@@ -38,8 +38,19 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
-            Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+        $eMessage = $exception->getMessage();
+        $ignore = [
+            'Discord responded with an HTTP error: 429: You are being rate limited.',
+            'Keine Daten über diesen Server \'js\' vorhanden.',
+            'Unauthenticated.',
+            'CSRF token mismatch.',
+            'Undefined offset: 1'
+        ];
+
+        if (!in_array($eMessage, $ignore) || $eMessage != '') {
+            if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
+                Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+            }
         }
         parent::report($exception);
     }
