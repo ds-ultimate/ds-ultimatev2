@@ -81,7 +81,7 @@
                                             <div class="card-body">
                                                 <h4 class="font-weight-bold mt-1 mb-3">Dominik 'Valerius2101'</h4>
                                                 <p class="font-weight-bold dark-grey-text h5 mb-4">
-                                                    Initiator (Inaktiv)
+                                                    Initiator
                                                 </p>
                                                 <span class="flag-icon flag-icon-de rounded" style="width: 2.666666em; line-height: 2em;"></span>
                                                 <!-- Triggering button -->
