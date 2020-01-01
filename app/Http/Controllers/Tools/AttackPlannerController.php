@@ -216,7 +216,7 @@ class AttackPlannerController extends BaseController
             
 
             $list = explode('&', $import);
-            if (count($list) < 7)
+            if (count($list) < 7) continue;
             
             $villageModel = new Village();
             $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
