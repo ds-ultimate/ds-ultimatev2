@@ -212,28 +212,31 @@ class AttackPlannerController extends BaseController
         $unitConfig = simplexml_load_string($world->units);
         $imports = explode(PHP_EOL, $request->import);
         foreach ($imports as $import){
-            if ($import != '') {
+            if ($import != '') continue;
+            
 
-                $list = explode('&', $import);
-                $villageModel = new Village();
-                $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
-                $start = $villageModel->find($list[0]);
-                $target = $villageModel->find($list[1]);
+            $list = explode('&', $import);
+            if (count($list) < 7)
+            
+            $villageModel = new Village();
+            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
+            $start = $villageModel->find($list[0]);
+            $target = $villageModel->find($list[1]);
 
-                if ($start != null && $target != null) {
-                    $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
-                    $arrival = (int)$list[3];
-                    $unit = $list[2];
-                    if ($list[7] != '') {
-                        $units = explode('/', $list[7]);
-                        $unitArray = [];
-                        foreach ($units as $unit) {
-                            $unitSplit = explode('=', $unit, 2);
-                            $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
-                        }
+            if ($start != null && $target != null) {
+                $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
+                $arrival = (int)$list[3];
+                $unit = $list[2];
+                
+                if (isset($list[7]) && $list[7] != '') {
+                    $units = explode('/', $list[7]);
+                    $unitArray = [];
+                    foreach ($units as $unit) {
+                        $unitSplit = explode('=', $unit, 2);
+                        $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
                     }
-                    self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
                 }
+                self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
             }
         }
 
