@@ -212,12 +212,11 @@ class AttackPlannerController extends BaseController
         $unitConfig = simplexml_load_string($world->units);
         $imports = explode(PHP_EOL, $request->import);
         foreach ($imports as $import){
-            if ($import != '') continue;
+            if ($import == '') continue;
             
 
             $list = explode('&', $import);
             if (count($list) < 7) continue;
-            
             $villageModel = new Village();
             $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
             $start = $villageModel->find($list[0]);
