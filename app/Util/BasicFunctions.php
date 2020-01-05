@@ -316,14 +316,18 @@ class BasicFunctions
         return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
     }
 
-    public static function thousandsCurrencyFormat($num) {
+    public static function thousandsCurrencyFormat($num, $uc = false) {
 
         if($num>100000) {
 
             $x = round($num);
             $x_number_format = number_format($x);
             $x_array = explode(',', $x_number_format);
-            $x_parts = array('k', 'm', 'b', 't');
+            if($uc){
+                $x_parts = array('K', 'M', 'B', 'T');
+            }else{
+                $x_parts = array('k', 'm', 'b', 't');
+            }
             $x_count_parts = count($x_array) - 1;
             $x_display = $x;
             $x_display = $x_array[0] . ((int) $x_array[1][0] !== 0 ? '.' . $x_array[1][0] : '') . ((int) $x_array[1][1] !== 0 ? $x_array[1][1] : '');

@@ -66,7 +66,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ __('ui.server.title') }}:</h2>
-                    <table class="table table-hover table-striped no-wrap">
+                    <table class="table table-hover table-striped text-break">
                         <thead>
                         <tr>
                             <th></th>
@@ -81,7 +81,7 @@
                             <tr>
                                 <td><span class="flag-icon flag-icon-{{ $serverData->flag }}"></span></td>
                                 <td>{{ $serverData->code }}</td>
-                                <td><a href="{{$serverData->url}}">{{ $serverData->url }}</a></td>
+                                <td style="word-break: break-all;"><a href="{{$serverData->url}}">{{ $serverData->url }}</a></td>
                                 <td>{{ $serverData->worlds->count() }}</td>
                                 <td><a href="{{ route('server', [$serverData->code]) }}" class="btn btn-primary btn-sm">{{ __('ui.server.show') }}</a></td>
                             </tr>
