@@ -55,6 +55,37 @@ class MapController extends BaseController
                 abort_unless($key == $wantedMap->edit_key, 403);
                 if($wantedMap->drawing_obj == null)
                     return "";
+                
+                /*$rawData = json_decode($wantedMap->drawing_obj);
+                foreach($rawData->objects as $obj) {
+                    if(isset($obj->eraserPaths)) {
+                        $cnt = count($obj->eraserPaths);
+                        for($i = 0; $i < $cnt; $i++) {
+                            unset($obj->eraserPaths[$i]);
+                        }
+                    }
+                }
+                
+                $newindex = 0;
+                $oldCnt = count($rawData->objects);
+                for($i = 0; $i < $oldCnt; $i++) {
+                   if($rawData->objects[$i]->type == "ErasablePath" ||
+                           $rawData->objects[$i]->type == "EraserPath") {
+                       unset($rawData->objects[$i]);
+                       continue;
+                   }
+                   if($i != $newindex) {
+                       $rawData->objects[$newindex] = $rawData->objects[$i];
+                       unset($rawData->objects[$i]);
+                   }
+                   $newindex++;
+                }
+                
+                $modified = json_encode($rawData);
+
+                return $modified;
+                */
+                
                 return $wantedMap->drawing_obj;
             default:
                 abort(404);
@@ -209,6 +240,7 @@ class MapController extends BaseController
             }
         }
         
+        $map->setFont("fonts/arial.ttf");
         $map->render();
         return $map->output($ext);
     }
