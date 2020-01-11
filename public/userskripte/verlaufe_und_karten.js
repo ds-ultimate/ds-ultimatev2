@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name           DS-Ultimate Verlaeufe
-// @description    Die Stämme: Fügt bei der Info-Seite von Spieler und Stämme Bash- und Punkteübersichten von DS-Ultimate ein.
+// @description    Die Staemme: Fuegt bei der Info-Seite von Spieler und Staemme Bash- und Punkteuebersichten von DS-Ultimate ein.
 // @namespace      https://ds-ultimate.de
-// @version        1.0
+// @version        1.1
 // @downloadURL    https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @updateURL      https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @include        https://de*.die-staemme.de/game.php*screen=info_player*

@@ -230,4 +230,5 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
     'barracks' => 'Kaserne',
     'church_f' => 'Erste Kirche',
   ),
+  'signature' => 'Signatur',
 );

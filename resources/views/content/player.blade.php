@@ -91,6 +91,13 @@
                             </tr>
                             </tbody>
                         </table>
+                        <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
+                        <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
+                            <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('signature')"><i class="far fa-copy"></i></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
                     </div>
@@ -178,6 +185,15 @@
                 $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
             });
         });
+
+        function copy(type) {
+            /* Get the text field */
+            var copyText = $("#" + type);
+            /* Select the text field */
+            copyText.select();
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+        }
     </script>
     <script>
         $(document).ready(function () {
