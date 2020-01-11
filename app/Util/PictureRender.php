@@ -47,6 +47,10 @@ class PictureRender {
                 ->header('Content-Type', 'image/base64');
     }
     
+    public function getRawImage() {
+        return $this->image;
+    }
+    
     public static function pngToBase64($png) {
         return "data:image/png;base64,".base64_encode($png);
     }

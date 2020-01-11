@@ -112,14 +112,16 @@ class Player extends CustomModel
      * @param int $playerID
      * @return \Illuminate\Support\Collection
      */
-    public static function playerDataChart($server, $world, $playerID){
+    public static function playerDataChart($server, $world, $playerID, $dayDelta = 30){
         $playerID = (int) $playerID;
         $tabelNr = $playerID % config('dsUltimate.hash_player');
-
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
+        $time = Carbon::createFromTimestamp(time());
+        $playerDataArray = $playerModel->where('playerID', $playerID)->where('created_at', '>', $time->subDays($dayDelta+1))->orderBy('updated_at', 'ASC')->get();
+        if ($dayDelta){
 
-        $playerDataArray = $playerModel->where('playerID', $playerID)->orderBy('updated_at', 'ASC')->get();
+        }
         $playerDatas = collect();
 
         foreach ($playerDataArray as $player){

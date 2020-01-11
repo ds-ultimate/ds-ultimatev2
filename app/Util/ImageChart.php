@@ -45,14 +45,19 @@ class ImageChart extends PictureRender {
         $this -> show_errs = $show_errs;
     }
 
-    public function render($data, $identification_str, $diagram_type, $display_invers) {
+    public function render($data, $identification_str, $diagram_type, $display_invers, $transparentBackground = false) {
         $thick = 1;
         imagesetthickness($this->image,$thick);
 
+        if($transparentBackground) {
+            $bg = imagecolorallocatealpha($this->image, 255, 255, 255, 127);
+        } else {
+            $bg = imagecolorallocate($this->image, 255, 255, 255);
+        }
+        
         //preparation & settings specification
         ksort($data);
         if(count($data)<= 1) {
-            imagecolorallocate($this->image, 255, 255, 255); #Hintergrund
             $color_black = imagecolorallocate($this->image, 0, 0, 0);
             $font_size = $this->height / 20;
             $box = imagettfbbox($font_size, 0, $this->font, $identification_str);
@@ -72,8 +77,7 @@ class ImageChart extends PictureRender {
             $min_data--;
             $data_range = $max_data - $min_data;
         }
-
-        $color_white = imagecolorallocate($this->image, 255, 255, 255); #Hintergrund
+        
         $color_grey = imagecolorallocate($this->image, 210, 210, 210);
         $color_black = imagecolorallocate($this->image, 0, 0, 0);
         $color_blue = imagecolorallocate($this->image, 0, 0, 255);
