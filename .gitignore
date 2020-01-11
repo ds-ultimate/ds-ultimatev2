@@ -4,13 +4,13 @@
 /storage/*.key
 /vendor
 .env
+.env.bak*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
 _ide_helper.php
-
 /.idea
 /stats
 .htpasswd
