@@ -609,7 +609,7 @@ class APIController extends Controller
             imagettftext($image, 10, 0, 56 + 4 + 18 + 3 + 100, 38 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial.ttf', \App\Util\BasicFunctions::thousandsCurrencyFormat($playerData->offBash, true) . ' [' . (isset($playerData->offBashRank) ? $playerData->offBashRank . '.]' : '--]'));
             imagettftext($image, 10, 0, 56 + 4 + 18 + 3 + 100, 59 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial.ttf', \App\Util\BasicFunctions::thousandsCurrencyFormat($playerData->defBash, true) . ' [' . (isset($playerData->defBashRank) ? $playerData->defBashRank . '.]' : '--]'));
             imagettftext($image, 10, 0, 56 + 4 + 18 + 3 + 100 + 4 + 18 + 3 + 100, 38 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial.ttf', \App\Util\BasicFunctions::thousandsCurrencyFormat($playerData->gesBash, true) . ' [' . (isset($playerData->gesBashRank) ? $playerData->gesBashRank . '.]' : '--]'));
-            imagettftext($image, 10, 0, 56 + 4 + 18 + 3 + 100 + 4 + 18 + 3 + 100, 59 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', ((isset($playerData->allyLatest))?$playerData->allyLatest->tag . ' [' . $playerData->allyLatest->rank . '.]':'--'));
+            imagettftext($image, 10, 0, 56 + 4 + 18 + 3 + 100 + 4 + 18 + 3 + 100, 59 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', ((isset($playerData->allyLatest))?\App\Util\BasicFunctions::decodeName($playerData->allyLatest->tag ). ' [' . $playerData->allyLatest->rank . '.]':'--'));
 
             //copy from PictureController getPlayerSizedPic
             $rawStatData = Player::playerDataChart($server, $world, $id, 17);
