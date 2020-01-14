@@ -2,7 +2,7 @@
 // @name           DS-Ultimate Verlaeufe
 // @description    Die Staemme: Fuegt bei der Info-Seite von Spieler und Staemme Bash- und Punkteuebersichten von DS-Ultimate ein.
 // @namespace      https://ds-ultimate.de
-// @version        1.1
+// @version        1.2
 // @downloadURL    https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @updateURL      https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @include        https://de*.die-staemme.de/game.php*screen=info_player*
@@ -52,13 +52,13 @@ if(getUrlParameter('screen') == 'info_player'){
   bash = true;
 }
 if(getUrlParameter('screen') == 'info_ally'){
-  element = $('#content_value td:first-child .vis');
+  element = $('td#embedmap_village').parent().parent().parent();
   width = element.width();
   type = ['a', 'ally'];
   bash = true;
 }
 if(getUrlParameter('screen') == 'info_village'){
-  element = $('#content_value td:first-child .vis');
+  element = $('td#embedmap_village').parent().parent().parent();
   width = element.width();
   type = ['v', 'village'];
   bash = false;
