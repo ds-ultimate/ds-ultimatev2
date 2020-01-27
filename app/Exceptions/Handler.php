@@ -44,12 +44,17 @@ class Handler extends ExceptionHandler
             "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException",
             "Symfony\\Component\\HttpKernel\\Exception\\HttpException",
             "Illuminate\\Session\\TokenMismatchException",
+            "Illuminate\\Database\\Eloquent\\ModelNotFoundException",
+            "NotificationChannels\\Discord\\Exceptions\\CouldNotSendNotification",
         ];
         
-        if (!in_array(get_class($exception), $ignore) && $eMessage != '') {
-            if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
-                Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+        try {
+            if (!in_array(get_class($exception), $ignore) && $eMessage != '') {
+                if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
+                    Notification::send(new Log(), null, new DiscordNotification('exception', $exception));
+                }
             }
+        } catch (Exception $ex) {
         }
         parent::report($exception);
     }
