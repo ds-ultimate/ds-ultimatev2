@@ -121,7 +121,7 @@
                                 {{ __('ui.unit.spear') }}
                             </td>
                             <td id="spearTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->spear->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->spear->speed)*60*1000) }}
                             </td>
                         </tr>
                         <tr>
@@ -130,7 +130,7 @@
                                 {{ __('ui.unit.sword') }}
                             </td>
                             <td id="swordTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->sword->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->sword->speed)*60*1000) }}
                             </td>
                         </tr>
                         <tr>
@@ -139,7 +139,7 @@
                                 {{ __('ui.unit.axe') }}
                             </td>
                             <td id="axeTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->axe->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->axe->speed)*60*1000) }}
                             </td>
                         </tr>
                         @if ($config->game->archer == 1)
@@ -149,7 +149,7 @@
                                     {{ __('ui.unit.archer') }}
                                 </td>
                                 <td id="archerTime">
-                                    {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->archer->speed))*60*1000) }}
+                                    {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->archer->speed)*60*1000) }}
                                 </td>
                             </tr>
                         @endif
@@ -159,7 +159,7 @@
                                 {{ __('ui.unit.spy') }}
                             </td>
                             <td id="spyTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->spy->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->spy->speed)*60*1000) }}
                             </td>
                         </tr>
                         <tr>
@@ -168,7 +168,7 @@
                                 {{ __('ui.unit.light') }}
                             </td>
                             <td id="lightTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->light->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->light->speed)*60*1000) }}
                             </td>
                         </tr>
                         @if ($config->game->archer == 1)
@@ -178,7 +178,7 @@
                                     {{ __('ui.unit.marcher') }}
                                 </td>
                                 <td id="marcherTime">
-                                    {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->marcher->speed))*60*1000) }}
+                                    {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->marcher->speed)*60*1000) }}
                                 </td>
                             </tr>
                         @endif
@@ -188,7 +188,7 @@
                                 {{ __('ui.unit.heavy') }}
                             </td>
                             <td id="heavyTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->heavy->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->heavy->speed)*60*1000) }}
                             </td>
                         </tr>
                         <tr>
@@ -197,7 +197,7 @@
                                 {{ __('ui.unit.ram') }}
                             </td>
                             <td id="ramTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->ram->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->ram->speed)*60*1000) }}
                             </td>
                         </tr>
                         <tr>
@@ -206,7 +206,7 @@
                                 {{ __('ui.unit.catapult') }}
                             </td>
                             <td id="catapultTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->catapult->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->catapult->speed)*60*1000) }}
                             </td>
                         </tr>
                         @if ($config->game->knight > 0)
@@ -216,7 +216,7 @@
                                     {{ __('ui.unit.knight') }}
                                 </td>
                                 <td id="knightTime">
-                                    {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->knight->speed))*60*1000) }}
+                                    {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->knight->speed)*60*1000) }}
                                 </td>
                             </tr>
                         @endif
@@ -226,7 +226,7 @@
                                 {{ __('ui.unit.snob') }}
                             </td>
                             <td id="snobTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->snob->speed))*60*1000) }}
+                                {{ \App\Util\BasicFunctions::convertTime(floatval($unitConfig->snob->speed)*60*1000) }}
                             </td>
                         </tr>
                     </table>
@@ -245,7 +245,7 @@
         }
 
         function convertTime(input){
-            var input1 = Math.floor( input * 60);
+            var input1 = Math.ceil( input * 60);
             var round = (input % 1000 >= 500) ? 1 : 0;
             var seconds = (input1 % 60) + round;
             var input2 = Math.floor(input1 / 60);

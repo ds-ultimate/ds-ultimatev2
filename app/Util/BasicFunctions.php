@@ -270,7 +270,7 @@ class BasicFunctions
     }
 
     public static function convertTime($input){
-        $input = floor($input / 1000);
+        $input = ceil($input / 1000);
 
         $seconds = $input % 60;
         $input = floor($input / 60);
