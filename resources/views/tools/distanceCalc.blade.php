@@ -270,7 +270,7 @@
                     start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xStart.val() + '|' + yStart.val() + '</b>  [' + data['continent'] + ']');
                     start.find('tr:nth-child(2) td').html(numeral(data['points']).format('0,0'));
                     start.find('tr:nth-child(3) td').html(data['ownerName']);
-                    start.find('tr:nth-child(4) td').html(data['ownerAlly']);
+                    start.find('tr:nth-child(4) td').html(data['ownerAllyName']);
                 })
                 .catch((error) =>{
                     var start = $('#startVillage');
@@ -289,7 +289,7 @@
                     start.find('tr:nth-child(1) td').html(data['name'].trunc(25) + ' <b>' + xTarget.val() + '|' + yTarget.val() + '</b>  [' + data['continent'] + ']');
                     start.find('tr:nth-child(2) td').html(numeral(data['points']).format('0,0'));
                     start.find('tr:nth-child(3) td').html(data['ownerName']);
-                    start.find('tr:nth-child(4) td').html(data['ownerAlly']);
+                    start.find('tr:nth-child(4) td').html(data['ownerAllyName']);
                 })
                 .catch((error) =>{
                     var start = $('#targetVillage');
@@ -300,25 +300,25 @@
                 });
 
 
-            var dis = Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2));
-            $('#spearTime').html(convertTime('{{ round((float)$unitConfig->spear->speed) }}' * dis));
-            $('#swordTime').html(convertTime('{{ round((float)$unitConfig->sword->speed) }}' * dis));
-            $('#axeTime').html(convertTime('{{ round((float)$unitConfig->axe->speed) }}' * dis));
+            var dis = (Math.round(Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2)) * 1000) / 1000);
+            $('#spearTime').html(convertTime({{ round((float)$unitConfig->spear->speed, 3) }} * dis));
+            $('#swordTime').html(convertTime({{ round((float)$unitConfig->sword->speed, 3) }} * dis));
+            $('#axeTime').html(convertTime({{ round((float)$unitConfig->axe->speed, 3) }} * dis));
             @if ($config->game->archer == 1)
-            $('#archerTime').html(convertTime('{{ round((float)$unitConfig->archer->speed) }}' * dis));
+            $('#archerTime').html(convertTime({{ round((float)$unitConfig->archer->speed, 3) }} * dis));
             @endif
-            $('#spyTime').html(convertTime('{{ round((float)$unitConfig->spy->speed) }}' * dis));
-            $('#lightTime').html(convertTime('{{ round((float)$unitConfig->light->speed) }}' * dis));
+            $('#spyTime').html(convertTime({{ round((float)$unitConfig->spy->speed, 3) }} * dis));
+            $('#lightTime').html(convertTime({{ round((float)$unitConfig->light->speed, 3) }} * dis));
             @if ($config->game->archer == 1)
-            $('#marcherTime').html(convertTime('{{ round((float)$unitConfig->marcher->speed) }}' * dis));
+            $('#marcherTime').html(convertTime({{ round((float)$unitConfig->marcher->speed, 3) }} * dis));
             @endif
-            $('#heavyTime').html(convertTime('{{ round((float)$unitConfig->heavy->speed) }}' * dis));
-            $('#ramTime').html(convertTime('{{ round((float)$unitConfig->ram->speed) }}' * dis));
-            $('#catapultTime').html(convertTime('{{ round((float)$unitConfig->catapult->speed) }}' * dis));
+            $('#heavyTime').html(convertTime({{ round((float)$unitConfig->heavy->speed, 3) }} * dis));
+            $('#ramTime').html(convertTime({{ round((float)$unitConfig->ram->speed, 3) }} * dis));
+            $('#catapultTime').html(convertTime({{ round((float)$unitConfig->catapult->speed, 3) }} * dis));
             @if ($config->game->knight > 0)
-            $('#knightTime').html(convertTime('{{ round((float)$unitConfig->knight->speed) }}' * dis));
+            $('#knightTime').html(convertTime({{ round((float)$unitConfig->knight->speed, 3) }} * dis));
             @endif
-            $('#snobTime').html(convertTime('{{ round((float)$unitConfig->snob->speed) }}' * dis));
+            $('#snobTime').html(convertTime({{ round((float)$unitConfig->snob->speed, 3) }} * dis));
         }
 
         String.prototype.trunc = String.prototype.trunc ||
@@ -347,6 +347,7 @@
             $("#xStart").bind('paste', function(e) {
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
+                $("#xStart").val(coords[0].substring(0, 3));
                 $("#yStart").val(coords[1].substring(0, 3));
             });
 
@@ -359,6 +360,7 @@
             $("#xTarget").bind('paste', function(e) {
                 var pastedData = e.originalEvent.clipboardData.getData('text');
                 var coords = pastedData.split("|");
+                $("#xTarget").val(coords[0].substring(0, 3));
                 $("#yTarget").val(coords[1].substring(0, 3));
             });
 
