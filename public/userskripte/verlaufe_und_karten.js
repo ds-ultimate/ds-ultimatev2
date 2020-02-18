@@ -2,7 +2,7 @@
 // @name           DS-Ultimate Verlaeufe
 // @description    Die Staemme: Fuegt bei der Info-Seite von Spieler und Staemme Bash- und Punkteuebersichten von DS-Ultimate ein.
 // @namespace      https://ds-ultimate.de
-// @version        1.2
+// @version        1.3
 // @downloadURL    https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @updateURL      https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
 // @include        https://de*.die-staemme.de/game.php*screen=info_player*
@@ -41,7 +41,7 @@ var generateDSUltimateImage = function(world, type, id, diagramType, width) {
 
 var host = win.location.host;
 var worldName = host.split('.');
-var world = worldName[0].match(/[a-z]+|[^a-z]+/gi);
+var world = [worldName[0].substring(0,2), worldName[0].substring(2)];
 var id = (getUrlParameter('id'))?getUrlParameter('id'): win.game_data.player.id;
 
 var element, width, type;
