@@ -561,7 +561,7 @@ class APIController extends Controller
                 })
                 ->addColumn('player', function ($connection) {
                     $player = Player::player($connection->world->server->code, $connection->world->name, $connection->player_id);
-                    return BasicFunctions::decodeName($player->name);
+                    return BasicFunctions::decodeName(($player != null)?$player->name:'<b>'.__('ui.player.deleted').'</b>');
                 })
                 ->editColumn('key', function ($connection) {
                     if ($connection->verified == 0) {
@@ -583,7 +583,7 @@ class APIController extends Controller
 
                     return $button;
                 })
-                ->rawColumns(['server', 'action','key'])
+                ->rawColumns(['server', 'action','key', 'player'])
                 ->toJson();
     }
 
