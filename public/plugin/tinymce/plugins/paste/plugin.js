@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.1.4 (2019-12-11)
+ * Version: 5.2.0 (2020-02-13)
  */
 (function (domGlobals) {
     'use strict';
@@ -1087,6 +1087,8 @@
       shouldUseDefaultFilters: shouldUseDefaultFilters
     };
 
+    var nbsp = '\xA0';
+
     function filter$1(content, items) {
       global$4.each(items, function (v) {
         if (v.constructor === RegExp) {
@@ -1146,7 +1148,7 @@
         if (!s1 && !s2) {
           return ' ';
         }
-        return '\xA0';
+        return nbsp;
       }
       html = filter$1(html, [
         /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig,
@@ -1399,12 +1401,12 @@
         ],
         [
           /&nbsp;/gi,
-          '\xA0'
+          nbsp
         ],
         [
           /<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
           function (str, spaces) {
-            return spaces.length > 0 ? spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join('\xA0') : '';
+            return spaces.length > 0 ? spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join(nbsp) : '';
           }
         ]
       ]);
@@ -1580,8 +1582,8 @@
         return action(editor, html, pasteHtml) !== true;
       });
     };
-    var insertContent = function (editor, html) {
-      if (Settings.isSmartPasteEnabled(editor) === false) {
+    var insertContent = function (editor, html, pasteAsText) {
+      if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
         pasteHtml(editor, html);
       } else {
         smartInsertContent(editor, html);
@@ -1604,11 +1606,11 @@
     };
     var normalizeWhitespace = function (text) {
       var result = foldl(text, function (acc, c) {
-        if (isCollapsibleWhitespace(c) || c === '\xA0') {
+        if (isCollapsibleWhitespace(c) || c === nbsp) {
           if (acc.pcIsSpace || acc.str === '' || acc.str.length === text.length - 1 || isNewline(text, acc.str.length + 1)) {
             return {
               pcIsSpace: false,
-              str: acc.str + '\xA0'
+              str: acc.str + nbsp
             };
           } else {
             return {
@@ -1629,18 +1631,21 @@
       return result.str;
     };
 
+    var doPaste = function (editor, content, internal, pasteAsText) {
+      var args = ProcessFilters.process(editor, content, internal);
+      if (args.cancelled === false) {
+        SmartPaste.insertContent(editor, args.content, pasteAsText);
+      }
+    };
     var pasteHtml$1 = function (editor, html, internalFlag) {
       var internal = internalFlag ? internalFlag : InternalHtml.isMarked(html);
-      var args = ProcessFilters.process(editor, InternalHtml.unmark(html), internal);
-      if (args.cancelled === false) {
-        SmartPaste.insertContent(editor, args.content);
-      }
+      doPaste(editor, InternalHtml.unmark(html), internal, false);
     };
     var pasteText = function (editor, text) {
       var encodedText = editor.dom.encode(text).replace(/\r\n/g, '\n');
       var normalizedText = normalizeWhitespace(encodedText);
       var html = Newlines.convert(normalizedText, editor.settings.forced_root_block, editor.settings.forced_root_block_attrs);
-      pasteHtml$1(editor, html, false);
+      doPaste(editor, html, false, true);
     };
     var getDataTransferItems = function (dataTransfer) {
       var items = {};
@@ -1803,7 +1808,7 @@
         }
       });
       function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
-        var content, isPlainTextHtml;
+        var content, isPlainTextHtml, isImage;
         if (hasContentType(clipboardContent, 'text/html')) {
           content = clipboardContent['text/html'];
         } else {
@@ -1816,10 +1821,11 @@
         content = Utils.trimHtml(content);
         pasteBin.remove();
         isPlainTextHtml = internal === false && Newlines.isPlainText(content);
-        if (!content.length || isPlainTextHtml) {
+        isImage = SmartPaste.isImageUrl(content);
+        if (!content.length || isPlainTextHtml && !isImage) {
           plainTextMode = true;
         }
-        if (plainTextMode) {
+        if (plainTextMode || isImage) {
           if (hasContentType(clipboardContent, 'text/plain') && isPlainTextHtml) {
             content = clipboardContent['text/plain'];
           } else {
@@ -2051,8 +2057,6 @@
       };
     };
 
-    var noop$1 = function () {
-    };
     var hasWorkingClipboardApi = function (clipboardData) {
       return global$2.iOS === false && clipboardData !== undefined && typeof clipboardData.setData === 'function' && Utils.isMsEdge() !== true;
     };
@@ -2140,7 +2144,8 @@
     var copy = function (editor) {
       return function (evt) {
         if (hasSelectedContent(editor)) {
-          setClipboardData(evt, getData(editor), fallback(editor), noop$1);
+          setClipboardData(evt, getData(editor), fallback(editor), function () {
+          });
         }
       };
     };
