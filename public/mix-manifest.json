@@ -32,5 +32,7 @@
     "/plugin/drawerJS/assets/cursor-fa-rotate-right.cur": "/plugin/drawerJS/assets/cursor-fa-rotate-right.cur",
     "/plugin/drawerJS/assets/cursor-fa-rotate-right.png": "/plugin/drawerJS/assets/cursor-fa-rotate-right.png",
     "/plugin/drawerJS/assets/pencil-square-o.32.png": "/plugin/drawerJS/assets/pencil-square-o.32.png",
-    "/plugin/drawerJS/assets/transparent.png": "/plugin/drawerJS/assets/transparent.png"
+    "/plugin/drawerJS/assets/transparent.png": "/plugin/drawerJS/assets/transparent.png",
+    "/plugin/coreui/coreui.min.css": "/plugin/coreui/coreui.min.css",
+    "/plugin/coreui/coreui.min.js": "/plugin/coreui/coreui.min.js"
 }

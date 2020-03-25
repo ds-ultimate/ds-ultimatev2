@@ -137,3 +137,13 @@ mix.copy([
 mix.sass('resources/sass/fontawesome.scss', 'public/css');
 
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/plugin/fontawesome/');
+
+
+/**
+ * coreui
+ */
+
+mix.copy([
+    'node_modules/@coreui/coreui/dist/css/coreui.min.css',
+    'node_modules/@coreui/coreui/dist/js/coreui.min.js'
+], 'public/plugin/coreui/');

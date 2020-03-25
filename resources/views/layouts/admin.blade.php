@@ -15,7 +15,7 @@
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
     
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
-    <link href="https://unpkg.com/@coreui/coreui/dist/css/coreui.min.css" rel="stylesheet" />
+    <link href="{{ asset('plugin/coreui/coreui.min.css') }}" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="{{ asset('vendor/admin/css/custom.css') }}" rel="stylesheet" />
@@ -88,7 +88,7 @@
     <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/datatables.min.js') }}"></script>
     
-    <script src="https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js"></script>
+    <script src="{{ asset('plugin/coreui/coreui.min.js') }}"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
