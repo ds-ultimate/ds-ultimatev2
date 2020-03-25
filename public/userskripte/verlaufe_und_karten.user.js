@@ -3,8 +3,8 @@
 // @description    Die Staemme: Fuegt bei der Info-Seite von Spieler und Staemme Bash- und Punkteuebersichten von DS-Ultimate ein.
 // @namespace      https://ds-ultimate.de
 // @version        1.3
-// @downloadURL    https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
-// @updateURL      https://ds-ultimate.de/userskripte/verlaufe_und_karten.js
+// @downloadURL    https://ds-ultimate.de/userskripte/verlaufe_und_karten.user.js
+// @updateURL      https://ds-ultimate.de/userskripte/verlaufe_und_karten.user.js
 // @include        https://de*.die-staemme.de/game.php*screen=info_player*
 // @include        https://de*.die-staemme.de/game.php*screen=info_ally*
 // @include        https://de*.die-staemme.de/game.php*screen=info_village*

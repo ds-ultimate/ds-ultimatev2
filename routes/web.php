@@ -22,6 +22,11 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware('verified'
 Route::get('/test', function () {
 });
 
+Route::get('/userskripte/verlaufe_und_karten.js', function() {
+    return Redirect::to('/userskripte/verlaufe_und_karten.user.js', 301);
+});
+
+
 Route::get('/setlocale/{locale}',function($lang){
     $validLocale = in_array($lang, ['de', 'en']);
     if ($validLocale) {
