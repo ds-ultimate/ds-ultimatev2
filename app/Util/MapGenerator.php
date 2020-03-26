@@ -54,6 +54,8 @@ class MapGenerator extends PictureRender {
     private $drawing_img = null;
     private $drawing_dimensions = null;
     
+    private $showContinentNumbers = true;
+    
     /*
      * Variables that are holding Data got from Database
      */
@@ -418,18 +420,20 @@ class MapGenerator extends PictureRender {
             imagefilledrectangle($this->image, 0, $y-$thick, $this->width, $y+$thick, $gridColBig);
         }
         
-        for($i = 0; $i <= 9; $i++) {
-            for($j = 0; $j <= 9; $j++) {
-                $txt = "K$j$i";
-                $size = $this->fieldWidth * 10;
-                $box = imagettfbbox($size, 0, $this->font, $txt);
-                
-                $xwanted = intval($this->fieldWidth * (($i+1)*100 - $this->mapDimension['xs']));
-                $ywanted = intval($this->fieldHeight * (($j+1)*100 - $this->mapDimension['ys']));
-                
-                $x = $xwanted - $box[2];
-                $y = $ywanted - $box[1];
-                imagettftext($this->image, $size, 0, $x, $y, $gridColText, $this->font, $txt);
+        if($this->showContinentNumbers) {
+            for($i = 0; $i <= 9; $i++) {
+                for($j = 0; $j <= 9; $j++) {
+                    $txt = "K$j$i";
+                    $size = $this->fieldWidth * 10;
+                    $box = imagettfbbox($size, 0, $this->font, $txt);
+
+                    $xwanted = intval($this->fieldWidth * (($i+1)*100 - $this->mapDimension['xs']));
+                    $ywanted = intval($this->fieldHeight * (($j+1)*100 - $this->mapDimension['ys']));
+
+                    $x = $xwanted - $box[2];
+                    $y = $ywanted - $box[1];
+                    imagettftext($this->image, $size, 0, $x, $y, $gridColText, $this->font, $txt);
+                }
             }
         }
         
@@ -696,6 +700,10 @@ class MapGenerator extends PictureRender {
         
         $this->markerFactor = $factor;
         return $this;
+    }
+    
+    public function setShowContinentNumbers($showContinentNumbers) {
+        $this->showContinentNumbers = $showContinentNumbers;
     }
     
     private function convertToInternalDimensions($dimensions) {

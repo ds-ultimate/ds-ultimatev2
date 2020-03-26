@@ -174,6 +174,10 @@ class MapController extends BaseController
             $wantedMap->markerFactor = $getArray['markerFactor'];
         }
         
+        if(isset($getArray['continentNumbersHere'])) {
+            $wantedMap->continentNumbers = (isset($getArray['continentNumbers']))?(1):(0);
+        }
+        
         $wantedMap->save();
         
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));

@@ -217,6 +217,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'showText' => 'Markieren',
     'highlight' => 'Hervorheben',
     'highlightAll' => 'Alle hervorheben',
+    'showContinentNumbers' => 'Zeige Kontinenten-Nummern',
   ),
   'pointCalc' => 
   array (

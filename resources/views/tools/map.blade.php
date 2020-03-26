@@ -281,6 +281,13 @@
                                 <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
                                 <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
                             </div>
+                            <div class="form-inline mb-2">
+                                <div class="form-check col-lg-auto">
+                                    <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
+                                    <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
+                                    <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
+                                </div>
+                            </div>
                             <div class="form-group float-right">
                                 <input type="submit" class="btn btn-sm btn-success">
                             </div>
@@ -506,6 +513,7 @@
         $('.colour-picker-map').on('colorpickerHide', store);
         $('#checkbox-show-player').change(store);
         $('#checkbox-show-barbarian').change(store);
+        $('#checkbox-continent-numbers').change(store);
         $('#map-zoom-value').change(store);
         $('#center-pos-x').change(store);
         $('#center-pos-y').change(store);

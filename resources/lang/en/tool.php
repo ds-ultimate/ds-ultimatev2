@@ -217,6 +217,7 @@ Attackcount: %ELEMENT_COUNT%
     'showText' => 'Add marker',
     'highlight' => 'Highlight this',
     'highlightAll' => 'Highlight all',
+    'showContinentNumbers' => 'Show continent numbers',
   ),
   'pointCalc' => 
   array (

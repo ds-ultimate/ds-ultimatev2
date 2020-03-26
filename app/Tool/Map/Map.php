@@ -42,6 +42,7 @@ class Map extends Model
         'drawing_dim',
         'drawing_png',
         'markerFactor',
+        'continentNumbers',
     ];
 
     public function user(){
@@ -222,6 +223,14 @@ class Map extends Model
         return $parts[1] != "null";
     }
     
+    public function continentNumbersEnabled() {
+        if(!isset($this->continentNumbers) || $this->continentNumbers == null) {
+            return true;
+        }
+        
+        return $this->continentNumbers == 1;
+    }
+    
     public function setDimensions($array) {
         $dim = "" . ((int) $array['xs']) . ";";
         $dim .= ((int) $array['xe']) . ";";
@@ -327,6 +336,7 @@ class Map extends Model
         if(isset($this->markerFactor)) {
             $generator->setMarkerFactor($this->markerFactor);
         }
+        $generator->setShowContinentNumbers($this->continentNumbersEnabled());
         
         $generator->setLayerOrder($this->getLayerConfiguration());
     }
