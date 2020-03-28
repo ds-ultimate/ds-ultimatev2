@@ -467,6 +467,7 @@ class MapGenerator extends PictureRender {
     
     private function renderText() {
         $white = imagecolorallocate($this->image, 255, 255, 255);
+        $black = imagecolorallocate($this->image, 0, 0, 0);
         foreach($this->dataAlly as $ally) {
             if(!$ally['showText']) continue;
             if($ally['villNum'] <= 0) continue;
@@ -474,7 +475,12 @@ class MapGenerator extends PictureRender {
             $x = $ally['villX'] / $ally['villNum'];
             $y = $ally['villY'] / $ally['villNum'];
             $color = imagecolorallocate($this->image, $ally['colour'][0], $ally['colour'][1], $ally['colour'][2]);
-            $this->renderShadowedCenteredText($x, $y, $ally['tag'], $color, $white);
+            if($ally['colour'][0] + $ally['colour'][1] + $ally['colour'][2] > 600) {
+                //use black shadow for bright colors
+                $this->renderShadowedCenteredText($x, $y, $ally['tag'], $color, $black);
+            } else {
+                $this->renderShadowedCenteredText($x, $y, $ally['tag'], $color, $white);
+            }
         }
         
         foreach($this->dataPlayer as $player) {

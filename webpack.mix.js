@@ -109,25 +109,11 @@ mix.styles([
  */
 
 mix.copy([
-    'node_modules/drawerjs/dist/drawerJs.min.css',
-    'node_modules/drawerjs/dist/drawerJs.standalone.min.js'
+    'node_modules/@ds-ultimate/drawerjs/dist/drawerJs.min.css',
+    'node_modules/@ds-ultimate/drawerjs/dist/drawerJs.standalone.min.js'
 ], 'public/plugin/drawerJS/');
 
-mix.copy([
-    'node_modules/drawerjs/dist/assets/border.gif',
-    'node_modules/drawerjs/dist/assets/border-dashed-bold.png',
-    'node_modules/drawerjs/dist/assets/border-dashed-thin.png',
-    'node_modules/drawerjs/dist/assets/border-solid-bold.png',
-    'node_modules/drawerjs/dist/assets/border-solid-thin.png',
-    'node_modules/drawerjs/dist/assets/cursor-fa-eraser.cur',
-    'node_modules/drawerjs/dist/assets/cursor-fa-eraser.png',
-    'node_modules/drawerjs/dist/assets/cursor-fa-pencil.cur',
-    'node_modules/drawerjs/dist/assets/cursor-fa-pencil.png',
-    'node_modules/drawerjs/dist/assets/cursor-fa-rotate-right.cur',
-    'node_modules/drawerjs/dist/assets/cursor-fa-rotate-right.png',
-    'node_modules/drawerjs/dist/assets/pencil-square-o.32.png',
-    'node_modules/drawerjs/dist/assets/transparent.png',
-], 'public/plugin/drawerJS/assets');
+mix.copyDirectory('node_modules/@ds-ultimate/drawerjs/dist/assets/', 'public/plugin/drawerJS/assets');
 
 
 /**

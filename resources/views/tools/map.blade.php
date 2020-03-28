@@ -494,7 +494,17 @@
         });
 
         $('.colour-picker-map', context).colorpicker({
-            useHashPrefix: false
+            useHashPrefix: false,
+            extensions: [{
+                name: 'swatches',
+                options: {
+                    colors: {
+                        'c11': '#ffffff', 'c12': '#eeece1', 'c13': '#d99694', 'c14': '#c0504d', 'c15': '#f79646', 'c16': '#ffff00', 'c17': '#9bbb59',
+                        'c21': '#4bacc6', 'c22': '#548dd4', 'c23': '#1f497d', 'c24': '#8064a2', 'c25': '#f926e5', 'c26': '#7f6000', 'c27': '#000000',
+                    },
+                    namesAsValues: false
+                }
+            }]
         });
 
         $('.data-input-map').change(function() {
