@@ -11,8 +11,6 @@
 |
 */
 
-use App\Notifications\DiscordNotification;
-
 Route::get('/', 'Controller@index')->name('index');
 
 Auth::routes(['verify' => true]);
