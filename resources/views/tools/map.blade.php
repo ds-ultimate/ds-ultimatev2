@@ -95,16 +95,27 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('tool.map.title')).' ['.$worldData->displayName().']' }}</h1>
-            @if($mode == 'show')
-                <h3 class="font-weight-normal">{{ $wantedMap->title }}</h3>
-            @endif
+            @auth
+            <div class="col-2 position-absolute dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="ownedMaps" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ ucfirst(__('tool.map.fastSwitch')) }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="ownedMaps">
+                    @foreach($ownMaps as $map)
+                        <a class="dropdown-item" href="{{ 
+                            route('tools.mapToolMode', [$map->id, 'edit', $map->edit_key])
+                            }}">{{ $map->getTitle().' ['.$map->world->displayName().']' }}</a>
+                    @endforeach
+                </div>
+            </div>
+            @endauth
+            <h1 class="font-weight-normal">{{ $wantedMap->getTitle().' ['.$worldData->displayName().']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('tool.map.title')).' ' }}
+                {{ $wantedMap->getTitle() }}
             </h1>
             <h4>
                 {{ '['.$worldData->displayName().']' }}
@@ -401,6 +412,12 @@
             $('.'+this.attributes['aria-for'].nodeValue).prop('checked', this.checked);
         });
         addCustomLibs(null);
+
+        $('#title-input').on("keypress keyup blur",function (event) {
+            if (event.keyCode == 13) {
+                titleSave();
+            }
+        });
     });
 
     /**

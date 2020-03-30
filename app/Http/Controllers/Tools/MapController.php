@@ -118,7 +118,12 @@ class MapController extends BaseController
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions'));
+        $ownMaps = array();
+        if(\Auth::check()) {
+            $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        }
+        
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps'));
     }
     
     public function show(Map $wantedMap){
@@ -127,7 +132,12 @@ class MapController extends BaseController
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'mapDimensions'));
+        $ownMaps = array();
+        if(\Auth::check()) {
+            $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        }
+        
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'mapDimensions', 'ownMaps'));
     }
     
     public function save(Map $wantedMap) {
@@ -362,5 +372,20 @@ class MapController extends BaseController
         abort_unless($wantedMap->edit_key == $key, 403);
         $wantedMap->title = $title;
         $wantedMap->save();
+    }
+
+    public function destroy(Map $wantedMap, $key){
+        abort_unless($wantedMap->edit_key == $key, 403);
+        if($wantedMap->delete()){
+            return \Response::json(array(
+                'data' => 'success',
+                'msg' => __('tool.map.destroySuccess'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('tool.map.destroyError'),
+            ));
+        }
     }
 }

@@ -283,4 +283,20 @@ class AttackPlannerController extends BaseController
         $attackList->save();
     }
 
+    public function destroy(AttackList $attackList, $key){
+        abort_unless($attackList->edit_key == $key, 403);
+        if($attackList->delete()){
+            return \Response::json(array(
+                'data' => 'success',
+                'msg' => __('tool.attackPlanner.destroySuccess'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => __('tool.attackPlanner.destroyError'),
+            ));
+        }
+    }
+
+
 }

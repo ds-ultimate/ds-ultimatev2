@@ -21,5 +21,6 @@
     "/plugin/drawerJS/drawerJs.min.css": "/plugin/drawerJS/drawerJs.min.css",
     "/plugin/drawerJS/drawerJs.standalone.min.js": "/plugin/drawerJS/drawerJs.standalone.min.js",
     "/plugin/coreui/coreui.min.css": "/plugin/coreui/coreui.min.css",
-    "/plugin/coreui/coreui.min.js": "/plugin/coreui/coreui.min.js"
+    "/plugin/coreui/coreui.min.js": "/plugin/coreui/coreui.min.js",
+    "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js": "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js"
 }

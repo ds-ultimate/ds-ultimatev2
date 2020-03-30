@@ -41,4 +41,19 @@ return array (
   ),
   'formular' => 'Formular',
   'applog' => 'Anwendungs Log',
+  'title' => 
+  array (
+    'overview' => 'Übersicht von',
+  ),
+  'confirm' => 
+  array (
+    'destroy' => 
+    array (
+      'title' => 'Wirklich löschen?',
+      'ok' => 'Ja',
+      'cancel' => 'Nein',
+      'mapContent' => 'Es wird nicht mehr möglich sein die Karte anzusehen oder zu bearbeiten',
+      'attackPlanContent' => 'Es wird nicht mehr möglich sein den Angriffsplan anzusehen oder zu bearbeiten',
+    ),
+  ),
 );

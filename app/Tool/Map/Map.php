@@ -9,15 +9,19 @@ use App\World;
 use App\Util\MapGenerator;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Map extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'map';
     protected $connection = 'mysql';
 
     protected $dates = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
     
     protected $hidden = [
@@ -55,6 +59,13 @@ class Map extends Model
 
     public function follows(){
         return $this->morphToMany('App\User', 'followable', 'follows');
+    }
+    
+    public function getTitle() {
+        if($this->title == null || $this->title == "") {
+            return ucfirst(__('tool.map.title'));
+        }
+        return $this->title;
     }
     
     /**

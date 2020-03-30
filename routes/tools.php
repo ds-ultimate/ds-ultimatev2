@@ -20,6 +20,7 @@ Route::get('/{server}/{world}/tools/attackPlanner', 'Tools\AttackPlannerControll
 Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');
 Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', 'Tools\AttackPlannerController@title')->name('attackPlannerTitle');
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
+Route::delete('/tools/attackPlanner/{attackList}/{key}', 'Tools\AttackPlannerController@destroy')->name('attackPlannerDestroy');
 Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemController', [
     'only' => ['store', 'destroy', 'update'],
 ]);
@@ -31,6 +32,7 @@ Route::get('/{server}/{world}/tools/map/create', 'Tools\MapController@new')->nam
 Route::post('/tools/map/{wantedMap}/title/{key}/{title}', 'Tools\MapController@title')->name('mapTitle');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@mode')->name('mapToolMode');
 Route::post('/tools/map/{wantedMap}/{action}/{key}', 'Tools\MapController@modePost')->name('mapToolMode.post');
+Route::delete('/tools/map/{wantedMap}/{key}', 'Tools\MapController@destroy')->name('mapDestroy');
 
 Route::get('/{server}/{world}/maptop10', 'Tools\MapController@mapTop10')->name('top10');
 Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name('top10p');

@@ -133,3 +133,12 @@ mix.copy([
     'node_modules/@coreui/coreui/dist/css/coreui.min.css',
     'node_modules/@coreui/coreui/dist/js/coreui.min.js'
 ], 'public/plugin/coreui/');
+
+
+/**
+ * bootstrap confirmation
+ */
+
+mix.copy([
+    'node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js'
+], 'public/plugin/bootstrap-confirmation/');

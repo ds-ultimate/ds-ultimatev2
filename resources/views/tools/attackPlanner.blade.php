@@ -1005,7 +1005,13 @@
             });
         };
 
-        $(document).ready(function (e) {
+        $(function (e) {
+            $('#title-input').on("keypress keyup blur",function (event) {
+                if (event.keyCode == 13) {
+                    titleSave();
+                    event.preventDefault();
+                }
+            });
 
             $('.type').change(function (e) {
                 var dataTarget = $(this).attr('data-target');

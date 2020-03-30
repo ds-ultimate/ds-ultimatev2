@@ -1,18 +1,21 @@
 @extends('layouts.temp')
 
-@section('titel', ucfirst(__('ui.tabletitel.overview')).' von '.Auth::user()->name)
+@section('titel', ucfirst(__('user.title.overview')).' '.Auth::user()->name)
 
 @section('content')
+    <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;">
+
+    </div>
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.tabletitel.overview')).' von '.Auth::user()->name }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('user.title.overview')).' '.Auth::user()->name }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ ucfirst(__('ui.tabletitel.overview')).' von ' }}
+                {{ ucfirst(__('user.title.overview')) }}
             </h1>
             <h4>
                 {{ Auth::user()->name }}
@@ -42,41 +45,44 @@
                             <div class="row mt-2">
                                 <div class="col-4">
                                     <div class="list-group" id="ownMaps" role="tablist">
-                                        @if (count($maps) > 0)
-                                            @foreach($maps as $map)
-                                                <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home">
-                                                    <b>{{ $map->world->displayName() }}</b>
-                                                    <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
-                                                </a>
-                                            @endforeach
-                                        @else
-                                            {{ __('ui.old.nodata') }}
-                                        @endif
+                                        @foreach($maps as $map)
+                                            <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="map-{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home">
+                                                <b>{{ $map->world->displayName() }}</b>
+                                                <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                    <div id="mapNoData"{!! (count($maps)>0)?(' style="display: none"'):('') !!}>
+                                        {{ __('ui.old.nodata') }}
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     @if (count($maps) > 0)
-                                    <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-content" id="map-own-nav-tabContent">
                                         <div class="tab-pane fade show active" id="previewMap" role="tabpanel" aria-labelledby="list-home-list">
                                             <img alt="map" id="imgMap" src="{{ route('api.map.show.sized', [$maps->get(0)->id, $maps->get(0)->show_key, 500, 500, 'png']) }}">
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                                 <div class="col-2">
-                                    <a id="editButtonMap" href="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                    {{--<a id="deleteButtonMap" onclick="destroyMap()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>--}}
-                                    <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
-                                    <div class="input-group mb-2">
-                                        <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkMap')"><i class="far fa-copy"></i></span>
+                                    @if (count($maps) > 0)
+                                    <div id="map-own-side-panel">
+                                        <a id="editButtonMap" href="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
+                                        <a id="deleteButtonMap" data-toggle="confirmation" data-content="{{ __('user.confirm.destroy.mapContent') }}" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
+                                        <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
+                                        <div class="input-group mb-2">
+                                            <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkMap')"><i class="far fa-copy"></i></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
-                                    <div class="input-group mb-2">
-                                        <input id="showLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'show', $maps->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
+                                        <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
+                                        <div class="input-group mb-2">
+                                            <input id="showLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'show', $maps->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
+                                            </div>
                                         </div>
                                     </div>
                                     @endif
@@ -108,37 +114,37 @@
                                                 </div>
                                             </div>
                                         </a>
-                                        @if (count($attackLists) > 0)
-                                            @foreach($attackLists as $attackList)
-                                                <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}')" data-toggle="list" role="tab" aria-controls="home">
-                                                    <div class="row">
-                                                        <div class="col-2">
-                                                            <b>{{ $attackList->world->displayName() }}</b>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <span class="badge badge-info badge-pill float-right text-white">{{ $attackList->nextAttack() }}</span>
-                                                        </div>
-                                                        <div class="col-1">
-                                                            <span class="badge badge-success badge-pill float-right">{{ $attackList->attackCount() }}</span>
-                                                        </div>
-                                                        <div class="col-1">
-                                                            <span class="badge badge-danger badge-pill float-right">{{ $attackList->outdatedCount() }}</span>
-                                                        </div>
+                                        @foreach($attackLists as $attackList)
+                                            <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="attackList-{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}')" data-toggle="list" role="tab" aria-controls="home">
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <b>{{ $attackList->world->displayName() }}</b>
                                                     </div>
-                                                </a>
-                                            @endforeach
-                                        @else
-                                            {{ __('ui.old.nodata') }}
-                                        @endif
+                                                    <div class="col-6">
+                                                        <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <span class="badge badge-info badge-pill float-right text-white">{{ $attackList->nextAttack() }}</span>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <span class="badge badge-success badge-pill float-right">{{ $attackList->attackCount() }}</span>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <span class="badge badge-danger badge-pill float-right">{{ $attackList->outdatedCount() }}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                    <div id="attackListNoData"{!! (count($attackLists)>0)?(' style="display: none"'):('') !!}>
+                                        {{ __('ui.old.nodata') }}
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     @if (count($attackLists) > 0)
+                                    <div id="attackPlan-own-side-panel">
                                         <a id="editButtonAttackPlanner" href="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
-                                        {{--<a id="deleteButtonAttackPlanner" onclick="destroyAttackPlanner()" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>--}}
+                                        <a id="deleteButtonAttackPlanner" data-toggle="confirmation" data-content="{{ __('user.confirm.destroy.attackPlanContent') }}"  class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
                                         <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                         <div class="input-group mb-2">
                                             <input id="editLinkAttackPlanner" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackLists->get(0)->id, 'edit', $attackLists->get(0)->edit_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -153,6 +159,7 @@
                                                 <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlanner')"><i class="far fa-copy"></i></span>
                                             </div>
                                         </div>
+                                    </div>
                                     @endif
                                 </div>
                             </div>
@@ -162,10 +169,10 @@
                         <div class="tab-pane fade {{ ($page == 'followMap')? 'show active' : '' }}" id="followMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
                                 <div class="col-4">
-                                    <div class="list-group" id="ownMaps" role="tablist">
+                                    <div class="list-group" id="ownAttacks" role="tablist">
                                         @if (count($mapsFollow) > 0)
                                             @foreach($mapsFollow as $map)
-                                                <a class="list-group-item list-group-item-action {{ ($mapsFollow->get(0)->id === $map->id)? 'active ': '' }}" id="{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', null, '{{ $map->show_key }}', true)" href="#previewMap" role="tab" aria-controls="home">
+                                                <a class="list-group-item list-group-item-action {{ ($mapsFollow->get(0)->id === $map->id)? 'active ': '' }}" id="map-{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', null, '{{ $map->show_key }}', true)" href="#previewMap" role="tab" aria-controls="home">
                                                     <b>{{ $map->world->displayName() }}</b>
                                                     <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                                                 </a>
@@ -177,13 +184,15 @@
                                 </div>
                                 <div class="col-6">
                                     @if (count($mapsFollow) > 0)
-                                        <div class="tab-content" id="nav-tabContent">
-                                            <div class="tab-pane fade show active" id="previewMap" role="tabpanel" aria-labelledby="list-home-list">
-                                                <img alt="map" id="imgMapFollow" src="{{ route('api.map.show.sized', [$mapsFollow->get(0)->id, $mapsFollow->get(0)->show_key, 500, 500, 'png']) }}">
-                                            </div>
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="previewMap" role="tabpanel" aria-labelledby="list-home-list">
+                                            <img alt="map" id="imgMapFollow" src="{{ route('api.map.show.sized', [$mapsFollow->get(0)->id, $mapsFollow->get(0)->show_key, 500, 500, 'png']) }}">
                                         </div>
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="col-2">
+                                    @if (count($mapsFollow) > 0)
                                     <a id="showButtonMapFollow" href="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.map.show') }}</a>
                                     <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                     <div class="input-group mb-2">
@@ -223,7 +232,7 @@
                                         </a>
                                         @if (count($attackListsFollow) > 0)
                                             @foreach($attackListsFollow as $attackList)
-                                                <a class="list-group-item list-group-item-action {{ ($attackListsFollow->get(0)->id === $attackList->id)? 'active ': '' }}" id="{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', null, '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
+                                                <a class="list-group-item list-group-item-action {{ ($attackListsFollow->get(0)->id === $attackList->id)? 'active ': '' }}" id="attackList-{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', null, '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
                                                     <div class="row">
                                                         <div class="col-2">
                                                             <b>{{ $attackList->world->displayName() }}</b>
@@ -250,14 +259,14 @@
                                 </div>
                                 <div class="col-2">
                                     @if (count($attackListsFollow) > 0)
-                                        <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.attackPlanner.show') }}</a>
-                                        <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
-                                        <div class="input-group mb-2">
-                                            <input id="showLinkAttackPlannerFollow" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlannerFollow')"><i class="far fa-copy"></i></span>
-                                            </div>
+                                    <a id="showButtonAttackPlannerFollow" href="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.attackPlanner.show') }}</a>
+                                    <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
+                                    <div class="input-group mb-2">
+                                        <input id="showLinkAttackPlannerFollow" type="text" class="form-control" value="{{ route('tools.attackPlannerMode', [$attackListsFollow->get(0)->id, 'show', $attackListsFollow->get(0)->show_key]) }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkAttackPlannerFollow')"><i class="far fa-copy"></i></span>
                                         </div>
+                                    </div>
                                     @endif
                                 </div>
                             </div>
@@ -271,6 +280,7 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('.nav-link').on("click", function (e) {
@@ -278,6 +288,18 @@
                 history.pushState(null, null, href.replace('#', '/user/overview/'));
                 e.preventDefault();
             });
+            
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]',
+                popout: true,
+                title: "{{ __('user.confirm.destroy.title') }}",
+                btnOkLabel: "{{ __('user.confirm.destroy.ok') }}",
+                btnOkClass: 'btn-danger',
+                btnCancelLabel: "{{ __('user.confirm.destroy.cancel') }}",
+                btnCancelClass: 'btn-info',
+            });
+            $('#deleteButtonMap').on('confirmed.bs.confirmation', destroyMap);
+            $('#deleteButtonAttackPlanner').on('confirmed.bs.confirmation', destroyAttackPlanner);
         })
 
         @if (count($maps) > 0)
@@ -318,11 +340,38 @@
         }
 
         function destroyMap() {
-            console.log(mapId + '____' + mapKey);
+            axios.delete('{{ route('index') }}/tools/map/' + mapId + '/' + mapKey)
+                .then((response) => {
+                    var data = response.data;
+                    createToast(data, "{{ __('tool.map.title') }}");
+                    
+                    $('#map-' + mapId).remove();
+                    $('#ownMaps').children(':first').click();
+                    if($('#ownMaps').children()[0] == undefined) {
+                        $('#mapNoData').show();
+                        $('#map-own-nav-tabContent').hide();
+                        $('#map-own-side-panel').hide();
+                    }
+                })
+                .catch((error) => {
+                });
         }
 
         function destroyAttackPlanner() {
-            console.log(attackPlannerId + '____' + attackPlannerKey);
+            axios.delete('{{ route('index') }}/tools/attackPlanner/' + attackPlannerId + '/' + attackPlannerKey)
+                .then((response) => {
+                    var data = response.data;
+                    createToast(data, "{{ __('tool.attackPlanner.title') }}");
+                    
+                    $('#attackList-' + attackPlannerId).remove();
+                    $('#ownAttackList').children().eq(1).click();
+                    if($('#ownAttackList').children()[1] == undefined) {
+                        $('#attackListNoData').show();
+                        $('#map-own-side-panel').hide();
+                    }
+                })
+                .catch((error) => {
+                });
         }
 
         function copy(type) {
@@ -332,6 +381,24 @@
             copyText.select();
             /* Copy the text inside the text field */
             document.execCommand("copy");
+        }
+
+        function createToast(data, title) {
+            var int = Math.floor((Math.random() * 1000) + 1);
+            $('#toast-content').append('<div class="toast toast'+int+'" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">\n' +
+                '            <div class="toast-header">\n' +
+                '                <div class="mr-2"><i class="fas fa-sync"></i></div>\n' +
+                '                <strong class="mr-auto">' + title + '</strong>\n' +
+                '                <small class="text-muted">{{__('global.now')}}</small>\n' +
+                '                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
+                '                    <span aria-hidden="true">&times;</span>\n' +
+                '                </button>\n' +
+                '            </div>\n' +
+                '            <div class="toast-body">\n' +
+                data['msg'] +
+                '            </div>\n' +
+                '        </div>');
+            $('.toast'+int).toast('show');
         }
     </script>
 @stop

@@ -41,4 +41,19 @@ return array (
     'successMessage' => 'Your error message was submitted successfully.',
   ),
   'applog' => 'App Log',
+  'confirm' => 
+  array (
+    'destroy' => 
+    array (
+      'cancel' => 'Abbort',
+      'ok' => 'Yes',
+      'title' => 'Really delete?',
+      'attackPlanContent' => 'It will not be possible to access the attack plan anymore',
+      'mapContent' => 'It will not be possible to access the map anymore',
+    ),
+  ),
+  'title' => 
+  array (
+    'overview' => 'overview of',
+  ),
 );
