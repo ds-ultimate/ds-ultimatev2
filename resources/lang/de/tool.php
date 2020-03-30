@@ -86,6 +86,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'show' => 'Angriffsplan anzeigen',
     'destroySuccess' => 'Angriffsplan erfolgreich gelöscht',
     'destroyError' => 'Der Angriffsplan konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
+    'fastSwitch' => 'Eigene Angriffspläne',
   ),
   'map' => 
   array (

@@ -86,6 +86,7 @@ Attackcount: %ELEMENT_COUNT%
     'show' => 'Show attackplann',
     'destroyError' => 'The attack plan could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Attack plan successfully deleted',
+    'fastSwitch' => 'own attack plans',
   ),
   'map' => 
   array (

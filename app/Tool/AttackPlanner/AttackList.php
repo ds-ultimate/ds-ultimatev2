@@ -10,7 +10,6 @@ namespace App\Tool\AttackPlanner;
 
 
 use App\World;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -69,5 +68,11 @@ class AttackList extends Model
     public function attackCount(){
         return $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->count();
     }
-
+    
+    public function getTitle() {
+        if($this->title == null || $this->title == "") {
+            return ucfirst(__('tool.attackPlanner.title'));
+        }
+        return $this->title;
+    }
 }

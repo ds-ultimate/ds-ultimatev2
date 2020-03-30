@@ -108,7 +108,11 @@ class AttackPlannerController extends BaseController
             ksort($stats['slowest_unit']);
         }
 
-        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats'));
+        $ownPlanners = array();
+        if(\Auth::check()) {
+            $ownPlanners = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        }
+        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats', 'ownPlanners'));
     }
 
     public function show(AttackList $attackList){
@@ -121,7 +125,11 @@ class AttackPlannerController extends BaseController
         $mode = 'show';
         $now = Carbon::createFromTimestamp(time());
 
-        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server'));
+        $ownPlanners = array();
+        if(\Auth::check()) {
+            $ownPlanners = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        }
+        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
 
     public function exportWB(AttackList $attackList){
