@@ -84,6 +84,8 @@ Attackcount: %ELEMENT_COUNT%
     'exportWB' => 'Export DSWorkbench',
     'exportWBDesc' => 'Export for DSWorkbench',
     'show' => 'Show attackplann',
+    'destroyError' => 'The attack plan could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
+    'destroySuccess' => 'Attack plan successfully deleted',
   ),
   'map' => 
   array (
@@ -218,6 +220,9 @@ Attackcount: %ELEMENT_COUNT%
     'highlight' => 'Highlight this',
     'highlightAll' => 'Highlight all',
     'showContinentNumbers' => 'Show continent numbers',
+    'destroyError' => 'The map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
+    'destroySuccess' => 'Map successfully deleted',
+    'fastSwitch' => 'own maps',
   ),
   'pointCalc' => 
   array (
