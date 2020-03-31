@@ -39,8 +39,13 @@
         <!-- ENDE Titel für Mobile Geräte -->
         @if($mode == 'edit')
         <!-- Village Card -->
-        <div class="col-12 mt-2">
-            <div class="card">
+        <div class="col-12">
+            @if($attackList->title === null)
+            <div class="card mt-2 p-3">
+                {{ __('tool.attackPlanner.withoutTitle') }}
+            </div>
+            @endif
+            <div class="card mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="true">{{ __('global.edit') }}</a>

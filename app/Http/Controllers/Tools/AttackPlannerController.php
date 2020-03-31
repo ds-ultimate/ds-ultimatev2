@@ -29,8 +29,16 @@ class AttackPlannerController extends BaseController
 
         $worldData = World::getWorld($server, $world);
         if($worldData->config == null || $worldData->units == null) {
-            //TODO real error blade here
-            return "Der Angriffsplaner ist für diese Welt nicht verfügbar";
+            abort(404, __('tool.attackPlanner.notAvailable'));
+        }
+        
+        if(\Auth::check()) {
+            //only allow one map without title per user per world
+            $listModel = new AttackList();
+            $uniqueList = $listModel->where('world_id', $worldData->id)->where('user_id', \Auth::user()->id)->whereNull('title')->first();
+            if($uniqueList != null) {
+                return redirect()->route('tools.attackPlannerMode', [$uniqueList->id, 'edit', $uniqueList->edit_key]);
+            }
         }
         
         $list = new AttackList();
@@ -48,8 +56,7 @@ class AttackPlannerController extends BaseController
     public function mode(AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
         if($worldData->config == null || $worldData->units == null) {
-            //TODO real error blade here
-            return "Der Angriffsplaner ist für diese Welt nicht verfügbar";
+            abort(404, __('tool.attackPlanner.notAvailable'));
         }
         
         switch ($mode){

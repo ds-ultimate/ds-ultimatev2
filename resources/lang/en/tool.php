@@ -7,6 +7,7 @@ return array (
     'targetVillage' => 'Target village',
     'days' => 'Day(s)',
     'title' => 'Distance Calculator',
+    'notAvailable' => 'The distance calculator is not available for this world',
   ),
   'attackPlanner' => 
   array (
@@ -87,6 +88,8 @@ Attackcount: %ELEMENT_COUNT%
     'destroyError' => 'The attack plan could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Attack plan successfully deleted',
     'fastSwitch' => 'own attack plans',
+    'notAvailable' => 'The attack planner is not available for this world',
+    'withoutTitle' => 'This attack planner has no title and is therefor used when pressing attack planner. In order to create a new attack planner you need to give this one a title',
   ),
   'map' => 
   array (
@@ -224,9 +227,11 @@ Attackcount: %ELEMENT_COUNT%
     'destroyError' => 'The map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Map successfully deleted',
     'fastSwitch' => 'own maps',
+    'withoutTitle' => 'This map has no title and is therefor used when pressing world map. In order to create a new map you need to give this one a title',
   ),
   'pointCalc' => 
   array (
     'title' => 'Points Calculator',
+    'notAvailable' => 'The point calculator is not available for this world',
   ),
 );

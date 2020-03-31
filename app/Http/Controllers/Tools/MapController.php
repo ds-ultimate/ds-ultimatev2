@@ -24,9 +24,18 @@ class MapController extends BaseController
         BasicFunctions::local();
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
-        $mapModel = new Map();
+        
+        if(\Auth::check()) {
+            //only allow one map without title per user per world
+            $mapModel = new Map();
+            $uniqueMap = $mapModel->where('world_id', $worldData->id)->where('user_id', \Auth::user()->id)->whereNull('title')->first();
+            if($uniqueMap != null) {
+                return redirect()->route('tools.mapToolMode', [$uniqueMap->id, 'edit', $uniqueMap->edit_key]);
+            }
+        }
+        
         $mapModel->world_id = $worldData->id;
-        if (\Auth::user()){
+        if (\Auth::check()){
             $mapModel->user_id = \Auth::user()->id;
             $profile = \Auth::user()->profile;
             if($profile != null) {

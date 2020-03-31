@@ -7,6 +7,7 @@ return array (
     'targetVillage' => 'Zieldorf',
     'days' => 'Tag(e)',
     'title' => 'Laufzeitrechner',
+    'notAvailable' => 'Der Laufzeitrechner ist auf dieser Welt nicht verfügbar',
   ),
   'attackPlanner' => 
   array (
@@ -87,6 +88,8 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'destroySuccess' => 'Angriffsplan erfolgreich gelöscht',
     'destroyError' => 'Der Angriffsplan konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'fastSwitch' => 'Eigene Angriffspläne',
+    'notAvailable' => 'Der Angriffsplaner ist auf dieser Welt nicht verfügbar',
+    'withoutTitle' => 'Dieser Angriffsplaner hat keinen Titel und wird daher immer standardmäßig beim Klick auf Angriffsplaner benutzt. Um damit einen neuen Angriffsplaner zu erstellen muss ein Titel vergeben werden.',
   ),
   'map' => 
   array (
@@ -224,9 +227,11 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'fastSwitch' => 'Eignene Weltkarten',
     'destroySuccess' => 'Weltkarte erfolgreich gelöscht',
     'destroyError' => 'Die Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
+    'withoutTitle' => 'Diese Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf Weltkarte benutzt. Um damit eine neue Weltkarte zu erstellen muss ein Titel vergeben werden.',
   ),
   'pointCalc' => 
   array (
     'title' => 'Punkterechner',
+    'notAvailable' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
   ),
 );

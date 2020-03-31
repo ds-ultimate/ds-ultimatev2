@@ -123,8 +123,13 @@
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
         @if($mode == 'edit')
-        <div class="col-12 mt-2">
-            <div class="card">
+        <div class="col-12">
+            @if($wantedMap->title === null)
+            <div class="card mt-2 p-3">
+                {{ __('tool.map.withoutTitle') }}
+            </div>
+            @endif
+            <div class="card mt-2">
                 <form id="mapEditForm">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
