@@ -19,6 +19,6 @@ class Dashboard
             return $next($request);
         }
 
-        return redirect(route('home'));
+        return redirect(route('index'));
     }
 }

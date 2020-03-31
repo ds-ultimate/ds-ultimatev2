@@ -1,4 +1,5 @@
-@extends('layouts.temp')
+@extends('layouts.app')
+
 @section('content')
     <div id="impressumBorder" class="card-body">
         <h1>Impressum</h1>

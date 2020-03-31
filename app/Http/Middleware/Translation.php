@@ -19,6 +19,6 @@ class Translation
             return $next($request);
         }
 
-        return redirect('/home');
+        return redirect()->route('index');
     }
 }

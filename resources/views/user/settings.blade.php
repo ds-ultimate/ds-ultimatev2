@@ -1,4 +1,4 @@
-@extends('layouts.temp')
+@extends('layouts.app')
 
 @section('titel', ucfirst(__('ui.titel.settings')).' von '.Auth::user()->name)
 

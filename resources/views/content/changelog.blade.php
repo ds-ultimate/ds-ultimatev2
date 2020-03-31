@@ -1,4 +1,5 @@
-@extends('layouts.temp')
+@extends('layouts.app')
+
 @section('content')
     <div class="justify-content-center">
         <div class="col-12 text-center">
