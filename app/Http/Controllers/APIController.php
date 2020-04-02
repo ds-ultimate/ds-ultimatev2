@@ -163,6 +163,9 @@ class APIController extends Controller
     
     private function doAllyChangeReturn($query) {
         return DataTables::eloquent($query)
+            ->editColumn('created_at', function ($allyChange){
+                return $allyChange->created_at->format('Y-m-d H:i:s');
+            })
             ->addColumn('player_name', function ($allyChange){
                 if($allyChange->player_id == 0) return ucfirst(__('ui.player.barbarian'));
                 if($allyChange->player == null) return ucfirst(__('ui.player.deleted'));
@@ -264,7 +267,7 @@ class APIController extends Controller
     private function doConquerReturn($query, $world) {
         return DataTables::eloquent($query)
             ->editColumn('timestamp', function ($conquer){
-                return Carbon::createFromTimestamp($conquer->timestamp);
+                return Carbon::createFromTimestamp($conquer->timestamp)->format('Y-m-d H:i:s');;
             })
             ->addColumn('village_name', function ($conquer){
                 if($conquer->village == null) return ucfirst (__("ui.player.deleted"));
