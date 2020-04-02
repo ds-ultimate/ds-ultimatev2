@@ -213,7 +213,7 @@ class APIController extends Controller
                 abort(404, "Unknown type");
         }
 
-        return $this->doConquerReturn($query);
+        return $this->doConquerReturn($query, World::getWorld($server, $world));
     }
 
     public function getPlayerConquer($server, $world, $type, $playerID)
@@ -240,7 +240,7 @@ class APIController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query);
+        return $this->doConquerReturn($query, World::getWorld($server, $world));
     }
 
     public function getVillageConquer($server, $world, $type, $villageID)
@@ -258,10 +258,10 @@ class APIController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query);
+        return $this->doConquerReturn($query, World::getWorld($server, $world));
     }
     
-    private function doConquerReturn($query) {
+    private function doConquerReturn($query, $world) {
         return DataTables::eloquent($query)
             ->editColumn('timestamp', function ($conquer){
                 return Carbon::createFromTimestamp($conquer->timestamp);
@@ -270,22 +270,29 @@ class APIController extends Controller
                 if($conquer->village == null) return ucfirst (__("ui.player.deleted"));
                 return BasicFunctions::decodeName($conquer->village->name);
             })
-            ->addColumn('old_owner_name', function ($conquer){
+            ->addColumn('old_owner_html', function ($conquer) use($world) {
                 if($conquer->old_owner == 0) return ucfirst(__('ui.player.barbarian'));
                 if($conquer->oldPlayer == null) return ucfirst(__('ui.player.deleted'));
-                return BasicFunctions::decodeName($conquer->oldPlayer->nameWithAlly());
+                return $conquer->oldPlayer->link($world);
             })
-            ->addColumn('new_owner_name', function ($conquer){
+            ->addColumn('new_owner_html', function ($conquer) use($world) {
                 if($conquer->new_owner == 0) return ucfirst(__('ui.player.barbarian'));
                 if($conquer->newPlayer == null) return ucfirst(__('ui.player.deleted'));
-                return BasicFunctions::decodeName($conquer->newPlayer->nameWithAlly());
+                return $conquer->newPlayer->link($world);
             })
-            ->addColumn('old_owner_exists', function ($conquer){
-                return $conquer->oldPlayer != null;
+            ->addColumn('old_owner_ally_html', function ($conquer) use($world) {
+                if($conquer->old_owner == 0) return "-";
+                if($conquer->oldPlayer == null) return "-";
+                if($conquer->oldPlayer->ally_id == 0) return "-";
+                return $conquer->oldPlayer->allyLatest->linkTag($world);
             })
-            ->addColumn('new_owner_exists', function ($conquer){
-                return $conquer->newPlayer != null;
+            ->addColumn('new_owner_ally_html', function ($conquer) use($world) {
+                if($conquer->new_owner == 0) return "-";
+                if($conquer->newPlayer == null) return "-";
+                if($conquer->newPlayer->ally_id == 0) return "-";
+                return $conquer->newPlayer->allyLatest->linkTag($world);
             })
+            ->rawColumns(['old_owner_html', 'new_owner_html', 'old_owner_ally_html', 'new_owner_ally_html'])
             ->toJson();
     }
 

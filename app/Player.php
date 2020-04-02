@@ -138,17 +138,9 @@ class Player extends CustomModel
         return $playerDatas;
 
     }
-
-    /**
-     * @return string
-     */
-    public function nameWithAlly() {
-        if ($this->ally_id != 0) {
-            return $this->name . " [" . $this->allyLatest->tag . "]";
-        }
-        else {
-            return $this->name . " [-]";
-        }
+    
+    public function link($world) {
+        return BasicFunctions::linkPlayer($world, $this->playerID, BasicFunctions::outputName($this->name));
     }
     
     public function linkIngame(World $world, $guest=false) {

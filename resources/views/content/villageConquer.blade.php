@@ -29,7 +29,9 @@
                             <th>{{ ucfirst(__('ui.table.date')) }}</th>
                             <th>{{ ucfirst(__('ui.table.villageName')) }}</th>
                             <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.owner')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.ally')) }}</th>
                             <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.owner')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.ally')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,6 +53,10 @@
             } );
 
             $('#table_id').DataTable({
+                "columnDefs": [
+                    {"targets": 2, "className": 'text-right'},
+                    {"targets": 4, "className": 'text-right'},
+                ],
                 "processing": true,
                 "serverSide": true,
                 "order": [[ 0, "desc" ]],
@@ -58,8 +64,10 @@
                 "columns": [
                     { "data": "timestamp" },
                     { "data": "village_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/village/"+ row.village_id +"'>"+ value +'</a>'}, "orderable": false},
-                    { "data": "old_owner_name", "render": function (value, type, row) {return (row.old_owner_exists)?("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.old_owner +"'>"+ value +'</a>'):(value)}, "orderable": false},
-                    { "data": "new_owner_name", "render": function (value, type, row) {return (row.new_owner_exists)?("<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.new_owner +"'>"+ value +'</a>'):(value)}, "orderable": false},
+                    { "data": "old_owner_html", "orderable": false},
+                    { "data": "old_owner_ally_html", "orderable": false},
+                    { "data": "new_owner_html", "orderable": false},
+                    { "data": "new_owner_ally_html", "orderable": false},
                 ],
                 responsive: true,
                 {!! \App\Util\Datatable::language() !!}

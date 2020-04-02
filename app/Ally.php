@@ -129,6 +129,10 @@ class Ally extends CustomModel
 
     }
     
+    public function linkTag($world) {
+        return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName("[".$this->tag."]"));
+    }
+    
     public function linkIngame(World $world, $guest=false) {
         $guestPart = "game";
         if($guest) {
