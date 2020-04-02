@@ -17,14 +17,15 @@ Route::get('/{server}/{world}/tools/distanceCalc', 'Tools\DistanceCalcController
 //Attack planner
 Route::get('/{server}/{world}/tools/attackPlanner', 'Tools\AttackPlannerController@index')->name('attackPlannerNew');
 
-Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');
-Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', 'Tools\AttackPlannerController@title')->name('attackPlannerTitle');
-Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
-Route::delete('/tools/attackPlanner/{attackList}/{key}', 'Tools\AttackPlannerController@destroy')->name('attackPlannerDestroy');
 Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemController', [
     'only' => ['store', 'destroy', 'update'],
 ]);
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
+
+Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');
+Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', 'Tools\AttackPlannerController@title')->name('attackPlannerTitle');
+Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', 'Tools\AttackPlannerController@mode')->name('attackPlannerMode');
+Route::delete('/tools/attackPlanner/{attackList}/{key}', 'Tools\AttackPlannerController@destroy')->name('attackPlannerDestroy');
 
 
 //Map Tool

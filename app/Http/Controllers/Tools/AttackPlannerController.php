@@ -312,6 +312,4 @@ class AttackPlannerController extends BaseController
             ));
         }
     }
-
-
 }
