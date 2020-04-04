@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
         try {
             if (!in_array(get_class($exception), $ignore) && $eMessage != '') {
                 if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
-                    Notification::send(new Log(), null, new DiscordNotification('exception', $exception));
+                    Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
                 }
             }
         } catch (Exception $ex) {
