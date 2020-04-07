@@ -228,6 +228,9 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'destroySuccess' => 'Weltkarte erfolgreich gelöscht',
     'destroyError' => 'Die Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'withoutTitle' => 'Diese Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf Weltkarte benutzt. Um damit eine neue Weltkarte zu erstellen muss ein Titel vergeben werden.',
+    'cached' => 'Diese Map benutzt ein gespeichertes Bild, daher ist das automatische Speichern deaktiviert. Veränderungen an den Einstellungen werden die Map von den aktuellen Daten neu generieren. Der Titel kann verändert werden, ohne dass sich die Map verändert.',
+    'autoUpdate' => 'Automatisches aktualisieren',
+    'autoUpdateHelp' => 'Wenn aktiviert, werden immer die aktuellen Daten benutzt um die Weltkarte zu generieren. Wenn deaktiviert wird die Map ein Mal generiert und dann immer das gespeicherte Bild verwendet.',
   ),
   'pointCalc' => 
   array (

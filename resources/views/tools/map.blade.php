@@ -129,8 +129,14 @@
                 {{ __('tool.map.withoutTitle') }}
             </div>
             @endif
+            @if($wantedMap->cached_at !== null)
+            <div class="card mt-2 p-3">
+                {{ __('tool.map.cached') }}
+            </div>
+            @endif
             <div class="card mt-2">
-                <form id="mapEditForm">
+                <form id="mapEditForm" action="{{ route('tools.mapToolMode', [$wantedMap->id, 'saveEdit', $wantedMap->edit_key]) }}" method="post">
+                    @csrf
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('tool.map.edit')) }}</a>
@@ -298,10 +304,15 @@
                                 <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
                             </div>
                             <div class="form-inline mb-2">
-                                <div class="form-check col-lg-auto">
+                                <div class="form-check col-lg-4">
                                     <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
                                     <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
                                     <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
+                                </div>
+                                <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
+                                    <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
+                                    <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input" {{ ($wantedMap->shouldUpdate)?('checked="checked"'):('') }}/>
+                                    <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
                                 </div>
                             </div>
                             <div class="form-group float-right">
@@ -420,6 +431,7 @@
 
         $('#title-input').on("keypress keyup blur",function (event) {
             if (event.keyCode == 13) {
+                event.preventDefault();
                 titleSave();
             }
         });
@@ -540,74 +552,79 @@
                 checkPart(this, null);
             }
         });
-
-        $('.data-input-map').change(store);
-        $('.colour-picker-map').on('colorpickerHide', store);
-        $('#checkbox-show-player').change(store);
-        $('#checkbox-show-barbarian').change(store);
-        $('#checkbox-continent-numbers').change(store);
-        $('#map-zoom-value').change(store);
-        $('#center-pos-x').change(store);
-        $('#center-pos-y').change(store);
-        $('.showTextBox').change(store);
-        $('.highlightBox').change(store);
-        $('#markerFactor').change(store);
-        $('#markerFactor').on("input", function(slideEvt) {
-            $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
-        });
-    }
-
-    $('#mapEditForm').on('submit', function (e) {
-        e.preventDefault();
-        store();
-    });
-    
-    var storing = false;
-    var storeNeeded = false;
-    function store() {
-        if(storing) {
-            storeNeeded = true;
-            return;
-        }
-        storing = true;
-        axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
-            .then((response) => {
-                mapDimensions = [
-                    response.data.xs,
-                    response.data.ys,
-                    response.data.w,
-                    response.data.h,
-                ];
-                
-                setTimeout(function() {
-                    if(storeNeeded) {
-                        storeNeeded = false
-                        store();
-                    }
-                }, 400);
-                storing = false;
-                reloadMap();
-                reloadDrawerBackground();
-            })
-            .catch((error) => {
-
+        
+        
+        @if($wantedMap->cached_at === null)
+            $('.data-input-map').change(store);
+            $('.colour-picker-map').on('colorpickerHide', store);
+            $('#checkbox-show-player').change(store);
+            $('#checkbox-show-barbarian').change(store);
+            $('#checkbox-continent-numbers').change(store);
+            $('#checkbox-auto-update').change(store);
+            $('#map-zoom-value').change(store);
+            $('#center-pos-x').change(store);
+            $('#center-pos-y').change(store);
+            $('.showTextBox').change(store);
+            $('.highlightBox').change(store);
+            $('#markerFactor').change(store);
+            $('#markerFactor').on("input", function(slideEvt) {
+                $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
             });
+        @endif
     }
+
+    @if($wantedMap->cached_at === null)
+        $('#mapEditForm').on('submit', function (e) {
+            e.preventDefault();
+            store();
+        });
     
-    var reloading = false;
-    var reloadNeeded = false;
-    function reloadMap() {
-        if(reloading) {
-            reloadNeeded = true;
-            return;
+        var storing = false;
+        var storeNeeded = false;
+        function store() {
+            if(storing) {
+                storeNeeded = true;
+                return;
+            }
+            storing = true;
+            axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
+                .then((response) => {
+                    mapDimensions = [
+                        response.data.xs,
+                        response.data.ys,
+                        response.data.w,
+                        response.data.h,
+                    ];
+
+                    setTimeout(function() {
+                        if(storeNeeded) {
+                            storeNeeded = false
+                            store();
+                        }
+                    }, 400);
+                    storing = false;
+                    reloadMap();
+                    reloadDrawerBackground();
+                })
+                .catch((error) => {
+
+                });
         }
-        reloading = true;
-        var elm = $('.active.map-show-content')[0];
-        elm.style.widht = elm.clientWidth + "px";
-        elm.style.height = elm.clientHeight + "px";
-        $('.map-show-content').empty();
-        $('.active.map-show-tab').trigger('click');
-    }
+
+        var reloading = false;
+        function reloadMap() {
+            if(reloading) {
+                reloadNeeded = true;
+                return;
+            }
+            reloading = true;
+            var elm = $('.active.map-show-content')[0];
+            elm.style.widht = elm.clientWidth + "px";
+            elm.style.height = elm.clientHeight + "px";
+            $('.map-show-content').empty();
+            $('.active.map-show-tab').trigger('click');
+        }
+    @endif
 </script>
 <script src="{{ asset('plugin/drawerJS/drawerJs.standalone.min.js') }}"></script>
 <script>
@@ -849,6 +866,10 @@
             200, 200
         ],
     };
+    
+    //define here since we are refering to it
+    var reloadNeeded = false;
+    
     $('.map-show-tab').click(function (e) {
         var targetID = this.attributes['aria-controls'].nodeValue;
         if($('#'+targetID)[0].innerHTML.length > 0) return;

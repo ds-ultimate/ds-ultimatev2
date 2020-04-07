@@ -19,6 +19,7 @@ class Map extends Model
     protected $connection = 'mysql';
 
     protected $dates = [
+        'cached_at',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -47,6 +48,7 @@ class Map extends Model
         'drawing_png',
         'markerFactor',
         'continentNumbers',
+        'shouldUpdate',
     ];
 
     public function user(){
@@ -121,7 +123,7 @@ class Map extends Model
             switch($parts[0]) {
                 case 'a':
                     $ally = Ally::ally($world->server->code, $world->name, $parts[1]);
-                    if($ally == null) continue;
+                    if($ally == null) break;
                     $result[] = [
                         'id' => $ally->allyID,
                         'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
@@ -132,7 +134,7 @@ class Map extends Model
                     break;
                 case 'p':
                     $player = Player::player($world->server->code, $world->name, $parts[1]);
-                    if($player == null) continue;
+                    if($player == null) break;
                     $result[] = [
                         'id' => $player->playerID,
                         'name' => BasicFunctions::decodeName($player->name),
@@ -143,7 +145,7 @@ class Map extends Model
                     break;
                 case 'v':
                     $vil = Village::village($world->server->code, $world->name, $parts[1]);
-                    if($vil == null) continue;
+                    if($vil == null) break;
                     $result[] = [
                         'id' => $vil->villageID,
                         'x' => $vil->x,
