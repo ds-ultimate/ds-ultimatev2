@@ -228,6 +228,9 @@ Attackcount: %ELEMENT_COUNT%
     'destroySuccess' => 'Map successfully deleted',
     'fastSwitch' => 'own maps',
     'withoutTitle' => 'This map has no title and is therefor used when pressing world map. In order to create a new map you need to give this one a title',
+    'autoUpdate' => 'Automatic updates',
+    'autoUpdateHelp' => 'With this enabled the map will always be generated from the current data. When deactivated the map will be generated once and this generated image will be served.',
+    'cached' => 'This Map uses a cached Image, thus the automatic saving is disabled. Any changes will regenerate it from current data. The title can be changed without altering the map',
   ),
   'pointCalc' => 
   array (

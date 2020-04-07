@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tools;
 
 use App\Tool\Map\Map;
 use App\Util\BasicFunctions;
+use App\Util\ImageCached;
 use App\Util\MapGenerator;
 use App\World;
 use App\Player;
@@ -25,9 +26,9 @@ class MapController extends BaseController
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
         
+        $mapModel = new Map();
         if(\Auth::check()) {
             //only allow one map without title per user per world
-            $mapModel = new Map();
             $uniqueMap = $mapModel->where('world_id', $worldData->id)->where('user_id', \Auth::user()->id)->whereNull('title')->first();
             if($uniqueMap != null) {
                 return redirect()->route('tools.mapToolMode', [$uniqueMap->id, 'edit', $uniqueMap->edit_key]);
@@ -108,6 +109,10 @@ class MapController extends BaseController
             case 'save':
                 abort_unless($key == $wantedMap->edit_key, 403);
                 return $this->save($wantedMap);
+            case 'saveEdit':
+                abort_unless($key == $wantedMap->edit_key, 403);
+                $this->save($wantedMap);
+                return $this->edit($wantedMap);
             case 'saveCanvas':
                 abort_unless($key == $wantedMap->edit_key, 403);
                 return $this->saveCanvas($wantedMap);
@@ -197,6 +202,11 @@ class MapController extends BaseController
             $wantedMap->continentNumbers = (isset($getArray['continentNumbers']))?(1):(0);
         }
         
+        if(isset($getArray['autoUpdateHere'])) {
+            $wantedMap->shouldUpdate = (isset($getArray['autoUpdate']))?(1):(0);
+        }
+        
+        $wantedMap->cached_at = null;
         $wantedMap->save();
         
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
@@ -214,6 +224,7 @@ class MapController extends BaseController
                 
                 $wantedMap->drawing_dim = $wantedMap->dimensions;
                 $wantedMap->drawing_png = \App\Util\PictureRender::base64ToPng($getArray['data']);
+                $wantedMap->cached_at = null;
                 $wantedMap->save();
                 break;
             case "object":
@@ -238,32 +249,39 @@ class MapController extends BaseController
     public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
-        $map = new MapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
-        $wantedMap->prepareRendering($map);
         
-        if($options != null) {
-            switch($options) {
-                case "noDrawing":
-                    $layers = $wantedMap->getLayerConfiguration();
-                    $final = array();
-                    foreach($layers as $layer)
-                        if($layer != MapGenerator::$LAYER_DRAWING)
-                            $final[] = $layer;
-                    
-                    $map->setLayerOrder($final);
-                    break;
-                case "pureDrawing":
-                    if(array_search(MapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
-                        $map->setLayerOrder([MapGenerator::$LAYER_DRAWING]);
-                    else
-                        $map->setLayerOrder([]);
-                    $map->setBackgroundColour([0,0,0,127]);
-                    break;
-                default:
+        if($options == null && $wantedMap->cached_at !== null) {
+            //use cached version
+            $map = new ImageCached("../".config('tools.map.cacheDir').$wantedMap->id, $this->decodeDimensions($width, $height), $this->debug);
+        } else {
+            $map = new MapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
+            $wantedMap->prepareRendering($map);
+
+            if($options != null) {
+                switch($options) {
+                    case "noDrawing":
+                        $layers = $wantedMap->getLayerConfiguration();
+                        $final = array();
+                        foreach($layers as $layer)
+                            if($layer != MapGenerator::$LAYER_DRAWING)
+                                $final[] = $layer;
+
+                        $map->setLayerOrder($final);
+                        break;
+                    case "pureDrawing":
+                        if(array_search(MapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
+                            $map->setLayerOrder([MapGenerator::$LAYER_DRAWING]);
+                        else
+                            $map->setLayerOrder([]);
+                        $map->setBackgroundColour([0,0,0,127]);
+                        break;
+                    default:
+                }
             }
+
+            $map->setFont("fonts/arial.ttf");
         }
         
-        $map->setFont("fonts/arial.ttf");
         $map->render();
         return $map->output($ext);
     }

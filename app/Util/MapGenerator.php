@@ -156,12 +156,12 @@ class MapGenerator extends PictureRender {
         if($this->show_errs) {
             $white = imagecolorallocate($this->image, 255, 255, 255);
             $box1 = imagettfbbox(10, 0, $this->font, "@Debug:");
-            $box2 = imagettfbbox(10, 0, $this->font, "Render time: " . $renderTime . "s");
+            $box2 = imagettfbbox(10, 0, $this->font, "Render time: {$renderTime}s");
             $x = $this->width - max($box1[2], $box2[2]);
             $y2 = $this->height - $box2[1] + $box2[5];
             $y1 = $y2 - $box1[1] + $box1[5];
             imagettftext($this->image, 10, 0, $x, $y1, $white, $this->font, "@Debug:");
-            imagettftext($this->image, 10, 0, $x, $y2, $white, $this->font, "Render time: " . $renderTime . "s");
+            imagettftext($this->image, 10, 0, $x, $y2, $white, $this->font, "Render time: {$renderTime}s");
         }
     }
     

@@ -120,7 +120,18 @@ class DiscordNotification extends Notification
                 return URL::current();
             default:
                 $trace = explode('#', $this->input->getTraceAsString());
-                return '#'.$trace[1]."\n#".$trace[2]."\n#".$trace[3]."...\n\n".URL::current();
+                $traceStr = "";
+                for($i = 0; $i < 4 && isset($trace[$i]); $i++) {
+                    $traceStr .= "#{$trace[$i]}\n";
+                }
+                
+                //TODO improve this...
+                try {
+                    $traceStr .= URL::current();
+                } catch (\Exception $ex) {
+                }
+                
+                return $traceStr;
         }
     }
 }
