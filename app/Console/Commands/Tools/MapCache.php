@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Tools;
 
 use App\Tool\Map\Map;
 use App\Util\MapGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
-class DeleteTable extends Command
+class MapCache extends Command
 {
     /**
      * The name and signature of the console command.
