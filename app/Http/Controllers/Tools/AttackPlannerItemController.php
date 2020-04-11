@@ -17,6 +17,7 @@ use App\Http\Requests\StoreAttackPlannerItemRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
@@ -33,7 +34,6 @@ class AttackPlannerItemController extends BaseController
                 $$unit = $request->get($unit);
             }
         }
-
         $item = new AttackListItem();
         $item->attack_list_id = $request->attack_list_id;
         if (!$item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
@@ -45,8 +45,19 @@ class AttackPlannerItemController extends BaseController
         $item->type = $request->type;
         $item->slowest_unit = $request->slowest_unit;
         $item->note = $request->note;
-        $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
-        $item->send_time = $item->calcSend();
+        if($request->time_type == 0){
+            $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
+            $item->send_time = $item->calcSend();
+        }else{
+            $item->send_time = Carbon::parse($request->day.' '.$request->time);
+            $item->arrival_time = $item->calcArrival();
+        }
+        $ms = explode('.',$request->time);
+        if (count($ms) > 1){
+            $item->ms = $ms[1];
+        }else{
+            $item->ms = 0;
+        }
         $item->spear = $spear;
         $item->sword = $sword;
         $item->axe = $axe;
@@ -65,9 +76,10 @@ class AttackPlannerItemController extends BaseController
     public function data(AttackList $attackList, $key){
         abort_unless($attackList->show_key == $key, 403);
 
-        $query = AttackListItem::query()->where('attack_list_id', $attackList->id)->orderBy('send_time');
+        $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
 
         return Datatables::of($query)
+            ->orderColumns(['send_time', 'arrival_time'], '-:column $1')
             ->setRowId(function (AttackListItem $attackListItem) {
                 return $attackListItem->id;
             })
@@ -88,7 +100,12 @@ class AttackPlannerItemController extends BaseController
                     return $attackListItem->arrival_time->format('Y-m-d');
                 },
                 'time' => function(AttackListItem $attackListItem) {
-                    return $attackListItem->arrival_time->format('H:i:s');
+                    if (strlen($attackListItem->ms) < 3){
+                        $ms = (strlen($attackListItem->ms) == 2)? '0'.$attackListItem->ms : '00'.$attackListItem->ms;
+                    }else{
+                        $ms = $attackListItem->ms;
+                    }
+                    return $attackListItem->arrival_time->format('H:i:s').'.'.$ms;
                 },
                 'type' => function(AttackListItem $attackListItem) {
                     return $attackListItem->type;
@@ -121,7 +138,12 @@ class AttackPlannerItemController extends BaseController
                 return $attackListItem->send_time->format('d.m.Y H:i:s');
             })
             ->addColumn('arrival_time', function (AttackListItem $attackListItem) {
-                return $attackListItem->arrival_time->format('d.m.Y H:i:s');
+                if (strlen($attackListItem->ms) < 3){
+                    $ms = (strlen($attackListItem->ms) == 2)? '0'.$attackListItem->ms : '00'.$attackListItem->ms;
+                }else{
+                    $ms = $attackListItem->ms;
+                }
+                return $attackListItem->arrival_time->format('d.m.Y H:i:s').'.<small class="text-muted">'.$ms.'</small>';
             })
             ->addColumn('time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time;
@@ -175,8 +197,19 @@ class AttackPlannerItemController extends BaseController
         }
         $attackListItem->slowest_unit = $request->slowest_unit;
         $attackListItem->note = $request->note;
-        $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);
-        $attackListItem->send_time = $attackListItem->calcSend();
+        if($request->time_type == 0){
+            $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);
+            $attackListItem->send_time = $attackListItem->calcSend();
+        }else{
+            $attackListItem->send_time = Carbon::parse($request->day.' '.$request->time);
+            $attackListItem->arrival_time = $attackListItem->calcArrival();
+        }
+        $ms = explode('.',$request->time);
+        if (count($ms) > 1){
+            $attackListItem->ms = $ms[1];
+        }else{
+            $attackListItem->ms = 0;
+        }
         $attackListItem->spear = $spear;
         $attackListItem->sword = $sword;
         $attackListItem->axe = $axe;
