@@ -15,7 +15,6 @@ use App\Village;
 use App\Tool\AttackPlanner\AttackList as AttackList;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 
 class AttackListItem extends CustomModel
 {
@@ -175,7 +174,6 @@ class AttackListItem extends CustomModel
         $dist = $this->calcDistance();
         $unit = self::$unit[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
-        Log::warning($runningTime);
         return $this->send_time->addSeconds($runningTime);
     }
 
