@@ -22,6 +22,21 @@ class SearchController extends Controller
         }
     }
 
+    public function search($server, $type, $search){
+        BasicFunctions::local();
+        switch ($type){
+            case 'player':
+                $result = SearchController::searchPlayer($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
+            case 'ally':
+                $result = SearchController::searchAlly($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
+            case 'village':
+                $result = SearchController::searchVillage($server, $search);
+                return view('content.search', compact('search', 'type', 'result', 'server'));
+        }
+    }
+
     public static function searchPlayer($server, $search){
         $worlds = Server::getWorldsByCode($server);
         $player = new Player();

@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'Controller@index')->name('index');
+Route::get('/', 'ContentController@index')->name('index');
 
 Auth::routes(['verify' => true]);
 
@@ -89,25 +89,25 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
 Route::get('redirect/{driver}', 'User\LoginController@redirectToProvider')->name('loginRedirect');
 Route::get('redirect/{driver}/callback', 'User\LoginController@handleProviderCallback');
 
-Route::get('/sitemap.xml', 'Controller@sitemap');
+Route::get('/sitemap.xml', 'ContentController@sitemap');
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::get('/changelog', 'Controller@changelog')->name('changelog');
+Route::get('/changelog', 'ContentController@changelog')->name('changelog');
 
 Route::view('/team', 'content.team')->name('team');
 
 Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
-Route::get('/search/{server}/{type}/{search}', 'Controller@search')->name('search');
+Route::get('/search/{server}/{type}/{search}', 'SearchController@search')->name('search');
 
-Route::get('/{server}', 'Controller@server')->name('server');
+Route::get('/{server}', 'ContentController@server')->name('server');
 
-Route::get('/{server}/{world}', 'Controller@world')->name('world');
+Route::get('/{server}/{world}', 'ContentController@world')->name('world');
 
-Route::get('/{server}/{world}/allys', 'Controller@allys')->name('worldAlly');
+Route::get('/{server}/{world}/allys', 'ContentController@allys')->name('worldAlly');
 Route::get('/{server}/{world}/allys/ranks', 'AllyController@rank')->name('rankAlly');
-Route::get('/{server}/{world}/players', 'Controller@players')->name('worldPlayer');
+Route::get('/{server}/{world}/players', 'ContentController@players')->name('worldPlayer');
 Route::get('/{server}/{world}/players/ranks', 'PlayerController@rank')->name('rankPlayer');
 Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');
 Route::get('/{server}/{world}/ally/{ally}', 'AllyController@ally')->name('ally');
@@ -116,7 +116,7 @@ Route::get('/{server}/{world}/village/{village}', 'VillageController@village')->
 Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', 'AllyController@allyChanges')->name('allyAllyChanges');
 Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerController@allyChanges')->name('playerAllyChanges');
 
-Route::get('/{server}/{world}/conquer/{type}', 'Controller@conquer')->name('worldConquer');
+Route::get('/{server}/{world}/conquer/{type}', 'ContentController@conquer')->name('worldConquer');
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
 Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');

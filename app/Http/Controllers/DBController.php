@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
-class DBController extends Controller
+class DBController
 {
     public static function worldTable(){
         Schema::create('worlds', function (Blueprint $table){
