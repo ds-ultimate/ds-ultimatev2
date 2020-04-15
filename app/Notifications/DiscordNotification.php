@@ -54,7 +54,7 @@ class DiscordNotification extends Notification
       $this->message = [
           'content' => '``'.$class.'`` '.$eMessage,
           'embed' => [
-              'title' => nl2br($input->getMessage()),
+              'title' => mb_strimwidth(nl2br($input->getMessage()), 0, 200, "..."),
               'description' => $this->embedContent(),
               'color' => 13632027,
               'timestamp' => Carbon::now()->format('c'),
