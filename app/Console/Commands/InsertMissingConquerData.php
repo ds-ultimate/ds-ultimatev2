@@ -71,10 +71,10 @@ class InsertMissingConquerData extends Command
                 ->get();
         
         foreach($todo as $con) {
+            if(Carbon::now()->timestamp - $con->timestamp < 60 * 60 * 2) continue;
             $old = $con->oldPlayer;
             $new = $con->newPlayer;
             $tempArr = array();
-            if(Carbon::now()->timestamp - $con->timestamp < 60 * 60 * 2) continue;
             
             if($con->old_owner == 0 || $old == null) {
                 $tempArr['old_owner_name'] = "";
