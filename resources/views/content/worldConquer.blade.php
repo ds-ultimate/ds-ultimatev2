@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('titel', ucfirst(__('ui.titel.village')).': '.\App\Util\BasicFunctions::decodeName($villageData->name))
+@section('titel', $typeName.': '.$worldData->displayName())
 
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ $typeName.': '.\App\Util\BasicFunctions::decodeName($villageData->name) }}</h1>
+            <h1 class="font-weight-normal">{{ $typeName.': '. $worldData->displayName() }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -15,7 +15,7 @@
                 {{ $typeName.': ' }}
             </h1>
             <h4>
-                {{ \App\Util\BasicFunctions::decodeName($villageData->name) }}
+                {{ $worldData->displayName() }}
             </h4>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
@@ -60,7 +60,7 @@
                 "processing": true,
                 "serverSide": true,
                 "order": [[ 0, "desc" ]],
-                "ajax": "{{ route('api.villageConquer', [$worldData->server->code, $worldData->name, $type, $villageData->villageID]) }}",
+                "ajax": "{{ route('api.worldConquer', [$worldData->server->code, $worldData->name, $type]) }}",
                 "columns": [
                     { "data": "timestamp" },
                     { "data": "village_html", "orderable": false},

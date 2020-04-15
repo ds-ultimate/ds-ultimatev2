@@ -41,6 +41,7 @@ Route::get('/{server}/{world}/playerAllyChanges/{type}/{player}', 'APIController
 Route::get('/{server}/{world}/allyConquer/{type}/{ally}', 'APIController@getAllyConquer')->name('allyConquer');
 Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'APIController@getPlayerConquer')->name('playerConquer');
 Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getVillageConquer')->name('villageConquer');
+Route::get('/{server}/{world}/worldConquer/{type}', 'APIController@getWorldConquer')->name('worldConquer');
 
 Route::get('/{server}/{world}/signature/{type}/{player}', 'APIController@signature')->name('signature');
 

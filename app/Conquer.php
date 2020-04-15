@@ -25,6 +25,24 @@ class Conquer extends CustomModel
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table[0].'.player_latest');
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function oldAlly()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $table[0].'.ally_latest');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function newAlly()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\Ally', 'new_ally', 'allyID', $table[0].'.ally_latest');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -95,5 +113,151 @@ class Conquer extends CustomModel
         $conquer->put('total', $conquerModel->where('village_id', $villageID)->count());
 
         return $conquer;
+    }
+    
+    public function linkVillageCoordsWithName($world) {
+        if($this->village == null) return ucfirst (__("ui.player.deleted"));
+        return BasicFunctions::linkVillage($world, $this->village_id,
+                '['.$this->village->coordinates().'] '.BasicFunctions::outputName($this->village->name));
+    }
+    
+    public function linkOldPlayer($world) {
+        if($this->old_owner == 0) return ucfirst(__('ui.player.barbarian'));
+        $oldName = $this->old_owner_name;
+        if($oldName == null || $oldName == "") {
+            if($this->oldPlayer == null) {
+                return ucfirst(__('ui.player.deleted'));
+            } else {
+                $oldName = $this->oldPlayer->name;
+            }
+        }
+        
+        return BasicFunctions::linkPlayer($world, $this->old_owner, BasicFunctions::outputName($oldName));
+    }
+    
+    public function linkNewPlayer($world) {
+        if($this->new_owner == 0) return ucfirst(__('ui.player.barbarian'));
+        $newName = $this->new_owner_name;
+        if($newName == null || $newName == "") {
+            if($this->newPlayer == null) {
+                return ucfirst(__('ui.player.deleted'));
+            } else {
+                $newName = $this->newPlayer->name;
+            }
+        }
+        
+        return BasicFunctions::linkPlayer($world, $this->new_owner, BasicFunctions::outputName($newName));
+    }
+    
+    public function linkOldAlly($world) {
+        if($this->old_owner == 0) return "-";
+        $oldAlly = $this->old_ally_tag;
+        $oldID = $this->old_ally;
+        if($oldAlly == null) {
+            if($this->oldPlayer == null || $this->oldPlayer->allyLatest == null) {
+                return "-";
+            } else {
+                $oldAlly = "[{$this->oldPlayer->allyLatest->tag}]";
+                $oldID = $this->oldPlayer->ally_id;
+            }
+        } else if($oldAlly == "") {
+            if($this->old_ally == 0) {
+                return "-"; //player had no ally while conquer
+            } else if($this->oldAlly == null) {
+                return ucfirst(__('ui.player.deleted'));
+            }
+        } else if($this->oldAlly == null) {
+            //deleted ally
+            return $oldAlly;
+        }
+        return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
+    }
+    
+    public function linkNewAlly($world) {
+        if($this->new_owner == 0) return "-";
+        $newAlly = $this->new_ally_tag;
+        $newID = $this->new_ally;
+        if($newAlly == null) {
+            if($this->newPlayer == null || $this->newPlayer->allyLatest == null) {
+                return "-";
+            } else {
+                $newAlly = "[{$this->newPlayer->allyLatest->tag}]";
+                $newID = $this->newPlayer->ally_id;
+            }
+        } else if($newAlly == "") {
+            if($this->new_ally == 0) {
+                return "-"; //player had no ally while conquer
+            } else if($this->newAlly == null) {
+                return ucfirst(__('ui.player.deleted'));
+            }
+        } else if($this->newAlly == null) {
+            //deleted ally
+            return $newAlly;
+        }
+        return BasicFunctions::linkAlly($world, $newID, BasicFunctions::outputName($newAlly));
+    }
+    
+    /**
+     * 0 ... normal
+     * 1 ... internal
+     * 2 ... self
+     * 3 ... barbarian
+     * 4 ... deletion
+     * 
+     * @return integer Type of the conquer
+     */
+    function getConquerType() {
+        if($this->new_owner == 0) return 4;
+        if($this->old_owner == 0) return 3;
+        if($this->old_owner == $this->new_owner) return 2;
+        if($this->getOldAllyID() == $this->getNewAllyID()) return 1;
+        return 0;
+    }
+    
+    public static $REFERTO_VILLAGE = 0;
+    public static $REFERTO_PLAYER = 1;
+    public static $REFERTO_ALLY = 2;
+    /**
+     * +1 for win
+     * 0 for unknown / doesnt matter
+     * -1 for loose
+     */
+    function getWinLoose($referTO, $id) {
+        switch($referTO) {
+            case Conquer::$REFERTO_ALLY:
+                $oldID = $this->getOldAllyID();
+                $newID = $this->getNewAllyID();
+                if($oldID == $newID) return 0;
+                if($oldID == $id) return -1;
+                if($newID == $id) return 1;
+                break;
+            case Conquer::$REFERTO_PLAYER:
+                if($this->old_owner == $this->new_owner) return 0;
+                if($this->old_owner == $id) return -1;
+                if($this->new_owner == $id) return 1;
+                break;
+            case Conquer::$REFERTO_VILLAGE:
+            default:
+                return 0;
+        }
+        return 0;
+    }
+    
+    private function getOldAllyID() {
+        $oldAllyID = $this->old_ally;
+        if($this->old_ally_name == null &&
+                $this->oldPlayer != null && $this->oldPlayer->allyLatest != null) {
+            $oldAllyID = $this->oldPlayer->ally_id;
+        }
+        return $oldAllyID;
+    }
+    
+    private function getNewAllyID() {
+        $newAllyID = $this->new_ally;
+        if($this->new_ally_name == null &&
+                $this->newPlayer != null && $this->newPlayer->allyLatest != null) {
+            $newAllyID = $this->newPlayer->ally_id;
+        }
+        return $newAllyID;
     }
 }

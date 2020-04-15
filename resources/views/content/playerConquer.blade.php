@@ -63,12 +63,25 @@
                 "ajax": "{{ route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerData->playerID]) }}",
                 "columns": [
                     { "data": "timestamp" },
-                    { "data": "village_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/village/"+ row.village_id +"'>"+ value +'</a>'}, "orderable": false},
+                    { "data": "village_html", "orderable": false},
                     { "data": "old_owner_html", "orderable": false},
                     { "data": "old_owner_ally_html", "orderable": false},
                     { "data": "new_owner_html", "orderable": false},
                     { "data": "new_owner_ally_html", "orderable": false},
                 ],
+                "fnRowCallback": function(row, data) {
+                    if(data.type == 3) {//barbarian
+                        $('td', row).css('background-color', 'rgba(140,140,140,0.2)'); //gray
+                    } else if(data.type == 2) {//self
+                        $('td', row).css('background-color', 'rrgba(235,247,64,0.2)'); //Yellow
+                    } else if(data.type == 1) {//internal
+                        $('td', row).css('background-color', 'rgba(38,79,242,0.2)'); //Blue
+                    } else if(data.winLoose == 1) {//win
+                        $('td', row).css('background-color', 'rgba(42,175,71,0.2)'); //Green
+                    } else if(data.winLoose == -1) {//loose
+                        $('td', row).css('background-color', 'rgba(226,54,71,0.2)'); //Red
+                    }
+                },
                 responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });

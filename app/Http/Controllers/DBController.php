@@ -162,6 +162,14 @@ class DBController extends Controller
             $table->bigInteger('timestamp');
             $table->integer('new_owner');
             $table->integer('old_owner');
+            $table->string('old_owner_name')->nullable()->default(null);
+            $table->string('new_owner_name')->nullable()->default(null);
+            $table->integer('old_ally')->nullable()->default(null);
+            $table->integer('new_ally')->nullable()->default(null);
+            $table->string('old_ally_name')->nullable()->default(null);
+            $table->string('new_ally_name')->nullable()->default(null);
+            $table->string('old_ally_tag')->nullable()->default(null);
+            $table->string('new_ally_tag')->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -715,6 +723,43 @@ class DBController extends Controller
             list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
             $tempArr['created_at'] = Carbon::createFromTimestamp(time());
             $tempArr['updated_at'] = Carbon::createFromTimestamp(time());
+            
+            $old = Player::player($server, $world, $tempArr['old_owner']);
+            if($tempArr['old_owner'] == 0) {
+                $tempArr['old_owner_name'] = "";
+                $tempArr['old_ally'] = 0;
+                $tempArr['old_ally_name'] = "";
+                $tempArr['old_ally_tag'] = "";
+            } else if($old == null) {
+                $tempArr['old_owner_name'] = null;
+                $tempArr['old_ally'] = 0;
+                $tempArr['old_ally_name'] = null;
+                $tempArr['old_ally_tag'] = null;
+            } else {
+                $tempArr['old_owner_name'] = $old->name;
+                $tempArr['old_ally'] = $old->ally_id;
+                $tempArr['old_ally_name'] = ($old->allyLatest != null)?$old->allyLatest->name:"";
+                $tempArr['old_ally_tag'] = ($old->allyLatest != null)?$old->allyLatest->tag:"";
+            }
+            
+            $new = Player::player($server, $world, $tempArr['new_owner']);
+            if($tempArr['new_owner'] == 0) {
+                $tempArr['new_owner_name'] = "";
+                $tempArr['new_ally'] = 0;
+                $tempArr['new_ally_name'] = "";
+                $tempArr['new_ally_tag'] = "";
+            } else if($new == null) {
+                $tempArr['new_owner_name'] = null;
+                $tempArr['new_ally'] = 0;
+                $tempArr['new_ally_name'] = null;
+                $tempArr['new_ally_tag'] = null;
+            } else {
+                $tempArr['new_owner_name'] = $new->name;
+                $tempArr['new_ally'] = $new->ally_id;
+                $tempArr['new_ally_name'] = ($new->allyLatest != null)?$new->allyLatest->name:"";
+                $tempArr['new_ally_tag'] = ($new->allyLatest != null)?$new->allyLatest->tag:"";
+            }
+            
             $array[] = $tempArr;
         }
 

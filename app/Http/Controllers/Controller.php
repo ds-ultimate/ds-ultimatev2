@@ -74,6 +74,22 @@ class Controller extends BaseController
 
         return view('content.worldPlayer', compact('worldData', 'server'));
     }
+    
+    public function conquer($server, $world, $type){
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+
+        switch($type) {
+            case "all":
+                $typeName = ucfirst(__('ui.conquer.all'));
+                break;
+            default:
+                abort(404, "Unknown type");
+        }
+        return view('content.worldConquer', compact('worldData', 'server', 'typeName', 'type'));
+    }
 
     public function search($server, $type, $search){
         BasicFunctions::local();

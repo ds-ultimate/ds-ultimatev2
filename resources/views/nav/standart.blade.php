@@ -44,6 +44,7 @@
                         <li class="dropdown-item"><a href="{{ route('rankAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.history') }})</a></li>
                     </ul>
                 </li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('worldConquer', [$worldData->server->code, $worldData->name, 'all']) }}">{{ ucfirst(__('ui.conquer.all')) }}</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{__('ui.server.tools')}}

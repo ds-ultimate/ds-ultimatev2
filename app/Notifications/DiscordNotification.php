@@ -130,7 +130,6 @@ class DiscordNotification extends Notification
                     $traceStr .= URL::current();
                 } catch (\Exception $ex) {
                 }
-                
                 return $traceStr;
         }
     }
