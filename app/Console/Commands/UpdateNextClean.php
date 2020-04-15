@@ -56,7 +56,7 @@ class UpdateNextClean extends Command
                 break;
             }
             
-            DBController::cleanOldEntries($world, 'v');
+            //DBController::cleanOldEntries($world, 'v');
             DBController::cleanOldEntries($world, 'p');
             DBController::cleanOldEntries($world, 'a');
         }
