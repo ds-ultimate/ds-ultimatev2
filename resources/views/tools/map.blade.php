@@ -492,7 +492,7 @@
 
         $('.select2-player', context).select2({
             ajax: {
-                url: '{{ route("api.searchPlayerByName", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Player", [$worldData->server->code, $worldData->name]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,
@@ -510,7 +510,7 @@
         });
         $('.select2-ally', context).select2({
             ajax: {
-                url: '{{ route("api.searchAllyByName", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Ally", [$worldData->server->code, $worldData->name]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,

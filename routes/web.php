@@ -81,7 +81,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::post('saveSettingsAccount', 'SettingsController@saveSettingsAccount')->name('saveSettingsAccount');
     Route::post('saveMapSettings', 'SettingsController@saveMapSettings')->name('saveMapSettings');
     Route::post('destroyConnection', 'SettingsController@destroyConnection')->name('destroyConnection');
-    Route::get('DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
+    Route::get('DsConnection', 'SettingsController@getDsConnection')->name('DsConnection');
     Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
     Route::get('socialite/destroy/{driver}', 'LoginController@destroyDriver')->name('socialiteDestroy');
     

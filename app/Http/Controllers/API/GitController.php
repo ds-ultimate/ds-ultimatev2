@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Changelog;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
-
-class GitController extends BaseController
+class GitController extends Controller
 {
 
     private $buffer;

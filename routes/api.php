@@ -18,32 +18,30 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/git/webhook', 'GitController@index')->name('git');
-Route::get('/{server}/activeWorlds', 'APIController@getActiveWorldByServer')->name('activeWorldByServer');
-Route::get('/{server}/{world}/data', 'APIController@getWorld')->name('worldData');
 
-Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'APIController@getVillageByCoord')->name('villageByCoord');
-Route::get('/{server}/{world}/playerName/{name}', 'APIController@getPlayerByName')->name('playerByName');
-Route::get('/{server}/{world}/allyName/{name}', 'APIController@getAllyByName')->name('allyByName');
+Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'FindModelController@getVillageByCoord')->name('villageByCoord');
+Route::get('/{server}/{world}/playerName/{name}', 'FindModelController@getPlayerByName')->name('playerByName');
+Route::get('/{server}/{world}/allyName/{name}', 'FindModelController@getAllyByName')->name('allyByName');
 
-Route::get('/{server}/{world}/searchPlayer', 'APIController@getSearchPlayerByName')->name('searchPlayerByName');
-Route::get('/{server}/{world}/searchAlly', 'APIController@getSearchAllyByName')->name('searchAllyByName');
+Route::get('/{server}/{world}/select2Player', 'FindModelController@getSelect2Player')->name('select2Player');
+Route::get('/{server}/{world}/select2Ally', 'FindModelController@getSelect2Ally')->name('select2Ally');
 
-Route::get('/{server}/{world}/players', 'APIController@getPlayers')->name('worldPlayer');
-Route::get('/{server}/{world}/players/{days}', 'APIController@getPlayersHistory')->name('worldPlayerHistory');
-Route::get('/{server}/{world}/allys', 'APIController@getAllys')->name('worldAlly');
-Route::get('/{server}/{world}/allys/{days}', 'APIController@getAllysHistory')->name('worldAllyHistory');
-Route::get('/{server}/{world}/ally/{ally}', 'APIController@getAllyPlayer')->name('allyPlayer');
-Route::get('/{server}/{world}/player/{player}', 'APIController@getPlayerVillage')->name('playerVillage');
+Route::get('/{server}/{world}/players', 'DatatablesController@getPlayers')->name('worldPlayer');
+Route::get('/{server}/{world}/players/{days}', 'DatatablesController@getPlayersHistory')->name('worldPlayerHistory');
+Route::get('/{server}/{world}/allys', 'DatatablesController@getAllys')->name('worldAlly');
+Route::get('/{server}/{world}/allys/{days}', 'DatatablesController@getAllysHistory')->name('worldAllyHistory');
+Route::get('/{server}/{world}/ally/{ally}', 'DatatablesController@getAllyPlayer')->name('allyPlayer');
+Route::get('/{server}/{world}/player/{player}', 'DatatablesController@getPlayerVillage')->name('playerVillage');
 
-Route::get('/{server}/{world}/allyAllyChanges/{type}/{ally}', 'APIController@getAllyAllyChanges')->name('allyAllyChanges');
-Route::get('/{server}/{world}/playerAllyChanges/{type}/{player}', 'APIController@getPlayerAllyChanges')->name('playerAllyChanges');
+Route::get('/{server}/{world}/allyAllyChanges/{type}/{ally}', 'AllyChangeController@getAllyAllyChanges')->name('allyAllyChanges');
+Route::get('/{server}/{world}/playerAllyChanges/{type}/{player}', 'AllyChangeController@getPlayerAllyChanges')->name('playerAllyChanges');
 
-Route::get('/{server}/{world}/allyConquer/{type}/{ally}', 'APIController@getAllyConquer')->name('allyConquer');
-Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'APIController@getPlayerConquer')->name('playerConquer');
-Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'APIController@getVillageConquer')->name('villageConquer');
-Route::get('/{server}/{world}/worldConquer/{type}', 'APIController@getWorldConquer')->name('worldConquer');
+Route::get('/{server}/{world}/allyConquer/{type}/{ally}', 'ConquerController@getAllyConquer')->name('allyConquer');
+Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'ConquerController@getPlayerConquer')->name('playerConquer');
+Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'ConquerController@getVillageConquer')->name('villageConquer');
+Route::get('/{server}/{world}/worldConquer/{type}', 'ConquerController@getWorldConquer')->name('worldConquer');
 
-Route::get('/{server}/{world}/signature/{type}/{player}', 'APIController@signature')->name('signature');
+Route::get('/{server}/{world}/signature/{type}/{player}', 'SignatureController@signature')->name('signature');
 
 
 /*
@@ -54,12 +52,12 @@ Route::get('/{server}/{world}/signature/{type}/{player}', 'APIController@signatu
  *  [**]-w-{width}
  *  [**]-h-{height}
  */
-Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', 'Tools\MapController@getOptionSizedMapByID')->name('map.options.sized');
-Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', 'Tools\MapController@getSizedMapByID')->name('map.show.sized');
-Route::get('/map/{wantedMap}/{token}/map.{ext}', 'Tools\MapController@getMapByID')->name('map.show');
+Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', '\App\Http\Controllers\Tools\MapController@getOptionSizedMapByID')->name('map.options.sized');
+Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', '\App\Http\Controllers\Tools\MapController@getSizedMapByID')->name('map.show.sized');
+Route::get('/map/{wantedMap}/{token}/map.{ext}', '\App\Http\Controllers\Tools\MapController@getMapByID')->name('map.show');
 
-Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', 'Tools\MapController@getSizedOverviewMap')->name('map.overview.sized');
-Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', 'Tools\MapController@getOverviewMap')->name('map.overview');
+Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', '\App\Http\Controllers\Tools\MapController@getSizedOverviewMap')->name('map.overview.sized');
+Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', '\App\Http\Controllers\Tools\MapController@getOverviewMap')->name('map.overview');
 
 Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}', 'PictureController@getAllySizedPic')->name('picture.ally.dimension');
 Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', 'PictureController@getPlayerSizedPic')->name('picture.player.dimension');
