@@ -84,6 +84,8 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::get('DsConnection', '\App\Http\Controllers\APIController@getDsConnection')->name('DsConnection');
     Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
     Route::get('socialite/destroy/{driver}', 'LoginController@destroyDriver')->name('socialiteDestroy');
+    
+    Route::post('saveConquerHighlighting/{type}', 'SettingsController@saveConquerHighlighting')->name('saveConquerHighlighting');
 });
 
 Route::get('redirect/{driver}', 'User\LoginController@redirectToProvider')->name('loginRedirect');

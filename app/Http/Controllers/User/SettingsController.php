@@ -182,4 +182,33 @@ class SettingsController extends Controller
             'msg' => __('ui.personalSettings.connectionError'),
         ));
     }
+
+    public function saveConquerHighlighting(Request $request, $type){
+        $user = \Auth::user();
+        $profile = $user->profile;
+        
+        $profileStr = "";
+        foreach(Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value) {
+            if($request->get($value)) {
+                if(strlen($profileStr) > 0) $profileStr .= ":";
+                $profileStr .= $key;
+            }
+        }
+        
+        switch($type) {
+            case "world":
+                $profile->conquerHightlight_World = $profileStr;
+                break;
+            case "ally":
+                $profile->conquerHightlight_Ally = $profileStr;
+                break;
+            case "player":
+                $profile->conquerHightlight_Player = $profileStr;
+                break;
+            case "village":
+                $profile->conquerHightlight_Village = $profileStr;
+                break;
+        }
+        $profile->save();
+    }
 }

@@ -85,7 +85,22 @@ class PlayerController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        return view('content.playerConquer', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
+        
+        $allHighlight = ['s', 'i', 'b', 'd', 'w', 'l'];
+        if(\Auth::check()) {
+            $profile = \Auth::user()->profile;
+            $userHighlight = explode(":", $profile->conquerHightlight_Player);
+        } else {
+            $userHighlight = $allHighlight;
+        }
+        
+        $who = BasicFunctions::decodeName($playerData->name);
+        $routeDatatableAPI = route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerData->playerID]);
+        $routeHighlightSaving = route('user.saveConquerHighlighting', ['player']);
+        
+        return view('content.conquer', compact('server', 'worldData', 'typeName',
+                'who', 'routeDatatableAPI', 'routeHighlightSaving',
+                'allHighlight', 'userHighlight'));
     }
 
     public function rank($server, $world){

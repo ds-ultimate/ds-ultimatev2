@@ -92,7 +92,23 @@ class AllyController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        return view('content.allyConquer', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
+        
+        $allHighlight = ['s', 'i', 'b', 'd', 'w', 'l'];
+        if(\Auth::check()) {
+            $profile = \Auth::user()->profile;
+            $userHighlight = explode(":", $profile->conquerHightlight_Ally);
+        } else {
+            $userHighlight = $allHighlight;
+        }
+        
+        $who = BasicFunctions::decodeName($allyData->name).
+                " [".BasicFunctions::decodeName($allyData->tag)."]";
+        $routeDatatableAPI = route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]);
+        $routeHighlightSaving = route('user.saveConquerHighlighting', ['ally']);
+        
+        return view('content.conquer', compact('server', 'worldData', 'typeName',
+                'who', 'routeDatatableAPI', 'routeHighlightSaving',
+                'allHighlight', 'userHighlight'));
     }
 
     public function rank($server, $world){

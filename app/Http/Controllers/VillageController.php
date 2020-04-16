@@ -43,6 +43,21 @@ class VillageController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        return view('content.villageConquer', compact('worldData', 'server', 'villageData', 'typeName', 'type'));
+        
+        $allHighlight = ['s', 'i', 'b', 'd'];
+        if(\Auth::check()) {
+            $profile = \Auth::user()->profile;
+            $userHighlight = explode(":", $profile->conquerHightlight_Village);
+        } else {
+            $userHighlight = $allHighlight;
+        }
+        
+        $who = BasicFunctions::decodeName($villageData->name);
+        $routeDatatableAPI = route('api.villageConquer', [$worldData->server->code, $worldData->name, $type, $villageData->villageID]);
+        $routeHighlightSaving = route('user.saveConquerHighlighting', ['village']);
+        
+        return view('content.conquer', compact('server', 'worldData', 'typeName',
+                'who', 'routeDatatableAPI', 'routeHighlightSaving',
+                'allHighlight', 'userHighlight'));
     }
 }

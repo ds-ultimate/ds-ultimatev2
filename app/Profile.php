@@ -27,9 +27,15 @@ class Profile extends Model
         'twitter_id',
         'created_at',
         'updated_at',
+        
         'map_dimensions',
         'map_defaultColours',
         'map_markerFactor',
+        
+        'conquerHightlight_World',
+        'conquerHightlight_Ally',
+        'conquerHightlight_Player',
+        'conquerHightlight_Village',
     ];
 
     public function checkOauth($driver){
@@ -135,4 +141,9 @@ class Profile extends Model
             'ye' => (int) $parts[3],
         ];
     }
+    
+    public static $CONQUER_HIGHLIGHT_MAPPING = [
+        's' => 'self', 'i' => 'internal', 'b' => 'barbarian', 'd' => 'deleted',
+        'w' => 'win', 'l' => 'loose',
+    ];
 }
