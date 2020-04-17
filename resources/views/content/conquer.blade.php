@@ -26,10 +26,10 @@
                 <i class="fas fa-cog"></i>
             </button>
             <div id="dropdown-settings-div" class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdown-settings">
-                <a id="conquer-highlight-all" class="dropdown-item conquer-highlight">{{ __('conquer.highlight.all') }}</a>
+                <a id="conquer-highlight-all" class="dropdown-item conquer-highlight">{{ __('ui.conquer.highlight.all') }}</a>
                 @foreach(\App\Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value)
                     @if(in_array($key, $allHighlight))
-                        <a id="conquer-highlight-{{ $value }}" class="{{ in_array($key, $userHighlight)?'active ':'' }}dropdown-item conquer-highlight">{{ __('conquer.highlight.'.$value) }}</a>
+                        <a id="conquer-highlight-{{ $value }}" class="{{ in_array($key, $userHighlight)?'active ':'' }}dropdown-item conquer-highlight">{{ __('ui.conquer.highlight.'.$value) }}</a>
                     @endif
                 @endforeach
             </div>

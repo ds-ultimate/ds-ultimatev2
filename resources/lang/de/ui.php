@@ -19,6 +19,16 @@ return array (
     'won' => 'Gewinne',
     'playerOwn' => 'Eigene Adelungen',
     'allyOwn' => 'Interne / Eigen-Adelungen',
+    'highlight' => 
+    array (
+      'all' => 'Alle',
+      'self' => 'Selbst',
+      'internal' => 'Intern',
+      'barbarian' => 'Berbarendörfer',
+      'deleted' => 'Löschungen',
+      'win' => 'Gewinne',
+      'loose' => 'Verluste',
+    ),
   ),
   'world' => 
   array (

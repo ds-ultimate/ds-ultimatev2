@@ -54,6 +54,16 @@ return array (
     'won' => 'Gain',
     'allyOwn' => 'Internal / Own-Conquers',
     'playerOwn' => 'Own conquers',
+    'highlight' => 
+    array (
+      'all' => 'all',
+      'barbarian' => 'barbarian',
+      'deleted' => 'deletions',
+      'internal' => 'internal',
+      'loose' => 'looses',
+      'self' => 'self',
+      'win' => 'gains',
+    ),
   ),
   'player' => 
   array (
