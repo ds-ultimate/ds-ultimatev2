@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Ally;
 use App\Player;
 use App\Village;
+use App\Http\Controllers\Controller;
 use App\Util\Chart;
 use App\Util\ImageChart;
 use App\Util\BasicFunctions;
