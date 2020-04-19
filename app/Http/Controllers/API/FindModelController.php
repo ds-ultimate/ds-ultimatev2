@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Ally;
 use App\Player;
+use App\Server;
 use App\Village;
+use App\World;
 use App\Util\BasicFunctions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Ally as AllyResource;
@@ -78,5 +80,15 @@ class FindModelController extends Controller
             $i++;
         }
         return response()->json($converted);
+    }
+    
+    public function getActiveWorldByServer($server){
+        $server = Server::getServerByCode($server);
+        $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
+        $array = [];
+        foreach ($worlds as $world){
+            $array[] = ['id' => $world->name, 'text' => $world->displayName()];
+        }
+        return $array;
     }
 }

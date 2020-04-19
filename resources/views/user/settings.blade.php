@@ -305,7 +305,7 @@
             });
 
             $('#server').on('select2:select', function (e) {
-                axios.get('{{ route('index') }}/api/' + e.params.data.text.toLowerCase() + '/activeWorlds')
+                axios.get('{{ route('index') }}/api/' + $('#server')[0].selectedOptions[0].title + '/activeWorlds')
                     .then(function (response) {
                         worldTable.empty().trigger("change");
                         var option1 = new Option('{{ __('ui.table.world') }}', 0, false, false);
@@ -328,11 +328,11 @@
                 playerTable.val(null).trigger('change');
                 playerTable.select2({
                     ajax: {
-                        url: '{{ route('index') }}/api/' + server[0].text.toLowerCase() + '/' + world[0].value + '/searchPlayer',
+                        url: '{{ route('index') }}/api/' + server[0].text.toLowerCase() + '/' + world[0].value + '/select2Player',
                         data: function (params) {
                             var query = {
                                 search: params.term,
-                                type: 'public'
+                                page: params.page || 1
                             }
 
                             // Query parameters will be ?search=[term]&type=public
@@ -344,6 +344,7 @@
                     theme: "bootstrap4"
                 });
             });
+            $('#server').trigger('select2:select', null);
 
             function formatState (state) {
                 if (!state.id) {

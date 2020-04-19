@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\DsConnection;
 use App\Http\Controllers\Controller;
+use App\Player;
 use App\Profile;
 use App\Util\BasicFunctions;
 use App\Village;
@@ -13,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Yajra\DataTables\Facades\DataTables;
 
 class SettingsController extends Controller
 {
