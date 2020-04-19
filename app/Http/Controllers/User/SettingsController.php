@@ -216,7 +216,7 @@ class SettingsController extends Controller
     {
 
             BasicFunctions::local();
-            $datas = Auth::user()->dsConnection();
+            $datas = \Auth::user()->dsConnection();
 
             return DataTables::eloquent($datas)
                 ->addColumn('server', function ($connection) {
