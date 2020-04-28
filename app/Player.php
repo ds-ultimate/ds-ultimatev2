@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\World;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -161,5 +162,20 @@ class Player extends CustomModel
         $timestamp = Carbon::now()->subDays($days);
         return $playerModel->where('playerID', $this->playerID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
     }
-
+    
+    public function signature() {
+        return $this->morphMany('App\Signature', 'element');
+    }
+    
+    public function getSignature(World $worldData) {
+        $sig = $this->morphOne('App\Signature', 'element')->where('worlds_id', $worldData->id)->first();
+        if($sig != null) {
+            return $sig;
+        }
+        
+        $sig = new Signature();
+        $sig->worlds_id = $worldData->id;
+        $this->signature()->save($sig);
+        return $sig;
+    }
 }

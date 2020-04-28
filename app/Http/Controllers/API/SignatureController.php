@@ -3,19 +3,48 @@
 namespace App\Http\Controllers\API;
 
 use App\Player;
+use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\Chart;
 use App\Util\ImageChart;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
 
 class SignatureController extends Controller
 {
     public function signature($server, $world, $type, $id){
+        World::existWorld($server, $world);
+        
+        $worldData = World::getWorld($server, $world);
+        $playerData = Player::player($server, $world, $id);
+        
+        $signature = $playerData->getSignature($worldData);
+        if(!$signature->isCached()) {
+            if (!file_exists('../'.config('tools.signature.cacheDir'))) {
+                mkdir('../'.config('tools.signature.cacheDir'), 0777, true);
+            }
+            
+            if($this->createSignature($signature->getCacheFile(), $server, $world, $type, $id)) {
+                $signature->cached = Carbon::now();
+                $signature->save();
+            } else {
+                return "Error";
+            }
+        }
+        
+        return Response::stream(function () use($signature) {
+            $filename = $signature->getCacheFile();
+            readfile($filename);
+        }, 200, ['content-type' => 'image/png']);
+    }
+    
+    private function createSignature($targetFile, $server, $world, $type, $id) {
         // Content type
         $worldData = \App\World::getWorld($server, $world);
         $playerData = \App\Player::player($server, $world, $id);
         if ($playerData != false && $type == 'player') {
             $image = imagecreatefrompng('images/default/signature/bg.png');
-            if ($image === false) die("Error");
+            if ($image === false) return false;
             if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
                 imagettftext($image, 9, 90, 15, 70 - 8 - 4, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
             } else {
@@ -51,14 +80,10 @@ class SignatureController extends Controller
             imagecopyresampled($image, $chart->getRawImage(), 402, 7 - 5, 32, 10, 89, 56, 89, 56);//src_x -> 30
         }else{
             $image = imagecreatefrompng('images/default/signature/bg_noData.png');
-            if ($image === false) die("Error");
+            if($image === false) return false;
         }
         // Output
-        ob_start();
-        imagepng($image);
-        $imagedata = ob_get_clean();
-        imagedestroy($image);
-        return response($imagedata, 200)
-            ->header('Content-Type', 'image/png');
+        imagepng($image, $targetFile);
+        return true;
     }
 }

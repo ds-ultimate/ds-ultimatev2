@@ -112,7 +112,7 @@ class ConquerController extends Controller
     private function doConquerReturn($query, $world, $referTO, $id) {
         return DataTables::eloquent($query)
             ->editColumn('timestamp', function (Conquer $conquer){
-                return Carbon::createFromTimestamp($conquer->timestamp)->format('Y-m-d H:i:s');;
+                return Carbon::createFromTimestamp($conquer->timestamp)->format('Y-m-d H:i:s');
             })
             ->addColumn('village_html', function (Conquer $conquer) use($world) {
                 return $conquer->linkVillageCoordsWithName($world);
