@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Conquer;
-use App\Player;
 use App\World;
 use App\Util\BasicFunctions;
-use App\Http\Controllers\DBController;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

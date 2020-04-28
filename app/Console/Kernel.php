@@ -92,6 +92,18 @@ class Kernel extends ConsoleKernel
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
 
+        /*
+         * Insert Conquer Data
+         */
+        $schedule->command("update:insertMissingConquer")
+            ->dailyAt('02:43')
+            ->onSuccess(function (){
+                Log::info('ConquerData -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('ConquerData -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
     }
 
     /**
