@@ -18,6 +18,13 @@ class SignatureController extends Controller
         $worldData = World::getWorld($server, $world);
         $playerData = Player::player($server, $world, $id);
         
+        if($playerData == null) {
+            return Response::stream(function () {
+                $filename = 'images/default/signature/bg_noData.png';
+                readfile($filename);
+            }, 200, ['content-type' => 'image/png']);
+        }
+        
         $signature = $playerData->getSignature($worldData);
         if(!$signature->isCached()) {
             if (!file_exists('../'.config('tools.signature.cacheDir'))) {
