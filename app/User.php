@@ -112,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    public function followAttackPlanner()
+    public function followAttackList()
     {
         return $this->morphedByMany('App\Tool\AttackPlanner\AttackList', 'followable', 'follows');
     }

@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function overview($page){
         $maps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         $attackLists = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
-        $attackListsFollow = \Auth::user()->followAttackPlanner()->get();
+        $attackListsFollow = \Auth::user()->followAttackList()->get();
         $mapsFollow = \Auth::user()->followMap()->get();
         
         return view('user.overview', compact('page', 'maps', 'attackLists', 'attackListsFollow', 'mapsFollow'));

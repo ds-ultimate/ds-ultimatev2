@@ -674,7 +674,7 @@
                     },
                     {
                         'orderable': false,
-                        'targets': [0,2,8,9,10,11]
+                        'targets': [0,2,8,9,10,@if($mode == 'edit') 11 @endif]
                     }
                 ],
                 "drawCallback": function(settings, json) {
