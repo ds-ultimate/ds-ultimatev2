@@ -122,3 +122,6 @@ Route::get('/{server}/{world}/conquer/{type}', 'ContentController@conquer')->nam
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
 Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');
+
+
+Route::get('api/{server}/{world}/signature/{type}/{player}', 'API\SignatureController@signature')->name('api.signature');

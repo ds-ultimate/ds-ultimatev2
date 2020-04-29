@@ -42,8 +42,6 @@ Route::get('/{server}/{world}/playerConquer/{type}/{ally}', 'ConquerController@g
 Route::get('/{server}/{world}/villageConquer/{type}/{ally}', 'ConquerController@getVillageConquer')->name('villageConquer');
 Route::get('/{server}/{world}/worldConquer/{type}', 'ConquerController@getWorldConquer')->name('worldConquer');
 
-Route::get('/{server}/{world}/signature/{type}/{player}', 'SignatureController@signature')->name('signature');
-
 
 /*
  * Picture API:
