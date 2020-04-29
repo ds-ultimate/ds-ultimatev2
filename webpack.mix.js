@@ -84,17 +84,17 @@ mix.copy('node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.
  */
 
 mix.scripts([
-    'node_modules/datatables.net/js/jquery.dataTables.min.js',
-    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js',
-    'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
-    'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js',
-    'node_modules/datatables.net-buttons/js/dataTables.buttons.min.js',
-    'node_modules/datatables.net-buttons/js/buttons.colVis.min.js',
-    'node_modules/datatables.net-buttons/js/buttons.html5.min.js',
-    'node_modules/datatables.net-buttons/js/buttons.print.min.js',
+    'node_modules/datatables.net/js/jquery.dataTables.js',
+    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
+    'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
+    'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.js',
+    'node_modules/datatables.net-buttons/js/dataTables.buttons.js',
+    'node_modules/datatables.net-buttons/js/buttons.colVis.js',
+    'node_modules/datatables.net-buttons/js/buttons.html5.js',
+    'node_modules/datatables.net-buttons/js/buttons.print.js',
     'node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js',
-    'node_modules/datatables.net-select/js/dataTables.select.min.js',
-    'node_modules/datatables.net-select-bs4/js/select.bootstrap4.min.js',
+    'node_modules/datatables.net-select/js/dataTables.select.js',
+    'node_modules/datatables.net-select-bs4/js/select.bootstrap4.js',
 ], 'public/js/datatables.min.js');
 
 mix.styles([
