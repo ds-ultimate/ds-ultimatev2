@@ -269,21 +269,17 @@ class MapGenerator extends PictureRender {
             $tmpVillage[$village['id']] = $village;
         }
         
-        $realSize = null;
+        $realSize = [
+            'xs' => 450,
+            'ys' => 450,
+            'xe' => 550,
+            'ye' => 550,
+        ];
         foreach($res as $village) {
-            if($realSize == null) {
-                $realSize = [
-                    'xs' => $village->x,
-                    'ys' => $village->y,
-                    'xe' => $village->x,
-                    'ye' => $village->y,
-                ];
-            } else {
-                if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
-                if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
-                if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
-                if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
-            }
+            if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
+            if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
+            if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
+            if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
             
             if(isset($tmpVillage[$village->villageID])) {
                 $this->dataVillage['mark'][$village->villageID] = $tmpVillage[$village->villageID];
