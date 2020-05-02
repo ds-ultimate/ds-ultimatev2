@@ -16,3 +16,6 @@ Disallow: /
 
 User-agent: SEOkicks-Robot
 Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
