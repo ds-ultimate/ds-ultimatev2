@@ -21,7 +21,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="ownedPlanners">
                     @foreach($ownPlanners as $planner)
-                        <a class="dropdown-item" href="{{ 
+                        <a class="dropdown-item" href="{{
                             route('tools.attackPlannerMode', [$planner->id, 'edit', $planner->edit_key])
                             }}">{{ $planner->getTitle().' ['.$planner->world->displayName().']' }}</a>
                     @endforeach
@@ -144,7 +144,7 @@
                                                 <a class="dropdown-item" onclick="changeTime(1)">{{ __('tool.attackPlanner.sendTime') }}</a>
                                             </div>
                                         </div>
-                                        <input id="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
+                                        <input id="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
                                         <input id="time_type" type="hidden" value="0">
                                     </div>
                                 </div>
@@ -637,8 +637,16 @@
 @endsection
 
 @section('js')
+    <audio controls class="d-none">
+        <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.wav') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <script type="text/javascript" src="{{ asset('plugin/jquery.countdown/jquery.countdown.min.js') }}"></script>
     <script>
+        var muteaudio = false;
+        var keyArray = {};
+        var audioTiming = 0;
+        var now;
         var table =
             $('#data1').DataTable({
                 ordering: true,
@@ -666,13 +674,6 @@
                 ],
                 columnDefs: [
                     {
-                        'targets': 8,
-                        'createdCell':  function (td, cellData, rowData, row, col) {
-                            $(td).attr('data-countdown', cellData);
-                        }
-
-                    },
-                    {
                         'orderable': false,
                         'targets': [0,2,8,9,10,@if($mode == 'edit') 11 @endif]
                     }
@@ -698,9 +699,24 @@
                 {!! \App\Util\Datatable::language() !!}
             });
 
+        $(document).ready(function () {
+            $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline"><div class="col-10"><label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="0">', __('tool.attackPlanner.audioTiming')) !!}</label><input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="0"></div><div class="col-2"><h5><a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button"><i id="audioMuteIcon" class="fas fa-volume-up"></i></a></h5></div></div>')
+        });
+
+        $(document).on('input', '#audioTiming', function () {
+            var value = this.value;
+            $('#audioTimingInput').val(value > 60 ? 60 : value);
+            audioTiming = value;
+        }).on('keyup', '#audioTimingInput', function (e) {
+            var value = this.value;
+            $('#audioTimingInput').val(value > 60 ? 60 : value);
+            $('#audioTiming').val(value > 60 ? 60 : value);
+            audioTiming = value;
+        })
+
         @if($mode == 'edit')
         $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         function titleEdit() {
@@ -736,7 +752,6 @@
 
         function changeTime(type, target = '') {
             $('#' + target + 'time_type').val(type);
-            console.log('#' + target + 'time_type');
             switch (type) {
                 case 0: $('#' + target + 'time_title').html("{{ __('tool.attackPlanner.arrivalTime') }}")
                     break;
@@ -810,7 +825,7 @@
 
                 })
                 .catch((error) => {
-                    
+
                 });
         }
 
@@ -916,6 +931,34 @@
             }
         });
 
+        $(".time").on( "keydown", function (e) {
+            keyArray[e.which] = true;
+            if(keyArray[17] && keyArray[86]){
+                var dataTarget = $(this).attr('data-target');
+                var target = (dataTarget != null)?dataTarget:'';
+                var inputTarget = $('#' + target + 'time');
+                inputTarget.attr('type', 'text').select()
+            }
+        });
+
+        $(".time").on( "keyup", function (e) {
+            delete keyArray[e.which];
+        });
+
+        $(".time").bind('paste', function (e) {
+            var dataTarget = $(this).attr('data-target');
+            var target = (dataTarget != null)?dataTarget:'';
+            var pastedData = e.originalEvent.clipboardData.getData('text');
+            var time = pastedData.split(':');
+            var output;
+            if (time.length === 4){
+                output = time[0] + ':' + time[1] + ':' + time[2] + '.' + time[3];
+            }else {
+                output = pastedData;
+            }
+            $('#' + target + 'time').val(output).attr('type', 'time')
+        });
+
         function edit(id) {
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
@@ -1017,7 +1060,7 @@
                             }
                         })
                         .catch((error) => {
-                            
+
                         });
                 }
             @endif
@@ -1034,28 +1077,75 @@
             document.execCommand("copy");
         }
 
+        function muteAudio() {
+            if(muteaudio){
+                $('#audioMuteIcon').removeClass('fa-volume-mute').addClass('fa-volume-up');
+                muteaudio = false;
+            }else{
+                $('#audioMuteIcon').removeClass('fa-volume-up').addClass('fa-volume-mute');
+                muteaudio = true;
+            }
+        }
+
         function countdown(){
-            $('[data-countdown]').each(function() {
-                var finalDate = $(this).data('countdown');
-                $(this).countdown(finalDate, {
-                    precision:  500
-                })
-                    .on('update.countdown', function(event) {
-                        var format = '%H:%M:%S';
-                        if(event.offset.totalDays > 0) {
-                            if (event.offset.totalDays > 1) {
-                                format = '%D {{ __('tool.distCalc.days') }} ' + format;
-                            }else {
-                                format = '%D {{ __('tool.distCalc.days') }} ' + format;
-                            }
-                        }
-                        $(this).html(event.strftime(format));
+            axios.post('{{ route('api.time') }}')
+                .then((response) => {
+                    now = parseInt(response.data['time']);
+                    $('countdown').each(function () {
+                        var date = $(this).attr('date');
+                        startTimer(now, date, $(this));
                     })
-                    .on('finish.countdown', function (e) {
-                        $(this).addClass('bg-danger text-white').html('00:00:00')
-                    });
-            });
-        };
+                })
+                .catch((error) => {
+                    now = parseInt({{ \Carbon\Carbon::now()->timestamp }});
+                });
+        }
+
+        function startTimer(now, arrive, display) {
+            var duration = arrive - now;
+            var timer = duration, days, hours, minutes, seconds;
+            var timerPlay = false;
+            if (duration < 0){
+                display.parent().html("00:00:00").addClass("bg-danger text-white");
+            }else {
+                var interval = setInterval(function () {
+
+                    days = Math.floor(timer / 86400);
+                    hours = Math.floor((timer - days * 86400) / 3600);
+                    minutes = Math.floor((timer - days * 86400 - hours * 3600) / 60);
+                    seconds = timer - days * 86400 - hours * 3600 - minutes * 60;
+
+                    days = days < 1 ? "" : days + " Tage ";
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+                    display.html(days + hours + ":" + minutes + ":" + seconds);
+
+                    if (--timer < 0) {
+                        display.parent().addClass("bg-danger text-white");
+                        clearInterval(interval);
+                    }
+                    if (timer < audioTiming && !timerPlay) {
+                        audio();
+                        timerPlay = true;
+                    }
+                }, 1000);
+            }
+        }
+
+        function audio(){
+            if(!muteaudio){
+                var $audio = $('audio');
+                var audio = $audio[0];
+                audio.volume = 0.2;
+                audio.play();
+                var audioTime = setInterval(function () {
+                    audio.pause()
+                    audio.currentTime = 0
+                    clearInterval(audioTime)
+                }, 2000)
+            }
+        }
 
         String.prototype.trunc = String.prototype.trunc ||
             function(n){

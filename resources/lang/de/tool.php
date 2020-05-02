@@ -85,6 +85,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'exportIGM' => 'Export IGM',
     'exportIGMDesc' => 'Export für eine Ingame-Nachricht. Da IGM\'s keine Tabellen und Bilder anzeigen können wird reiner Text ausgegeben.',
     'show' => 'Angriffsplan anzeigen',
+    'audioTiming' => 'Der Alarm startet %S% Sekunden vor ablauf des Timers.',
     'destroySuccess' => 'Angriffsplan erfolgreich gelöscht',
     'destroyError' => 'Der Angriffsplan konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'fastSwitch' => 'Eigene Angriffspläne',

@@ -28,7 +28,8 @@ mix.sass('resources/sass/app.scss', 'public/css')
             "row",
             "font-weight-bold",
             "px-3",
-            "pr-3"
+            "pr-3",
+            "fa-volume-mute"
         ],
     });
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);

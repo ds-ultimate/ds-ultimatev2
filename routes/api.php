@@ -18,6 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/git/webhook', 'GitController@index')->name('git');
+Route::post('/time', function (){
+    return response()->json([
+        'time' => \Carbon\Carbon::now()->timestamp
+    ]);
+})->name('time');
 Route::get('/{server}/activeWorlds', 'FindModelController@getActiveWorldByServer')->name('activeWorldByServer');
 
 Route::get('/{server}/{world}/villageCoords/{x}/{y}', 'FindModelController@getVillageByCoord')->name('villageByCoord');
