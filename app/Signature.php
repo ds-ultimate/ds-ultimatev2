@@ -32,6 +32,6 @@ class Signature extends Model
     
     public function getCacheFile() {
         $constrained = explode("\\", $this->element_type);
-        return "../".config('tools.signature.cacheDir')."{$constrained[count($constrained) - 1]}-{$this->element_id}.png";
+        return "../".config('tools.signature.cacheDir')."{$this->id}-{$constrained[count($constrained) - 1]}-{$this->element_id}.png";
     }
 }
