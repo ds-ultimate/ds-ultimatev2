@@ -1098,6 +1098,7 @@
                 })
                 .catch((error) => {
                     now = parseInt({{ \Carbon\Carbon::now()->timestamp }});
+                    startTimer(now, date, $(this));
                 });
         }
 
