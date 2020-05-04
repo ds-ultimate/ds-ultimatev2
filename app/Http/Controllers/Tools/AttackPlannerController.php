@@ -238,7 +238,6 @@ class AttackPlannerController extends BaseController
             $target = $villageModel->find($list[1]);
 
             if ($start != null && $target != null) {
-                $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
                 $arrival = (int)$list[3];
 
                 if (isset($list[7]) && $list[7] != '') {
