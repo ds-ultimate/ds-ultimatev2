@@ -31,7 +31,7 @@ class AttackPlannerController extends BaseController
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.attackPlanner.notAvailable'));
         }
-        
+
         if(\Auth::check()) {
             //only allow one map without title per user per world
             $listModel = new AttackList();
@@ -40,7 +40,7 @@ class AttackPlannerController extends BaseController
                 return redirect()->route('tools.attackPlannerMode', [$uniqueList->id, 'edit', $uniqueList->edit_key]);
             }
         }
-        
+
         $list = new AttackList();
         $list->world_id = $worldData->id;
         if (\Auth::user()){
@@ -58,7 +58,7 @@ class AttackPlannerController extends BaseController
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.attackPlanner.notAvailable'));
         }
-        
+
         switch ($mode){
             case 'edit':
                 abort_unless($attackList->edit_key == $key, 403);
@@ -228,7 +228,7 @@ class AttackPlannerController extends BaseController
         $imports = explode(PHP_EOL, $request->import);
         foreach ($imports as $import){
             if ($import == '') continue;
-            
+
 
             $list = explode('&', $import);
             if (count($list) < 7) continue;
@@ -240,8 +240,7 @@ class AttackPlannerController extends BaseController
             if ($start != null && $target != null) {
                 $dist = sqrt(pow($start->x - $target->x, 2) + pow($start->y - $target->y, 2));
                 $arrival = (int)$list[3];
-                $unit = $list[2];
-                
+
                 if (isset($list[7]) && $list[7] != '') {
                     $units = explode('/', $list[7]);
                     $unitArray = [];
