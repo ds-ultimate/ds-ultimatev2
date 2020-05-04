@@ -22,6 +22,12 @@ Route::get('/userskripte/verlaufe_und_karten.js', function() {
     return Redirect::to('/userskripte/verlaufe_und_karten.user.js', 301);
 });
 
+Route::post('/api/time', function (){
+    return response()->json([
+        'time' => \Carbon\Carbon::now()->timestamp
+    ]);
+})->name('api.time');
+
 
 Route::get('/setlocale/{locale}',function($lang){
     $validLocale = in_array($lang, ['de', 'en']);
