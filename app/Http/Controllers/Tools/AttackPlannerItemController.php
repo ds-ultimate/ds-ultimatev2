@@ -146,7 +146,7 @@ class AttackPlannerItemController extends BaseController
                 return $attackListItem->arrival_time->format('d.m.Y H:i:s').'.<small class="text-muted">'.$ms.'</small>';
             })
             ->addColumn('time', function (AttackListItem $attackListItem) {
-                return $attackListItem->send_time;
+                return '<countdown date="'. $attackListItem->send_time->timestamp .'"></countdown>';
             })
             ->addColumn('info', function (AttackListItem $attackListItem){
                 $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
@@ -164,7 +164,7 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('delete', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-edit"></i></a><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
-            ->rawColumns(['type', 'arrival_time', 'slowest_unit', 'info', 'action', 'delete'])
+            ->rawColumns(['type', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
             ->make(true);
     }
 
