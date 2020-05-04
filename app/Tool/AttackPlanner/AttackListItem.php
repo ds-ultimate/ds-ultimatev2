@@ -92,7 +92,7 @@ class AttackListItem extends CustomModel
     }
 
     public function unitIDToName(){
-        return $this->unit[$this->slowest_unit];
+        return AttackListItem::$unit[$this->slowest_unit];
     }
 
     public static function unitNameToID($input){
