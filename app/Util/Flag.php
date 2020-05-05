@@ -25,4 +25,15 @@ class Flag
             'sk','sl','sm','sn','so','sr','ss','st','sv','sx','sy','sz','tc','td','tf','tg','th','tj','tk','tl','tm','tn','to','tr','tt','tv','tw','tz','ua',
             'ug','um','us','uy','uz','va','vc','ve','vg','vi','vn','vu','wf','ws','ye','yt','za','zm','zw'];
     }
+    
+    /**
+     * @return array
+     */
+    public static function flagsWithSymbol(){
+        $allFlags = [];
+        foreach(Flag::flags() as $flag) {
+            $allFlags[$flag] = "<span class='flag-icon flag-icon-$flag'></span> [$flag]";
+        }
+        return $allFlags;
+    }
 }

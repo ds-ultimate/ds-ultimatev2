@@ -131,10 +131,15 @@ mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public
  * coreui
  */
 
-mix.copy([
-    'node_modules/@coreui/coreui/dist/css/coreui.min.css',
-    'node_modules/@coreui/coreui/dist/js/coreui.min.js'
-], 'public/plugin/coreui/');
+mix.js('resources/js/admin_sidebar.js', 'public/js');
+mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
+    .options({
+        processCssUrls: false
+    })
+    .purgeCss({
+        whitelistPatterns: [],
+        whitelist: [],
+    });
 
 
 /**

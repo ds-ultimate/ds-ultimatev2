@@ -59,8 +59,8 @@ return array (
       'active' => 'Active',
       'active_helper' => 'Aktualisiert den Server',
     ),
-    'titel' => 'Server',
     'title_singular' => 'Server',
+    'title' => 'Server',
   ),
   'user' => 
   array (

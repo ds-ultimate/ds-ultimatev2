@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Changelog;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ChangelogRequest;
 use App\Http\Requests\MassDestroyChangelogRequest;
 use App\Http\Requests\StoreChangelogRequest;
 use App\Http\Requests\UpdateChangelogRequest;
-use App\Changelog;
-use Carbon\Carbon;
+use App\Util\BasicFunctions;
 use Illuminate\Support\Facades\Auth;
 
 class ChangelogsController extends Controller
@@ -26,8 +25,12 @@ class ChangelogsController extends Controller
     public function create()
     {
         abort_unless(\Gate::allows('changelog_create'), 403);
-
-        return view('admin.changelogs.create');
+        
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.changelogs.store");
+        $header = __('admin.changelogs.title');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function store(StoreChangelogRequest $request)
@@ -42,14 +45,25 @@ class ChangelogsController extends Controller
     public function edit(Changelog $changelog)
     {
         abort_unless(\Gate::allows('changelog_edit'), 403);
+        $request->validate([
+            'version' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+            'icon' => 'required',
+            'color' => 'required',
+        ]);
 
-        return view('admin.changelogs.edit', compact('changelog'));
+        $formEntries = $this->generateEditFormConfig($changelog);
+        $route = route("admin.changelogs.update", [$changelog->id]);
+        $header = __('admin.changelogs.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function update(UpdateChangelogRequest $request, Changelog $changelog)
     {
         abort_unless(\Gate::allows('changelog_edit'), 403);
-
+        
         $changelog->update($request->all());
 
         return redirect()->route('admin.changelogs.index');
@@ -58,8 +72,11 @@ class ChangelogsController extends Controller
     public function show(Changelog $changelog)
     {
         abort_unless(\Gate::allows('changelog_show'), 403);
-
-        return view('admin.changelogs.show', compact('changelog'));
+        
+        $formEntries = $this->generateShowFormConfig($changelog);
+        $header = __('admin.changelog.show');
+        $title = __('admin.changelog.title');
+        return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
     public function destroy(Changelog $changelog)
@@ -77,5 +94,31 @@ class ChangelogsController extends Controller
 
         return response(null, 204);
     }
-
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.changelogs.version'), 'version', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'fas', __('admin.changelogs.icon'), 'icon', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'optionColor', __('admin.changelogs.color'), 'color', '', false, true, [
+                'options' => [
+                    '#20a8d8', '#f86c6b', '#c8ced3', '#4dbd74', '#ffc107', '#000000', '#63c2de',
+                ],
+            ]),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.changelogs.form_title'), 'title', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.changelogs.content'), 'content', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.changelogs.url'), 'repository_html_url', '', false, false),
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        return [
+            BasicFunctions::formEntryShow(__('admin.changelogs.version'), $values->version),
+            BasicFunctions::formEntryShow(__('admin.changelogs.icon'), "<h1><i class='". htmlentities($values->icon) ."'></i></h1>", false),
+            BasicFunctions::formEntryShow(__('admin.changelogs.form_title'), $values->title),
+            BasicFunctions::formEntryShow(__('admin.changelogs.content'), $values->content, false),
+            BasicFunctions::formEntryShow(__('admin.changelogs.url'), $values->repository_html_url),
+            BasicFunctions::formEntryShow(__('admin.changelogs.buffer'), $values->buffer, false),
+            BasicFunctions::formEntryShow(__('admin.changelogs.created'), $values->created_at->diffForHumans()),
+        ];
+    }
 }

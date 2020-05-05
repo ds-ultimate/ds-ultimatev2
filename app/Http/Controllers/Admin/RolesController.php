@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Permission;
+use App\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyRoleRequest;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Permission;
-use App\Role;
+use App\Util\BasicFunctions;
 
 class RolesController extends Controller
 {
@@ -24,9 +25,11 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('role_create'), 403);
 
-        $permissions = Permission::all()->pluck('title', 'id');
-
-        return view('admin.roles.create', compact('permissions'));
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.roles.store");
+        $header = __('admin.roles.titleCreate');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function store(StoreRoleRequest $request)
@@ -43,11 +46,11 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('role_edit'), 403);
 
-        $permissions = Permission::all()->pluck('title', 'id');
-
-        $role->load('permissions');
-
-        return view('admin.roles.edit', compact('permissions', 'role'));
+        $formEntries = $this->generateEditFormConfig($role);
+        $route = route("admin.roles.update", [$role->id]);
+        $header = __('admin.roles.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
@@ -63,10 +66,11 @@ class RolesController extends Controller
     public function show(Role $role)
     {
         abort_unless(\Gate::allows('role_show'), 403);
-
-        $role->load('permissions');
-
-        return view('admin.roles.show', compact('role'));
+        
+        $formEntries = $this->generateShowFormConfig($role);
+        $header = __('admin.roles.show');
+        $title = $role->title;
+        return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
     public function destroy(Role $role)
@@ -83,5 +87,26 @@ class RolesController extends Controller
         Role::whereIn('id', request('ids'))->delete();
 
         return response(null, 204);
+    }
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'text', __('admint.roles.form_title'), 'title', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'select', __('admin.roles.permissions'), 'permissions[]', collect(), false, false, [
+                'options' => Permission::all()->pluck('title', 'id'),
+                'multiple' => true,
+            ])
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        $permissions = "";
+        foreach($values->permissions as $perm) {
+            $permissions .= "<span class='badge badge-info'>$perm->title</span> ";
+        }
+        
+        return [
+            BasicFunctions::formEntryShow(__('admin.roles.permissions'), $permissions, false),
+        ];
     }
 }

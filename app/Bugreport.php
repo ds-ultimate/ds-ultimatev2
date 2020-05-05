@@ -19,6 +19,14 @@ class Bugreport extends Model
         'url',
         'status',
     ];
+    
+    protected $dates = [
+        'firstSeen',
+        'delivery',
+        'updated_at',
+        'created_at',
+        'deleted_at',
+    ];
 
     public function comments(){
 
@@ -71,13 +79,13 @@ class Bugreport extends Model
     public function getStatus(){
         switch ($this->status){
             case 0:
-                return __('cruds.bugreport.statusSelect.open');
+                return __('admin.bugreport.statusSelect.open');
             case 1:
-                return __('cruds.bugreport.statusSelect.inprogress');
+                return __('admin.bugreport.statusSelect.inprogress');
             case 2:
-                return __('cruds.bugreport.statusSelect.resolved');
+                return __('admin.bugreport.statusSelect.resolved');
             case 3:
-                return __('cruds.bugreport.statusSelect.close');
+                return __('admin.bugreport.statusSelect.close');
         }
     }
 

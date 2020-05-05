@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Server;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyServerRequest;
 use App\Http\Requests\StoreServerRequest;
 use App\Http\Requests\UpdateServerRequest;
-use App\Server;
+use App\Util\BasicFunctions;
 
 class ServerController extends Controller
 {
@@ -23,7 +24,11 @@ class ServerController extends Controller
     {
         abort_unless(\Gate::allows('server_create'), 403);
 
-        return view('admin.server.create');
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.server.store");
+        $header = __('admin.server.titleCreate');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function store(StoreServerRequest $request)
@@ -41,7 +46,11 @@ class ServerController extends Controller
     {
         abort_unless(\Gate::allows('server_edit'), 403);
 
-        return view('admin.server.edit', compact('server'));
+        $formEntries = $this->generateEditFormConfig($server);
+        $route = route("admin.server.update", [$server->id]);
+        $header = __('admin.server.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function update(UpdateServerRequest $request, Server $server)
@@ -57,8 +66,11 @@ class ServerController extends Controller
     public function show(Server $server)
     {
         abort_unless(\Gate::allows('server_show'), 403);
-
-        return view('admin.server.show', compact('server'));
+        
+        $formEntries = $this->generateShowFormConfig($server);
+        $header = __('admin.server.show');
+        $title = $server->code;
+        return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
     public function destroy(Server $server)
@@ -75,5 +87,30 @@ class ServerController extends Controller
         Server::whereIn('id', $request->input('ids'))->delete();
 
         return response(null, 204);
+    }
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.server.code'), 'code', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'select', __('admin.server.flag'), 'flag', '', false, true, [
+                'options' => \App\Util\Flag::flagsWithSymbol(),
+                'multiple' => false,
+                'raw' => true,
+            ]),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.server.url'), 'url', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.server.active'), 'active', '', false, false),
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        return [
+            BasicFunctions::formEntryShow(__('admin.server.code'), $values->code),
+            BasicFunctions::formEntryShow(__('admin.server.flag'), '<span class="flag-icon flag-icon-'. htmlentities($values->flag).
+                    '"></span> ['. htmlentities($values->flag). ']', false),
+            BasicFunctions::formEntryShow(__('admin.server.url'), $values->url),
+            BasicFunctions::formEntryShow(__('admin.server.active'),
+                    ($values->active == 1)? '<span class="fas fa-check" style="color: green"></span>' :
+                    '<span class="fas fa-times" style="color: red"></span>', false),
+        ];
     }
 }

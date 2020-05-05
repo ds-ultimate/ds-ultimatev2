@@ -25,7 +25,6 @@ class UpdateUserRequest extends FormRequest
                 'integer',
             ],
             'roles'   => [
-                'required',
                 'array',
             ],
         ];

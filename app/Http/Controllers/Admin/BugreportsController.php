@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Bugreport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BugreportRequest;
 use App\Http\Requests\MassDestroyBugreportRequest;
 use App\Http\Requests\StoreBugreportRequest;
 use App\Http\Requests\UpdateBugreportRequest;
-use App\Bugreport;
+use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,6 +40,7 @@ class BugreportsController extends Controller
 
         return view('admin.bugreports.index', compact('bugreports'));
     }
+    
     public function indexNew()
     {
         abort_unless(\Gate::allows('bugreport_access'), 403);
@@ -51,8 +53,12 @@ class BugreportsController extends Controller
     public function create()
     {
         abort_unless(\Gate::allows('bugreport_create'), 403);
-
-        return view('admin.bugreports.create');
+        
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.bugreports.store");
+        $header = __('user.bugreport.title');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function store(StoreBugreportRequest $request)
@@ -70,7 +76,11 @@ class BugreportsController extends Controller
     {
         abort_unless(\Gate::allows('bugreport_edit'), 403);
 
-        return view('admin.bugreports.edit', compact('bugreport'));
+        $formEntries = $this->generateEditFormConfig($bugreport);
+        $route = route("admin.bugreports.update", [$bugreport->id]);
+        $header = __('admin.bugreports.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
     public function update(UpdateBugreportRequest $request, Bugreport $bugreport)
@@ -93,8 +103,11 @@ class BugreportsController extends Controller
             $bugreport->firstSeen = Carbon::now();
             $bugreport->save();
         }
-
-        return view('admin.bugreports.show', compact('bugreport'));
+        
+        $formEntries = $this->generateShowFormConfig($bugreport);
+        $header = __('admin.bugreports.show');
+        $title = $bugreport->title;
+        return view('admin.bugreports.show', compact('bugreport', 'formEntries', 'header', 'title'));
     }
 
     public function destroy(Bugreport $bugreport)
@@ -112,5 +125,47 @@ class BugreportsController extends Controller
 
         return response(null, 204);
     }
-
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.name'), 'name', Auth::user()->name, true, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.email'), 'email', Auth::user()->email, true, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.form_title'), 'title', null, false, true),
+            BasicFunctions::formEntryEdit($values, 'select', __('user.bugreport.priority'), 'priority', 0, false, true, [
+                'options' => [
+                    '0' => __('user.bugreport.prioritySelect.low'),
+                    '1' => __('user.bugreport.prioritySelect.normal'),
+                    '2' => __('user.bugreport.prioritySelect.high'),
+                    '3' => __('user.bugreport.prioritySelect.critical'),
+                ],
+                'multiple' => false,
+            ]),
+            BasicFunctions::formEntryEdit($values, 'select', __('admin.bugreport.status'), 'status', 0, false, true, [
+                'options' => [
+                    '0' => __('admin.bugreport.statusSelect.open'),
+                    '1' => __('admin.bugreport.statusSelect.inprogress'),
+                    '2' => __('admin.bugreport.statusSelect.resolved'),
+                    '3' => __('admin.bugreport.statusSelect.close'),
+                ],
+                'multiple' => false,
+            ]),
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.description'), 'description', null, false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.url'), 'url', null, false, true),
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        return [
+            BasicFunctions::formEntryShow(__('user.bugreport.name'), $values->name),
+            BasicFunctions::formEntryShow(__('user.bugreport.email'), $values->email),
+            BasicFunctions::formEntryShow(__('user.bugreport.priority'), $values->getPriorityBadge(), false),
+            BasicFunctions::formEntryShow(__('admin.bugreport.status'), $values->getStatusBadge(), false),
+            BasicFunctions::formEntryShow(__('admin.bugreport.created_at'),
+                    "{$values->created_at} || {$values->created_at->diffForHumans()}"),
+            BasicFunctions::formEntryShow(__('user.bugreport.url'), $values->url),
+            BasicFunctions::formEntryShow(__('user.bugreport.description'), $values->description),
+            BasicFunctions::formEntryShow(__('admin.bugreport.seen'),
+                    "{$values->firstSeenUser->name} || {$values->firstSeen} || {$values->firstSeen->diffForHumans()}"),
+        ];
+    }
 }

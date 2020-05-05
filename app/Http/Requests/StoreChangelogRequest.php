@@ -15,12 +15,11 @@ class StoreChangelogRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => [
-                'required',
-            ],
-            'content' => [
-                'required',
-            ],
+            'version' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+            'icon' => 'required',
+            'color' => 'required',
         ];
     }
 }

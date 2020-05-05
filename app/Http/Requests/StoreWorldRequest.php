@@ -29,6 +29,9 @@ class StoreWorldRequest extends FormRequest
             'config' => [
                 'required',
             ],
+            'units' => [
+                'required',
+            ],
         ];
     }
 }

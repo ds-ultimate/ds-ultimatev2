@@ -27,9 +27,10 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "@coreui/coreui": "^2.1.15",
+        "@coreui/coreui": "^3.0.0",
         "@ds-ultimate/drawerjs": "^2.0.2",
         "@fortawesome/fontawesome-free": "^5.13.0",
+        "@popperjs/core": "^2.4.0",
         "@ttskch/select2-bootstrap4-theme": "^1.4.0",
         "bootstrap-colorpicker": "^3.2.0",
         "bootstrap-confirmation2": "^4.1.0",
@@ -45,6 +46,7 @@
         "jquery-countdown": "^2.2.0",
         "jquery-ui-dist": "^1.12.1",
         "numeral": "^2.0.6",
+        "perfect-scrollbar": "^1.5.0",
         "select2": "^4.0.13"
     }
 }

@@ -30,6 +30,7 @@ class World extends Model
         'village_count',
         'url',
         'config',
+        'units',
         'active',
     ];
 
