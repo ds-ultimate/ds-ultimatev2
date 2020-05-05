@@ -93,17 +93,54 @@ class DiscordNotification extends Notification
     }
 
     public function conquere(){
-        $input = $this->input;
+        $input = $this->input['conquere'];
         $world = $this->input['world'];
-        $old = Player::player($world->server->code, $world->name, $this->input['old']);
-        $new = Player::player($world->server->code, $world->name, $this->input['new']);
-        $village = Village::village($world->server->code, $world->name, $this->input['village']);
+        $old = Player::player($world->server->code, $world->name, $input[3]);
+        $new = Player::player($world->server->code, $world->name, $input[2]);
+        $village = Village::village($world->server->code, $world->name, $input[0]);
+        $time = Carbon::createFromTimestamp($input[1]);
+
+        if (isset($old)){
+            if ($old->ally_id == $new->ally_id){
+                $color = 3447003;
+            }else{
+                $color = 3066993;
+            }
+        }else{
+            $color = 9807270;
+        }
 
         $this->message = [
-            'content' => 'Das Dorf ``['.$village->coordinates().']'.BasicFunctions::decodeName($village->name).'`` wurde geadelt um '.$input['date'].'. Alter Besitzer:``'.BasicFunctions::decodeName($old->name).'`` || Neuer Besitzer:``'.BasicFunctions::decodeName($new->name).'``',
-            'embed' => null,
+//            'content' => 'Das Dorf ``['.$village->coordinates().']'.BasicFunctions::decodeName($village->name).'`` wurde geadelt um '.$input['date'].'. Alter Besitzer:``'.BasicFunctions::decodeName($old->name).'`` || Neuer Besitzer:``'.BasicFunctions::decodeName($new->name).'``',
+            'content' => '',
+            'embed' => [
+                'title' => $world->displayName(),
+                'color' => $color,
+                'description' => 'Zeitpunkt: ``'.$time->format('d.m.Y H:i:s').'``',
+                'fields' => [
+                    ['name' => 'Alter Besitzer', 'value'=> self::conquerePlayer($world, $old, ':red_circle:'), 'inline' => true],
+                    ['name' => "Dorf", 'value'=> '[['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name).']('.route('village',[$world->server->code, $world->name, $village->villageID]).')'."\n \n \n ------------------------------", 'inline' => true],
+                    ['name' => 'Neuer Besitzer', 'value'=> self::conquerePlayer($world, $new, ':green_circle:'), 'inline' => true],
+                ],
+                'timestamp' => Carbon::now()->toIso8601ZuluString(),
+                'footer' => [
+                    'text' => config('app.name'),
+                ],
+            ],
         ];
+    }
 
+    public static function conquerePlayer($world, $player, $icon){
+        if (isset($player)){
+            $output = $icon.' ['.BasicFunctions::decodeName($player->name).']('.route('player',[$world->server->code, $world->name, $player->playerID]).') ';
+            if ($player->ally_id != 0){
+                $output .= '[['.BasicFunctions::decodeName($player->allyLatest->tag).']]('.route('ally', [$world->server->code, $world->name, $player->allyLatest->allyID]).')';
+            }
+            $output .= "\n Punkte: ".BasicFunctions::numberConv($player->points)."\n Dörfer: ".BasicFunctions::numberConv($player->village_count);
+        }else{
+            $output = ':white_circle: '.__('ui.player.barbarian')."\n \n ";
+        }
+        return $output."\n ------------------------------";
     }
 
     public function embedContent(){
@@ -124,7 +161,7 @@ class DiscordNotification extends Notification
                 for($i = 0; $i < 4 && isset($trace[$i]); $i++) {
                     $traceStr .= "#{$trace[$i]}\n";
                 }
-                
+
                 //TODO improve this...
                 try {
                     $traceStr .= URL::current();
