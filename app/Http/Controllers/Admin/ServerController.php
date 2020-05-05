@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Server;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyServerRequest;
-use App\Http\Requests\StoreServerRequest;
-use App\Http\Requests\UpdateServerRequest;
 use App\Util\BasicFunctions;
+use Illuminate\Http\Request;
 
 class ServerController extends Controller
 {
@@ -31,12 +29,16 @@ class ServerController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreServerRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('server_create'), 403);
 
+        $request->validate([
+            'code' => 'required',
+            'flag' => 'required',
+            'url' => 'required',
+        ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
-
         $server = Server::create($request->all());
 
         return redirect()->route('admin.server.index');
@@ -53,11 +55,16 @@ class ServerController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateServerRequest $request, Server $server)
+    public function update(Request $request, Server $server)
     {
         abort_unless(\Gate::allows('server_edit'), 403);
+        
+        $request->validate([
+            'code' => 'required',
+            'flag' => 'required',
+            'url' => 'required',
+        ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
-
         $server->update($request->all());
 
         return redirect()->route('admin.server.index');
@@ -82,10 +89,15 @@ class ServerController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyServerRequest $request)
+    public function massDestroy(Request $request)
     {
-        Server::whereIn('id', $request->input('ids'))->delete();
+        abort_unless(\Gate::allows('server_delete'), 403);
 
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:server,id',
+        ]);
+        Server::whereIn('id', $request->input('ids'))->delete();
         return response(null, 204);
     }
     

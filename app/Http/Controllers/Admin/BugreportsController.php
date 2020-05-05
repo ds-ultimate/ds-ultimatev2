@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Bugreport;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BugreportRequest;
-use App\Http\Requests\MassDestroyBugreportRequest;
-use App\Http\Requests\StoreBugreportRequest;
-use App\Http\Requests\UpdateBugreportRequest;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BugreportsController extends Controller
@@ -61,10 +58,18 @@ class BugreportsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreBugreportRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('bugreport_create'), 403);
-
+        
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'title' => 'required',
+            'priority' => 'required|integer',
+            'description' => 'required',
+            'status' => 'required|integer',
+        ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
 
         $bugreport = Bugreport::create($request->all());
@@ -83,10 +88,18 @@ class BugreportsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateBugreportRequest $request, Bugreport $bugreport)
+    public function update(Request $request, Bugreport $bugreport)
     {
         abort_unless(\Gate::allows('bugreport_edit'), 403);
 
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'title' => 'required',
+            'priority' => 'required|integer',
+            'description' => 'required',
+            'status' => 'required|integer',
+        ]);
         ($request->status != $bugreport->status)?(($request->status == 2 || $request->status == 3)? $bugreport->delivery = Carbon::now() : $bugreport->delivery = null) : null;
 
         $bugreport->update($request->all());
@@ -119,8 +132,14 @@ class BugreportsController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyBugreportRequest $request)
+    public function massDestroy(Request $request)
     {
+        abort_unless(\Gate::allows('bugreport_delete'), 403);
+        
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:bugreports,id',
+        ]);
         Bugreport::whereIn('id', $request->input('ids'))->delete();
 
         return response(null, 204);

@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\World;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyWorldRequest;
-use App\Http\Requests\StoreWorldRequest;
-use App\Http\Requests\UpdateWorldRequest;
 use App\Util\BasicFunctions;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class WorldsController extends Controller
 {
@@ -17,8 +15,7 @@ class WorldsController extends Controller
         abort_unless(\Gate::allows('world_access'), 403);
 
         $worlds = World::all();
-
-        $now = Carbon::createFromTimestamp(time());
+        $now = Carbon::now();
 
         return view('admin.worlds.index', compact('worlds', 'now'));
     }
@@ -34,10 +31,17 @@ class WorldsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreWorldRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('world_create'), 403);
-
+        
+        $request->validate([
+            'server_id' => 'required',
+            'name' => 'required',
+            'url' => 'required',
+            'config' => 'required',
+            'units' => 'required',
+        ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
 
         $world = World::create($request->all());
@@ -56,9 +60,17 @@ class WorldsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateWorldRequest $request, World $world)
+    public function update(Request $request, World $world)
     {
         abort_unless(\Gate::allows('world_edit'), 403);
+        
+        $request->validate([
+            'server_id' => 'required',
+            'name' => 'required',
+            'url' => 'required',
+            'config' => 'required',
+            'units' => 'required',
+        ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
 
         $world->update($request->all());
@@ -85,10 +97,15 @@ class WorldsController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyWorldRequest $request)
+    public function massDestroy(Request $request)
     {
+        abort_unless(\Gate::allows('world_delete'), 403);
+        
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:worlds,id',
+        ]);
         World::whereIn('id', $request->input('ids'))->delete();
-
         return response(null, 204);
     }
     

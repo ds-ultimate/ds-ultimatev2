@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\News;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyNewsRequest;
-use App\Http\Requests\StoreNewsRequest;
-use App\Http\Requests\UpdateNewsRequest;
 use App\Util\BasicFunctions;
+use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
@@ -31,10 +29,14 @@ class NewsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreNewsRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('news_create'), 403);
-
+        
+        $request->validate([
+            'content_de' => 'required',
+            'content_en' => 'required',
+        ]);
         $news = News::create($request->all());
 
         return redirect()->route('admin.news.index');
@@ -51,10 +53,14 @@ class NewsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateNewsRequest $request, News $news)
+    public function update(Request $request, News $news)
     {
         abort_unless(\Gate::allows('news_edit'), 403);
 
+        $request->validate([
+            'content_de' => 'required',
+            'content_en' => 'required',
+        ]);
         $news->update($request->all());
 
         return redirect()->route('admin.news.index');
@@ -79,10 +85,14 @@ class NewsController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyNewsRequest $request)
+    public function massDestroy(Request $request)
     {
         News::whereIn('id', $request->input('ids'))->delete();
 
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:news,id',
+        ]);
         return response(null, 204);
     }
     

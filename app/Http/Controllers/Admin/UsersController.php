@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyUserRequest;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Util\BasicFunctions;
-use \Carbon\Carbon;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
@@ -33,10 +31,17 @@ class UsersController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('user_create'), 403);
-
+        
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'roles' => 'array',
+            'roles.*' => 'integer',
+        ]);
         $user = User::create($request->all());
         if(!isset($request->verified) && $user->email_verified_at != null) {
             $user->email_verified_at = null;
@@ -60,10 +65,16 @@ class UsersController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
         abort_unless(\Gate::allows('user_edit'), 403);
-
+        
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'roles' => 'array',
+            'roles.*' => 'integer',
+        ]);
         $user->update($request->all());
         if(!isset($request->verified) && $user->email_verified_at != null) {
             $user->email_verified_at = null;
@@ -95,10 +106,15 @@ class UsersController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyUserRequest $request)
+    public function massDestroy(Request $request)
     {
-        User::whereIn('id', request('ids'))->delete();
+        abort_unless(\Gate::allows('user_delete'), 403);
 
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:users,id',
+        ]);
+        User::whereIn('id', request('ids'))->delete();
         return response(null, 204);
     }
     

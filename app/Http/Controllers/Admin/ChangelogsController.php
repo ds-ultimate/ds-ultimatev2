@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Changelog;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyChangelogRequest;
-use App\Http\Requests\StoreChangelogRequest;
-use App\Http\Requests\UpdateChangelogRequest;
 use App\Util\BasicFunctions;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ChangelogsController extends Controller
 {
@@ -33,10 +30,17 @@ class ChangelogsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreChangelogRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('changelog_create'), 403);
-
+        
+        $request->validate([
+            'version' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+            'icon' => 'required',
+            'color' => 'required',
+        ]);
         $changelog = Changelog::create($request->all());
 
         return redirect()->route('admin.changelogs.index');
@@ -60,10 +64,17 @@ class ChangelogsController extends Controller
         return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateChangelogRequest $request, Changelog $changelog)
+    public function update(Request $request, Changelog $changelog)
     {
         abort_unless(\Gate::allows('changelog_edit'), 403);
-        
+
+        $request->validate([
+            'version' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+            'icon' => 'required',
+            'color' => 'required',
+        ]);
         $changelog->update($request->all());
 
         return redirect()->route('admin.changelogs.index');
@@ -88,10 +99,15 @@ class ChangelogsController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyChangelogRequest $request)
+    public function massDestroy(Request $request)
     {
+        abort_unless(\Gate::allows('changelog_delete'), 403);
+        
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:changelogs,id',
+        ]);
         Changelog::whereIn('id', $request->input('ids'))->delete();
-
         return response(null, 204);
     }
     
