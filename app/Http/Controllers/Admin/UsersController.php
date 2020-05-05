@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyUserRequest;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Role;
 use App\User;
+use App\Http\Controllers\Controller;
+use App\Util\BasicFunctions;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
@@ -24,17 +24,32 @@ class UsersController extends Controller
     {
         abort_unless(\Gate::allows('user_create'), 403);
 
-        $roles = Role::all()->pluck('title', 'id');
-
-        return view('admin.users.create', compact('roles'));
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.users.store");
+        $header = __('admin.users.titleCreate');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('user_create'), 403);
-
+        
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'roles' => 'array',
+            'roles.*' => 'integer',
+        ]);
         $user = User::create($request->all());
+        if(!isset($request->verified) && $user->email_verified_at != null) {
+            $user->email_verified_at = null;
+        } else if(isset($request->verified) && $user->email_verified_at == null) {
+            $user->email_verified_at = Carbon::now();
+        }
         $user->roles()->sync($request->input('roles', []));
+        $user->save();
 
         return redirect()->route('admin.users.index');
     }
@@ -43,19 +58,31 @@ class UsersController extends Controller
     {
         abort_unless(\Gate::allows('user_edit'), 403);
 
-        $roles = Role::all()->pluck('title', 'id');
-
-        $user->load('roles');
-
-        return view('admin.users.edit', compact('roles', 'user'));
+        $formEntries = $this->generateEditFormConfig($user);
+        $route = route("admin.users.update", [$user->id]);
+        $header = __('admin.users.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
         abort_unless(\Gate::allows('user_edit'), 403);
-
+        
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'roles' => 'array',
+            'roles.*' => 'integer',
+        ]);
         $user->update($request->all());
+        if(!isset($request->verified) && $user->email_verified_at != null) {
+            $user->email_verified_at = null;
+        } else if(isset($request->verified) && $user->email_verified_at == null) {
+            $user->email_verified_at = Carbon::now();
+        }
         $user->roles()->sync($request->input('roles', []));
+        $user->save();
 
         return redirect()->route('admin.users.index');
     }
@@ -64,9 +91,10 @@ class UsersController extends Controller
     {
         abort_unless(\Gate::allows('user_show'), 403);
 
-        $user->load('roles');
-
-        return view('admin.users.show', compact('user'));
+        $formEntries = $this->generateShowFormConfig($user);
+        $header = __('admin.users.show');
+        $title = $user->name;
+        return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
     public function destroy(User $user)
@@ -78,10 +106,43 @@ class UsersController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyUserRequest $request)
+    public function massDestroy(Request $request)
     {
-        User::whereIn('id', request('ids'))->delete();
+        abort_unless(\Gate::allows('user_delete'), 403);
 
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:users,id',
+        ]);
+        User::whereIn('id', request('ids'))->delete();
         return response(null, 204);
+    }
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.users.name'), 'name', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.users.email'), 'email', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'password', __('admin.users.password'), 'password', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'select', __('admin.users.roles'), 'roles[]', collect(), false, false, [
+                'options' => Role::all()->pluck('title', 'id'),
+                'multiple' => true,
+            ]),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.users.verified'), 'verified', '', false, false, [
+                'value' => $values->email_verified_at ?? false,
+            ]),
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        $permissions = "";
+        foreach($values->roles as $role) {
+            $permissions .= "<span class='badge badge-info'>$role->title</span> ";
+        }
+        
+        return [
+            BasicFunctions::formEntryShow(__('admin.users.email'), $values->email),
+            BasicFunctions::formEntryShow(__('admin.users.verified'), $values->email_verified_at),
+            BasicFunctions::formEntryShow(__('admin.roles.permissions'), $permissions, false),
+        ];
     }
 }

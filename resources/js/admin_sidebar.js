@@ -1,0 +1,2 @@
+
+require('@coreui/coreui');

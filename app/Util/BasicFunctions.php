@@ -339,5 +339,24 @@ class BasicFunctions
 
         return self::numberConv($num);
     }
-
+    
+    public static function formEntryEdit($generateFrom, $type, $name, $id, $value, $readonly, $required, $optional = array()) {
+        $index = str_replace("[]", "", $id);
+        return array_merge([
+            'type' => $type,
+            'name' => $name,
+            'id' => $id,
+            'value' => $generateFrom->$index ?? $value,
+            'readonly' => $readonly,
+            'required' => $required,
+        ], $optional);
+    }
+    
+    public static function formEntryShow($name, $value, $escape = true, $optional = array()) {
+        return array_merge([
+            'name' => $name,
+            'value' => $value,
+            'escape' => $escape,
+        ], $optional);
+    }
 }

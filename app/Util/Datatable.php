@@ -11,6 +11,14 @@ namespace App\Util;
 
 class Datatable
 {
+    /**
+     * WTF
+     * use something like
+    language: {
+        url: languages.{{ app()->getLocale() }}
+    },
+     * @return type
+     */
     public static function language(){
         return "
         language:{

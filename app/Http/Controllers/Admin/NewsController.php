@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MassDestroyNewsRequest;
-use App\Http\Requests\StoreNewsRequest;
-use App\Http\Requests\UpdateNewsRequest;
 use App\News;
-use App\World;
+use App\Http\Controllers\Controller;
+use App\Util\BasicFunctions;
+use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
@@ -23,14 +21,22 @@ class NewsController extends Controller
     public function create()
     {
         abort_unless(\Gate::allows('news_create'), 403);
-
-        return view('admin.news.create');
+        
+        $formEntries = $this->generateEditFormConfig(null);
+        $route = route("admin.news.store");
+        $header = __('admin.news.titleCreate');
+        $method = "POST";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function store(StoreNewsRequest $request)
+    public function store(Request $request)
     {
         abort_unless(\Gate::allows('news_create'), 403);
-
+        
+        $request->validate([
+            'content_de' => 'required',
+            'content_en' => 'required',
+        ]);
         $news = News::create($request->all());
 
         return redirect()->route('admin.news.index');
@@ -40,13 +46,21 @@ class NewsController extends Controller
     {
         abort_unless(\Gate::allows('news_edit'), 403);
 
-        return view('admin.news.edit', compact('news'));
+        $formEntries = $this->generateEditFormConfig($news);
+        $route = route("admin.news.update", [$news->id]);
+        $header = __('admin.news.update');
+        $method = "PUT";
+        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
     }
 
-    public function update(UpdateNewsRequest $request, News $news)
+    public function update(Request $request, News $news)
     {
         abort_unless(\Gate::allows('news_edit'), 403);
 
+        $request->validate([
+            'content_de' => 'required',
+            'content_en' => 'required',
+        ]);
         $news->update($request->all());
 
         return redirect()->route('admin.news.index');
@@ -55,8 +69,11 @@ class NewsController extends Controller
     public function show(News $news)
     {
         abort_unless(\Gate::allows('news_show'), 403);
-
-        return view('admin.news.show', compact('news'));
+        
+        $formEntries = $this->generateShowFormConfig($news);
+        $header = __('admin.news.show');
+        $title = __('admin.news.title') . "({$news->id})";
+        return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
     public function destroy(News $news)
@@ -68,10 +85,30 @@ class NewsController extends Controller
         return back();
     }
 
-    public function massDestroy(MassDestroyNewsRequest $request)
+    public function massDestroy(Request $request)
     {
         News::whereIn('id', $request->input('ids'))->delete();
 
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:news,id',
+        ]);
         return response(null, 204);
+    }
+    
+    private function generateEditFormConfig($values) {
+        return [
+            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.news.content')." DE", 'content_de', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.news.content')." EN", 'content_en', '', false, true),
+        ];
+    }
+    
+    private function generateShowFormConfig($values) {
+        return [
+            BasicFunctions::formEntryShow(__('admin.news.id'), $values->id),
+            BasicFunctions::formEntryShow(__('admin.news.content')." DE", $values->content_de ?? '', false),
+            BasicFunctions::formEntryShow(__('admin.news.content')." EN", $values->content_en ?? '', false),
+            BasicFunctions::formEntryShow(__('admin.news.update'), $values->updated_at),
+        ];
     }
 }
