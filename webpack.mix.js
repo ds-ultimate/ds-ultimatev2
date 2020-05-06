@@ -29,8 +29,6 @@ mix.sass('resources/sass/app.scss', 'public/css')
             "font-weight-bold",
             "px-3",
             "pr-3",
-            "fa-volume-mute",
-            "mx-1"
         ],
     });
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
@@ -138,7 +136,12 @@ mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
     })
     .purgeCss({
         whitelistPatterns: [],
-        whitelist: [],
+        whitelist: [
+            "c-sidebar-nav-dropdown-items",
+            "c-sidebar-nav-dropdown-toggle",
+            "c-sidebar-nav-dropdown",
+            "c-show",
+        ],
     });
 
 
