@@ -129,7 +129,7 @@ class WorldsController extends Controller
     private function generateShowFormConfig($values) {
         return [
             BasicFunctions::formEntryShow(__('admin.worlds.id'), $values->id),
-            BasicFunctions::formEntryShow(__('admin.server.server'), '<span class="flag-icon flag-icon-'. htmlentities($values->server->flag).
+            BasicFunctions::formEntryShow(__('admin.server.flag'), '<span class="flag-icon flag-icon-'. htmlentities($values->server->flag).
                     '"></span> ['. htmlentities($values->server->code). ']', false),
             BasicFunctions::formEntryShow(__('admin.worlds.name'), $values->name),
             BasicFunctions::formEntryShow(__('admin.worlds.ally_count'), $values->ally_count),

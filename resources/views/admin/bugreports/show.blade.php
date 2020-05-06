@@ -39,10 +39,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal{{ $comment->id }}">{{ __('global.edit') }}</a>
-                            <form action="{{ route('admin.bugreportsComments.destroy', [$comment->id]) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                            <form action="{{ route('admin.bugreportsComments.destroy', [$comment->id]) }}" method="POST" onsubmit="return confirm('{{ __('global.areYouSure') }}');" style="display: inline-block;">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="submit" class="dropdown-item" style="width: 158px" value="{{ trans('global.delete') }}">
+                                <input type="submit" class="dropdown-item" style="width: 158px" value="{{ __('global.delete') }}">
                             </form>
                         </div>
                     </div>

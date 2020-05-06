@@ -4,13 +4,13 @@
 </a></div>
 
 <ul class="c-sidebar-nav">
-    <x-admin.menue access="dashboard_access" route="admin.home" icon="fa-tachometer-alt" :name="__('admin.dashboard')" />
+    <x-admin.menue access="dashboard_access" route="admin.home" icon="fa-tachometer-alt" :name="__('admin.dashboard.title')" />
     <x-admin.menue access="news_access" route="admin.news.index" icon="fa-newspaper" :name="__('admin.news.title')" />
     <x-admin.menue access="changelog_access" route="admin.changelogs.index" icon="fa-file-code" :name="__('admin.changelogs.title')" />
                    
     <x-admin.menue access="user_management_access" route="" icon="fa-users" :name="__('admin.userManagement.title')">
-        <x-admin.menue access="role_access" route="admin.roles.index" icon="fa-briefcase" :name="__('admin.role.title')" />
-        <x-admin.menue access="user_access" route="admin.users.index" icon="fa-user" :name="__('admin.user.title')" />
+        <x-admin.menue access="role_access" route="admin.roles.index" icon="fa-briefcase" :name="__('admin.roles.title')" />
+        <x-admin.menue access="user_access" route="admin.users.index" icon="fa-user" :name="__('admin.users.title')" />
     </x-admin.menue>
     
     <x-admin.menue access="server_management_access" route="" icon="fa-cloud" :name="__('admin.serverManagement.title')">

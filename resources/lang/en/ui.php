@@ -121,6 +121,16 @@ return array (
   array (
     'title' => 'News',
   ),
+  'tool' => 
+  array (
+    'distCalc' => 
+    array (
+      'startVillage' => 'Origin village',
+      'targetVillage' => 'Target village',
+      'days' => 'Day(s)',
+      'title' => 'Distance Calculator',
+    ),
+  ),
   'unit' => 
   array (
     'archer' => 'Archer',

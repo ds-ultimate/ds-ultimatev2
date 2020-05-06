@@ -20,34 +20,34 @@
                 <thead>
                 <tr>
                     <th>
-                        {{ trans('admin.worlds.id') }}
+                        {{ __('admin.worlds.id') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.server') }}
+                        {{ __('admin.worlds.server') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.name') }}
+                        {{ __('admin.worlds.name') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.ally') }}
+                        {{ __('admin.worlds.ally_count') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.player') }}
+                        {{ __('admin.worlds.player_count') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.village') }}
+                        {{ __('admin.worlds.village_count') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.url') }}
+                        {{ __('admin.worlds.url') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.active') }}
+                        {{ __('admin.worlds.active') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.update') }}
+                        {{ __('admin.worlds.update') }}
                     </th>
                     <th>
-                        {{ trans('admin.worlds.clean') }}
+                        {{ __('admin.worlds.clean') }}
                     </th>
                     <th>
                         &nbsp;
@@ -90,19 +90,19 @@
                         <td>
                             @can('world_show')
                                 <a class="btn btn-xs btn-primary" href="{{ route('admin.worlds.show', $world->id) }}">
-                                    {{ trans('global.view') }}
+                                    {{ __('global.view') }}
                                 </a>
                             @endcan
                             @can('world_edit')
                                 <a class="btn btn-xs btn-info" href="{{ route('admin.worlds.edit', $world->id) }}">
-                                    {{ trans('global.edit') }}
+                                    {{ __('global.edit') }}
                                 </a>
                             @endcan
                             @can('world_delete')
-                                <form action="{{ route('admin.worlds.destroy', $world->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                <form action="{{ route('admin.worlds.destroy', $world->id) }}" method="POST" onsubmit="return confirm('{{ __('global.areYouSure') }}');" style="display: inline-block;">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
+                                    <input type="submit" class="btn btn-xs btn-danger" value="{{ __('global.delete') }}">
                                 </form>
                             @endcan
                         </td>

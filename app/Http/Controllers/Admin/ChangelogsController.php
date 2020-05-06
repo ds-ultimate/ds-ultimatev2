@@ -85,8 +85,8 @@ class ChangelogsController extends Controller
         abort_unless(\Gate::allows('changelog_show'), 403);
         
         $formEntries = $this->generateShowFormConfig($changelog);
-        $header = __('admin.changelog.show');
-        $title = __('admin.changelog.title');
+        $header = __('admin.changelogs.show');
+        $title = __('admin.changelogs.title');
         return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 

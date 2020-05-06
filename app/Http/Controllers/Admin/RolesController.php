@@ -105,7 +105,7 @@ class RolesController extends Controller
     
     private function generateEditFormConfig($values) {
         return [
-            BasicFunctions::formEntryEdit($values, 'text', __('admint.roles.form_title'), 'title', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.roles.form_title'), 'title', '', false, true),
             BasicFunctions::formEntryEdit($values, 'select', __('admin.roles.permissions'), 'permissions[]', collect(), false, false, [
                 'options' => Permission::all()->pluck('title', 'id'),
                 'multiple' => true,

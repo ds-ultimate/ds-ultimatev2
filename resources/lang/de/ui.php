@@ -121,6 +121,16 @@ return array (
   array (
     'title' => 'Neuigkeiten',
   ),
+  'tool' => 
+  array (
+    'distCalc' => 
+    array (
+      'startVillage' => 'Startdorf',
+      'targetVillage' => 'Zieldorf',
+      'days' => 'Tag(e)',
+      'title' => 'Laufzeitrechner',
+    ),
+  ),
   'unit' => 
   array (
     'spear' => 'Speerträger',

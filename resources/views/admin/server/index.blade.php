@@ -20,19 +20,19 @@
                 <thead>
                     <tr>
                         <th>
-                            {{ trans('cruds.server.fields.id') }}
+                            {{ __('admin.server.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.code') }}
+                            {{ __('admin.server.code') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.flag') }}
+                            {{ __('admin.server.flag') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.url') }}
+                            {{ __('admin.server.url') }}
                         </th>
                         <th>
-                            {{ trans('cruds.server.fields.active') }}
+                            {{ __('admin.server.active') }}
                         </th>
                         <th>
                             &nbsp;
@@ -60,19 +60,19 @@
                             <td>
                                 @can('server_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.server.show', $server->id) }}">
-                                        {{ trans('global.view') }}
+                                        {{ __('global.view') }}
                                     </a>
                                 @endcan
                                 @can('server_edit')
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.server.edit', $server->id) }}">
-                                        {{ trans('global.edit') }}
+                                        {{ __('global.edit') }}
                                     </a>
                                 @endcan
                                 @can('server_delete')
-                                    <form action="{{ route('admin.server.destroy', $server->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ route('admin.server.destroy', $server->id) }}" method="POST" onsubmit="return confirm('{{ __('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
+                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ __('global.delete') }}">
                                     </form>
                                 @endcan
                             </td>

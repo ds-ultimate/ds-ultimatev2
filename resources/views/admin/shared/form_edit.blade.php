@@ -102,7 +102,7 @@
             </div>
             @endforeach
             <div>
-                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+                <input class="btn btn-danger" type="submit" value="{{ __('global.save') }}">
             </div>
         </form>
     </div>
