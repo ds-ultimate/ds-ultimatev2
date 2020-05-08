@@ -162,6 +162,7 @@ class DBController
             $table->bigInteger('timestamp');
             $table->integer('new_owner');
             $table->integer('old_owner');
+            $table->increments('id');
             $table->string('old_owner_name')->nullable()->default(null);
             $table->string('new_owner_name')->nullable()->default(null);
             $table->integer('old_ally')->nullable()->default(null);
