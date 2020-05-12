@@ -119,12 +119,13 @@ class DiscordNotification extends Notification
                 'description' => 'Zeitpunkt: ``'.$time->format('d.m.Y H:i:s').'``',
                 'fields' => [
                     ['name' => 'Alter Besitzer', 'value'=> self::conquerePlayer($world, $old, ':red_circle:'), 'inline' => true],
-                    ['name' => "Dorf", 'value'=> '[['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name).']('.route('village',[$world->server->code, $world->name, $village->villageID]).')'."\n \n \n ------------------------------", 'inline' => true],
+                    ['name' => "Dorf", 'value'=> '[['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name).']('.route('village',[$world->server->code, $world->name, $village->villageID]).')'."\n Punkte: ".BasicFunctions::numberConv($village->points)."\n \n ------------------------------", 'inline' => true],
                     ['name' => 'Neuer Besitzer', 'value'=> self::conquerePlayer($world, $new, ':green_circle:'), 'inline' => true],
                 ],
-                'timestamp' => Carbon::now()->toIso8601ZuluString(),
+                'timestamp' => $time->toIso8601ZuluString(),
                 'footer' => [
                     'text' => config('app.name'),
+                    'icon_url' => 'https://cdn.discordapp.com/app-icons/654376022128459796/dda48d5acf94cb4e7d45753827c4ebab.png'
                 ],
             ],
         ];

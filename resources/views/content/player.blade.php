@@ -91,7 +91,20 @@
                             </tr>
                             </tbody>
                         </table>
-                        <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
+                        <div class="row">
+                            <div class="col">
+                                <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
+                            </div>
+                            <div class="col">
+{{--                                @auth--}}
+{{--                                    @if($playerData->follows()->where(['user_id' => Auth::user()->id, 'worlds_id' => $worldData->id])->count() > 0)--}}
+{{--                                        <div class="float-right"><a id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star text-warning">{{__('ui.player.discordNotification.addFollow')}}</a></div>--}}
+{{--                                    @else--}}
+{{--                                        <div class="float-right"><a id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star text-muted">{{__('ui.player.discordNotification.addFollow')}}</a></div>--}}
+{{--                                    @endif--}}
+{{--                                @endauth--}}
+                            </div>
+                        </div>
                         <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
                             <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-label="Recipient's username" aria-describedby="basic-addon2">
                             <div class="input-group-append">
@@ -301,6 +314,27 @@
                 {!! \App\Util\Datatable::language() !!}
             });
         } );
+
+        @auth
+        function changeFollow() {
+            var icon = $('#follow-icon');
+            axios.post('{{ route('follow') }}',{
+                model: 'Player',
+                id: '{{ $playerData->playerID }}',
+                world: '{{ $worldData->id }}',
+            })
+                .then((response) => {
+                    if(icon.hasClass('far')){
+                        icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                    }else {
+                        icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                    }
+                })
+                .catch((error) => {
+
+                });
+        }
+        @endauth
     </script>
     {!! $chartJS !!}
 @endsection

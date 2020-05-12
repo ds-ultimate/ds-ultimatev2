@@ -122,6 +122,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphedByMany('App\Tool\Map\Map', 'followable', 'follows');
     }
 
+    public function followPlayer()
+    {
+        return $this->morphedByMany('App\Player', 'followable', 'follows');
+    }
+
     public function profile()
     {
         return $this->hasOne('App\Profile');

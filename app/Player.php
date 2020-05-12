@@ -107,6 +107,10 @@ class Player extends CustomModel
         return $playerModel->find($player);
     }
 
+    public function follows(){
+        return $this->morphToMany('App\User', 'followable', 'follows');
+    }
+
     /**
      * @param string $server
      * @param $world
@@ -120,7 +124,7 @@ class Player extends CustomModel
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
         $time = Carbon::createFromTimestamp(time());
         $playerDataArray = $playerModel->where('playerID', $playerID)->where('created_at', '>', $time->subDays($dayDelta+1))->orderBy('updated_at', 'ASC')->get();
-        
+
         $playerDatas = collect();
 
         foreach ($playerDataArray as $player){
@@ -139,17 +143,17 @@ class Player extends CustomModel
         return $playerDatas;
 
     }
-    
+
     public function link($world) {
         return BasicFunctions::linkPlayer($world, $this->playerID, BasicFunctions::outputName($this->name));
     }
-    
+
     public function linkIngame(World $world, $guest=false) {
         $guestPart = "game";
         if($guest) {
             $guestPart = "guest";
         }
-            
+
         return "{$world->url}/$guestPart.php?screen=info_player&id={$this->playerID}";
     }
 
@@ -162,17 +166,17 @@ class Player extends CustomModel
         $timestamp = Carbon::now()->subDays($days);
         return $playerModel->where('playerID', $this->playerID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
     }
-    
+
     public function signature() {
         return $this->morphMany('App\Signature', 'element');
     }
-    
+
     public function getSignature(World $worldData) {
         $sig = $this->morphOne('App\Signature', 'element')->where('worlds_id', $worldData->id)->first();
         if($sig != null) {
             return $sig;
         }
-        
+
         $sig = new Signature();
         $sig->worlds_id = $worldData->id;
         $this->signature()->save($sig);

@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Ally;
 use App\Conquer;
+use App\Follow;
 use App\Log;
 use App\Notifications\DiscordNotification;
 use App\Player;
 use App\Server;
 use App\AllyChanges;
+use App\User;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
@@ -174,7 +176,7 @@ class DBController
             $table->timestamps();
         });
     }
-    
+
     public static function updateNeeded() {
         if(!BasicFunctions::existTable(null, 'worlds')) return false;
         $worldModel = new World();
@@ -182,7 +184,7 @@ class DBController
                 - (60 * 60) * config('dsUltimate.db_update_every_hours')))
                 ->where('active', '=', 1)->count() > 0;
     }
-    
+
     public static function cleanNeeded() {
         if(!BasicFunctions::existTable(null, 'worlds')) return false;
         $worldModel = new World();
@@ -226,7 +228,7 @@ class DBController
                     $worldNew = new World();
                     $worldNew->setTable('worlds');
                 }
-                
+
                 $worldNew->server_id = $serverUrl->id;
                 $worldNew->name = $worldName;
                 $worldNew->url = $link;
@@ -242,9 +244,9 @@ class DBController
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
                     continue;
                 }
-                
+
                 if(!$create) continue;
-                
+
                 BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                 $name = BasicFunctions::getDatabaseName('', '').$world;
                 if (BasicFunctions::existDatabase($name) !== false) {
@@ -270,7 +272,7 @@ class DBController
         }
 
     }
-    
+
     public static function latestPlayer($server, $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
@@ -281,7 +283,7 @@ class DBController
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
             DBController::playerLatestTable($dbName, 'latest_temp');
         }
-        
+
         if (BasicFunctions::existTable($dbName, 'ally_changes') === false){
             DBController::allyChangeTable($dbName);
         }
@@ -289,7 +291,7 @@ class DBController
         if (BasicFunctions::existTable($dbName, 'player_latest') === false){
             DBController::playerLatestTable($dbName, 'latest');
         }
-        
+
         $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
         if(!is_array($lines)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
@@ -375,8 +377,8 @@ class DBController
             $playerTot->put('tot', (int)$kills);
             $playerTots->put($id, $playerTot);
         }
-        
-        
+
+
         $playerChange = new Player();
         $playerChange->setTable($dbName . '.player_latest');
         $databasePlayer = array();
@@ -406,7 +408,7 @@ class DBController
                 'updated_at' => Carbon::createFromTimestamp(time()),
             ];
             $arrayPlayer []= $dataPlayer;
-            
+
             if((isset($databasePlayer[$player->get('id')]) && $databasePlayer[$player->get('id')] != $player->get('ally')) ||
                     (!isset($databasePlayer[$player->get('id')]) && $player->get('ally') != 0)) {
                 $arrayAllyChange[] = [
@@ -423,7 +425,7 @@ class DBController
         foreach (array_chunk($arrayPlayer,3000) as $t){
             $insert->insert($t);
         }
-        
+
         $allyChangeModel = new AllyChanges();
         $allyChangeModel->setTable($dbName.'.ally_changes');
         foreach (array_chunk($arrayAllyChange,3000) as $t){
@@ -432,7 +434,7 @@ class DBController
 
         Schema::dropIfExists("$dbName.player_latest");
         DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
-        
+
         $hashPlayer = DBController::hashTable($arrayPlayer, 'p', 'playerID');
 
         for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
@@ -510,11 +512,11 @@ class DBController
         foreach (array_chunk($array, 3000) as $t) {
             $insert->insert($t);
         }
-        
+
         $villageDB = DBController::prepareVillageChangeCheck($dbName);
         Schema::dropIfExists("$dbName.village_latest");
         DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
-        
+
         $hashVillage = DBController::hashTable($array, 'v', 'villageID', array(DBController::class, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < config('dsUltimate.hash_village'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
@@ -672,7 +674,7 @@ class DBController
     public static function conquer($server, $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1500M');
-        
+
         $dbName = BasicFunctions::getDatabaseName($server, $world);
         $worldUpdate = World::getWorld($server, $world);
 
@@ -686,7 +688,7 @@ class DBController
             $latest = 0;
         else
             $latest = $first->timestamp;
-        
+
         if(time() - $latest > 60 * 60 * 23) {
             $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
             if (!is_array($lines)) {
@@ -712,19 +714,30 @@ class DBController
                 return;
             }
         }
-        
+
         $array = array();
         $databaseConquer = DBController::prepareConquerDupCheck($dbName);
-        
+
         foreach ($lines as $line) {
             $exploded = explode(',', trim($line));
             if(DBController::conquerInsideDB($databaseConquer, $exploded)) continue;
-            
+
             $tempArr = array();
             list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
             $tempArr['created_at'] = Carbon::createFromTimestamp(time());
             $tempArr['updated_at'] = Carbon::createFromTimestamp(time());
-            
+
+//            $follow = \App\Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])->where('worlds_id', $worldUpdate->id)->get();
+//
+//            if ($follow->count() > 0){
+//                $input = [
+//                    'world' => $worldUpdate,
+//                    'conquere' => [$tempArr['village_id'],$tempArr['timestamp'],$tempArr['new_owner'],$tempArr['old_owner']]
+//                ];
+//
+//                Follow::conquereNotification($follow, $input);
+//            }
+
             $old = Player::player($server, $world, $tempArr['old_owner']);
             if($tempArr['old_owner'] == 0) {
                 $tempArr['old_owner_name'] = "";
@@ -742,7 +755,7 @@ class DBController
                 $tempArr['old_ally_name'] = ($old->allyLatest != null)?$old->allyLatest->name:"";
                 $tempArr['old_ally_tag'] = ($old->allyLatest != null)?$old->allyLatest->tag:"";
             }
-            
+
             $new = Player::player($server, $world, $tempArr['new_owner']);
             if($tempArr['new_owner'] == 0) {
                 $tempArr['new_owner_name'] = "";
@@ -760,7 +773,7 @@ class DBController
                 $tempArr['new_ally_name'] = ($new->allyLatest != null)?$new->allyLatest->name:"";
                 $tempArr['new_ally_tag'] = ($new->allyLatest != null)?$new->allyLatest->tag:"";
             }
-            
+
             $array[] = $tempArr;
         }
 
@@ -771,7 +784,7 @@ class DBController
             $insert->insert($t);
         }
     }
-    
+
     public static function cleanOldEntries(World $world, $type) {
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         switch($type) {
@@ -780,7 +793,7 @@ class DBController
                 $tablePrefix = 'ally';
                 $model = new Ally();
                 break;
-                
+
             case 'p':
                 $envHashIndex = 'hash_player';
                 $tablePrefix = 'player';
@@ -793,7 +806,7 @@ class DBController
                 $model = new Village();
                 break;
         }
-        
+
         for ($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++){
             if (BasicFunctions::existTable($dbName, "{$tablePrefix}_{$i}") === true) {
                 $model->setTable("$dbName.{$tablePrefix}_{$i}");
@@ -804,23 +817,23 @@ class DBController
         $world->worldCleaned_at = Carbon::createFromTimestamp(time());
         $world->save();
     }
-    
+
     private static function prepareVillageChangeCheck($dbName) {
         if(!BasicFunctions::existTable($dbName, 'village_latest')) {
             return array();
         }
         $villageModel = new Village();
         $villageModel->setTable($dbName . '.village_latest');
-        
+
         $arrVil = array();
         foreach ($villageModel->get() as $village) {
             $arrVil[$village->villageID] = array($village->name, $village->points, $village->owner);
         }
         return $arrVil;
     }
-    
+
     /**
-     * 
+     *
      * @param type $arrVil
      * @param type $data
      * @return boolean true if same is already inside Database
@@ -834,19 +847,19 @@ class DBController
                 $possible_dup[2] == $data['owner']) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private static function prepareConquerDupCheck($dbName) {
         $conquerModel = new Conquer();
         $conquerModel->setTable($dbName . '.conquer');
-        
+
         $arrCon = array();
         foreach ($conquerModel->get() as $conquer) {
             if(!isset($arrCon[$conquer->timestamp]))
                 $arrCon[$conquer->timestamp] = array();
-            
+
             $arrCon[$conquer->timestamp][] = array($conquer->village_id, $conquer->old_owner, $conquer->new_owner);
         }
         return $arrCon;
@@ -864,7 +877,7 @@ class DBController
                 return true;
             }
         }
-        
+
         return false;
     }
 
