@@ -238,4 +238,12 @@ Attackcount: %ELEMENT_COUNT%
     'title' => 'Points Calculator',
     'notAvailable' => 'The point calculator is not available for this world',
   ),
+  'tableGenerator' => 
+  array (
+    'playerByAlly' => 'All players of a tribe',
+    'villageByAlly' => 'All villages of a tribe',
+    'villageByPlayer' => 'All villages of a player',
+    'title' => 'Tables generator',
+    'maxSing' => 'The forum accepts max. 1000 the sign "[".<br>The output was therefore divided into several tables',
+  ),
 );

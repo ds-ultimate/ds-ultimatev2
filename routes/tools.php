@@ -20,6 +20,7 @@ Route::get('/{server}/{world}/tools/attackPlanner', 'Tools\AttackPlannerControll
 Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemController', [
     'only' => ['store', 'destroy', 'update'],
 ]);
+
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
 Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');
@@ -42,7 +43,9 @@ Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name
 //Point calculator
 Route::get('/{server}/{world}/tools/pointCalc', 'Tools\PointCalcController@index')->name('pointCalc');
 
-
+//TableGenerator
+Route::get('/{server}/{world}/tools/tableGenerator', 'Tools\TableGeneratorController@index')->name('tableGenerator');
+Route::post('/tools/tableGenerator', 'Tools\TableGeneratorController@data')->name('tableGeneratorData');
 //Data Collection
 Route::get('/tools/datacollectionHQ/index', 'Tools\CollectDataController@index')->name('collectData');
 Route::get('/tools/datacollectionHQ/stats', 'Tools\CollectDataController@stats')->name('collectDataStats');

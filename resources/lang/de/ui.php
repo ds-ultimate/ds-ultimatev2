@@ -251,4 +251,11 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
     'church_f' => 'Erste Kirche',
   ),
   'signature' => 'Signatur',
+  'sorting' => 'Sortierung',
+  'columns' => 'Spalten',
+  'numberLines' => 'Zeilen nummerieren',
+  'showPoints' => 'Punkte anzeigen',
+  'additionalColumns' => 'Zusätzliche Spalten',
+  'selection' => 'Auswahl',
+  'mistake' => 'Es gab einen Fehler.',
 );

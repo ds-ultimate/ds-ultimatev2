@@ -60,6 +60,7 @@
                         @if($worldData->config != null && $worldData->buildings != null)
                             <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.pointCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.pointCalc.title')) }}</a></li>
                         @endif
+                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.tableGenerator', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.tableGenerator.title')) }}</a></li>
                     </ul>
                 </li>
             @endif

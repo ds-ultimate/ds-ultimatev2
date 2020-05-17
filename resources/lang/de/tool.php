@@ -238,4 +238,12 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'title' => 'Punkterechner',
     'notAvailable' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
   ),
+  'tableGenerator' => 
+  array (
+    'playerByAlly' => 'Alle Spieler eines Stamms',
+    'villageByPlayer' => 'Alle Dörfer eines Spielers',
+    'villageByAlly' => 'Alle Dörfer eines Stamms',
+    'title' => 'Tabellen Generator',
+    'maxSing' => 'Das Forum akzeptiert max. 1000 das Zeichen "[".<br>Darum wurde die Ausgabe in mehrere Tabellen unterteilt',
+  ),
 );

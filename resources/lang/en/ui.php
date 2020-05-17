@@ -251,4 +251,11 @@ It is not specified which village you have to give the name to, but it must belo
     'church_f' => 'first church',
   ),
   'signature' => 'signature',
+  'sorting' => 'Sorting',
+  'columns' => 'Columns',
+  'numberLines' => 'Number lines',
+  'showPoints' => 'Show points',
+  'additionalColumns' => 'Additional columns',
+  'selection' => 'Selection',
+  'mistake' => 'There was a mistake.',
 );
