@@ -658,9 +658,9 @@
                 order:[[6, 'desc']],
                 ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
                 columns: [
-                    { data: 'start_village', name: 'start_village', render: function (val) {return val.trunc(25)}},
+                    { data: 'start_village', name: 'start_village'},
                     { data: 'attacker', name: 'attacker'},
-                    { data: 'target_village', name: 'target_village', render: function (val) {return val.trunc(25)}},
+                    { data: 'target_village', name: 'target_village'},
                     { data: 'defender', name: 'defender'},
                     { data: 'slowest_unit', name: 'slowest_unit'},
                     { data: 'type', name: 'type'},

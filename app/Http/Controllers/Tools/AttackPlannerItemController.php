@@ -22,12 +22,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
 {
+
+    private static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
+
     public function store(Request $request)
     {
         $attackplaner = AttackList::findOrFail($request->attack_list_id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
-        $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
-        foreach ($units as $unit){
+        foreach (self::$units as $unit){
             if ($request->get($unit) == null){
                 $$unit = 0;
             }else{
@@ -116,11 +118,11 @@ class AttackPlannerItemController extends BaseController
             ])
             ->addColumn('start_village', function (AttackListItem $attackListItem) {
                 $village =$attackListItem->start_village;
-                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name);
+                return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
             ->addColumn('target_village', function (AttackListItem $attackListItem) {
                 $village =$attackListItem->target_village;
-                return '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name);
+                return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->typeIDToName().'">';
@@ -129,10 +131,10 @@ class AttackPlannerItemController extends BaseController
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->unitIDToNameOutput().'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
-                return $attackListItem->attackerName();
+                return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->attackerID(), $attackListItem->attackerName(), null, null, true);
             })
             ->addColumn('defender', function (AttackListItem $attackListItem) {
-                return $attackListItem->defenderName();
+                return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->defenderID(), $attackListItem->defenderName(), null, null, true);
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time->format('d.m.Y H:i:s');
@@ -149,9 +151,8 @@ class AttackPlannerItemController extends BaseController
                 return '<countdown date="'. $attackListItem->send_time->timestamp .'"></countdown>';
             })
             ->addColumn('info', function (AttackListItem $attackListItem){
-                $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
                 $unitCount = '';
-                foreach ($units as $unit){
+                foreach (self::$units as $unit){
                     if ($attackListItem->$unit != 0){
                         $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>".BasicFunctions::numberConv($attackListItem->$unit)."</b>".(($unit != 'snob')? '<br>':'');
                     }
@@ -164,7 +165,7 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('delete', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-edit"></i></a><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
-            ->rawColumns(['type', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
+            ->rawColumns(['type', 'start_village', 'target_village', 'attacker', 'defender', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
             ->make(true);
     }
 
@@ -179,8 +180,7 @@ class AttackPlannerItemController extends BaseController
     public function update(Request $request, AttackListItem $attackListItem){
         $attackplaner = $attackListItem->list;
         abort_unless($request->key == $attackplaner->edit_key, 403);
-        $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
-        foreach ($units as $unit){
+        foreach (self::$units as $unit){
             if ($request->get($unit) == null){
                 $$unit = 0;
             }else{

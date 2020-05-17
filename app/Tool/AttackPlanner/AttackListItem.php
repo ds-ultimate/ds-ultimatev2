@@ -155,10 +155,22 @@ class AttackListItem extends CustomModel
         return BasicFunctions::decodeName($this->start_village->playerLatest->name);
     }
 
+    public function attackerID(){
+        if($this->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->start_village->playerLatest->playerID);
+    }
+
     public function defenderName(){
         if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
         if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
         return BasicFunctions::decodeName($this->target_village->playerLatest->name);
+    }
+
+    public function defenderID(){
+        if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->target_village->playerLatest->playerID);
     }
 
     public function calcSend(){
