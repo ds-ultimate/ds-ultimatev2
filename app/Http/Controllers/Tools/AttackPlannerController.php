@@ -224,7 +224,6 @@ class AttackPlannerController extends BaseController
     public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
         abort_unless($attackList->edit_key == $request->get('key'), 403);
         $world = $attackList->world;
-        $unitConfig = simplexml_load_string($world->units);
         $imports = explode(PHP_EOL, $request->import);
         foreach ($imports as $import){
             if ($import == '') continue;
@@ -248,7 +247,7 @@ class AttackPlannerController extends BaseController
                         $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
                     }
                 }
-                self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), $list[4], (isset($unitArray))?$unitArray:null);
+                self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1, (isset($unitArray))?$unitArray:null);
             }
         }
 

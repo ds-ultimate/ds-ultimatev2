@@ -435,6 +435,7 @@
                                         <span class="input-group-text"><img id="edit_type_img" src="{{ \App\Util\Icon::icons(8) }}"></span>
                                     </div>
                                     <select id="edit_type" class="custom-select type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}" data-target="edit_">
+                                        <option value="-1">{{ __('ui.old.nodata') }}</option>
                                         <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
                                             <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
                                             <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
@@ -1172,6 +1173,7 @@
 
         function typ_img(input){
             switch (input) {
+                case '-1': return '{{ \App\Util\Icon::icons(-1) }}';
                 case '8': return '{{ \App\Util\Icon::icons(8) }}';
                 case '11': return '{{ \App\Util\Icon::icons(11) }}';
                 case '14': return '{{ \App\Util\Icon::icons(14) }}';

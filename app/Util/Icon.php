@@ -90,7 +90,7 @@ class Icon
                 return ['color' => 'dark', 'icon' => 'grip-lines'];
         }
     }
-    
+
     const BUILDING_SIZE_SMALL = 1;
     const BUILDING_SIZE_MEDIUM = 2;
     const BUILDING_SIZE_BIG = 3;
@@ -99,7 +99,7 @@ class Icon
             return Icon::icons(-1);
         }
         if($buildingName == "church_f") $buildingName = "church";
-        
+
         if($size == Icon::BUILDING_SIZE_SMALL) {
             return asset("images/ds_images/buildings/small/$buildingName.png");
         }
@@ -112,5 +112,9 @@ class Icon
         else {
             throw new \InvalidArgumentException("Invalid size");
         }
+    }
+
+    public static function attackPlannerTypeIcons(){
+        return [-1 ,8,11,14,45,0,1,7,46];
     }
 }
