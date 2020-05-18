@@ -85,7 +85,7 @@ Attackcount: %ELEMENT_COUNT%
     'exportWB' => 'Export DSWorkbench',
     'exportWBDesc' => 'Export for DSWorkbench',
     'show' => 'Show attackplann',
-    'audioTiming' => 'The alarm starts %S% seconds before the timer decays.',
+    'audioTiming' => 'The alarm starts %S% s before the timer decays.',
     'destroyError' => 'The attack plan could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Attack plan successfully deleted',
     'fastSwitch' => 'own attack plans',

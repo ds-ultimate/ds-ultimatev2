@@ -116,6 +116,9 @@ class AttackPlannerItemController extends BaseController
                     return $attackListItem->slowest_unit;
                 },
             ])
+            ->addColumn('select', function (){
+                return '';
+            })
             ->addColumn('start_village', function (AttackListItem $attackListItem) {
                 $village =$attackListItem->start_village;
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);

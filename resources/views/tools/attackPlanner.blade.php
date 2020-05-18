@@ -7,6 +7,16 @@
     <style>
         table.dataTable thead .sorting:before,table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_desc:after,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_asc_disabled:after,table.dataTable thead .sorting_desc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{position:absolute;bottom:0.3em;display:block;opacity:0.3}
         table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_desc:after{opacity:1}table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{opacity:0}
+        table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a {color: #7d510f;}
+        table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {color: #212529;}
+        table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {background-color: rgba(237, 212, 146, 0.4);}
+        /*.even.selected td {*/
+        /*    background-color: rgba(238, 223, 193, 0); !important; !* Add !important to make sure override datables base styles *!*/
+        /*}*/
+
+        /*.odd.selected td {*/
+        /*    background-color: #edd492; !important; !* Add !important to make sure override datables base styles *!*/
+        /*}*/
     </style>
 @stop
 
@@ -391,6 +401,9 @@
                     <table id="data1" class="table table-bordered table-striped no-wrap w-100">
                         <thead>
                             <tr>
+                                @if($mode == 'edit')
+                                    <th style="min-width: 25px">&nbsp;</th>
+                                @endif
                                 <th>{{ __('tool.attackPlanner.startVillage') }}</th>
                                 <th>{{ __('tool.attackPlanner.attacker') }}</th>
                                 <th>{{ __('tool.attackPlanner.targetVillage') }}</th>
@@ -655,9 +668,15 @@
                 serverSide: true,
                 pageLength: 25,
                 searching: false,
+                @if($mode == 'edit')
+                select: true,
+                @endif
                 order:[[6, 'desc']],
                 ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
                 columns: [
+                    @if($mode == 'edit')
+                    { data: 'select', name: 'select'},
+                    @endif
                     { data: 'start_village', name: 'start_village'},
                     { data: 'attacker', name: 'attacker'},
                     { data: 'target_village', name: 'target_village'},
@@ -676,8 +695,19 @@
                 columnDefs: [
                     {
                         'orderable': false,
-                        'targets': [0,2,8,9,10,@if($mode == 'edit') 11 @endif]
+                        @if($mode == 'edit')
+                        'targets': [1,3,9,10,11,@if($mode == 'edit') 12 @endif]
+                        @else
+                        'targets': [0,2,8,9,10,]
+                        @endif
+                    },
+                    @if($mode == 'edit')
+                    {
+                        orderable: false,
+                        className: 'select-checkbox',
+                        targets:   0
                     }
+                    @endif
                 ],
                 "drawCallback": function(settings, json) {
                     @if($mode == 'edit')
@@ -687,22 +717,39 @@
                     @endif
                     countdown();
                     popover();
-                    @auth
-                        @if($attackList->user_id != Auth::user()->id)
-                            @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
-                            $('#data1_wrapper .row div:eq(2)').html('<div class="float-right"><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning"></i></div>');
-                            @else
-                            $('#data1_wrapper .row div:eq(2)').html('<div class="float-right"><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted"></i></div>');
+                    $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline">' +
+                        '<div class="col-9">' +
+                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="0">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
+                            '<input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="0">' +
+                        '</div>' +
+                        '<div class="col-2">' +
+                            '<h5>' +
+                                '<a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button">' +
+                                    '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
+                                '</a>' +
+                            '</h5>' +
+                        '</div>' +
+                        @auth
+                            @if($attackList->user_id != Auth::user()->id)
+                                @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                                    '<div class="col-1">' +
+                                        '<h5>' +
+                                            '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
+                                        '</h5>' +
+                                    '</div>' +
+                                @else
+                                    '<div class="col-1">' +
+                                        '<h5>' +
+                                            '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
+                                        '</h5>' +
+                                    '</div>' +
+                                @endif
                             @endif
-                        @endif
-                    @endauth
+                        @endauth
+                        '</div>')
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
-
-        $(document).ready(function () {
-            $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline"><div class="col-10"><label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="0">', __('tool.attackPlanner.audioTiming')) !!}</label><input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="0"></div><div class="col-2"><h5><a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button"><i id="audioMuteIcon" class="fas fa-volume-up"></i></a></h5></div></div>')
-        });
 
         $(document).on('input', '#audioTiming', function () {
             var value = this.value;
