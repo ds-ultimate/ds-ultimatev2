@@ -10,13 +10,6 @@
         table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a {color: #7d510f;}
         table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {color: #212529;}
         table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {background-color: rgba(237, 212, 146, 0.4);}
-        /*.even.selected td {*/
-        /*    background-color: rgba(238, 223, 193, 0); !important; !* Add !important to make sure override datables base styles *!*/
-        /*}*/
-
-        /*.odd.selected td {*/
-        /*    background-color: #edd492; !important; !* Add !important to make sure override datables base styles *!*/
-        /*}*/
     </style>
 @stop
 
