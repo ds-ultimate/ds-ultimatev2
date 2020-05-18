@@ -689,7 +689,7 @@
                     {
                         'orderable': false,
                         @if($mode == 'edit')
-                        'targets': [1,3,9,10,11,@if($mode == 'edit') 12 @endif]
+                        'targets': [1,3,9,10,11,12]
                         @else
                         'targets': [0,2,8,9,10,]
                         @endif
