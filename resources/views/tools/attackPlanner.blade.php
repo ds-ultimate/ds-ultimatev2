@@ -13,6 +13,15 @@
     </style>
 @stop
 
+@php
+$tabList = [
+    'create' => ['name' => __('global.create'), 'active' => true],
+    'link' => ['name' => __('tool.attackPlanner.links'), 'active' => false],
+    'import' => ['name' => __('tool.attackPlanner.importExport'), 'active' => false],
+    'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false]
+    ];
+@endphp
+
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
@@ -54,334 +63,16 @@
             @endif
             <div class="card mt-2">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="create-tab" data-toggle="tab" href="#create" role="tab" aria-controls="create" aria-selected="true">{{ __('global.edit') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ __('tool.attackPlanner.links') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="import-tab" data-toggle="tab" href="#import" role="tab" aria-controls="import" aria-selected="false">{{ __('tool.attackPlanner.importExport') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">{{ __('tool.attackPlanner.statistics') }}</a>
-                    </li>
+                    @foreach($tabList as $key => $tab)
+                        <li class="nav-item">
+                            <a class="nav-link {{ ($tab['active'])?'active':'' }}" id="{{ $key }}-tab" data-toggle="tab" href="#{{ $key }}" role="tab" aria-controls="{{ $key }}" aria-selected="true">{{ $tab['name'] }}</a>
+                        </li>
+                    @endforeach
                 </ul>
                 <div class="card-body tab-content">
-                    <div class="tab-pane fade show active" id="create" role="tabpanel" aria-labelledby="create-tab">
-                        <form id="createItemForm">
-                            <div class="row">
-                                <div class="col-12 text-center">
-                                    <b id="title-show" class="h3 card-title">{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</b>
-                                    <input id="title-input" onfocus="this.select();" class="form-control mb-3" style="display:none" name="title" type="text">
-                                    <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
-                                    <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
-                                    <hr>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ __('tool.attackPlanner.type') }}</span>
-                                            <span class="input-group-text"><img id="type_img" src="{{ \App\Util\Icon::icons(8) }}"></span>
-                                        </div>
-                                        <select id="type" class="custom-select type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">
-                                            <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
-                                                <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
-                                                <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
-                                                <option value="14">{{ __('tool.attackPlanner.fake') }}</option>
-                                                <option value="45">{{ __('tool.attackPlanner.wallbreaker') }}</option>
-                                            </optgroup>
-                                            <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
-                                                <option value="0">{{ __('tool.attackPlanner.support') }}</option>
-                                                <option value="1">{{ __('tool.attackPlanner.standSupport') }}</option>
-                                                <option value="7">{{ __('tool.attackPlanner.fastSupport') }}</option>
-                                                <option value="46">{{ __('tool.attackPlanner.fakeSupport') }}</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ __('tool.attackPlanner.startVillage') }}</span>
-                                        </div>
-                                        <input id="xStart" class="form-control mx-auto col-5 koord xStart" type="text" placeholder="500" maxlength="3" />
-                                        <div class="input-group-append input-group-prepend">
-                                            <span class="input-group-text">|</span>
-                                        </div>
-                                        <input id="yStart" class="form-control mx-auto col-5 koord yStart" type="text" placeholder="500" maxlength="3" />
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ __('tool.attackPlanner.targetVillage') }}</span>
-                                        </div>
-                                        <input id="xTarget" class="form-control mx-auto col-5 koord xTarget" type="text" placeholder="500" maxlength="3" />
-                                        <div class="input-group-append input-group-prepend">
-                                            <span class="input-group-text">|</span>
-                                        </div>
-                                        <input id="yTarget" class="form-control mx-auto col-5 koord yTarget" type="text" placeholder="500" maxlength="3" />
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ __('tool.attackPlanner.date') }}</span>
-                                        </div>
-                                        <input id="day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <button id="time_title" type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                {{ __('tool.attackPlanner.arrivalTime') }} <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" onclick="changeTime(0)">{{ __('tool.attackPlanner.arrivalTime') }}</a>
-                                                <a class="dropdown-item" onclick="changeTime(1)">{{ __('tool.attackPlanner.sendTime') }}</a>
-                                            </div>
-                                        </div>
-                                        <input id="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
-                                        <input id="time_type" type="hidden" value="0">
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-4">
-                                    <div class="input-group input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ __('global.unit') }}</span>
-                                            <span class="input-group-text"><img id="unit_img" src="{{ \App\Util\Icon::icons(0) }}"></span>
-                                        </div>
-                                        <select id="slowest_unit" class="form-control form-control-sm slowest_unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
-                                            <option value="0">{{ __('ui.unit.spear') }}</option>
-                                            <option value="1">{{ __('ui.unit.sword') }}</option>
-                                            <option value="2">{{ __('ui.unit.axe') }}</option>
-                                            @if ($config->game->archer == 1)
-                                                <option value="3">{{ __('ui.unit.archer') }}</option>
-                                            @endif
-                                            <option value="4">{{ __('ui.unit.spy') }}</option>
-                                            <option value="5">{{ __('ui.unit.light') }}</option>
-                                            @if ($config->game->archer == 1)
-                                                <option value="6">{{ __('ui.unit.marcher') }}</option>
-                                            @endif
-                                            <option value="7">{{ __('ui.unit.heavy') }}</option>
-                                            <option value="8">{{ __('ui.unit.ram') }}</option>
-                                            <option value="9">{{ __('ui.unit.catapult') }}</option>
-                                            @if ($config->game->knight > 0)
-                                                <option value="10">{{ __('ui.unit.knight') }}</option>
-                                            @endif
-                                            <option value="11">{{ __('ui.unit.snob') }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-12">
-                                    <div class="form-inline row">
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
-                                            </div>
-                                            <input id="spear" name="spear" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
-                                            </div>
-                                            <input id="sword" name="sword" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
-                                            </div>
-                                            <input id="axe" name="axe" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        @if ($config->game->archer == 1)
-                                            <div class="input-group col-2 input-group-sm mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
-                                                </div>
-                                                <input id="archer" name="archer" class="form-control form-control-sm col-9" type="number">
-                                            </div>
-                                        @endif
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
-                                            </div>
-                                            <input id="spy" name="spy" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
-                                            </div>
-                                            <input id="light" name="light" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        @if ($config->game->archer == 1)
-                                            <div class="input-group col-2 input-group-sm mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
-                                                </div>
-                                                <input id="marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
-                                            </div>
-                                        @endif
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
-                                            </div>
-                                            <input id="heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
-                                            </div>
-                                            <input id="ram" name="ram" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
-                                            </div>
-                                            <input id="catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                        @if ($config->game->knight > 0)
-                                            <div class="input-group col-2 input-group-sm mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
-                                                </div>
-                                                <input id="knight" name="knight" class="form-control form-control-sm col-9" type="number">
-                                            </div>
-                                        @endif
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
-                                            </div>
-                                            <input id="snob" name="snob" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <label class="control-label col-3">Notizen</label>
-                                        <div class="col-12">
-                                            <textarea id="note" class="form-control form-control-sm"  rows="2"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                @csrf
-                                <input id="attack_list_id" type="hidden" value="{{ $attackList->id }}">
-                                <div class="col-12">
-                                    <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('tool.attackPlanner.outdated') }}">
-                                    <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('global.save') }}">
-                                </div>
-                                <!--/span-->
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
-                        <div class="row pt-3">
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <label class="control-label col-md-2">{{ __('tool.attackPlanner.editLink') }}</label>
-                                    <div class="col-md-1">
-                                        <button class="btn btn-primary btn-sm" onclick="copy('link-edit')">{{ __('global.datatables.copy') }}</button>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'edit', $attackList->edit_key]) }}" />
-                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.editLink_helper') }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <label class="control-label col-md-2">{{ __('tool.attackPlanner.showLink') }}</label>
-                                    <div class="col-md-1">
-                                        <button class="btn btn-primary btn-sm" onclick="copy('link-show')">{{ __('global.datatables.copy') }}</button>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.attackPlannerMode', [$attackList->id, 'show', $attackList->show_key]) }}" />
-                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.showLink_helper') }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="import" role="tabpanel" aria-labelledby="import-tab">
-                        <div class="row pt-3">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportWB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportWB')">{{ __('global.datatables.copy') }}</button>
-                                    <textarea id="exportWB" class="form-control form-control-sm" rows="1"></textarea>
-                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportWBDesc') }}</small>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportBB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportBB')">{{ __('global.datatables.copy') }}</button>
-                                    <textarea id="exportBB" class="form-control form-control-sm" rows="1"></textarea>
-                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportBBDesc') }}</small>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label mr-3">{{ __('tool.attackPlanner.exportIGM') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportIGM')">{{ __('global.datatables.copy') }}</button>
-                                    <textarea id="exportIGM" class="form-control form-control-sm" rows="1"></textarea>
-                                    <small class="form-control-feedback">{{ __('tool.attackPlanner.exportIGMDesc') }}</small>
-                                </div>
-                                <form id="importItemsForm">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label class="control-label mr-3">{{ __('tool.attackPlanner.import') }}</label>
-                                        <textarea id="importWB" class="form-control form-control-sm" style="height: 80px"></textarea>
-                                        <small class="form-control-feedback">{{ __('tool.attackPlanner.import_helper') }}</small>
-                                    </div>
-                                    <div class="col-12">
-                                        <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('tool.attackPlanner.import') }}">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                        <div class="row pt-3">
-                            <div class="col-1"></div>
-                            <div class="col-4">
-                                <h3>{{ __('ui.tabletitel.general') }}</h3>
-                                <div class="form-group">
-                                    {{ __('tool.attackPlanner.attackTotal') }}: <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['total']) }}</b>
-                                </div>
-                                <div class="form-group">
-                                    {{ __('tool.attackPlanner.attackStart_village') }}: <b id="attackStart_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['start_village']) }}</b>
-                                </div>
-                                <div class="form-group">
-                                    {{ __('tool.attackPlanner.attackTarget_village') }}: <b id="attackTarget_village" class="float-right">{{ \App\Util\BasicFunctions::numberConv($stats['target_village']) }}</b>
-                                </div>
-                            </div>
-                            <div class="col-1"></div>
-                            <div class="col-2">
-                                <h3>{{ __('global.units') }}</h3>
-                                @if (isset($stats['slowest_unit']))
-                                    @foreach ($stats['slowest_unit'] as $slowest_unit)
-                                        <div class="form-group">
-                                            <img src="{{ \App\Util\Icon::icons($slowest_unit['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($slowest_unit['count']) }}</b>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <div class="col-1"></div>
-                            <div class="col-2">
-                                <h3>{{ __('tool.attackPlanner.type') }}</h3>
-                                @if (isset($stats['type']))
-                                    @foreach ($stats['type'] as $type)
-                                        <div class="form-group">
-                                            <img src="{{ \App\Util\Icon::icons($type['id']) }}">-{{ __('global.total') }} <b id="attackTotal" class="float-right">{{ \App\Util\BasicFunctions::numberConv($type['count']) }}</b>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <div class="col-1"></div>
-                        </div>
-                    </div>
+                    @foreach($tabList as $key => $tab)
+                        @include('tools.attackPlanner.'.$key, ['active' => $tab['active']])
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -422,224 +113,7 @@
         <!-- ENDE Unit Card -->
     </div>
     <!-- START Modal -->
-    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ __('global.edit') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="editItemForm">
-                    <div class="modal-body">
-                        <div class="row justify-content-md-center">
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Type</span>
-                                        <span class="input-group-text"><img id="edit_type_img" src="{{ \App\Util\Icon::icons(8) }}"></span>
-                                    </div>
-                                    <select id="edit_type" class="custom-select type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}" data-target="edit_">
-                                        <option value="-1">{{ __('ui.old.nodata') }}</option>
-                                        <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
-                                            <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
-                                            <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
-                                            <option value="14">{{ __('tool.attackPlanner.fake') }}</option>
-                                            <option value="45">{{ __('tool.attackPlanner.wallbreaker') }}</option>
-                                        </optgroup>
-                                        <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
-                                            <option value="0">{{ __('tool.attackPlanner.support') }}</option>
-                                            <option value="1">{{ __('tool.attackPlanner.standSupport') }}</option>
-                                            <option value="7">{{ __('tool.attackPlanner.fastSupport') }}</option>
-                                            <option value="46">{{ __('tool.attackPlanner.fakeSupport') }}</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ __('tool.attackPlanner.startVillage') }}</span>
-                                    </div>
-                                    <input id="edit_xStart" data-target="edit_" class="form-control mx-auto col-5 koord xStart" type="text" placeholder="500" maxlength="3" />
-                                    <div class="input-group-append input-group-prepend">
-                                        <span class="input-group-text">|</span>
-                                    </div>
-                                    <input id="edit_yStart" data-target="edit_" class="form-control mx-auto col-5 koord yStart" type="text" placeholder="500" maxlength="3" />
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ __('tool.attackPlanner.targetVillage') }}</span>
-                                    </div>
-                                    <input id="edit_xTarget" data-target="edit_" class="form-control mx-auto col-5 koord xTarget" type="text" placeholder="500" maxlength="3" />
-                                    <div class="input-group-append input-group-prepend">
-                                        <span class="input-group-text">|</span>
-                                    </div>
-                                    <input id="edit_yTarget" data-target="edit_" class="form-control mx-auto col-5 koord yTarget" type="text" placeholder="500" maxlength="3" />
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ __('tool.attackPlanner.date') }}</span>
-                                    </div>
-                                    <input id="edit_day" data-target="edit_" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <button id="edit_time_title" type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            {{ __('tool.attackPlanner.arrivalTime') }} <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" onclick="changeTime(0,'edit_')">{{ __('tool.attackPlanner.arrivalTime') }}</a>
-                                            <a class="dropdown-item" onclick="changeTime(1,'edit_')">{{ __('tool.attackPlanner.sendTime') }}</a>
-                                        </div>
-                                    </div>
-                                    <input id="edit_time" data-target="edit_" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
-                                    <input id="edit_time_type" data-target="edit_" type="hidden" value="0">
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-4">
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">{{ __('global.unit') }}</span>
-                                        <span class="input-group-text"><img id="unit_img" src="{{ \App\Util\Icon::icons(0) }}"></span>
-                                    </div>
-                                    <select id="edit_slowest_unit" data-target="edit_" class="form-control form-control-sm slowest_unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
-                                        <option value="0">{{ __('ui.unit.spear') }}</option>
-                                        <option value="1">{{ __('ui.unit.sword') }}</option>
-                                        <option value="2">{{ __('ui.unit.axe') }}</option>
-                                        @if ($config->game->archer == 1)
-                                            <option value="3">{{ __('ui.unit.archer') }}</option>
-                                        @endif
-                                        <option value="4">{{ __('ui.unit.spy') }}</option>
-                                        <option value="5">{{ __('ui.unit.light') }}</option>
-                                        @if ($config->game->archer == 1)
-                                            <option value="6">{{ __('ui.unit.marcher') }}</option>
-                                        @endif
-                                        <option value="7">{{ __('ui.unit.heavy') }}</option>
-                                        <option value="8">{{ __('ui.unit.ram') }}</option>
-                                        <option value="9">{{ __('ui.unit.catapult') }}</option>
-                                        @if ($config->game->knight > 0)
-                                            <option value="10">{{ __('ui.unit.knight') }}</option>
-                                        @endif
-                                        <option value="11">{{ __('ui.unit.snob') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-12">
-                                <div class="form-inline row">
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
-                                        </div>
-                                        <input id="edit_spear" name="spear" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
-                                        </div>
-                                        <input id="edit_sword" name="sword" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
-                                        </div>
-                                        <input id="edit_axe" name="axe" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    @if ($config->game->archer == 1)
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
-                                            </div>
-                                            <input id="edit_archer" name="archer" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                    @endif
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
-                                        </div>
-                                        <input id="edit_spy" name="spy" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
-                                        </div>
-                                        <input id="edit_light" name="light" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    @if ($config->game->archer == 1)
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
-                                            </div>
-                                            <input id="edit_marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                    @endif
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
-                                        </div>
-                                        <input id="edit_heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
-                                        </div>
-                                        <input id="edit_ram" name="ram" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
-                                        </div>
-                                        <input id="edit_catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                    @if ($config->game->knight > 0)
-                                        <div class="input-group col-2 input-group-sm mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
-                                            </div>
-                                            <input id="edit_knight" name="knight" class="form-control form-control-sm col-9" type="number">
-                                        </div>
-                                    @endif
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
-                                        </div>
-                                        <input id="edit_snob" name="snob" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="control-label col-3">Notizen</label>
-                                    <div class="col-12">
-                                        <textarea id="edit_note" class="form-control form-control-sm"  rows="2"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <input id="attack_list_item" type="hidden">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">{{ __('global.close') }}</button>
-                        <button type="submit" class="btn btn-success">{{ __('global.save') }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('tools.attackPlanner.edit')
     <!-- ENDE Modal -->
 @endsection
 
@@ -1003,8 +477,10 @@
         function edit(id) {
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
+            var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) !== -1 ? rowData.type : -1;
+            console.log(type);
             $('#attack_list_item').val(data.id);
-            $('#edit_type').val(rowData.type);
+            $('#edit_type').val(type);
             $('#edit_xStart').val(rowData.xStart);
             $('#edit_yStart').val(rowData.yStart);
             $('#edit_xTarget').val(rowData.xTarget);
@@ -1025,10 +501,19 @@
             $('#edit_knight').val(data.knight);
             $('#edit_snob').val(data.snob);
             $('#edit_note').val(data.note);
-            $('#edit_unit_img').attr('src', slowest_unit_img(rowData.slowest_unit));
-            $('#edit_type_img').attr('src', typ_img(rowData.type));
+            $('#edit_unit_img').attr('src', slowest_unit_img(rowData.slowest_unit.toString()));
+            $('#edit_type_img').attr('src', typ_img(type.toString()));
             village(rowData.xStart, rowData.yStart, 'Start', 'edit_');
             village(rowData.xTarget, rowData.yTarget, 'Target', 'edit_');
+        }
+
+        function multiEdit() {
+            var select = table.rows('.selected').data();
+            var a = [];
+            select.each(function(e){
+                a.push(e.id)
+            })
+            console.log(a)
         }
 
         function village(x, y, input, target = null) {
@@ -1255,7 +740,6 @@
                 var target = (dataTarget != null)?dataTarget:'';
                 var img = $('#' + target + 'unit_img');
                 var input = $(this).val();
-
                 img.attr('src', slowest_unit_img(input));
             });
 
