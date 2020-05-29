@@ -12,9 +12,9 @@ class HomeController
     public function index()
     {
         $users = User::all();
-        $counter['maps'] = Map::all()->count();
-        $counter['attackplaner'] = AttackList::all()->count();
-        $counter['attacks'] = AttackListItem::all()->count();
+        $counter['maps'] = (new Map())->count();
+        $counter['attackplaner'] = (new AttackList())->count();
+        $counter['attacks'] = (new AttackListItem())->count();
         $counter['users'] = $users->count();
         $twitter = 0;
         $facebook = 0;
