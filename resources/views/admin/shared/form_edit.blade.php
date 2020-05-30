@@ -121,21 +121,26 @@
 @if($needTinymce)
     <script src="{{ asset('plugin/tinymce/tinymce.min.js') }}"></script>
     <script>
-        tinymce.init({
-            selector:'textarea.description',
-            plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount tinymcespellchecker a11ychecker imagetools textpattern help formatpainter permanentpen pageembed tinycomments mentions linkchecker',
-            toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
-            mobile: {
-                theme: 'silver'
-            }
+        $(function() {
+            tinymce.init({
+                selector:'textarea.description',
+                plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount tinymcespellchecker a11ychecker imagetools textpattern help formatpainter permanentpen pageembed tinycomments mentions linkchecker',
+                toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
+                mobile: {
+                    theme: 'silver'
+                }
+            })
         });
     </script>
 @endif
 @if($needFasPicker)
     <script src="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.min.js') }}"></script>
     <script>
-        var picker =$('.fas-icon-picker').fontIconPicker({
-            theme: 'fip-bootstrap'
+        $(function() {
+            var picker =$('.fas-icon-picker').fontIconPicker({
+                theme: 'fip-bootstrap'
+            });
+            $('.fas-icon-picker').hide()
         });
     </script>
 @endif
@@ -150,16 +155,18 @@
             return $("<p>"+state.element.attributes['data-content'].nodeValue+"</p>");
         }
         
-        $('.select2-single').select2({
-            theme: "bootstrap4",
-            minimumResultsForSearch: 0,
-            templateResult: loadText,
-        });
-        $('.select2-multi').select2({
-            theme: "bootstrap4",
-            minimumResultsForSearch: 0,
-            closeOnSelect: false,
-            templateResult: loadText,
+        $(function() {
+            $('.select2-single').select2({
+                theme: "bootstrap4",
+                minimumResultsForSearch: 0,
+                templateResult: loadText,
+            });
+            $('.select2-multi').select2({
+                theme: "bootstrap4",
+                minimumResultsForSearch: 0,
+                closeOnSelect: false,
+                templateResult: loadText,
+            });
         });
     </script>
 @endif

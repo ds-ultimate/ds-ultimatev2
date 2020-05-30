@@ -55,6 +55,7 @@ mix.copy('node_modules/jquery-countdown/dist/jquery.countdown.min.js', 'public/p
 /*
  * Tinymce (wysiwyg editor for backend)
  */
+mix.copyDirectory('node_modules/tinymce/icons', 'public/plugin/tinymce/icons');
 mix.copyDirectory('node_modules/tinymce/plugins', 'public/plugin/tinymce/plugins');
 mix.copyDirectory('node_modules/tinymce/skins', 'public/plugin/tinymce/skins');
 mix.copyDirectory('node_modules/tinymce/themes', 'public/plugin/tinymce/themes');
