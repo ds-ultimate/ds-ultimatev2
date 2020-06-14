@@ -72,7 +72,7 @@
 
 @section('js')
     <script>
-        $(document).ready( function () {
+        $(function () {
             $('#t10Player').DataTable({
                 "responsive": true,
                 "searching": false,

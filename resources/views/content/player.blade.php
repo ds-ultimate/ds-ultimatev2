@@ -318,7 +318,7 @@
         @auth
         function changeFollow() {
             var icon = $('#follow-icon');
-            axios.post('{{ route('follow') }}',{
+            axios.post('{{ route('tools.follow') }}',{
                 model: 'Player',
                 id: '{{ $playerData->playerID }}',
                 world: '{{ $worldData->id }}',

@@ -49,13 +49,6 @@ class ChangelogsController extends Controller
     public function edit(Changelog $changelog)
     {
         abort_unless(\Gate::allows('changelog_edit'), 403);
-        $request->validate([
-            'version' => 'required',
-            'title' => 'required',
-            'content' => 'required',
-            'icon' => 'required',
-            'color' => 'required',
-        ]);
 
         $formEntries = $this->generateEditFormConfig($changelog);
         $route = route("admin.changelogs.update", [$changelog->id]);

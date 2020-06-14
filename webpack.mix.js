@@ -12,26 +12,34 @@ require('laravel-mix-purgecss');
  |
  */
 
+let whitePatterns =
+[
+    /flag-icon.*/,
+    /col-.*/,
+    /.*pagination.*/,
+    /.*page.*/,
+    /.*popover.*/,
+    /.*datepicker.*/,
+];
+let whiteList =
+[
+    "arrow",
+    "fade",
+    "row",
+    "font-weight-bold",
+    "px-3",
+    "pr-3",
+    "fa-volume-mute",
+    "mx-1",
+];
 mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')
     .options({
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: [
-            /(flag-icon.*|col-.*|.*pagination.*|.*page.*)/,
-            /.*popover.*/,/.*datepicker.*/,
-        ],
-        whitelist: [
-            "arrow",
-            "fade",
-            "row",
-            "font-weight-bold",
-            "px-3",
-            "pr-3",
-            "fa-volume-mute",
-            "mx-1",
-        ],
+        whitelistPatterns: whitePatterns,
+        whitelist: whiteList,
     });
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
 
@@ -47,6 +55,7 @@ mix.copy('node_modules/jquery-countdown/dist/jquery.countdown.min.js', 'public/p
 /*
  * Tinymce (wysiwyg editor for backend)
  */
+mix.copyDirectory('node_modules/tinymce/icons', 'public/plugin/tinymce/icons');
 mix.copyDirectory('node_modules/tinymce/plugins', 'public/plugin/tinymce/plugins');
 mix.copyDirectory('node_modules/tinymce/skins', 'public/plugin/tinymce/skins');
 mix.copyDirectory('node_modules/tinymce/themes', 'public/plugin/tinymce/themes');
@@ -131,19 +140,20 @@ mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public
  * coreui
  */
 
+whiteList = whiteList.concat([
+    "c-sidebar-nav-dropdown-items",
+    "c-sidebar-nav-dropdown-toggle",
+    "c-sidebar-nav-dropdown",
+    "c-show",
+]);
 mix.js('resources/js/admin_sidebar.js', 'public/js');
 mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
     .options({
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: [],
-        whitelist: [
-            "c-sidebar-nav-dropdown-items",
-            "c-sidebar-nav-dropdown-toggle",
-            "c-sidebar-nav-dropdown",
-            "c-show",
-        ],
+        whitelistPatterns: whitePatterns,
+        whitelist: whiteList,
     });
 
 
