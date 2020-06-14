@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+<div class="tab-pane fade {{ ($active)? 'show active':'' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
     <div class="row pt-3">
         <div class="col-1"></div>
         <div class="col-4">

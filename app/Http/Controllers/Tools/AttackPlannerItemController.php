@@ -14,6 +14,7 @@ use App\Tool\AttackPlanner\AttackListItem;
 use App\Util\BasicFunctions;
 use App\Util\Icon;
 use App\Http\Requests\StoreAttackPlannerItemRequest;
+use App\Village;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
@@ -226,6 +227,79 @@ class AttackPlannerItemController extends BaseController
         $attackListItem->knight = $knight;
         $attackListItem->snob = $snob;
         $attackListItem->update();
+    }
+
+    public function multiedit(Request $request){
+        $attackplaner = AttackList::find($request->attack_list_id);
+        abort_unless($request->key == $attackplaner->edit_key, 403);
+
+        $server = $attackplaner->world->server->code;
+        $world = $attackplaner->world->name;
+
+        if (count($request->items) > 0){
+            foreach ($request->items as $item){
+                $attackListItemold = AttackListItem::find($item);
+                $attackListItem = AttackListItem::find($item);
+                if (in_array('multiedit_type_checkbox', $request->checkboxes)){
+                    $attackListItem->type = $request->type;
+                }
+                if (in_array('multiedit_start_checkbox', $request->checkboxes) || in_array('multiedit_target_checkbox', $request->checkboxes)){
+                    if (in_array('multiedit_start_checkbox', $request->checkboxes)){
+                        $xStart = $request->xStart;
+                        $yStart = $request->yStart;
+                    }else{
+                        $villageStart = Village::village($server, $world, $attackListItem->start_village_id);
+                        $xStart = $villageStart->x;
+                        $yStart = $villageStart->y;
+                    }
+                    if (in_array('multiedit_target_checkbox', $request->checkboxes)){
+                        $xTarget = $request->xTarget;
+                        $yTarget = $request->yTarget;
+                    }else{
+                        $villageTarget = Village::village($server, $world, $attackListItem->target_village_id);
+                        $xTarget = $villageTarget->x;
+                        $yTarget = $villageTarget->y;
+                    }
+                    if (!$attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget)){
+                        return \Response::json(array(
+                            'data' => 'error',
+                            'msg' => __('ui.villageNotExist'),
+                        ));
+                    }
+                }
+
+                if (in_array('multiedit_date_checkbox', $request->checkboxes)) {
+                    if ($request->time_type == 0) {
+                        $attackListItem->arrival_time = Carbon::parse($request->day. ' ' .$request->time);
+                    } else {
+                        $attackListItem->send_time = Carbon::parse($request->day . ' ' . $request->time);
+                    }
+                }
+
+                if (in_array('multiedit_slowest_unit_checkbox', $request->checkboxes)){
+                    $attackListItem->slowest_unit = $request->slowest_unit;
+                }
+
+                if (array_intersect($request->checkboxes, ['multiedit_start_checkbox','multiedit_target_checkbox','multiedit_date_checkbox','multiedit_slowest_unit_checkbox',])) {
+                    if ($request->time_type == 0) {
+                        $attackListItem->send_time = $attackListItem->calcSend();
+                    } else {
+                        $attackListItem->arrival_time = $attackListItem->calcArrival();
+                    }
+                }
+                $attackListItem->update();
+            }
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'msg' => 'village count < 1',
+            ));
+        }
+
+        return \Response::json(array(
+            'data' => 'success',
+            'msg' => 'success',
+        ));
     }
 
 }

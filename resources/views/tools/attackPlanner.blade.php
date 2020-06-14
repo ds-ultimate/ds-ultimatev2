@@ -16,6 +16,7 @@
 @php
 $tabList = [
     'create' => ['name' => __('global.create'), 'active' => true],
+    'multiedit' => ['name' => __('global.edit'), 'active' => false],
     'link' => ['name' => __('tool.attackPlanner.links'), 'active' => false],
     'import' => ['name' => __('tool.attackPlanner.importExport'), 'active' => false],
     'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false]
@@ -382,6 +383,54 @@ $tabList = [
                 });
         }
 
+        function multiupdate() {
+            var select = table.rows('.selected').data();
+            var attackItems = [];
+            select.each(function(e){
+                attackItems.push(e.id)
+            })
+            var checkboxes = $('input:checkbox:checked');
+            var checkboxeItems = [];
+            checkboxes.each(function (key, value) {
+                checkboxeItems.push(value.name)
+            })
+            axios.post('{{ route('tools.attackListItemMultiedit') }}', {
+                'attack_list_id' : $('#attack_list_id').val(),
+                'items' : attackItems,
+                'checkboxes' : checkboxeItems,
+                'type' : $('#multiedit_type').val(),
+                'xStart' : $('#multiedit_xStart').val(),
+                'yStart' : $('#multiedit_yStart').val(),
+                'xTarget' : $('#multiedit_xTarget').val(),
+                'yTarget' : $('#multiedit_yTarget').val(),
+                'slowest_unit' : $('#multiedit_slowest_unit').val(),
+                'note' : $('#multiedit_note').val(),
+                'day' : $('#multiedit_day').val(),
+                'time' : $('#multiedit_time').val(),
+                'ms' : $('#multiedit_ms').val(),
+                'time_type' : $('#multiedit_time_type').val(),
+                'key' : '{{ $attackList->edit_key }}',
+                'spear': $('#multiedit_spear').val() != 0 ? $('#multiedit_spear').val() : 0,
+                'sword': $('#multiedit_sword').val() != 0 ? $('#multiedit_sword').val() : 0,
+                'axe': $('#multiedit_axe').val() != 0 ? $('#multiedit_axe').val() : 0,
+                'archer': $('#multiedit_archer').val() != 0 ? $('#multiedit_archer').val() : 0,
+                'spy': $('#multiedit_spy').val() != 0 ? $('#multiedit_spy').val() : 0,
+                'light': $('#multiedit_light').val() != 0 ? $('#multiedit_light').val() : 0,
+                'marcher': $('#multiedit_marcher').val() != 0 ? $('#multiedit_marcher').val() : 0,
+                'heavy': $('#multiedit_heavy').val() != 0 ? $('#multiedit_heavy').val() : 0,
+                'ram': $('#multiedit_ram').val() != 0 ? $('#multiedit_ram').val() : 0,
+                'catapult': $('#multiedit_catapult').val() != 0 ? $('#multiedit_catapult').val() : 0,
+                'knight': $('#multiedit_knight').val() != 0 ? $('#multiedit_knight').val() : 0,
+                'snob': $('#multiedit_snob').val() != 0 ? $('#multiedit_snob').val() : 0,
+            })
+                .then((response) => {
+                    table.ajax.reload();
+                })
+                .catch((error) => {
+
+                });
+        }
+
         function importWB() {
                 var importWB = $('#importWB');
                 axios.post('{{ route('tools.attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
@@ -446,6 +495,30 @@ $tabList = [
             }
         });
 
+        $(document).on('submit', '#multieditItemForm', function (e) {
+            e.preventDefault();
+            var start = $('#multiedit_xStart').val() + '|' + $('#multiedit_yStart').val();
+            var target = $('#multiedit_xTarget').val() + '|' + $('#multiedit_yTarget').val();
+
+            var error = 0;
+            if ($('#multiedit_start_checkbox').is(':checked') || $('#multiedit_target_checkbox').is(':checked')) {
+                if (start == '') {
+                    error += 1;
+                }
+                if (target == '') {
+                    error += 1;
+                }
+                if (start == target) {
+                    alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                    error += 1;
+                }
+            }
+
+            if (error == 0){
+                multiupdate();
+            }
+        });
+
         $(".time").on( "keydown", function (e) {
             keyArray[e.which] = true;
             if(keyArray[17] && keyArray[86]){
@@ -478,7 +551,6 @@ $tabList = [
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
             var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) !== -1 ? rowData.type : -1;
-            console.log(type);
             $('#attack_list_item').val(data.id);
             $('#edit_type').val(type);
             $('#edit_xStart').val(rowData.xStart);
@@ -505,15 +577,6 @@ $tabList = [
             $('#edit_type_img').attr('src', typ_img(type.toString()));
             village(rowData.xStart, rowData.yStart, 'Start', 'edit_');
             village(rowData.xTarget, rowData.yTarget, 'Target', 'edit_');
-        }
-
-        function multiEdit() {
-            var select = table.rows('.selected').data();
-            var a = [];
-            select.each(function(e){
-                a.push(e.id)
-            })
-            console.log(a)
         }
 
         function village(x, y, input, target = null) {
@@ -591,6 +654,21 @@ $tabList = [
                 }
             @endif
         @endauth
+
+        $(document).on('click', 'input[type="checkbox"][data-group]', function(event) {
+            // The checkbox that was clicked
+            var actor = $(this);
+            // The status of that checkbox
+            var checked = actor.prop('checked');
+            // The group that checkbox is in
+            var group = actor.data('group');
+            // All checkboxes of that group
+            var checkboxes = $('input[type="checkbox"][data-group="' + group + '"]');
+            // All checkboxes excluding the one that was clicked
+            var otherCheckboxes = checkboxes.not(actor);
+            // Check those checkboxes
+            otherCheckboxes.prop('checked', checked);
+        });
 
         function copy(type) {
             /* Get the text field */

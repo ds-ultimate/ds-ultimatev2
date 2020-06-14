@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="import" role="tabpanel" aria-labelledby="import-tab">
+<div class="tab-pane fade {{ ($active)? 'show active':'' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
     <div class="row pt-3">
         <div class="col-12">
             <div class="form-group">
