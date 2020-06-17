@@ -9,9 +9,6 @@
 @stop
 
 @section('content')
-    <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;">
-
-    </div>
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
@@ -496,7 +493,7 @@
             $('.colour-picker-map').colorpicker({
                 useHashPrefix: false
             });
-            
+
             $('.colour-picker-map').on('colorpickerHide', storeMapSettings);
             $('.map-settings-input').change(storeMapSettings);
             $('#markerFactor').on("input", function(slideEvt) {
@@ -507,7 +504,7 @@
                 storeMapSettings();
             });
         });
-        
+
         var storingMap = false;
         var storeMapNeeded = false;
         function storeMapSettings() {
@@ -525,7 +522,7 @@
                         }
                     }, 400);
                     storingMap = false;
-                    
+
                     var data = response.data;
                     createToast(data, "{{ __('ui.personalSettings.map') }}");
                 })
