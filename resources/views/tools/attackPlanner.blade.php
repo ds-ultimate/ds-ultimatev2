@@ -464,7 +464,9 @@ $tabList = [
                 error += 1;
             }
             if (start == target){
-                alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                var data = []
+                data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
+                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', "{{ __('global.now') }}")
                 error += 1;
             }
 

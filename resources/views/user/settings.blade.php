@@ -425,7 +425,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
@@ -439,29 +439,11 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
                 });
-        }
-
-        function createToast(data, title) {
-            var int = Math.floor((Math.random() * 1000) + 1);
-            $('#toast-content').append('<div class="toast toast'+int+'" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">\n' +
-                '            <div class="toast-header">\n' +
-                '                <div class="mr-2"><i class="fas fa-sync"></i></div>\n' +
-                '                <strong class="mr-auto">' + title + '</strong>\n' +
-                '                <small class="text-muted">{{__('global.now')}}</small>\n' +
-                '                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">\n' +
-                '                    <span aria-hidden="true">&times;</span>\n' +
-                '                </button>\n' +
-                '            </div>\n' +
-                '            <div class="toast-body">\n' +
-                data['msg'] +
-                '            </div>\n' +
-                '        </div>');
-            $('.toast'+int).toast('show');
         }
 
         $(document).on('submit', '#settings-account-form', function (e) {
@@ -472,7 +454,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}");
+                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                 })
                 .catch((error) => {
                 });
@@ -524,7 +506,7 @@
                     storingMap = false;
 
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.map') }}");
+                    createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
                 })
                 .catch((error) => {
 
