@@ -3,9 +3,6 @@
 @section('titel', ucfirst(__('user.title.overview')).' '.Auth::user()->name)
 
 @section('content')
-    <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;">
-
-    </div>
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
@@ -288,7 +285,7 @@
                 history.pushState(null, null, href.replace('#', '/user/overview/'));
                 e.preventDefault();
             });
-            
+
             $('[data-toggle=confirmation]').confirmation({
                 rootSelector: '[data-toggle=confirmation]',
                 popout: true,
@@ -344,7 +341,7 @@
                 .then((response) => {
                     var data = response.data;
                     createToast(data, "{{ __('tool.map.title') }}");
-                    
+
                     $('#map-' + mapId).remove();
                     $('#ownMaps').children(':first').click();
                     if($('#ownMaps').children()[0] == undefined) {
@@ -362,7 +359,7 @@
                 .then((response) => {
                     var data = response.data;
                     createToast(data, "{{ __('tool.attackPlanner.title') }}");
-                    
+
                     $('#attackList-' + attackPlannerId).remove();
                     $('#ownAttackList').children().eq(1).click();
                     if($('#ownAttackList').children()[1] == undefined) {

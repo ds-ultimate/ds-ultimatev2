@@ -3,8 +3,6 @@
 @section('titel', "Collection")
 
 @section('content')
-    <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;"></div>
-
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
@@ -82,14 +80,14 @@
 @section('js')
 <script>
     var url = "{{ route('index') }}/tools/datacollectionHQ/post/";
-    
+
     $(function () {
         $('#select-world').change(function() {
             $('#collect-form')[0].action = url + $('#select-world').val() + "?debug=1";
         });
-        
+
         $('#select-world').trigger("change");
-        
+
         $('#collect-form').submit(function(e) {
             e.preventDefault();
             axios.post($('#collect-form')[0].action, $('#collect-form').serialize())
@@ -102,7 +100,7 @@
                 });
         });
     });
-    
+
     function createToast(data, title) {
         var int = Math.floor((Math.random() * 1000) + 1);
         $('#toast-content').append('<div class="toast toast'+int+'" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">\n' +
@@ -129,7 +127,7 @@
     #latest-table thead th:first-child { text-align: left }
     #latest-table tbody td { text-align: center }
     #latest-table tbody td:first-child { text-align: left }
-    
+
     #data-table thead th { text-align: center }
     #data-table thead th:first-child { text-align: left }
     #data-table tbody td { text-align: center }
