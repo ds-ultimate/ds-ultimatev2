@@ -21,6 +21,7 @@ Route::resource('/tools/attackPlanner/attackListItem','Tools\AttackPlannerItemCo
     'only' => ['store', 'destroy', 'update'],
 ]);
 Route::post('/tools/attackPlanner/attackListItem/multiedit', 'Tools\AttackPlannerItemController@multiedit')->name('attackListItemMultiedit');
+Route::post('/tools/attackPlanner/attackListItem/sendattack', 'Tools\AttackPlannerItemController@sendattack')->name('attackListItemSendattack');
 Route::get('/tools/attackPlanner/attackListItem/data/{attackList}/{key}','Tools\AttackPlannerItemController@data')->name('attackListItem.data');
 
 Route::post('/tools/attackPlanner/{attackList}/importWB/{key}', 'Tools\AttackPlannerController@importWB')->name('attackPlannerImportWB');

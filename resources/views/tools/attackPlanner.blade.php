@@ -336,9 +336,9 @@ $tabList = [
                 'snob': $('#snob').val() != 0 ? $('#snob').val() : 0,
             })
                 .then((response) => {
-
+                    var data = response.data;
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
-
                 })
                 .catch((error) => {
 
@@ -375,8 +375,9 @@ $tabList = [
             })
                 .then((response) => {
                     $('.bd-example-modal-xl').modal('hide');
+                    var data = response.data;
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
-
                 })
                 .catch((error) => {
 
@@ -424,6 +425,8 @@ $tabList = [
                 'snob': $('#multiedit_snob').val() != 0 ? $('#multiedit_snob').val() : 0,
             })
                 .then((response) => {
+                    var data = response.data;
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
                 })
                 .catch((error) => {
@@ -466,7 +469,7 @@ $tabList = [
             if (start == target){
                 var data = []
                 data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
-                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', "{{ __('global.now') }}")
+                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                 error += 1;
             }
 
@@ -488,7 +491,9 @@ $tabList = [
                 error += 1;
             }
             if (start == target){
-                alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                var data = []
+                data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
+                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                 error += 1;
             }
 
@@ -511,7 +516,9 @@ $tabList = [
                     error += 1;
                 }
                 if (start == target) {
-                    alert('{{ __('tool.attackPlanner.errorKoord') }}');
+                    var data = []
+                    data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
+                    createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                     error += 1;
                 }
             }
@@ -671,6 +678,18 @@ $tabList = [
             // Check those checkboxes
             otherCheckboxes.prop('checked', checked);
         });
+
+        function sendattack(id){
+            axios.post('{{ route('tools.attackListItemSendattack') }}', {
+                'id': id,
+                'key': '{{$attackList->show_key}}',
+            })
+                .then((response) => {
+                    table.ajax.reload();
+                })
+                .catch((error) => {
+                });
+        }
 
         function copy(type) {
             /* Get the text field */

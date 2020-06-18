@@ -34,7 +34,16 @@ class AttackPlannerItemController extends BaseController
             if ($request->get($unit) == null){
                 $$unit = 0;
             }else{
-                $$unit = $request->get($unit);
+                $value = $request->get($unit);
+                if ($value <= 2147483648){
+                    $$unit = $value;
+                }else{
+                    return \Response::json(array(
+                        'data' => 'error',
+                        'title' => __('tool.attackPlanner.errorKoordTitle'),
+                        'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
+                    ));
+                }
             }
         }
         $item = new AttackListItem();
@@ -42,7 +51,8 @@ class AttackPlannerItemController extends BaseController
         if (!$item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
             return \Response::json(array(
                 'data' => 'error',
-                'msg' => __('ui.villageNotExist'),
+                'title' => __('tool.attackPlanner.villageNotExistTitle'),
+                'msg' => __('tool.attackPlanner.villageNotExist'),
             ));
         }
         $item->type = $request->type;
@@ -73,7 +83,19 @@ class AttackPlannerItemController extends BaseController
         $item->catapult = $catapult;
         $item->knight = $knight;
         $item->snob = $snob;
-        $item->save();
+        if($item->save()){
+            return \Response::json(array(
+                'data' => 'success',
+                'title' => __('tool.attackPlanner.storeSuccessTitle'),
+                'msg' => __('tool.attackPlanner.storeSuccess'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'title' => __('tool.attackPlanner.storeErrorTitle'),
+                'msg' => __('tool.attackPlanner.storeError'),
+            ));
+        }
     }
 
     public function data(AttackList $attackList, $key){
@@ -164,7 +186,7 @@ class AttackPlannerItemController extends BaseController
                 return '<h4 class="mb-0"><i class="fas fa-info-circle text-info" data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"></i></h4>';
             })
             ->addColumn('action', function (AttackListItem $attackListItem){
-                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&mode=command&target='.$attackListItem->target_village_id.'&type=0&spear='.$attackListItem->spear.'&sword='.$attackListItem->sword.'&axe='.$attackListItem->axe.'&archer='.$attackListItem->archer.'&spy='.$attackListItem->spy.'&light='.$attackListItem->light.'&marcher='.$attackListItem->marcher.'&heavy='.$attackListItem->heavy.'&ram='.$attackListItem->ram.'&catapult='.$attackListItem->catapult.'&knight='.$attackListItem->knight.'&snob='.$attackListItem->snob.'"><i class="fas fa-play-circle"></i></a></h4>';
+                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&mode=command&target='.$attackListItem->target_village_id.'&type=0&spear='.$attackListItem->spear.'&sword='.$attackListItem->sword.'&axe='.$attackListItem->axe.'&archer='.$attackListItem->archer.'&spy='.$attackListItem->spy.'&light='.$attackListItem->light.'&marcher='.$attackListItem->marcher.'&heavy='.$attackListItem->heavy.'&ram='.$attackListItem->ram.'&catapult='.$attackListItem->catapult.'&knight='.$attackListItem->knight.'&snob='.$attackListItem->snob.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-edit"></i></a><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
@@ -188,7 +210,16 @@ class AttackPlannerItemController extends BaseController
             if ($request->get($unit) == null){
                 $$unit = 0;
             }else{
-                $$unit = $request->get($unit);
+                $value = $request->get($unit);
+                if ($value <= 2147483648){
+                    $$unit = $value;
+                }else{
+                    return \Response::json(array(
+                        'data' => 'error',
+                        'title' => __('tool.attackPlanner.errorKoordTitle'),
+                        'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
+                    ));
+                }
             }
         }
 
@@ -196,7 +227,8 @@ class AttackPlannerItemController extends BaseController
         if (!$attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
             return \Response::json(array(
                 'data' => 'error',
-                'msg' => __('ui.villageNotExist'),
+                'title' => __('tool.attackPlanner.villageNotExistTitle'),
+                'msg' => __('tool.attackPlanner.villageNotExist'),
             ));
         }
         $attackListItem->slowest_unit = $request->slowest_unit;
@@ -226,7 +258,19 @@ class AttackPlannerItemController extends BaseController
         $attackListItem->catapult = $catapult;
         $attackListItem->knight = $knight;
         $attackListItem->snob = $snob;
-        $attackListItem->update();
+        if($attackListItem->update()){
+            return \Response::json(array(
+                'data' => 'success',
+                'title' => __('tool.attackPlanner.updateSuccessTitle'),
+                'msg' => __('tool.attackPlanner.updateSuccess'),
+            ));
+        }else{
+            return \Response::json(array(
+                'data' => 'error',
+                'title' => __('tool.attackPlanner.updateErrorTitle'),
+                'msg' => __('tool.attackPlanner.updateError'),
+            ));
+        }
     }
 
     public function multiedit(Request $request){
@@ -238,7 +282,6 @@ class AttackPlannerItemController extends BaseController
 
         if (count($request->items) > 0){
             foreach ($request->items as $item){
-                $attackListItemold = AttackListItem::find($item);
                 $attackListItem = AttackListItem::find($item);
                 if (in_array('multiedit_type_checkbox', $request->checkboxes)){
                     $attackListItem->type = $request->type;
@@ -263,7 +306,8 @@ class AttackPlannerItemController extends BaseController
                     if (!$attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget)){
                         return \Response::json(array(
                             'data' => 'error',
-                            'msg' => __('ui.villageNotExist'),
+                            'title' => __('tool.attackPlanner.villageNotExistTitle'),
+                            'msg' => __('tool.attackPlanner.villageNotExist'),
                         ));
                     }
                 }
@@ -287,19 +331,48 @@ class AttackPlannerItemController extends BaseController
                         $attackListItem->arrival_time = $attackListItem->calcArrival();
                     }
                 }
+
+                foreach (self::$units as $unit){
+                    if (in_array('multiedit_' . $unit . '_checkbox', $request->checkboxes)) {
+                        $value = $request->$unit;
+                        if ($value == null) {
+                            $$unit = 0;
+                        } else {
+                            if ($value <= 2147483648) {
+                                $attackListItem->$unit = $value;
+                            } else {
+                                return \Response::json(array(
+                                    'data' => 'error',
+                                    'title' => __('tool.attackPlanner.errorKoordTitle'),
+                                    'msg' => __('ui.unit.' . $unit) . ' ' . __('tool.attackPlanner.errorUnitCount'),
+                                ));
+                            }
+                        }
+                    }
+                }
+
                 $attackListItem->update();
             }
         }else{
             return \Response::json(array(
                 'data' => 'error',
-                'msg' => 'village count < 1',
+                'title' => __('tool.attackPlanner.villageCountTitle'),
+                'msg' => __('tool.attackPlanner.villageCount'),
             ));
         }
 
         return \Response::json(array(
             'data' => 'success',
-            'msg' => 'success',
+            'title' => __('tool.attackPlanner.multieditSuccessTitle'),
+            'msg' => __('tool.attackPlanner.multieditSuccess'),
         ));
+    }
+
+    function sendattack(Request $request){
+        $attackListItem = AttackListItem::find($request->id);
+        abort_unless($request->key == $attackListItem->list->show_key, 403);
+        $attackListItem->send = 1;
+        $attackListItem->update();
     }
 
 }
