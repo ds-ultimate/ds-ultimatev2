@@ -16,10 +16,11 @@
 @php
 $tabList = [
     'create' => ['name' => __('global.create'), 'active' => true],
-    'multiedit' => ['name' => __('global.edit'), 'active' => false],
+    'multiedit' => ['name' => __('tool.attackPlanner.multiedit'), 'active' => false],
     'link' => ['name' => __('tool.attackPlanner.links'), 'active' => false],
     'import' => ['name' => __('tool.attackPlanner.importExport'), 'active' => false],
-    'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false]
+    'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false],
+    'tips' => ['name' => __('tool.attackPlanner.tips'), 'active' => false]
     ];
 @endphp
 
