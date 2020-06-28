@@ -40,7 +40,7 @@ class AttackPlannerItemController extends BaseController
                 }else{
                     return \Response::json(array(
                         'data' => 'error',
-                        'title' => __('tool.attackPlanner.errorKoordTitle'),
+                        'title' => __('tool.attackPlanner.errorUnitTitle'),
                         'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
                     ));
                 }
@@ -216,7 +216,7 @@ class AttackPlannerItemController extends BaseController
                 }else{
                     return \Response::json(array(
                         'data' => 'error',
-                        'title' => __('tool.attackPlanner.errorKoordTitle'),
+                        'title' => __('tool.attackPlanner.errorUnitCountTitle'),
                         'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
                     ));
                 }
@@ -343,7 +343,7 @@ class AttackPlannerItemController extends BaseController
                             } else {
                                 return \Response::json(array(
                                     'data' => 'error',
-                                    'title' => __('tool.attackPlanner.errorKoordTitle'),
+                                    'title' => __('tool.attackPlanner.errorUnitCountTitle'),
                                     'msg' => __('ui.unit.' . $unit) . ' ' . __('tool.attackPlanner.errorUnitCount'),
                                 ));
                             }
@@ -356,8 +356,8 @@ class AttackPlannerItemController extends BaseController
         }else{
             return \Response::json(array(
                 'data' => 'error',
-                'title' => __('tool.attackPlanner.villageCountTitle'),
-                'msg' => __('tool.attackPlanner.villageCount'),
+                'title' => __('tool.attackPlanner.attackCountTitle'),
+                'msg' => __('tool.attackPlanner.attackCount'),
             ));
         }
 
