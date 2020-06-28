@@ -23,7 +23,21 @@
         }
     </style>
 @stop
-
+@php
+    if ($mode == 'edit'){
+        $tabList = [
+            'edit' => ['name' => __('tool.map.edit'), 'active' => true],
+            'drawing' => ['name' => __('tool.map.drawing'), 'active' => false],
+            'link' => ['name' => __('tool.map.links'), 'active' => false],
+            'settings' => ['name' => __('tool.map.settings'), 'active' => false],
+            'legend' => ['name' => __('tool.map.legend'), 'active' => false],
+            ];
+    }else{
+        $tabList = [
+            'legend' => ['name' => __('tool.map.legend'), 'active' => true],
+            ];
+    }
+@endphp
 @section('content')
     <?php
         function generateHTMLSelector($type, $id, $defaultContent=null) {
@@ -102,7 +116,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="ownedMaps">
                     @foreach($ownMaps as $map)
-                        <a class="dropdown-item" href="{{ 
+                        <a class="dropdown-item" href="{{
                             route('tools.mapToolMode', [$map->id, 'edit', $map->edit_key])
                             }}">{{ $map->getTitle().' ['.$map->world->displayName().']' }}</a>
                     @endforeach
@@ -122,208 +136,35 @@
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
-        @if($mode == 'edit')
         <div class="col-12">
-            @if($wantedMap->title === null)
-            <div class="card mt-2 p-3">
-                {{ __('tool.map.withoutTitle') }}
-            </div>
+            @if($wantedMap->title === null && $mode == 'edit')
+                <div class="card mt-2 p-3">
+                    {{ __('tool.map.withoutTitle') }}
+                </div>
             @endif
-            @if($wantedMap->cached_at !== null)
-            <div class="card mt-2 p-3">
-                {{ __('tool.map.cached') }}
-            </div>
+            @if($wantedMap->cached_at !== null && $mode == 'edit')
+                <div class="card mt-2 p-3">
+                    {{ __('tool.map.cached') }}
+                </div>
             @endif
             <div class="card mt-2">
                 <form id="mapEditForm" action="{{ route('tools.mapToolMode', [$wantedMap->id, 'saveEdit', $wantedMap->edit_key]) }}" method="post">
                     @csrf
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="edit-tab" data-toggle="tab" href="#edit" role="tab" aria-controls="edit" aria-selected="true">{{ ucfirst(__('tool.map.edit')) }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="drawing-tab" data-toggle="tab" href="#drawing" role="tab" aria-controls="drawing" aria-selected="false">{{ ucfirst(__('tool.map.drawing')) }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">{{ ucfirst(__('tool.map.settings')) }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="link-tab" data-toggle="tab" href="#link" role="tab" aria-controls="link" aria-selected="false">{{ ucfirst(__('tool.map.links')) }}</a>
-                        </li>
+                        @foreach($tabList as $key => $tab)
+                            <li class="nav-item">
+                                <a class="nav-link {{ ($tab['active'])?'active':'' }}" id="{{ $key }}-tab" data-toggle="tab" href="#{{ $key }}" role="tab" aria-controls="{{ $key }}" aria-selected="true">{{ $tab['name'] }}</a>
+                            </li>
+                        @endforeach
                     </ul>
                     <div class="card-body tab-content">
-                        <div class="tab-pane fade show active" id="edit" role="tabpanel" aria-labelledby="edit-tab">
-                            <div class="col-12 text-center">
-                                <b id="title-show" class="h3 card-title">{{ ($wantedMap->title === null)? __('ui.noTitle'): $wantedMap->title }}</b>
-                                <input id="title-input" onfocus="this.select();" class="form-control mb-3" style="display:none" name="title" type="text">
-                                <a id="title-edit" onclick="titleEdit()" style="cursor:pointer;"><i class="far fa-edit text-muted h5 ml-2"></i></a>
-                                <a id="title-save" onclick="titleSave()" style="cursor:pointer; display:none"><i class="far fa-save text-muted h5 ml-2"></i></a>
-                                <hr>
-                            </div>
-                            <div class="row pt-3">
-                                @foreach(['ally', 'player', 'village'] as $type)
-                                    <div id="main-{{$type}}" class="col-lg-4">
-                                        {{ ucfirst(__('tool.map.'.$type)) }}<br>
-                                        @if($type != 'village')
-                                            <div class="form-check form-check-inline float-right mr-0">
-                                                <label class="form-check-label mr-2" for="showTextAll-{{ $type }}">{{ ucfirst(__('tool.map.showAllText')) }}</label>
-                                                /
-                                                <label class="form-check-label ml-2 mr-2" for="highlightAll-{{ $type }}">{{ ucfirst(__('tool.map.highlightAll')) }}</label>
-                                                <input class="form-check-input change-all showTextBox mr-2" type="checkbox" aria-for="showText-{{ $type }}"
-                                                       id="showTextAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.showAllText')) }}">
-                                                <input class="form-check-input change-all highlightBox ml-2" type="checkbox" aria-for="highlight-{{ $type }}"
-                                                       id="highlightAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlightAll')) }}">
-                                            </div>
-                                        @else
-                                            <div class="form-check form-check-inline float-right mr-0">
-                                                <label class="form-check-label mr-2" for="highlightAll-{{ $type }}">{{ ucfirst(__('tool.map.highlightAll')) }}</label>
-                                                <input class="form-check-input change-all highlightBox ml-2" type="checkbox" aria-for="highlight-{{ $type }}"
-                                                       id="highlightAll-{{ $type }}" data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlightAll')) }}">
-                                            </div>
-                                        @endif
-                                        <br>
-                                        @foreach($defaults[$type] as $num=>$defValues)
-                                            {!! generateHTMLSelector($type, $num, $defValues) !!}
-                                        @endforeach
-                                    </div>
-                                @endforeach
-                                <div class="col-12">
-                                    <input type="submit" class="btn btn-sm btn-success float-right">
-                                </div>
-                            </div>
-                            <div id="model" style="display: none">
-                                @foreach(['ally', 'player', 'village'] as $type)
-                                    <textarea id="{{ $type }}-mark-model-area">
-                                        {!! generateHTMLSelector($type, "model") !!}
-                                    </textarea>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="drawing" role="tabpanel" aria-labelledby="drawing-tab">
-                            <div class="row pt-3">
-                                <div class="form-group float-left" style="margin-left: calc(50% - 500px);">
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteDrawing()">{{ ucfirst(__('tool.map.deleteDrawing')) }}</button>
-                                </div>
-                                <div class="col-12 text-center">
-                                    <img id="canvas-bg-img" src="">
-                                    <div id="canvas-container" style="position: absolute; left: 0px; top: 0px; margin-left: calc(50% - 500px);">
-                                        <div id="canvas-editor"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="link" role="tabpanel" aria-labelledby="link-tab">
-                            <div class="row pt-3">
-                                <div class="col-12">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-2">{{ ucfirst(__('tool.map.editLink')) }}</label>
-                                        <div class="col-1">
-                                            <a class="btn btn-primary btn-sm" onclick="copy('edit')">{{ ucfirst(__('tool.map.copy')) }}</a>
-                                        </div>
-                                        <div class="col-9">
-                                            <input id="link-edit" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'edit', $wantedMap->edit_key]) }}" />
-                                            <small class="form-control-feedback">{{ ucfirst(__('tool.map.editLinkDesc')) }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-2">{{ ucfirst(__('tool.map.showLink')) }}</label>
-                                        <div class="col-1">
-                                            <a class="btn btn-primary btn-sm" onclick="copy('show')">{{ ucfirst(__('tool.map.copy')) }}</a>
-                                        </div>
-                                        <div class="col-9">
-                                            <input id="link-show" type="text" class="form-control-plaintext form-control-sm disabled" value="{{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}" />
-                                            <small class="form-control-feedback">{{ ucfirst(__('tool.map.showLinkDesc')) }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                            <div id='default-background-div' class='col-12 input-group mb-2 mr-sm-2'>
-                                <div class='colour-picker-map input-group-prepend'>
-                                    <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                    <input name='default[background]' id="bg-colour" type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
-                                </div>
-                                <label class='form-control'>{{ __('tool.map.defaultBackground') }}</label>
-                            </div>
-                            <div class="form-inline mb-2">
-                                <div class="form-check col-lg-auto ml-auto">
-                                    <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
-                                    <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
-                                </div>
-                                <div id='default-player-div' class='col-lg-9 input-group'>
-                                    <div class='colour-picker-map input-group-prepend'>
-                                        <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                        <input name='default[player]' id="player-colour" type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
-                                    </div>
-                                    <label class='form-control'>{{ __('tool.map.defaultPlayer') }}</label>
-                                </div>
-                            </div>
-                            <div class="form-inline mb-2">
-                                <div class="form-check col-lg-auto ml-auto">
-                                    <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
-                                    <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
-                                </div>
-                                <div id='default-barbarian-div' class='col-lg-9 input-group'>
-                                    <div class='colour-picker-map input-group-prepend'>
-                                        <span class='input-group-text colorpicker-input-addon'><i></i></span>
-                                        <input name='default[barbarian]' type='hidden' id="barbarian-colour" value='{{ $wantedMap->getDefBarbarianColour() }}'/>
-                                    </div>
-                                    <label class='form-control'>{{ __('tool.map.defaultBarbarian') }}</label>
-                                </div>
-                            </div>
-                            <div class="form-inline mb-2">
-                                <div class="col-lg-6 input-group">
-                                    <label for="map-zoom-value" class="col-lg-4">{{ __('tool.map.zoom') }}</label>
-                                    <select class="form-control col-lg-2" id="map-zoom-value" name="zoomValue">
-                                        <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
-                                        <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
-                                        <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
-                                        <option value="215"{{ ($mapDimensions['w'] == 215)?(' selected="selected"'):('') }}>3</option>
-                                        <option value="129"{{ ($mapDimensions['w'] == 129)?(' selected="selected"'):('') }}>4</option>
-                                        <option value="77"{{ ($mapDimensions['w'] == 77)?(' selected="selected"'):('') }}>5</option>
-                                        <option value="46"{{ ($mapDimensions['w'] == 46)?(' selected="selected"'):('') }}>6</option>
-                                        <option value="28"{{ ($mapDimensions['w'] == 28)?(' selected="selected"'):('') }}>7</option>
-                                        <option value="16"{{ ($mapDimensions['w'] == 16)?(' selected="selected"'):('') }}>8</option>
-                                        <option value="10"{{ ($mapDimensions['w'] == 10)?(' selected="selected"'):('') }}>9</option>
-                                    </select>
-                                </div>
-                                <div id="center-pos-div" class="input-group col-lg-6 mb-2">
-                                    <label for="center-pos-x" class="col-lg-4">{{ __('tool.map.center') }}</label>
-                                    <input id="center-pos-x" name="centerX" class="form-control mr-1" placeholder="500" type="text" value="{{ $mapDimensions['cx'] }}"/>|
-                                    <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
-                                </div>
-                            </div>
-                            <div class="form-inline mb-2 col-lg-6">
-                                <label for="markerFactor" class="col-lg-auto">{{ ucfirst(__('tool.map.markerFactor')) }}</label>
-                                <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
-                                <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
-                            </div>
-                            <div class="form-inline mb-2">
-                                <div class="form-check col-lg-4">
-                                    <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
-                                    <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
-                                </div>
-                                <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
-                                    <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
-                                    <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input" {{ ($wantedMap->shouldUpdate)?('checked="checked"'):('') }}/>
-                                    <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
-                                </div>
-                            </div>
-                            <div class="form-group float-right">
-                                <input type="submit" class="btn btn-sm btn-success">
-                            </div>
-                        </div>
+                        @foreach($tabList as $key => $tab)
+                            @include('tools.map.'.$key, ['active' => $tab['active']])
+                        @endforeach
                     </div>
                 </form>
             </div>
         </div>
-        @endif
         <div class="col-12 mt-2">
             <div class="card">
                 @auth
@@ -423,7 +264,7 @@
                 checkPart(this, null);
             }
         });
-        
+
         $('.change-all').change(function(e) {
             $('.'+this.attributes['aria-for'].nodeValue).prop('checked', this.checked);
         });
@@ -465,7 +306,7 @@
             case 'village':
                 checkVillage(that, e);
                 break;
-        }     
+        }
     }
 
     function checkVillage(that, e) {
@@ -552,8 +393,8 @@
                 checkPart(this, null);
             }
         });
-        
-        
+
+
         @if($wantedMap->cached_at === null)
             $('.data-input-map').change(store);
             $('.colour-picker-map').on('colorpickerHide', store);
@@ -578,7 +419,7 @@
             e.preventDefault();
             store();
         });
-    
+
         var storing = false;
         var storeNeeded = false;
         function store() {
@@ -793,7 +634,7 @@
         }, 1000, 1000);
         $('#canvas-editor').append(drawer.getHtml());
         drawer.onInsert();
-        
+
         axios.get('{{ route('tools.mapToolMode', [$wantedMap->id, 'getCanvas', $wantedMap->edit_key]) }}')
             .then((response) => {
                 canvasDataObject = response.data;
@@ -801,10 +642,10 @@
             .catch((error) => {
                 console.log(error);
             });
-        
+
     });
     var canvasDataObject = "";
-    
+
     function saveCanvas(type, data) {
         var convertedData = "type="+type;
         convertedData += "&data="+encodeURIComponent(data);
@@ -819,16 +660,16 @@
                 alert("Could not save Drawings");
             });
     }
-    
-    
+
+
     $('#drawing-tab').click(function (e) {
         if($('#canvas-bg-img')[0].currentSrc != "") return;
-        
+
         var imgSrc = "{{ route('api.map.options.sized', [$wantedMap->id, $wantedMap->show_key, 'noDrawing','1000', '1000', 'png']) }}";
         imgSrc += "?" + Math.floor(Math.random() * 9000000 + 1000000);
         $('#canvas-bg-img')[0].src = imgSrc;
     });
-    
+
     function deleteDrawing(e) {
         saveCanvas("image", "");
         saveCanvas("object", "");
@@ -837,7 +678,7 @@
         drawer.api.loadCanvasFromData('{"objects":[],"background":""}');
         drawer.api.stopEditing();
     }
-    
+
     function reloadDrawerBackground() {
         $('#canvas-bg-img')[0].src = "";
     }
@@ -866,14 +707,14 @@
             200, 200
         ],
     };
-    
+
     //define here since we are refering to it
     var reloadNeeded = false;
-    
+
     $('.map-show-tab').click(function (e) {
         var targetID = this.attributes['aria-controls'].nodeValue;
         if($('#'+targetID)[0].innerHTML.length > 0) return;
-        
+
         $.ajax({
             type: "GET",
             url: sizeRoutes[targetID][0] + "?" + Math.floor(Math.random() * 9000000 + 1000000),
@@ -895,7 +736,7 @@
                 $('#'+targetID+'-img').click(function(e) {
                     mapClicked(e, this, targetID, sizeRoutes[targetID][2], sizeRoutes[targetID][3]);
                 });
-                
+
                 setTimeout(function() {
                     var elm = $('.active.map-show-content')[0];
                     elm.style.widht = "";
@@ -942,7 +783,7 @@
                     '{{ ucfirst(__('ui.table.name')) }}: <a href="'+data.selfLink+'" target="_blank">'+data.name+'</a><br>'+
                     '{{ ucfirst(__('ui.table.points')) }}: '+data.points+'<br>'+
                     '{{ ucfirst(__('ui.table.coordinates')) }}: '+data.coordinates+'<br>';
-                
+
                 if(data.owner != 0) {
                     popupHTML += '{{ ucfirst(__('ui.table.owner')) }}: <a href="'+data.ownerLink+'" target="_blank">'+data.ownerName+'</a><br>';
                 } else {
@@ -967,7 +808,7 @@
     $(function () {
         $('.active.map-show-tab').trigger('click');
     });
-    
+
     @auth
         @if($wantedMap->user_id != Auth::user()->id)
             function changeFollow() {

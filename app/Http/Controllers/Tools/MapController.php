@@ -15,17 +15,17 @@ use Illuminate\Support\Str;
 class MapController extends BaseController
 {
     private $debug = false;
-    
+
     public function __construct()
     {
         $this->debug = config('app.debug');
     }
-    
+
     public function new($server, $world){
         BasicFunctions::local();
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
-        
+
         $mapModel = new Map();
         if(\Auth::check()) {
             //only allow one map without title per user per world
@@ -34,7 +34,7 @@ class MapController extends BaseController
                 return redirect()->route('tools.mapToolMode', [$uniqueMap->id, 'edit', $uniqueMap->edit_key]);
             }
         }
-        
+
         $mapModel->world_id = $worldData->id;
         if (\Auth::check()){
             $mapModel->user_id = \Auth::user()->id;
@@ -50,10 +50,10 @@ class MapController extends BaseController
         $mapModel->save();
         return redirect()->route('tools.mapToolMode', [$mapModel->id, 'edit', $mapModel->edit_key]);
     }
-    
+
     public function mode(Map $wantedMap, $action, $key){
         BasicFunctions::local();
-        
+
         switch ($action) {
             case 'edit':
                 abort_unless($key == $wantedMap->edit_key, 403);
@@ -65,7 +65,7 @@ class MapController extends BaseController
                 abort_unless($key == $wantedMap->edit_key, 403);
                 if($wantedMap->drawing_obj == null)
                     return "";
-                
+
                 /*$rawData = json_decode($wantedMap->drawing_obj);
                 foreach($rawData->objects as $obj) {
                     if(isset($obj->eraserPaths)) {
@@ -75,7 +75,7 @@ class MapController extends BaseController
                         }
                     }
                 }
-                
+
                 $newindex = 0;
                 $oldCnt = count($rawData->objects);
                 for($i = 0; $i < $oldCnt; $i++) {
@@ -90,21 +90,21 @@ class MapController extends BaseController
                    }
                    $newindex++;
                 }
-                
+
                 $modified = json_encode($rawData);
 
                 return $modified;
                 */
-                
+
                 return $wantedMap->drawing_obj;
             default:
                 abort(404);
         }
     }
-    
+
     public function modePost(Map $wantedMap, $action, $key){
         BasicFunctions::local();
-        
+
         switch ($action) {
             case 'save':
                 abort_unless($key == $wantedMap->edit_key, 403);
@@ -120,7 +120,7 @@ class MapController extends BaseController
                 abort(404);
         }
     }
-    
+
     public function edit(Map $wantedMap){
         $worldData = $wantedMap->world;
         $defaults = [
@@ -131,32 +131,37 @@ class MapController extends BaseController
         $mode = 'edit';
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
-        
+
         $ownMaps = array();
         if(\Auth::check()) {
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        
+
         return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps'));
     }
-    
+
     public function show(Map $wantedMap){
         $worldData = $wantedMap->world;
+        $defaults = [
+            "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
+            "player" => $wantedMap->getMarkersAsDefaults($worldData, 'p'),
+            "village" => $wantedMap->getMarkersAsDefaults($worldData, 'v'),
+        ];
         $mode = 'show';
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
-        
+
         $ownMaps = array();
         if(\Auth::check()) {
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'mapDimensions', 'ownMaps'));
+
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps'));
     }
-    
+
     public function save(Map $wantedMap) {
         $getArray = $_POST;
-        
+
         if(isset($getArray['mark'])) {
             $wantedMap->setMarkers($getArray['mark']);
         }
@@ -178,14 +183,14 @@ class MapController extends BaseController
                 $wantedMap->disablePlayer();
             }
         }
-        
+
         if(isset($getArray['zoomValue']) &&
                 isset($getArray['centerX']) &&
                 isset($getArray['centerY'])) {
             $zoom = (int) $getArray['zoomValue'];
             $cX = (int) $getArray['centerX'];
             $cY = (int) $getArray['centerY'];
-            
+
             $wantedMap->setDimensions([
                 'xs' => ceil($cX - $zoom / 2),
                 'xe' => ceil($cX + $zoom / 2),
@@ -193,35 +198,35 @@ class MapController extends BaseController
                 'ye' => ceil($cY + $zoom / 2),
             ]);
         }
-        
+
         if(isset($getArray['markerFactor'])) {
             $wantedMap->markerFactor = $getArray['markerFactor'];
         }
-        
+
         if(isset($getArray['continentNumbersHere'])) {
             $wantedMap->continentNumbers = (isset($getArray['continentNumbers']))?(1):(0);
         }
-        
+
         if(isset($getArray['autoUpdateHere'])) {
             $wantedMap->shouldUpdate = (isset($getArray['autoUpdate']))?(1):(0);
         }
-        
+
         $wantedMap->cached_at = null;
         $wantedMap->save();
-        
+
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
-    
+
     public function saveCanvas(Map $wantedMap) {
         $getArray = $_POST;
-        
+
         abort_unless(isset($getArray['type']), 404);
         abort_unless(isset($getArray['data']), 404);
         switch($getArray['type']) {
             case "image":
                 if(!isset($wantedMap->dimensions) || $wantedMap->dimensions == null)
                     $wantedMap->setDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
-                
+
                 $wantedMap->drawing_dim = $wantedMap->dimensions;
                 $wantedMap->drawing_png = \App\Util\PictureRender::base64ToPng($getArray['data']);
                 $wantedMap->cached_at = null;
@@ -234,10 +239,10 @@ class MapController extends BaseController
             default:
                 abort(404);
         }
-        
+
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
-    
+
     public static function getMapDimension($dimensions) {
         $dimensions['w'] = $dimensions['xe'] - $dimensions['xs'];
         $dimensions['h'] = $dimensions['ye'] - $dimensions['ys'];
@@ -249,7 +254,7 @@ class MapController extends BaseController
     public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
-        
+
         if($options == null && $wantedMap->cached_at !== null) {
             //use cached version
             $map = new ImageCached("../".config('tools.map.cacheDir').$wantedMap->id, $this->decodeDimensions($width, $height), $this->debug);
@@ -281,7 +286,7 @@ class MapController extends BaseController
 
             $map->setFont("fonts/arial.ttf");
         }
-        
+
         $map->render();
         return $map->output($ext);
     }
@@ -289,15 +294,15 @@ class MapController extends BaseController
     public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){
         return $this->getOptionSizedMapByID($wantedMap, $token, null, $width, $height, $ext);
     }
-    
+
     public function getMapByID(Map $wantedMap, $token, $ext) {
         return $this->getSizedMapByID($wantedMap, $token, null, null, $ext);
     }
-    
+
     public function getSizedOverviewMap($server, $world, $type, $id, $width, $height, $ext){
         BasicFunctions::local();
         $world = World::getWorld($server, $world);
-        
+
         $map = new MapGenerator($world, $this->decodeDimensions($width, $height), $this->debug);
         switch($type) {
             case 'a':
@@ -324,11 +329,11 @@ class MapController extends BaseController
         $map->render();
         return $map->output($ext);
     }
-    
+
     public function getOverviewMap($server, $world, $type, $id, $ext){
         return $this->getSizedOverviewMap($server, $world, $type, $id, null, null, $ext);
     }
-    
+
     private function decodeDimensions($width, $height)
     {
         if($width == 'w') {
@@ -346,7 +351,7 @@ class MapController extends BaseController
             );
         }
     }
-    
+
     public function mapTop10P($server, $world){
         BasicFunctions::local();
         $world = World::getWorld($server, $world);

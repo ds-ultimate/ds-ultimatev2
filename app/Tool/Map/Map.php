@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Map extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'map';
     protected $connection = 'mysql';
 
@@ -24,7 +24,7 @@ class Map extends Model
         'updated_at',
         'deleted_at',
     ];
-    
+
     protected $hidden = [
         'edit_key',
         'show_key',
@@ -62,39 +62,39 @@ class Map extends Model
     public function follows(){
         return $this->morphToMany('App\User', 'followable', 'follows');
     }
-    
+
     public function getTitle() {
         if($this->title == null || $this->title == "") {
             return ucfirst(__('tool.map.title'));
         }
         return $this->title;
     }
-    
+
     /**
      * Save format: {type}:{id}:{colour (hex)}:{settings (t for text)};...;...
      * @param type $markerArray
      */
     public function setMarkers($markerArray) {
         $markerStr = "";
-        
+
         $types = [
             array("ally", "a"),
             array("player", "p"),
             array("village", "v"),
         ];
-        
+
         foreach($types as $type) {
             if(!isset($markerArray[$type[0]])) continue;
-            
+
             foreach($markerArray[$type[0]] as $marker) {
                 if(strlen($marker['colour']) != 6 || ! Map::checkHex($marker['colour'])) {
                     continue;
                 }
                 if(!isset($marker['id']) || $marker['id'] == 0) continue;
-                
-                
+
+
                 $markerStr .= $type[1] . ":". ((int) $marker['id']) . ":" . $marker['colour'];
-                
+
                 $markerOptions = "";
                 if(isset(($marker['textHere'])) && isset(($marker['text'])) && $marker['text'] == "on") {
                     $markerOptions .= "t";
@@ -102,24 +102,24 @@ class Map extends Model
                 if(isset(($marker['hLightHere'])) && isset(($marker['hLight'])) && $marker['hLight'] == "on") {
                     $markerOptions .= "h";
                 }
-                
+
                 if(strlen($markerOptions) > 0) {
                     $markerStr .= ":" . $markerOptions;
                 }
                 $markerStr .= ";";
             }
         }
-        
+
         $this->markers = $markerStr;
     }
-    
+
     public function getMarkersAsDefaults(World $world, $filterBy) {
         $result = array();
         foreach(explode(";", $this->markers) as $marker) {
             $parts = explode(":", $marker);
             if(count($parts) < 3 || count($parts) > 4) continue;
             if($parts[0] != $filterBy) continue;
-            
+
             switch($parts[0]) {
                 case 'a':
                     $ally = Ally::ally($world->server->code, $world->name, $parts[1]);
@@ -150,6 +150,8 @@ class Map extends Model
                         'id' => $vil->villageID,
                         'x' => $vil->x,
                         'y' => $vil->y,
+                        'name' => $vil->name,
+                        'owner' => $vil->playerLatest,
                         'colour' => $parts[2],
                         'text' => count($parts) > 3 && strpos($parts[3], "t") !== false,
                         'highlight' => count($parts) > 3 && strpos($parts[3], "h") !== false,
@@ -157,12 +159,12 @@ class Map extends Model
                     break;
             }
         }
-        
+
         //append one empty row
         $result[] = null;
         return $result;
     }
-    
+
     public function getDefPlayerColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
@@ -172,7 +174,7 @@ class Map extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
-    
+
     public function getDefBarbarianColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
@@ -182,7 +184,7 @@ class Map extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
-    
+
     public function getBackgroundColour() {
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
@@ -192,58 +194,58 @@ class Map extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
-    
+
     public function setDefaultColours($background, $player, $barbarian) {
         $defCol = ((Map::checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
         $defCol .= ((Map::checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
         $defCol .= ((Map::checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
         $this->defaultColours = $defCol;
     }
-    
+
     public function disableBarbarian() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
             return;
         }
-        
+
         $parts = explode(";", $this->defaultColours);
         $this->defaultColours = "{$parts[0]};{$parts[1]};null";
     }
-    
+
     public function barbarianEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
             return true;
         }
-        
+
         $parts = explode(";", $this->defaultColours);
         return $parts[2] != "null";
     }
-    
+
     public function disablePlayer() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
             return;
         }
-        
+
         $parts = explode(";", $this->defaultColours);
         $this->defaultColours = "{$parts[0]};null;{$parts[2]}";
     }
-    
+
     public function playerEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
             return true;
         }
-        
+
         $parts = explode(";", $this->defaultColours);
         return $parts[1] != "null";
     }
-    
+
     public function continentNumbersEnabled() {
         if(!isset($this->continentNumbers) || $this->continentNumbers == null) {
             return true;
         }
-        
+
         return $this->continentNumbers == 1;
     }
-    
+
     public function setDimensions($array) {
         $dim = "" . ((int) $array['xs']) . ";";
         $dim .= ((int) $array['xe']) . ";";
@@ -251,7 +253,7 @@ class Map extends Model
         $dim .= ((int) $array['ye']);
         $this->dimensions = $dim;
     }
-    
+
     public function getDimensions() {
         if(!isset($this->dimensions) || $this->dimensions == null) {
             return MapGenerator::$DEFAULT_DIMENSIONS;
@@ -264,7 +266,7 @@ class Map extends Model
             'ye' => (int) $parts[3],
         ];
     }
-    
+
     /**
      * Configure given MapGenerator for rendering this map
      * @param \App\Util\MapGenerator $generator Generator to Configure
@@ -291,7 +293,7 @@ class Map extends Model
                 }
             }
         }
-        
+
         if(isset($this->defaultColours) && $this->defaultColours != null) {
             $parts = explode(";", $this->defaultColours);
             if(count($parts) == 3) {
@@ -299,7 +301,7 @@ class Map extends Model
                 if($rgb != null) {
                     $generator->setBackgroundColour($rgb);
                 }
-                
+
                 $rgb = Map::hexToRGB($parts[1]);
                 if($rgb != null) {
                     $generator->setPlayerColour($rgb);
@@ -307,7 +309,7 @@ class Map extends Model
                 if($parts[1] == "null") {
                     $generator->setPlayerColour(null);
                 }
-                
+
                 $rgb = Map::hexToRGB($parts[2]);
                 if($rgb != null) {
                     $generator->setBarbarianColour($rgb);
@@ -317,7 +319,7 @@ class Map extends Model
                 }
             }
         }
-        
+
         if(isset($this->dimensions) && $this->dimensions != null) {
             $parts = explode(";", $this->dimensions);
             if(count($parts) == 4) {
@@ -329,11 +331,11 @@ class Map extends Model
                 ]);
             }
         }
-        
+
         if(isset($this->drawing_dim) && $this->drawing_dim != null && $this->drawing_dim != "" &&
                 isset($this->drawing_png) && $this->drawing_png != null && $this->drawing_png != "" &&
                 isset($this->drawing_obj) && $this->drawing_obj != null && $this->drawing_obj != "") {
-            
+
             $parts = explode(";", $this->drawing_dim);
             if(count($parts) == 4) {
                 $drawing_dim = [
@@ -345,18 +347,18 @@ class Map extends Model
             }
             $generator->setDrawings($this->drawing_png, $drawing_dim);
         }
-        
+
         if(isset($this->markerFactor)) {
             $generator->setMarkerFactor($this->markerFactor);
         }
         $generator->setShowContinentNumbers($this->continentNumbersEnabled());
-        
+
         $generator->setLayerOrder($this->getLayerConfiguration());
     }
-    
+
     public function getLayerConfiguration() {
         $layers = [MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID, MapGenerator::$LAYER_TEXT];
-        
+
         if(isset($this->drawing_dim) && $this->drawing_dim != null && $this->drawing_dim != "" &&
                 isset($this->drawing_png) && $this->drawing_png != null && $this->drawing_png != "" &&
                 isset($this->drawing_obj) && $this->drawing_obj != null && $this->drawing_obj != "") {
@@ -364,12 +366,12 @@ class Map extends Model
         }
         return $layers;
     }
-    
+
     public static function checkHex($hex) {
         if(!ctype_alnum($hex)) return false;
         if(strlen($hex) != 6) return false;
         $validHex = "0123456789ABCDEF";
-        
+
         for($i = 0; $i < strlen($hex); $i++) {
             if(strpos($validHex, $hex[$i]) === false) {
                 return false;
@@ -377,12 +379,12 @@ class Map extends Model
         }
         return true;
     }
-    
+
     public static function hexToRGB($hex) {
         if(! Map::checkHex($hex)) return null;
         if(strlen($hex) != 6) return null;
         $hexChars = "0123456789ABCDEF";
-        
+
         return [
             strpos($hexChars, $hex[0]) * 16 + strpos($hexChars, $hex[1]),
             strpos($hexChars, $hex[2]) * 16 + strpos($hexChars, $hex[3]),
@@ -392,7 +394,7 @@ class Map extends Model
     public static function RGBToHex($rgb) {
         if(count($rgb) != 3) return null;
         $hexChars = "0123456789ABCDEF";
-        
+
         $hex = $hexChars[intval(((int)$rgb[0]) / 16)];
         $hex .= $hexChars[((int)$rgb[0]) % 16];
         $hex .= $hexChars[intval(((int)$rgb[1]) / 16)];

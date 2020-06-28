@@ -251,6 +251,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'cached' => 'Diese Map benutzt ein gespeichertes Bild, daher ist das automatische Speichern deaktiviert. Veränderungen an den Einstellungen werden die Map von den aktuellen Daten neu generieren. Der Titel kann verändert werden, ohne dass sich die Map verändert.',
     'autoUpdate' => 'Automatisches aktualisieren',
     'autoUpdateHelp' => 'Wenn aktiviert, werden immer die aktuellen Daten benutzt um die Weltkarte zu generieren. Wenn deaktiviert wird die Map ein Mal generiert und dann immer das gespeicherte Bild verwendet.',
+    'legend' => 'Legende',
   ),
   'pointCalc' => 
   array (
