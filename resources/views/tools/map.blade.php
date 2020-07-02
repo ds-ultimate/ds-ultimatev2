@@ -94,8 +94,8 @@
                         <input name="{{ "mark[$type][$id][colour]" }}" type="hidden" value="{{ $defCol }}"/>
                     </div>
                     <input id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}" type="hidden"/>
-                    <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" maxlength="3" value="{{ $defX }}"/>|
-                    <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" maxlength="3" value="{{ $defY }}"/>
+                    <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" min="0" max="1000" value="{{ $defX }}"/>|
+                    <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" min="0" max="1000" value="{{ $defY }}"/>
                     <div class="form-check ml-2 mt-2">
                         <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
                         <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
