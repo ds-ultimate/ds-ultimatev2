@@ -94,8 +94,8 @@
                         <input name="{{ "mark[$type][$id][colour]" }}" type="hidden" value="{{ $defCol }}"/>
                     </div>
                     <input id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}" type="hidden"/>
-                    <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defX }}"/>|
-                    <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 checked-data-input-map data-input-map" placeholder="500" type="text" value="{{ $defY }}"/>
+                    <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" maxlength="3" value="{{ $defX }}"/>|
+                    <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" maxlength="3" value="{{ $defY }}"/>
                     <div class="form-check ml-2 mt-2">
                         <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
                         <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
@@ -270,6 +270,24 @@
         });
         addCustomLibs(null);
 
+        @if($wantedMap->cached_at === null)
+            $('.data-input-map').change(store);
+            $('.colour-picker-map').on('colorpickerHide', store);
+            $('#checkbox-show-player').change(store);
+            $('#checkbox-show-barbarian').change(store);
+            $('#checkbox-continent-numbers').change(store);
+            $('#checkbox-auto-update').change(store);
+            $('#map-zoom-value').change(store);
+            $('#center-pos-x').change(store);
+            $('#center-pos-y').change(store);
+            $('.showTextBox').change(store);
+            $('.highlightBox').change(store);
+            $('#markerFactor').change(store);
+            $('#markerFactor').on("input", function(slideEvt) {
+                $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
+            });
+        @endif
+
         $('#title-input').on("keypress keyup blur",function (event) {
             if (event.keyCode == 13) {
                 event.preventDefault();
@@ -393,25 +411,18 @@
                 checkPart(this, null);
             }
         });
-
-
-        @if($wantedMap->cached_at === null)
-            $('.data-input-map').change(store);
-            $('.colour-picker-map').on('colorpickerHide', store);
-            $('#checkbox-show-player').change(store);
-            $('#checkbox-show-barbarian').change(store);
-            $('#checkbox-continent-numbers').change(store);
-            $('#checkbox-auto-update').change(store);
-            $('#map-zoom-value').change(store);
-            $('#center-pos-x').change(store);
-            $('#center-pos-y').change(store);
-            $('.showTextBox').change(store);
-            $('.highlightBox').change(store);
-            $('#markerFactor').change(store);
-            $('#markerFactor').on("input", function(slideEvt) {
-                $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
-            });
-        @endif
+        
+        $('.coord-data-input').bind('paste', function(e) {
+            var target = this.id.substring(0, this.id.lastIndexOf("-"));
+            var pastedData = e.originalEvent.clipboardData.getData('text');
+            var coords = pastedData.split("|");
+            if (coords.length === 2) {
+                e.preventDefault()
+                $('#' + target + '-x').val(coords[0].substring(0, 3));
+                $('#' + target + '-y').val(coords[1].substring(0, 3));
+                $(this).change();
+            }
+        });
     }
 
     @if($wantedMap->cached_at === null)
