@@ -188,8 +188,8 @@ $tabList = [
                     popover();
                     $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline">' +
                         '<div class="col-9">' +
-                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="0">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                            '<input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="0">' +
+                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
+                            '<input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="' + audioTiming + '">' +
                         '</div>' +
                         '<div class="col-2">' +
                             '<h5>' +
@@ -216,6 +216,7 @@ $tabList = [
                             @endif
                         @endauth
                         '</div>')
+                    $('#audioTimingInput').val(audioTiming);
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
@@ -338,8 +339,8 @@ $tabList = [
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
@@ -377,8 +378,8 @@ $tabList = [
                 .then((response) => {
                     $('.bd-example-modal-xl').modal('hide');
                     var data = response.data;
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
@@ -427,8 +428,8 @@ $tabList = [
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     table.ajax.reload();
+                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
