@@ -8,7 +8,11 @@
                 <small>-</small>
             </li>
             <li class="list-inline-item mr-0">
-                <small><a href="{{ route('changelog') }}">Changelog</a></small>
+                <small><a href="{{ route('changelog') }}">Changelog</a>
+                    @if ($newCangelog)
+                        <span class="badge badge-pill badge-info blink_me">!</span>
+                    @endif
+                </small>
             </li>
             <li class="list-inline-item mr-0">
                 <small>-</small>

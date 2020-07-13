@@ -9,6 +9,7 @@ namespace App\Util;
 use App;
 use App\World;
 use App\Server;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -116,20 +117,20 @@ class BasicFunctions
         $data = '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'all', $itemID]).'">'.
                 BasicFunctions::numberConv($conquer->get('total')).
                 '</a>';
-        
+
         if($conquer->has('new') && $conquer->has('old')) {
             //assume that there will be always gain an loose
             $data .= ' ( ';
             $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'new', $itemID]).'"><i class="text-success">'.
                     BasicFunctions::numberConv($conquer->get('new')).
                     '</i></a> - ';
-            
+
             if($conquer->has('own')) {
                 $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'own', $itemID]).'"><i class="text-info">'.
                         BasicFunctions::numberConv($conquer->get('own')).
                         '</i></a> - ';
             }
-            
+
             $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'old', $itemID]).'"><i class="text-danger">'.
                     BasicFunctions::numberConv($conquer->get('old')).
                     '</i></a> )';
@@ -180,6 +181,11 @@ class BasicFunctions
     public static function local(){
         App::setLocale(\Session::get('locale', 'de'));
     }
+
+    public static function changelogUpdate(){
+        \Session::put('changelog', Carbon::now());
+    }
+
     /**
      * This function only decodes the Data
      * the output must be escaped properly afterwards
@@ -283,7 +289,7 @@ class BasicFunctions
 
         return $day.' '.__('tool.distCalc.days').' '.str_pad($hour, 2, "0", STR_PAD_LEFT).':'.str_pad($minutes, 2, "0", STR_PAD_LEFT).':'.str_pad($seconds, 2, "0", STR_PAD_LEFT);
     }
-    
+
     public static function sign( $number ) {
         return ( $number > 0 ) ? 1 : (( $number < 0 ) ? -1 : 0 );
     }
@@ -339,7 +345,7 @@ class BasicFunctions
 
         return self::numberConv($num);
     }
-    
+
     public static function formEntryEdit($generateFrom, $type, $name, $id, $value, $readonly, $required, $optional = array()) {
         $index = str_replace("[]", "", $id);
         return array_merge([
@@ -351,7 +357,7 @@ class BasicFunctions
             'required' => $required,
         ], $optional);
     }
-    
+
     public static function formEntryShow($name, $value, $escape = true, $optional = array()) {
         return array_merge([
             'name' => $name,
