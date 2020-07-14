@@ -53,7 +53,7 @@ class ContentController extends Controller
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        
+
         return view('content.worldAlly', compact('worldData', 'server'));
     }
 
@@ -68,7 +68,7 @@ class ContentController extends Controller
 
         return view('content.worldPlayer', compact('worldData', 'server'));
     }
-    
+
     public function conquer($server, $world, $type){
         BasicFunctions::local();
         World::existWorld($server, $world);
@@ -82,7 +82,7 @@ class ContentController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        
+
         $allHighlight = ['s', 'i', 'b', 'd'];
         if(\Auth::check()) {
             $profile = \Auth::user()->profile;
@@ -90,11 +90,11 @@ class ContentController extends Controller
         } else {
             $userHighlight = $allHighlight;
         }
-        
+
         $who = $worldData->displayName();
         $routeDatatableAPI = route('api.worldConquer', [$worldData->server->code, $worldData->name, $type]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['world']);
-        
+
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
                 'allHighlight', 'userHighlight'));
@@ -103,11 +103,11 @@ class ContentController extends Controller
     public function sitemap() {
         $servers = array();
         $serverArray = Server::getServer();
-        
+
         foreach($serverArray as $server) {
             $worldsArray = World::worldsCollection($server->code);
             $servers[$server->code] = collect();
-            
+
             if($worldsArray->get('world') != null && count($worldsArray->get('world')) > 0) {
                 $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('world'));
             }
@@ -121,7 +121,7 @@ class ContentController extends Controller
                 $servers[$server->code] =  $servers[$server->code]->merge($worldsArray->get('classic'));
             }
         }
-        
+
         return response()->view('sitemap', compact('servers'))->header('Content-Type', 'text/xml');
     }
 
@@ -129,6 +129,8 @@ class ContentController extends Controller
         $changelogModel = new Changelog();
 
         $changelogs = $changelogModel->orderBy('created_at', 'DESC')->get();
+
+        BasicFunctions::changelogUpdate();
 
         return view('content.changelog', compact('changelogs'));
     }
