@@ -561,7 +561,7 @@ $tabList = [
         function edit(id) {
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
-            var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) !== -1 ? rowData.type : -1;
+            var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) ? rowData.type : -1;
             $('#attack_list_item').val(data.id);
             $('#edit_type').val(type);
             $('#edit_xStart').val(rowData.xStart);
