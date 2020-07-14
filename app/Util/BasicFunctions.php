@@ -183,7 +183,14 @@ class BasicFunctions
     }
 
     public static function changelogUpdate(){
-        \Session::put('changelog', Carbon::now());
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $user->profile->last_seen_changelog = Carbon::now();
+            $user->profile->save();
+            \Session::put('last_seen_changelog', Carbon::now());
+        }else{
+            \Session::put('last_seen_changelog', Carbon::now());
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ class Profile extends Model
     protected $dates = [
         'updated_at',
         'created_at',
+        'last_seen_changelog',
     ];
 
     protected $fillable = [
@@ -25,13 +26,14 @@ class Profile extends Model
         'facebook_id',
         'google_id',
         'twitter_id',
+        'last_seen_changelog',
         'created_at',
         'updated_at',
-        
+
         'map_dimensions',
         'map_defaultColours',
         'map_markerFactor',
-        
+
         'conquerHightlight_World',
         'conquerHightlight_Ally',
         'conquerHightlight_Player',
@@ -42,12 +44,12 @@ class Profile extends Model
         $name = $driver.'_id';
         return isset($this->$name);
     }
-    
-    
+
+
     /*
      * Functions for map settings
      */
-    
+
     public function getDefPlayerColour() {
         if(isset($this->map_defaultColours) && $this->map_defaultColours != null) {
             $parts = explode(";", $this->map_defaultColours);
@@ -57,7 +59,7 @@ class Profile extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
-    
+
     public function getDefBarbarianColour() {
         if(isset($this->map_defaultColours) && $this->map_defaultColours != null) {
             $parts = explode(";", $this->map_defaultColours);
@@ -67,7 +69,7 @@ class Profile extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
-    
+
     public function getBackgroundColour() {
         if(isset($this->map_defaultColours) && $this->map_defaultColours != null) {
             $parts = explode(";", $this->map_defaultColours);
@@ -77,50 +79,50 @@ class Profile extends Model
         }
         return Map::RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
-    
+
     public function setDefaultColours($background, $player, $barbarian) {
         $defCol = ((Map::checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
         $defCol .= ((Map::checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
         $defCol .= ((Map::checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
         $this->map_defaultColours = $defCol;
     }
-    
+
     public function disableBarbarian() {
         if(!isset($this->map_defaultColours) || $this->map_defaultColours == null) {
             return;
         }
-        
+
         $parts = explode(";", $this->map_defaultColours);
         $this->map_defaultColours = "{$parts[0]};{$parts[1]};null";
     }
-    
+
     public function barbarianEnabled() {
         if(!isset($this->map_defaultColours) || $this->map_defaultColours == null) {
             return true;
         }
-        
+
         $parts = explode(";", $this->map_defaultColours);
         return $parts[2] != "null";
     }
-    
+
     public function disablePlayer() {
         if(!isset($this->map_defaultColours) || $this->map_defaultColours == null) {
             return;
         }
-        
+
         $parts = explode(";", $this->map_defaultColours);
         $this->map_defaultColours = "{$parts[0]};null;{$parts[2]}";
     }
-    
+
     public function playerEnabled() {
         if(!isset($this->map_defaultColours) || $this->map_defaultColours == null) {
             return true;
         }
-        
+
         $parts = explode(";", $this->map_defaultColours);
         return $parts[1] != "null";
     }
-    
+
     public function setDimensions($array) {
         $dim = "" . ((int) $array['xs']) . ";";
         $dim .= ((int) $array['xe']) . ";";
@@ -128,7 +130,7 @@ class Profile extends Model
         $dim .= ((int) $array['ye']);
         $this->map_dimensions = $dim;
     }
-    
+
     public function getDimensions() {
         if(!isset($this->map_dimensions) || $this->map_dimensions == null) {
             return MapGenerator::$DEFAULT_DIMENSIONS;
@@ -141,7 +143,7 @@ class Profile extends Model
             'ye' => (int) $parts[3],
         ];
     }
-    
+
     public static $CONQUER_HIGHLIGHT_MAPPING = [
         's' => 'self', 'i' => 'internal', 'b' => 'barbarian', 'd' => 'deleted',
         'w' => 'win', 'l' => 'loose',

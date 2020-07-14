@@ -32,14 +32,28 @@ class AppServiceProvider extends ServiceProvider
             BasicFunctions::local();
 
             $changelog = Changelog::orderBy('created_at', 'desc')->first();
-            if (\Session::get('changelog')) {
-                if (\Session::get('changelog') < $changelog->created_at) {
-                    $newCangelog = true;
-                }else{
-                    $newCangelog = false;
+            if (\Auth::check()){
+                $user = \Auth::user();
+                if (\Session::get('last_seen_changelog')) {
+                    $lastSeenChangelog = \Session::get('last_seen_changelog');
+                    if ($lastSeenChangelog > $user->profile->last_seen_changelog) {
+                        $user->profile->last_seen_changelog = $lastSeenChangelog;
+                        $user->profile->save();
+                    }
                 }
+
+                $newCangelog = $changelog->created_at > $user->profile->last_seen_changelog;
+
             }else{
-                $newCangelog = $changelog->created_at->diffInDays() < 5;
+                if (\Session::get('last_seen_changelog')) {
+                    if (\Session::get('last_seen_changelog') < $changelog->created_at) {
+                        $newCangelog = true;
+                    }else{
+                        $newCangelog = false;
+                    }
+                }else{
+                    $newCangelog = $changelog->created_at->diffInDays() < 5;
+                }
             }
 
             $view->with('newCangelog', $newCangelog);
