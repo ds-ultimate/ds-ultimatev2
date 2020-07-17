@@ -5,6 +5,7 @@ namespace App;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class World extends Model
 {
@@ -71,7 +72,7 @@ class World extends Model
         if(World::where('name', $world)->get()->count() > 0){
             return true;
         }
-        
+
         abort(404, "Keine Daten über diese Welt '$server$world' vorhanden.");
     }
 
@@ -113,6 +114,30 @@ class World extends Model
             $worldsArray[$worldData->sortType()]->push($worldData);
         }
         return $worldsArray;
+    }
+
+    public static function worldsCollectionActiveSorter(Collection $worldTypes){
+        $collect = collect();
+        $active = collect();
+        $inactive = collect();
+        foreach ($worldTypes as $key => $worldType){
+            foreach ($worldType as $world){
+                if ($world->active){
+                    if (! $active->has($key)) {
+                        $active[$key] = collect();
+                    }
+                    $active[$key]->push($world);
+                }else{
+                    if (! $inactive->has($key)) {
+                        $inactive[$key] = collect();
+                    }
+                    $inactive[$key]->push($world);
+                }
+            }
+        }
+        $collect->put('active', $active);
+        $collect->put('inactive', $inactive);
+        return $collect;
     }
 
     /**

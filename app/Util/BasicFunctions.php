@@ -187,10 +187,8 @@ class BasicFunctions
             $user = \Auth::user();
             $user->profile->last_seen_changelog = Carbon::now();
             $user->profile->save();
-            \Session::put('last_seen_changelog', Carbon::now());
-        }else{
-            \Session::put('last_seen_changelog', Carbon::now());
         }
+        \Session::put('last_seen_changelog', Carbon::now());
     }
 
     /**

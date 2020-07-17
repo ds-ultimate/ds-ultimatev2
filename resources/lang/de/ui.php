@@ -258,4 +258,7 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'additionalColumns' => 'Zusätzliche Spalten',
   'selection' => 'Auswahl',
   'mistake' => 'Es gab einen Fehler.',
+  'archive' => 'Archiv',
+  'showLessWorlds' => 'weniger Welten anzeigen',
+  'showMoreWorlds' => 'mehr Welten anzeigen',
 );

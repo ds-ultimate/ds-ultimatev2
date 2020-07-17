@@ -9,6 +9,7 @@ use App\Player;
 use App\Server;
 use App\Util\BasicFunctions;
 use App\World;
+use phpDocumentor\Reflection\Type;
 
 
 class ContentController extends Controller
@@ -27,7 +28,10 @@ class ContentController extends Controller
         BasicFunctions::local();
         World::existServer($server);
         $worldsArray = World::worldsCollection($server);
-        return view('content.server', compact('worldsArray', 'server'));
+        $worldsArrays = World::worldsCollectionActiveSorter($worldsArray);
+        $worldsActive = $worldsArrays->get('active');
+        $worldsInactive = $worldsArrays->get('inactive');
+        return view('content.server', compact('worldsActive', 'worldsInactive', 'server'));
     }
 
     /*

@@ -258,4 +258,7 @@ It is not specified which village you have to give the name to, but it must belo
   'additionalColumns' => 'Additional columns',
   'selection' => 'Selection',
   'mistake' => 'There was a mistake.',
+  'archive' => 'archive',
+  'showLessWorlds' => 'show less worlds',
+  'showMoreWorlds' => 'show more worlds',
 );
