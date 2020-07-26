@@ -6,13 +6,13 @@
  * Time: 13:08
  */
 namespace App\Util;
+
 use App;
 use App\World;
 use App\Server;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class BasicFunctions
 {
@@ -24,6 +24,7 @@ class BasicFunctions
     public static function numberConv($num, $round_to = 0){
         return number_format($num, $round_to, ',', '.');
     }
+
     /**
      * @param $world
      * @return int
@@ -31,6 +32,7 @@ class BasicFunctions
     public static function getWorldNum($world) {
         return (int)preg_replace("/[^0-9]+/", '', $world);
     }
+
     /**
      * @param $world
      * @return string
@@ -43,6 +45,7 @@ class BasicFunctions
         }
         return '';
     }
+
     /**
      * @param World $world
      * @param string $text
@@ -53,6 +56,7 @@ class BasicFunctions
     public static function linkWorld(World $world, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('world',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param string $text
@@ -63,6 +67,7 @@ class BasicFunctions
     public static function linkWorldAlly(World $world, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('worldAlly',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param string $text
@@ -73,6 +78,7 @@ class BasicFunctions
     public static function linkWorldPlayer(World $world, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('worldPlayer',[$world->server->code, $world->name]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param int $playerID
@@ -84,6 +90,7 @@ class BasicFunctions
     public static function linkPlayer(World $world, $playerID, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('player',[$world->server->code, $world->name, $playerID]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param int $allyID
@@ -95,6 +102,7 @@ class BasicFunctions
     public static function linkAlly(World $world, $allyID, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('ally',[$world->server->code, $world->name, $allyID]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param int $villageID
@@ -106,6 +114,7 @@ class BasicFunctions
     public static function linkVillage(World $world, $villageID, $text, $class = null, $id = null, $blank=false){
         return '<a class="'.$class.'" id="'.$id.'" '.($blank?'target="_blank "':'').'href="'.route('village',[$world->server->code, $world->name, $villageID]).'">'.$text.'</a>';
     }
+
     /**
      * @param World $world
      * @param int $allyID
@@ -137,6 +146,7 @@ class BasicFunctions
         }
         return $data;
     }
+
     /**
      * @param string $dbName
      * @param string $table
@@ -150,6 +160,7 @@ class BasicFunctions
         }
         return $result !== false;
     }
+
     /**
      * @param string $dbName
      * @return bool
@@ -162,6 +173,7 @@ class BasicFunctions
         }
         return $result !== false && count($result) > 0;
     }
+
     /**
      * @param $input
      * @param $type
@@ -178,6 +190,7 @@ class BasicFunctions
         }
         return false;
     }
+
     public static function local(){
         App::setLocale(\Session::get('locale', 'de'));
     }
@@ -201,6 +214,7 @@ class BasicFunctions
     public static function decodeName($name) {
         return urldecode($name);
     }
+
     /**
      * @param string $name
      * @return string
@@ -208,6 +222,7 @@ class BasicFunctions
     public static function outputName($name) {
         return nl2br(htmlentities(urldecode($name)));
     }
+
     public static function createLog($type, $msg){
         // FIXME: would like to get E-Mails from log messages
         $log = new App\Log();
@@ -216,6 +231,7 @@ class BasicFunctions
         $log->msg = $msg;
         $log->save();
     }
+
     /**
      * @return Collection
      */
@@ -223,6 +239,7 @@ class BasicFunctions
         $world = new World();
         return $world->where('active', '=', '1');
     }
+
     /**
      * @param string $server
      * @param $world
@@ -237,6 +254,7 @@ class BasicFunctions
             array_values($replaceArray),
             config('dsUltimate.db_database_world'));
     }
+
     /**
      * @param $haystack
      * @param $needle
@@ -245,6 +263,7 @@ class BasicFunctions
     public static function startsWith($haystack, $needle) {
         return $needle === "" || strpos($haystack, $needle) === 0;
     }
+
     /**
      * @param $haystack
      * @param $needle
@@ -253,12 +272,14 @@ class BasicFunctions
     public static function endsWith($haystack, $needle) {
         return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
     }
+
     public static function ignoreErrs() {
         set_error_handler(function($severity, $message, $file, $line) {
             echo "We got an errror[$severity] at $file:$line:\n$message\nBut we are ignoring it\n";
             return;
         });
     }
+
     /**
      * @param $toEscape
      * @return mixed

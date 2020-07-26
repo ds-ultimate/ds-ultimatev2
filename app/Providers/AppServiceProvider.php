@@ -74,5 +74,8 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('setTrue', function($name) {
             return "<?php $name=true; ?>";
         });
+        Blade::directive('forceSet', function($name) {
+            return "<?php if(!isset($name)) {"."$name=null;} ?>";
+        });
     }
 }

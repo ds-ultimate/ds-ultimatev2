@@ -75,8 +75,7 @@
 
 .bg-nav {
     background: #edd492;
-    background: -webkit-gradient(linear, left top, left bottom, from(#edd492), color-stop(80%, #edd492), to(#fbf6e9));
-    background: linear-gradient(180deg, #edd492 0%, #edd492 80%, #fbf6e9 100%);
+    background: linear-gradient(180deg, #edd492 0%, #edd492 calc(100% - 12px), #fbf6e9 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#edd492",endColorstr="#fbf6e9",GradientType=1);
 }
 
@@ -98,6 +97,26 @@ body {
 
 .cookie-consent__message{
     color: white;
+}
+
+@include media-breakpoint-up('lg') {
+  .navbar-nav {
+    flex-direction: row;
+  }
+
+  .navbar-nav .dropdown-menu {
+    position: absolute;
+  }
+
+  .nav-link {
+    padding: 0.5rem !important;
+  }
+}
+
+@include media-breakpoint-down('md') {
+  .nav-item {
+    width: 100%;
+  }
 }
 
 .blink_me {

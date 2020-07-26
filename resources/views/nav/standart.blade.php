@@ -1,78 +1,98 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-nav">
+@forceSet($server)
+@forceSet($worldData)
+<?php
+function generateMenuEntry($entry, $level=0) {
+    if($entry['subElements'] == null) {//normal entry
+        ?>
+        @if($level==0)
+            <li class="nav-item">
+                <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
+            </li>
+        @else
+            <li class="dropdown-item">
+                <a id="{{ $entry['id'] }}" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
+            </li>
+        @endif
+        <?php
+    } else {
+        ?>
+        @if($level==0)
+            <li class="nav-item dropdown">
+                <a id="{{ $entry['id'] }}" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ $entry['title']}}
+                </a>
+                <ul class="dropdown-menu multi-level" role="menu">
+                    <?php foreach($entry['subElements'] as $item) {
+                        generateMenuEntry($item, $level+1);
+                    } ?>
+                </ul>
+            </li>
+        @else
+            <li class="dropdown-submenu">
+                <a id="{{ $entry['id'] }}" class="dropdown-item dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ $entry['title'] }}
+                </a>
+                <ul class="dropdown-menu multi-level" role="menu">
+                    <?php foreach($entry['subElements'] as $item) {
+                        generateMenuEntry($item, $level+1);
+                    } ?>
+                </ul>
+            </li>
+        @endif
+        <?php
+    }
+}
+
+$navNum = 1;
+function generateMobileMenuEntry($entry, $level=0) {
+    global $navNum;
+    if($entry['subElements'] == null) {//normal entry
+        ?>
+        <li class="nav-item">
+            <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}" style="padding-left: {{ $level * 10 }}px">
+                @isset($entry['icon'])<span class="{{ $entry['icon'] }} mr-1"></span>@endisset{{ $entry['title']}}
+            </a>
+        </li>
+        <?php
+    } else {
+        ?>
+        <li class="nav-item">
+            <a id="{{ $entry['id'] }}" class="nav-link dropdown-toggle" role="button" style="padding-left: {{ $level * 10 }}px"
+                data-toggle="collapse" data-target="#navbar-m{{ $navNum }}" aria-controls="navbar-m{{ $navNum }}" aria-expanded="false">
+                @if(Auth::check() && $entry['id'] == str_replace(".", "", Auth::user()->name))
+                    <img src="{{ Auth::user()->avatarPath() }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
+                @endif
+                {{ $entry['title']}}
+            </a>
+            <ul id="navbar-m{{ $navNum++ }}" class="navbar-nav collapse" role="menu">
+                <?php foreach($entry['subElements'] as $item) {
+                    generateMobileMenuEntry($item, $level+1);
+                } ?>
+            </ul>
+        </li>
+        <?php
+    }
+}
+?>
+<nav class="navbar navbar-light bg-nav">
     <a class="navbar-brand" href="{{ route('index') }}">
         DS-Ultimate
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            @if (isset($server))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('server', [$server]) }}">{{ucfirst(__('ui.titel.worldOverview'))}} <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ ucfirst(__('ui.server.worlds')) }}
-                </a>
-                <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                    @foreach(\App\World::worldsCollection($server) as $worlds)
-                        <li class="dropdown-submenu">
-                            <a  class="dropdown-item" tabindex="-1" href="#">{!! (($worlds->get(0)->sortType() == "world")? ucfirst(__('ui.tabletitel.normalWorlds')): ucfirst(__('ui.tabletitel.specialWorlds'))) !!}</a>
-                            <ul class="dropdown-menu">
-                                @foreach($worlds as $world)
-                                    <li class="dropdown-item">
-                                        {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @endforeach
-                </ul>
-            </li>
-            @endif
-            @if (isset($worldData))
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{__('ui.server.ranking')}}
-                    </a>
-                    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                        <li class="dropdown-item"><a href="{{ route('world', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.tabletitel.top10')) }}</a></li>
-                        <li class="dropdown-item"><a href="{{ route('worldPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }} ({{ __('ui.nav.current') }})</a></li>
-                        <li class="dropdown-item"><a href="{{ route('rankPlayer', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.player')) }} ({{ __('ui.nav.history') }})</a></li>
-                        <li class="dropdown-item"><a href="{{ route('worldAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.current') }})</a></li>
-                        <li class="dropdown-item"><a href="{{ route('rankAlly', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('ui.table.ally')) }} ({{ __('ui.nav.history') }})</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('worldConquer', [$worldData->server->code, $worldData->name, 'all']) }}">{{ ucfirst(__('ui.conquer.all')) }}</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{__('ui.server.tools')}}
-                    </a>
-                    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.distanceCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.distCalc.title')) }}</a></li>
-                        @if($worldData->config != null && $worldData->units != null)
-                            <li class="dropdown-item"><a rel="nofollow" href="{{ route('tools.attackPlannerNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.attackPlanner.title')) }}</a></li>
-                        @endif
-                        @if($worldData->units != null)
-                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.mapNew', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.map.title')) }}</a></li>
-                        @endif
-                        @if($worldData->config != null && $worldData->buildings != null)
-                            <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.pointCalc', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.pointCalc.title')) }}</a></li>
-                        @endif
-                        <li class="dropdown-item"><a rel="nofollow"  href="{{ route('tools.tableGenerator', [$worldData->server->code, $worldData->name]) }}">{{ ucfirst(__('tool.tableGenerator.title')) }}</a></li>
-                    </ul>
-                </li>
-            @endif
-        </ul>
-        <ul class="navbar-nav">
+
+    <!-- Desktop Menue -->
+    <ul class="d-none d-lg-flex navbar-nav mr-auto">
+        @foreach(\App\Util\Navigation::generateNavArray($server, $worldData) as $item)
+            <?php generateMenuEntry($item) ?>
+        @endforeach
+    </ul>
+    <ul class="d-none d-lg-flex navbar-nav">
         @if (isset($server))
             <form class="form-inline" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
                 <li class="nav-item">
-                        @csrf
-                        <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
-                            value="{{ $search }}"
-                        @endif>
+                    @csrf
+                    <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
+                        value="{{ $search }}"
+                    @endif>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
@@ -80,9 +100,9 @@
                             {{ __('ui.titel.search') }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                            <button class="dropdown-item" name="submit" type="submit"  value="player">{{ ucfirst(__('ui.table.player')) }}</button>
-                            <button class="dropdown-item" name="submit" type="submit" value="ally">{{ ucfirst(__('ui.table.ally')) }}</button>
-                            <button class="dropdown-item" name="submit" type="submit" value="village">{{ ucfirst(__('ui.table.village')) }}</button>
+                            <button class="dropdown-item" name="submit" type="submit"  value="player"><i class="p-1 fas fa-user"></i>{{ ucfirst(__('ui.table.player')) }}</button>
+                            <button class="dropdown-item" name="submit" type="submit" value="ally"><i class="p-1 fas fa-users"></i>{{ ucfirst(__('ui.table.ally')) }}</button>
+                            <button class="dropdown-item" name="submit" type="submit" value="village"><i class="p-1 fab fa-fort-awesome"></i>{{ ucfirst(__('ui.table.village')) }}</button>
                         </div>
                     </div>
                 </li>
@@ -150,6 +170,59 @@
                 </div>
             </li>
         @endauth
-        </ul>
+    </ul>
+
+    <!-- Mobile Menue -->
+    <div class="d-lg-none">
+        @if (isset($server))
+            <button class="ml-auto navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-search-mobile" aria-controls="navbar-search-mobile" aria-expanded="false">
+                <i class="p-1 fas fa-search"></i>
+            </button>
+        @endif
+        <button class="ml-2 navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile" aria-controls="navbar-mobile" aria-expanded="false" aria-label="{{ __('ui.nav.toggle') }}">
+            <i class="p-1 fas fa-bars"></i>
+        </button>
     </div>
+    <ul id="navbar-mobile" class="navbar-nav d-lg-none navbar-collapse collapse">
+        @foreach(\App\Util\Navigation::generateMobileNavArray($server, $worldData) as $item)
+            <?php generateMobileMenuEntry($item) ?>
+        @endforeach
+    </ul>
+    @if (isset($server))
+        <nav id="navbar-search-mobile" class="d-lg-none navbar-collapse collapse mt-2 navbar-nav">
+            <form class="form-inline w-100" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
+                <li class="nav-item d-flex" style="width: calc(100% - 5rem)">
+                    @csrf
+                    <input class="form-control mr-sm-2 w-100" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
+                        value="{{ $search }}"
+                    @endif>
+                </li>
+                <li class="nav-item ml-2 w-auto">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle navbar-toggler" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="p-1 fas fa-user"></i>
+                        </button>
+                        <div id="dropdown-search" class="dropdown-menu dropdown-menu-right position-absolute" style="min-width: 0 !important" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item" name="submit" type="submit"  value="player"><i class="p-1 fas fa-user"></i></button>
+                            <button class="dropdown-item" name="submit" type="submit" value="ally"><i class="p-1 fas fa-users"></i></button>
+                            <button class="dropdown-item" name="submit" type="submit" value="village"><i class="p-1 fab fa-fort-awesome"></i></button>
+                        </div>
+                    </div>
+                </li>
+            </form>
+        </nav>
+    @endif
 </nav>
+@push('js')
+<script>
+    $('#userlogout').click(function(e) {
+        e.preventDefault();
+        $('#logout-form').submit();
+    });
+/*
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+*/
+</script>
+@endpush
