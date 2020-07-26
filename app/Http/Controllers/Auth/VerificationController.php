@@ -26,8 +26,8 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected function authenticated(Request $request, $user) {
-        return redirect()->route('user.settings', 'settings-profile');
+    protected function redirectTo() {
+        return route('user.settings', 'settings-profile');
     }
 
     /**
