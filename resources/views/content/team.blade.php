@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('style')
+@push('style')
     <style>
         .card-wrapper .avatar {
             display: block;
@@ -39,7 +39,7 @@
             border-top-left-radius: calc(5rem - 1px);
         }
     </style>
-@stop
+@endpush
 
 @section('content')
     <div class="row justify-content-center">
@@ -372,11 +372,11 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script>
         $(function($) {
             $(".card-wrapper").flip();
         });
     </script>
-@stop
+@endpush

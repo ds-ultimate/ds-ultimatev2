@@ -180,7 +180,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script>
         $('#map-tab').click(function (e) {
             if($('#map-img').length > 0) return;
@@ -298,4 +298,4 @@
         } );
     </script>
     {!! $chartJS !!}
-@endsection
+@endpush

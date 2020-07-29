@@ -84,6 +84,3 @@
 </div>
 @endsection
 
-@section('js')
-
-@stop

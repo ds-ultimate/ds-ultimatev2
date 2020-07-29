@@ -40,7 +40,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script>
         $(document).ready( function () {
@@ -115,4 +115,4 @@
 
         } );
     </script>
-@endsection
+@endpush

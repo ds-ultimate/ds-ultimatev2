@@ -57,7 +57,7 @@
 </div>
 @endsection
 
-@section('js')
+@push('js')
 <script>
     var dataTable;
     $(document).ready( function () {
@@ -132,4 +132,4 @@
     }
     @endauth
 </script>
-@endsection
+@endpush

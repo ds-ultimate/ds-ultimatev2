@@ -89,7 +89,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script>
         $(document).ready( function () {
             $('#table_id').DataTable({
@@ -99,4 +99,4 @@
             });
         } );
     </script>
-@endsection
+@endpush

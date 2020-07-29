@@ -36,7 +36,7 @@
         <noscript><p><img src="//matomo.ds-ultimate.de/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
         <!-- End Matomo Code -->
     @endif
-    @yield('style')
+    @stack('style')
 </head>
 <body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
 <div class="flex-center position-ref full-height">
@@ -54,20 +54,6 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>
-<style>
-    .cookie-consent {
-        color: white;
-        background: red;
-        padding: 15px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translateX(-50%) translateY(-50%);
-        -webkit-transform: translate(-50%,-50%);
-        transform: translate(-50%,-50%);
-    }
-</style>
-@yield('js')
 @stack('js')
 </body>
 </html>

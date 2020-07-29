@@ -237,7 +237,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function pad(d) {
@@ -370,4 +370,4 @@
             });
         })
     </script>
-@endsection
+@endpush

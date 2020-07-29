@@ -78,7 +78,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
 <script>
 var buildConf = {
     @foreach ($buildConfig as $name => $value)
@@ -156,4 +156,4 @@ function toTime(seconds) {
     return h + ":" + m + ":" + s
 }
 </script>
-@endsection
+@endpush

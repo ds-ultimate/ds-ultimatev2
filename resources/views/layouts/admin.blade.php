@@ -12,7 +12,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/admin_sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
-    @yield('styles')
+    @stack('styles')
 </head>
 
 <body class="c-app">
@@ -36,6 +36,6 @@
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/datatables.min.js') }}"></script>
     <script src="{{ asset('js/admin_sidebar.js') }}"></script>
-    @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

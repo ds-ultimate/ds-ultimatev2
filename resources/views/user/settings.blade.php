@@ -2,11 +2,11 @@
 
 @section('titel', ucfirst(__('ui.titel.settings')).' von '.Auth::user()->name)
 
-@section('style')
+@push('style')
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
-@stop
+@endpush
 
 @section('content')
     <div class="row justify-content-center">
@@ -256,7 +256,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
@@ -513,4 +513,4 @@
                 });
         }
     </script>
-@stop
+@endpush

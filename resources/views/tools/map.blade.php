@@ -2,7 +2,7 @@
 
 @section('titel', $worldData->displayName(),': '.__('tool.map.title'))
 
-@section('style')
+@push('style')
     <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
@@ -22,7 +22,8 @@
             pointer-events: auto;
         }
     </style>
-@stop
+@endpush
+
 @php
     if ($mode == 'edit'){
         $tabList = [
@@ -201,7 +202,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
 @if($mode == 'edit')
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
@@ -842,4 +843,4 @@
         @endif
     @endauth
 </script>
-@endsection
+@endpush

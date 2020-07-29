@@ -276,7 +276,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <script>
         $(document).ready(function () {
@@ -380,4 +380,4 @@
             document.execCommand("copy");
         }
     </script>
-@stop
+@endpush

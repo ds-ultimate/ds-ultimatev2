@@ -94,7 +94,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
 <script>
     var url = "https://mkich.ds-ultimate.de/tools/datacollectionHQ/post/";
     
@@ -106,9 +106,9 @@
         $('#select-world').trigger("change");
     });
 </script>
-@endsection
+@endpush
 
-@section('style')
+@push('style')
 <style>
     #latest-table thead th { text-align: center }
     #latest-table thead th:first-child { text-align: left }
@@ -120,4 +120,4 @@
     #data-table tbody td { text-align: center }
     #data-table tbody td:first-child { text-align: left }
 </style>
-@endsection
+@endpush

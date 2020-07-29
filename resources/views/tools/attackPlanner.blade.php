@@ -2,7 +2,7 @@
 
 @section('titel', $worldData->displayName(),': '.__('tool.attackPlanner.title'))
 
-@section('style')
+@push('style')
     <link href="{{ asset('plugin/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
     <style>
         table.dataTable thead .sorting:before,table.dataTable thead .sorting:after,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_asc:after,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_desc:after,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_asc_disabled:after,table.dataTable thead .sorting_desc_disabled:before,table.dataTable thead .sorting_desc_disabled:after{position:absolute;bottom:0.3em;display:block;opacity:0.3}
@@ -11,7 +11,7 @@
         table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {color: #212529;}
         table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {background-color: rgba(237, 212, 146, 0.4);}
     </style>
-@stop
+@endpush
 
 @php
 $tabList = [
@@ -119,7 +119,7 @@ $tabList = [
     <!-- ENDE Modal -->
 @endsection
 
-@section('js')
+@push('js')
     <audio controls class="d-none">
         <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.wav') }}" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -903,4 +903,4 @@ $tabList = [
             });
         })
     </script>
-@endsection
+@endpush

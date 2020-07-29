@@ -70,7 +70,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
     <script>
         $(function () {
             $('#t10Player').DataTable({
@@ -92,4 +92,4 @@
             });
         } );
     </script>
-@endsection
+@endpush

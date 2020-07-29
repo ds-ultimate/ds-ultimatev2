@@ -232,7 +232,7 @@
     </div>
 @endsection
 
-@section('js')
+@push('js')
 <script>
     $('.inactive').on('show.bs.collapse', function (e) {
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showLessWorlds')}}')
@@ -241,4 +241,4 @@
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showMoreWorlds')}}')
     })
 </script>
-@endsection
+@endpush

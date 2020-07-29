@@ -213,16 +213,12 @@ function generateMobileMenuEntry($entry, $level=0) {
         </nav>
     @endif
 </nav>
+
 @push('js')
 <script>
     $('#userlogout').click(function(e) {
         e.preventDefault();
         $('#logout-form').submit();
     });
-/*
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-*/
 </script>
 @endpush
