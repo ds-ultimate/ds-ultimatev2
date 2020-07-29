@@ -373,7 +373,7 @@
 @endsection
 
 @push('js')
-    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+    <script src="{{ asset('plugin/flip/jquery.flip.min.js') }}"></script>
     <script>
         $(function($) {
             $(".card-wrapper").flip();

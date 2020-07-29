@@ -22,5 +22,7 @@
     "/css/datatables.min.css": "/css/datatables.min.css",
     "/plugin/drawerJS/drawerJs.min.css": "/plugin/drawerJS/drawerJs.min.css",
     "/plugin/drawerJS/drawerJs.standalone.min.js": "/plugin/drawerJS/drawerJs.standalone.min.js",
-    "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js": "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js"
+    "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js": "/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js",
+    "/plugin/flip/jquery.flip.min.js": "/plugin/flip/jquery.flip.min.js",
+    "/plugin/flip/jquery.flip.min.js.map": "/plugin/flip/jquery.flip.min.js.map"
 }

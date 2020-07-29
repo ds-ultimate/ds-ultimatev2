@@ -238,7 +238,6 @@
 @endsection
 
 @push('js')
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function pad(d) {
             return (d < 10) ? '0' + d.toString() : d.toString();

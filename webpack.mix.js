@@ -52,6 +52,7 @@ mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.js', 'public/plugin/jquery-u
 
 mix.copy('node_modules/jquery-countdown/dist/jquery.countdown.min.js', 'public/plugin/jquery.countdown/jquery.countdown.min.js');
 
+
 /*
  * Tinymce (wysiwyg editor for backend)
  */
@@ -61,6 +62,7 @@ mix.copyDirectory('node_modules/tinymce/skins', 'public/plugin/tinymce/skins');
 mix.copyDirectory('node_modules/tinymce/themes', 'public/plugin/tinymce/themes');
 mix.copy('node_modules/tinymce/jquery.tinymce.min.js', 'public/plugin/tinymce/jquery.tinymce.min.js');
 mix.copy('node_modules/tinymce/tinymce.min.js', 'public/plugin/tinymce/tinymce.min.js');
+
 
 /*
  * Fonticonpicker
@@ -77,6 +79,7 @@ mix.copyDirectory('node_modules/@fonticonpicker/fonticonpicker/dist/fonts', 'pub
 mix.copy('node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css', 'public/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css');
 mix.copy('node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js', 'public/plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js');
 
+
 /*
  * Date Picker
  */
@@ -89,6 +92,7 @@ mix.copy('node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js', 'p
 mix.copy('node_modules/select2/dist/css/select2.min.css', 'public/plugin/select2/select2.min.css');
 mix.copy('node_modules/select2/dist/js/select2.full.min.js', 'public/plugin/select2/select2.full.min.js');
 mix.copy('node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css', 'public/plugin/select2/select2-bootstrap4.min.css');
+
 
 /*
  * Datatables
@@ -114,6 +118,7 @@ mix.styles([
     'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css',
     'node_modules/datatables.net-select-bs4/css/select.bootstrap4.min.css',
 ], 'public/css/datatables.min.css');
+
 
 /*
  * DrawerJS
@@ -164,3 +169,9 @@ mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
 mix.copy([
     'node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js'
 ], 'public/plugin/bootstrap-confirmation/');
+
+/**
+ * JQuery Flip
+ */
+mix.copy('node_modules/flip/dist/jquery.flip.min.js', 'public/plugin/flip/jquery.flip.min.js');
+mix.copy('node_modules/flip/dist/jquery.flip.min.js.map', 'public/plugin/flip/jquery.flip.min.js.map');
