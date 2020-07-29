@@ -47,7 +47,7 @@
                     <div class="card-header">
                         <h5 id="settings-card-title" class="card-title my-1">{{ __('ui.personalSettings.title') }}</h5>
                     </div>
-                    <div class="card-body">
+                    <div id="user-overview" class="card-body">
                         <div class="tab-content" id="settings-tabContent">
                             <!-- START settings-profile -->
                             <div class="tab-pane fade {{ ($page == 'settings-profile')? 'show active' : '' }}" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab" data-title="{{ __('ui.personalSettings.profile') }}">
@@ -365,7 +365,7 @@
                 clear: "{{ __('datepicker.Clear') }}",
             };
 
-            $('.nav-link').on("click", function (e) {
+            $('.nav-link', $('#user-overview')).on("click", function (e) {
                 var href = $(this).attr("href");
                 history.pushState(null, null, href.replace('#', '/user/settings/'));
                 e.preventDefault();

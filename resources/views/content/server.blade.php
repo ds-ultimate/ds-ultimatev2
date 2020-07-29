@@ -48,7 +48,7 @@
                             <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#inactive1" aria-expanded="false" aria-controls="inactive1" type="button">
                                 {{__('ui.showMoreWorlds')}}</button>
                         </div>
-                        <div class="collapse" id="inactive1">
+                        <div class="collapse inactive" id="inactive1">
                             <h2 class="card-title">{{ __('ui.tabletitel.normalWorlds').' '.__('ui.archive') }}:</h2>
                             <table class="table table-hover table-striped no-wrap w-100">
                                 <thead>
@@ -158,7 +158,7 @@
                             <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#inactive2" aria-expanded="false" aria-controls="inactive2" type="button">
                                 {{__('ui.showMoreWorlds')}}</button>
                         </div>
-                        <div class="collapse" id="inactive2">
+                        <div class="collapse inactive" id="inactive2">
                             <h2 class="card-title">{{ __('ui.tabletitel.specialWorlds').' '.__('ui.archive') }}:</h2>
                             <table class="table table-hover table-striped no-wrap w-100">
                                 <thead>
@@ -234,10 +234,10 @@
 
 @section('js')
 <script>
-    $('.collapse').on('show.bs.collapse', function (e) {
+    $('.inactive').on('show.bs.collapse', function (e) {
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showLessWorlds')}}')
     })
-    $('.collapse').on('hide.bs.collapse', function (e) {
+    $('.inactive').on('hide.bs.collapse', function (e) {
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showMoreWorlds')}}')
     })
 </script>

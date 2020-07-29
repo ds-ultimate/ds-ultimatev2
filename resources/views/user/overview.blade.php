@@ -21,7 +21,7 @@
         <!-- ENDE Titel für Geräte | PC -->
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
+                <div id="user-overview" class="card-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link {{ ($page == 'myMap')? 'active' : '' }}" id="myMap-tab" data-toggle="tab" href="#myMap" role="tab" aria-controls="home" aria-selected="true">{{ __('ui.own.maps') }}</a>
@@ -280,7 +280,7 @@
     <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <script>
         $(document).ready(function () {
-            $('.nav-link').on("click", function (e) {
+            $('.nav-link', $('#user-overview')).on("click", function (e) {
                 var href = $(this).attr("href");
                 history.pushState(null, null, href.replace('#', '/user/overview/'));
                 e.preventDefault();
