@@ -201,12 +201,18 @@ class DBController
         $serverArray = Server::getServer();
 
         foreach ($serverArray as $serverUrl){
+            if($serverUrl->active != 1) {
+                continue;
+            }
+            
             $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
             $worldTable = new World();
             $worldTable->setTable('worlds');
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
-
+                if($serverUrl->code != substr($world, 0, 2)) {
+                    continue;
+                }
                 $worldName = substr($world, 2);
 
                 if ($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->count() >= 1){
