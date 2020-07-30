@@ -52,7 +52,7 @@ class DiscordNotification extends Notification
 //            'embed' => null,
 //        ];
       $this->message = [
-          'content' => '``'.$class.'`` '.$eMessage,
+          'content' => '``'.$class.'`` '.mb_strimwidth($eMessage, 0, 150, "..."),
           'embed' => [
               'title' => mb_strimwidth(nl2br($input->getMessage()), 0, 200, "..."),
               'description' => $this->embedContent(),
@@ -63,7 +63,6 @@ class DiscordNotification extends Notification
               ],
           ],
       ];
-
     }
 
     public function worldUpdate(){
@@ -153,9 +152,9 @@ class DiscordNotification extends Notification
                 foreach ($messageArray as $key => $message){
                     $msg .= $key.': '.$message[0]."\n";
                 }
-                return $msg."\n".URL::current();
+                return mb_strimwidth($msg."\n".URL::current(), 0, 200, "...");
             case 'Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException':
-                return URL::current();
+                return mb_strimwidth(URL::current(), 0, 200, "...");
             default:
                 $trace = explode('#', $this->input->getTraceAsString());
                 $traceStr = "";
@@ -168,7 +167,7 @@ class DiscordNotification extends Notification
                     $traceStr .= URL::current();
                 } catch (\Exception $ex) {
                 }
-                return $traceStr;
+                return mb_strimwidth($traceStr, 0, 200, "...");
         }
     }
 }
