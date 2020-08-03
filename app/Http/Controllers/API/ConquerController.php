@@ -26,25 +26,42 @@ class ConquerController extends Controller
         }
         
         $query = $conquerModel->newQuery();
+        $filt = null;
         
         switch($type) {
             case "all":
-                $query->whereIn('new_owner', $allyPlayers)->orWhereIn('old_owner', $allyPlayers);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->whereIn('new_owner', $allyPlayers)->orWhereIn('old_owner', $allyPlayers);
+                    });
+                };
                 break;
             case "old":
-                $query->whereIn('old_owner', $allyPlayers)->whereNotIn('new_owner', $allyPlayers);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->whereIn('new_owner', $allyPlayers)->whereNotIn('old_owner', $allyPlayers);
+                    });
+                };
                 break;
             case "new":
-                $query->whereNotIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->whereNotIn('new_owner', $allyPlayers)->whereIn('old_owner', $allyPlayers);
+                    });
+                };
                 break;
             case "own":
-                $query->whereIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->whereIn('new_owner', $allyPlayers)->whereIn('old_owner', $allyPlayers);
+                    });
+                };
                 break;
             default:
                 abort(404, "Unknown type");
         }
 
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_ALLY, $allyID);
+        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_ALLY, $allyID, $filt);
     }
 
     public function getPlayerConquer($server, $world, $type, $playerID)
@@ -53,25 +70,42 @@ class ConquerController extends Controller
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
         $query = $conquerModel->newQuery();
+        $filt = null;
 
         switch($type) {
             case "all":
-                $query->where('new_owner', $playerID)->orWhere('old_owner', $playerID);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->where('new_owner', $playerID)->orWhere('old_owner', $playerID);
+                    });
+                };
                 break;
             case "old":
-                $query->where([['old_owner', "=", $playerID],['new_owner', '!=', $playerID]]);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->where('new_owner', '=', $playerID)->where('old_owner', '!=', $playerID);
+                    });
+                };
                 break;
             case "new":
-                $query->where([['old_owner', "!=", $playerID],['new_owner', '=', $playerID]]);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->where('new_owner', '!=', $playerID)->where('old_owner', '=', $playerID);
+                    });
+                };
                 break;
             case "own":
-                $query->where([['old_owner', "=", $playerID],['new_owner', '=', $playerID]]);
+                $filt = function($query) use($playerID) {
+                    $query->where(function($query) use($playerID) {
+                        $query->where('new_owner', $playerID)->where('old_owner', $playerID);
+                    });
+                };
                 break;
             default:
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_PLAYER, $playerID);
+        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_PLAYER, $playerID, $filt);
     }
 
     public function getVillageConquer($server, $world, $type, $villageID)
@@ -80,16 +114,21 @@ class ConquerController extends Controller
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
         $query = $conquerModel->newQuery();
+        $filt = null;
 
-        switch($type) {
-            case "all":
-                $query->where('village_id', $villageID);
+        switch($type) { 
+           case "all":
+                $filt = function($query) use($villageID) {
+                    $query->where(function($query) use($villageID) {
+                        $query->where('village_id', $villageID);
+                    });
+                };
                 break;
             default:
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_VILLAGE, $villageID);
+        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_VILLAGE, $villageID, $filt);
     }
 
     public function getWorldConquer($server, $world, $type)
@@ -109,24 +148,28 @@ class ConquerController extends Controller
         return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_VILLAGE, 0);
     }
     
-    private function doConquerReturn($query, $world, $referTO, $id) {
-        return DataTables::eloquent($query)
+    private function doConquerReturn($query, $world, $referTO, $id, $filter=null) {
+        $data = DataTables::eloquent($query);
+        if($filter !== null) {
+            $data = $data->filter($filter, true);
+        }
+        return $data
             ->editColumn('timestamp', function (Conquer $conquer){
                 return Carbon::createFromTimestamp($conquer->timestamp)->format('Y-m-d H:i:s');
             })
-            ->addColumn('village_html', function (Conquer $conquer) use($world) {
+            ->addColumn('village', function (Conquer $conquer) use($world) {
                 return $conquer->linkVillageCoordsWithName($world);
             })
-            ->addColumn('old_owner_html', function (Conquer $conquer) use($world) {
+            ->editColumn('old_owner_name', function (Conquer $conquer) use($world) {
                 return $conquer->linkOldPlayer($world);
             })
-            ->addColumn('new_owner_html', function (Conquer $conquer) use($world) {
+            ->editColumn('new_owner_name', function (Conquer $conquer) use($world) {
                 return $conquer->linkNewPlayer($world);
             })
-            ->addColumn('old_owner_ally_html', function (Conquer $conquer) use($world) {
+            ->editColumn('old_ally_name', function (Conquer $conquer) use($world) {
                 return $conquer->linkOldAlly($world);
             })
-            ->addColumn('new_owner_ally_html', function (Conquer $conquer) use($world) {
+            ->editColumn('new_ally_name', function (Conquer $conquer) use($world) {
                 return $conquer->linkNewAlly($world);
             })
             ->addColumn('type', function (Conquer $conquer) {
@@ -135,12 +178,10 @@ class ConquerController extends Controller
             ->addColumn('winLoose', function (Conquer $conquer) use($referTO, $id) {
                 return $conquer->getWinLoose($referTO, $id);
             })
-            ->rawColumns(['village_html', 'old_owner_html', 'new_owner_html', 'old_owner_ally_html', 'new_owner_ally_html'])
+            ->rawColumns(['village', 'old_owner_name', 'new_owner_name', 'old_ally_name', 'new_ally_name'])
             ->removeColumn('created_at')->removeColumn('updated_at')
             ->removeColumn('new_owner')->removeColumn('old_owner')
-            ->removeColumn('old_owner_name')->removeColumn('new_owner_name')
             ->removeColumn('old_ally')->removeColumn('new_ally')
-            ->removeColumn('old_ally_name')->removeColumn('new_ally_name')
             ->removeColumn('old_ally_tag')->removeColumn('new_ally_tag')
             ->toJson();
     }

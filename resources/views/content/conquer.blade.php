@@ -76,11 +76,11 @@
             "ajax": "{{ $routeDatatableAPI }}",
             "columns": [
                 { "data": "timestamp" },
-                { "data": "village_html", "orderable": false},
-                { "data": "old_owner_html", "orderable": false},
-                { "data": "old_owner_ally_html", "orderable": false},
-                { "data": "new_owner_html", "orderable": false},
-                { "data": "new_owner_ally_html", "orderable": false},
+                { "data": "village", "orderable": false},
+                { "data": "old_owner_name", "orderable": true},
+                { "data": "old_ally_name", "orderable": true},
+                { "data": "new_owner_name", "orderable": true},
+                { "data": "new_ally_name", "orderable": true},
             ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian
