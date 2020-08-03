@@ -30,29 +30,29 @@ class ConquerController extends Controller
         
         switch($type) {
             case "all":
-                $filt = function($query) use($playerID) {
-                    $query->where(function($query) use($playerID) {
+                $filt = function($query) use($allyPlayers) {
+                    $query->where(function($query) use($allyPlayers) {
                         $query->whereIn('new_owner', $allyPlayers)->orWhereIn('old_owner', $allyPlayers);
                     });
                 };
                 break;
             case "old":
-                $filt = function($query) use($playerID) {
-                    $query->where(function($query) use($playerID) {
-                        $query->whereIn('new_owner', $allyPlayers)->whereNotIn('old_owner', $allyPlayers);
-                    });
-                };
-                break;
-            case "new":
-                $filt = function($query) use($playerID) {
-                    $query->where(function($query) use($playerID) {
+                $filt = function($query) use($allyPlayers) {
+                    $query->where(function($query) use($allyPlayers) {
                         $query->whereNotIn('new_owner', $allyPlayers)->whereIn('old_owner', $allyPlayers);
                     });
                 };
                 break;
+            case "new":
+                $filt = function($query) use($allyPlayers) {
+                    $query->where(function($query) use($allyPlayers) {
+                        $query->whereIn('new_owner', $allyPlayers)->whereNotIn('old_owner', $allyPlayers);
+                    });
+                };
+                break;
             case "own":
-                $filt = function($query) use($playerID) {
-                    $query->where(function($query) use($playerID) {
+                $filt = function($query) use($allyPlayers) {
+                    $query->where(function($query) use($allyPlayers) {
                         $query->whereIn('new_owner', $allyPlayers)->whereIn('old_owner', $allyPlayers);
                     });
                 };
@@ -83,14 +83,14 @@ class ConquerController extends Controller
             case "old":
                 $filt = function($query) use($playerID) {
                     $query->where(function($query) use($playerID) {
-                        $query->where('new_owner', '=', $playerID)->where('old_owner', '!=', $playerID);
+                        $query->where('new_owner', '!=', $playerID)->where('old_owner', $playerID);
                     });
                 };
                 break;
             case "new":
                 $filt = function($query) use($playerID) {
                     $query->where(function($query) use($playerID) {
-                        $query->where('new_owner', '!=', $playerID)->where('old_owner', '=', $playerID);
+                        $query->where('new_owner', $playerID)->where('old_owner', '!=', $playerID);
                     });
                 };
                 break;
