@@ -109,7 +109,7 @@ class Village extends CustomModel
      * @return string
      */
     public function continentString() {
-        return "K" . intval($this->x / 100) . intval($this->y / 100);
+        return "K" . intval($this->y / 100) . intval($this->x / 100);
     }
 
     /**
