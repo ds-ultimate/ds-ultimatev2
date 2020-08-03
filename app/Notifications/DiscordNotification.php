@@ -158,7 +158,7 @@ class DiscordNotification extends Notification
             default:
                 $trace = explode('#', $this->input->getTraceAsString());
                 $traceStr = "";
-                for($i = 0; $i < 4 && isset($trace[$i]); $i++) {
+                for($i = 0; $i < 10 && isset($trace[$i]); $i++) {
                     $traceStr .= "#{$trace[$i]}\n";
                 }
 
@@ -167,7 +167,7 @@ class DiscordNotification extends Notification
                     $traceStr .= URL::current();
                 } catch (\Exception $ex) {
                 }
-                return mb_strimwidth($traceStr, 0, 200, "...");
+                return mb_strimwidth($traceStr, 0, 1000, "...");
         }
     }
 }
