@@ -12,7 +12,7 @@
         "php": "^7.3.0",
         "barryvdh/laravel-translation-manager": "^0.5.3",
         "buzz/laravel-google-captcha": "^2.1",
-        "doctrine/dbal": "~2.",
+        "doctrine/dbal": "dev-dev-2.0.x",
         "google/recaptcha": "^1.2",
         "khill/lavacharts": "3.1.*",
         "laravel-notification-channels/discord": "^1.1",
@@ -30,6 +30,12 @@
         "phpunit/phpunit": "^9.0",
         "laravel/tinker": "^2.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ds-ultimate/dbal.git"
+        }
+    ],
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
