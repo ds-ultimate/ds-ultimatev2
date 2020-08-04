@@ -15,10 +15,14 @@ class Navigation
                 foreach($worlds as $world) {
                     $worldNav[] = self::navElement($world->displayName(), 'world', [$world->server->code, $world->name], false);
                 }
-                if($worlds->get(0)->sortType() == "world") {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.normalWorlds', $worldNav);
+                if($worlds->get(0)->sortType() == "casual") {
+                    $serverNav[] = self::navDropdown('ui.tabletitel.casualWorlds', $worldNav);
+                } else if($worlds->get(0)->sortType() == "speed") {
+                    $serverNav[] = self::navDropdown('ui.tabletitel.speedWorlds', $worldNav);
+                } else if($worlds->get(0)->sortType() == "classic") {
+                    $serverNav[] = self::navDropdown('ui.tabletitel.classicWorlds', $worldNav);
                 } else {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.specialWorlds', $worldNav);
+                    $serverNav[] = self::navDropdown('ui.tabletitel.normalWorlds', $worldNav);
                 }
             }
             $retArray[] = self::navElement('ui.titel.worldOverview', 'server', [$serverArg]);

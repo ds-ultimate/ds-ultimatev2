@@ -67,7 +67,7 @@ class Server extends Model
     public static function getWorldsByCode($code){
         $server = Server::where('code', $code)->first();
         $collect = $server->worlds;
-        return $collect->sortBy('name');
+        return $collect->sortByDesc('name');
     }
 
     /**

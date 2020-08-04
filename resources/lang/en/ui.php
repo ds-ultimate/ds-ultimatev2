@@ -92,6 +92,9 @@ return array (
     'player' => 'player',
     'top10' => 'Top 10',
     'villages' => 'Villages',
+    'casualWorlds' => 'Casual worlds',
+    'classicWorlds' => 'Classic worlds',
+    'speedWorlds' => 'Speed worlds',
   ),
   'titel' => 
   array (

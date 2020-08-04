@@ -24,7 +24,7 @@ return array (
       'all' => 'Alle',
       'self' => 'Selbst',
       'internal' => 'Intern',
-      'barbarian' => 'Berbarendörfer',
+      'barbarian' => 'Barbarendörfer',
       'deleted' => 'Löschungen',
       'win' => 'Gewinne',
       'loose' => 'Verluste',
@@ -61,6 +61,9 @@ return array (
     'top10' => 'Top 10',
     'ally' => 'Stämme',
     'overview' => 'Übersicht',
+    'classicWorlds' => 'Classic Welten',
+    'speedWorlds' => 'Speed Runden',
+    'casualWorlds' => 'Casual Welten',
   ),
   'table' => 
   array (
