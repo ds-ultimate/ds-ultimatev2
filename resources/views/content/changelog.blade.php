@@ -29,7 +29,7 @@
                         <p><small class="text-muted"><i class="fas fa-clock"></i> {{ $changelog->created_at->diffForHumans() }}</small></p>
                     </div>
                     <div class="timeline-body">
-                        <p>{!! $changelog->content !!}</p>
+                        <p>{!! ($changelog->$locale != null)? $changelog->$locale : $changelog->de !!}</p>
                         @if ($changelog->repository_html_url != null)
                             <p class="float-right"><a class="link-black" style="color: black; font-size: 1.75rem" href="{{ $changelog->repository_html_url }}" target="_blank"><i class="fab fa-github"></i></a></p>
                         @endif

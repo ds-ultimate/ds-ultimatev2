@@ -9,6 +9,7 @@ use App\Player;
 use App\Server;
 use App\Util\BasicFunctions;
 use App\World;
+use Illuminate\Support\Facades\App;
 use phpDocumentor\Reflection\Type;
 
 
@@ -130,12 +131,15 @@ class ContentController extends Controller
     }
 
     public function changelog(){
+        BasicFunctions::local();
         $changelogModel = new Changelog();
 
         $changelogs = $changelogModel->orderBy('created_at', 'DESC')->get();
 
         BasicFunctions::changelogUpdate();
 
-        return view('content.changelog', compact('changelogs'));
+        $locale = in_array(App::getLocale(), config('dsUltimate.changelog_lang_key'))? App::getLocale() : 'en';
+
+        return view('content.changelog', compact('changelogs', 'locale'));
     }
 }

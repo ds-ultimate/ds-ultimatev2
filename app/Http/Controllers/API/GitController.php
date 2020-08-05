@@ -52,7 +52,12 @@ class GitController extends Controller
 
         $changelog->version = $payload->release->tag_name;
         $changelog->title = $payload->release->name;
-        $changelog->content = nl2br($payload->release->body);
+        $contents = $this->splitContent($payload->release->body);
+        foreach ($contents as $key => $content){
+            if(in_array($key, config('dsUltimate.changelog_lang_key'))){
+                $changelog->$key = $content;
+            }
+        }
         $changelog->repository_html_url = $payload->repository->html_url;
 
         if($changelog->save()){
@@ -73,6 +78,33 @@ class GitController extends Controller
             Log::debug('Release failed');
             echo 'failed';
         }
+    }
+
+    private function splitContent($body){
+        $keys = config('dsUltimate.changelog_lang_key');
+        $i = 0;
+        $split = '/(';
+        foreach ($keys as $key){
+            $split .= '\['.$key.'\]';
+            if ($i != count($keys) - 1){
+                $split .= '|';
+            }
+            $i++;
+        }
+
+        $split .= ')/';
+
+        $contentArrays = preg_split($split, $body, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $lang_key = '';
+        foreach ($contentArrays as $key => $contentArray){
+            if ($key % 2 === 0){
+                $lang_key = str_replace(array('[', ']'), '', $contentArray);
+            }else{
+                $content[$lang_key] = nl2br(trim($contentArray));
+            }
+        }
+
+        return $content;
     }
 
 }
