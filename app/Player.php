@@ -11,8 +11,21 @@ class Player extends CustomModel
 {
     private $hash = 59;
     protected $primaryKey = 'playerID';
-    protected $fillable =[
-            'id', 'name', 'ally', 'village', 'points', 'rank', 'off', 'offR', 'def', 'defR', 'tot', 'totR',
+    protected $fillable = [
+        'playerID',
+        'name',
+        'ally_id',
+        'village_count',
+        'points',
+        'rank',
+        'offBash',
+        'offBashRank',
+        'defBash',
+        'defBashRank',
+        'supBash',
+        'supBashRank',
+        'gesBash',
+        'gesBashRank',
     ];
 
     public $timestamps = true;
@@ -136,7 +149,7 @@ class Player extends CustomModel
             $playerData->put('gesBash', $player->gesBash);
             $playerData->put('offBash', $player->offBash);
             $playerData->put('defBash', $player->defBash);
-            $playerData->put('utBash', $player->gesBash-$player->offBash-$player->defBash);
+            $playerData->put('supBash', $player->supBash);
             $playerDatas->push($playerData);
         }
 

@@ -25,8 +25,8 @@ class Chart
                 return __('chart.titel.offBash');
             case 'defBash':
                 return __('chart.titel.defBash');
-            case 'utBash':
-                return __('chart.titel.utBash');
+            case 'supBash':
+                return __('chart.titel.supBash');
         }
     }
 
@@ -44,8 +44,8 @@ class Chart
                 return __('chart.label.offBash');
             case 'defBash':
                 return __('chart.label.defBash');
-            case 'utBash':
-                return __('chart.label.utBash');
+            case 'supBash':
+                return __('chart.label.supBash');
         }
     }
 
@@ -56,7 +56,7 @@ class Chart
             case 'gesBash':
             case 'offBash':
             case 'defBash':
-            case 'utBash':
+            case 'supBash':
                 return false;
             case 'rank':
                 return true;
@@ -72,7 +72,7 @@ class Chart
             case 'gesBash':
             case 'offBash':
             case 'defBash':
-            case 'utBash':
+            case 'supBash':
                 return 'short';
             case 'rank':
                 return '';
@@ -89,7 +89,7 @@ class Chart
             case 'gesBash':
             case 'offBash':
             case 'defBash':
-            case 'utBash':
+            case 'supBash':
                 return true;
             default:
                 return false;

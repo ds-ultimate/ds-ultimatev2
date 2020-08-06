@@ -29,6 +29,8 @@ class Player extends JsonResource
             'offBashRank' => $this->offBashRank,
             'defBash' => $this->defBash,
             'defBashRank' => $this->defBashRank,
+            'supBash' => $this->supBash,
+            'supBashRank' => $this->supBashRank,
             'gesBash' => $this->gesBash,
             'gesBashRank' => $this->gesBashRank,
         ];

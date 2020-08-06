@@ -10,7 +10,6 @@ return array (
   ),
   'table' => 
   array (
-    'bashUt' => 'supporter',
     'ally' => 'tribe',
     'allyChanges' => 'tribe changes',
     'avgPlayer' => 'Points per player',
@@ -40,6 +39,7 @@ return array (
     'world' => 'world',
     'bashPointsRatio' => 'KP-Rate',
     'bonusType' => 'Bonus',
+    'bashSup' => 'supporter',
   ),
   'allyChanges' => 
   array (
@@ -171,10 +171,10 @@ return array (
     'player_points' => 'Old Points per Player',
     'points' => 'Old Points',
     'rank' => 'Old Rank',
-    'utBash' => 'Old Supporter',
     'village_count' => 'Old Villages',
     'village_points' => 'Old Point per player',
     'nodata' => 'no data',
+    'supBash' => 'Old Supporter',
   ),
   'own' => 
   array (

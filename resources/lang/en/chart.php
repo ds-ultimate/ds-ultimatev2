@@ -14,8 +14,8 @@ return array (
     'offBash' => 'Attacker points',
     'points' => 'Points',
     'rank' => 'Rank',
-    'utBash' => 'Supporter points',
     'village' => 'Villages',
+    'supBash' => 'Supporter points',
   ),
   'titel' => 
   array (
@@ -24,7 +24,7 @@ return array (
     'offBash' => 'Opponents defeated as attacker',
     'points' => 'Points',
     'rank' => 'Rank',
-    'utBash' => 'Opponents defeated as supporter',
     'village' => 'Villages',
+    'supBash' => 'Opponents defeated as supporter',
   ),
 );

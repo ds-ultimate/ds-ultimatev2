@@ -45,7 +45,7 @@ class DBController
     public static function playerTable($dbName, $tableName){
         Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
             $table->integer('playerID');
-            $table->string('name');
+            $table->string('name', 288);
             $table->integer('ally_id');
             $table->integer('village_count');
             $table->integer('points');
@@ -54,6 +54,8 @@ class DBController
             $table->integer('offBashRank')->nullable();
             $table->bigInteger('defBash')->nullable();
             $table->integer('defBashRank')->nullable();
+            $table->bigInteger('supBash')->nullable();
+            $table->integer('supBashRank')->nullable();
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
@@ -64,7 +66,7 @@ class DBController
     public static function playerLatestTable($dbName, $tableName){
         Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
             $table->integer('playerID');
-            $table->string('name');
+            $table->string('name', 288);
             $table->integer('ally_id');
             $table->integer('village_count');
             $table->integer('points');
@@ -73,6 +75,8 @@ class DBController
             $table->integer('offBashRank')->nullable();
             $table->bigInteger('defBash')->nullable();
             $table->integer('defBashRank')->nullable();
+            $table->bigInteger('supBash')->nullable();
+            $table->integer('supBashRank')->nullable();
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
@@ -83,8 +87,8 @@ class DBController
     public static function allyTable($dbName, $tableName){
         Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
             $table->integer('allyID');
-            $table->string('name');
-            $table->string('tag');
+            $table->string('name', 384);
+            $table->string('tag', 72);
             $table->integer('member_count');
             $table->integer('points');
             $table->integer('village_count');
@@ -103,8 +107,8 @@ class DBController
     public static function allyLatestTable($dbName, $tableName){
         Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
             $table->integer('allyID');
-            $table->string('name');
-            $table->string('tag');
+            $table->string('name', 384);
+            $table->string('tag', 72);
             $table->integer('member_count');
             $table->integer('points');
             $table->integer('village_count');
@@ -123,7 +127,7 @@ class DBController
     public static function villageTable($dbName, $tableName){
         Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
             $table->integer('villageID');
-            $table->string('name');
+            $table->string('name', 384);
             $table->integer('x');
             $table->integer('y');
             $table->integer('points');
@@ -137,7 +141,7 @@ class DBController
     public static function villageLatestTable($dbName, $tableName){
         Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
             $table->integer('villageID');
-            $table->string('name');
+            $table->string('name', 384);
             $table->integer('x');
             $table->integer('y');
             $table->integer('points');
@@ -165,14 +169,14 @@ class DBController
             $table->integer('new_owner');
             $table->integer('old_owner');
             $table->increments('id');
-            $table->string('old_owner_name')->nullable()->default(null);
-            $table->string('new_owner_name')->nullable()->default(null);
+            $table->string('old_owner_name', 288)->nullable()->default(null);
+            $table->string('new_owner_name', 288)->nullable()->default(null);
             $table->integer('old_ally')->nullable()->default(null);
             $table->integer('new_ally')->nullable()->default(null);
-            $table->string('old_ally_name')->nullable()->default(null);
-            $table->string('new_ally_name')->nullable()->default(null);
-            $table->string('old_ally_tag')->nullable()->default(null);
-            $table->string('new_ally_tag')->nullable()->default(null);
+            $table->string('old_ally_name', 384)->nullable()->default(null);
+            $table->string('new_ally_name', 384)->nullable()->default(null);
+            $table->string('old_ally_tag', 72)->nullable()->default(null);
+            $table->string('new_ally_tag', 72)->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -202,6 +206,7 @@ class DBController
 
         foreach ($serverArray as $serverUrl){
             if($serverUrl->active != 1) {
+                echo "Ignoring {$serverUrl->code}\n";
                 continue;
             }
             
@@ -211,6 +216,7 @@ class DBController
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
                 if($serverUrl->code != substr($world, 0, 2)) {
+                    echo "Ignoring {$serverUrl->code} / {$world}\n";
                     continue;
                 }
                 $worldName = substr($world, 2);
@@ -313,6 +319,7 @@ class DBController
         $players = collect();
         $playerOffs = collect();
         $playerDefs = collect();
+        $playerSups = collect();
         $playerTots = collect();
 
         foreach ($lines as $line){
@@ -365,6 +372,25 @@ class DBController
             $playerDefs->put($id, $playerDef);
         }
 
+        $sups = gzfile("$worldUpdate->url/map/kill_sup.txt.gz");
+        if(!is_array($defs)) {
+            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_sup.txt.gz konnte nicht ge&ouml;ffnet werden");
+            $input =[
+                'world' => $worldUpdate,
+                'file' => 'kill_sup.txt',
+                'url' => $worldUpdate->url.'/map/kill_sup.txt'
+            ];
+            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
+            return;
+        }
+        foreach ($sups as $sup){
+            list($rank, $id, $kills) = explode(',', $sup);
+            $playerSup = collect();
+            $playerSup->put('supRank', (int)$rank);
+            $playerSup->put('sup', (int)$kills);
+            $playerSups->put($id, $playerSup);
+        }
+
         $tots = gzfile("$worldUpdate->url/map/kill_all.txt.gz");
         if(!is_array($tots)) {
             BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all.txt.gz konnte nicht ge&ouml;ffnet werden");
@@ -395,6 +421,8 @@ class DBController
         $insert = new Player();
         $insert->setTable($dbName.'.player_latest_temp');
         $arrayAllyChange = array();
+        $insertTime = Carbon::createFromTimestamp(time());
+        
         foreach ($players as $player) {
             $id = $player->get('id');
             $dataPlayer = [
@@ -404,14 +432,16 @@ class DBController
                 'village_count' => $player->get('villages'),
                 'points' => $player->get('points'),
                 'rank' => $player->get('rank'),
-                'offBash' => (is_null($playerOffs->get($id)))? null :$playerOffs->get($id)->get('off'),
+                'offBash' => (is_null($playerOffs->get($id)))? 0 :$playerOffs->get($id)->get('off'),
                 'offBashRank' => (is_null($playerOffs->get($id)))? null : $playerOffs->get($id)->get('offRank'),
-                'defBash' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('def'),
+                'defBash' => (is_null($playerDefs->get($id)))? 0 : $playerDefs->get($id)->get('def'),
                 'defBashRank' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('defRank'),
-                'gesBash' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('tot'),
+                'supBash' => (is_null($playerSups->get($id)))? 0 : $playerSups->get($id)->get('sup'),
+                'supBashRank' => (is_null($playerSups->get($id)))? null : $playerSups->get($id)->get('supRank'),
+                'gesBash' => (is_null($playerTots->get($id)))? 0 : $playerTots->get($id)->get('tot'),
                 'gesBashRank' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('totRank'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
+                'created_at' => $insertTime,
+                'updated_at' => $insertTime,
             ];
             $arrayPlayer []= $dataPlayer;
 
@@ -422,8 +452,8 @@ class DBController
                     'old_ally_id' => (isset($databasePlayer[$player->get('id')]))?($databasePlayer[$player->get('id')]):(0),
                     'new_ally_id' => $player->get('ally'),
                     'points' => $player->get('points'),
-                    'created_at' => Carbon::createFromTimestamp(time()),
-                    'updated_at' => Carbon::createFromTimestamp(time()),
+                    'created_at' => $insertTime,
+                    'updated_at' => $insertTime,
                 ];
             }
         }
@@ -458,7 +488,7 @@ class DBController
         $count = count($arrayPlayer);
 
         $worldUpdate->player_count = $count;
-        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->worldUpdated_at = $insertTime;
         $worldUpdate->save();
     }
 
@@ -501,6 +531,8 @@ class DBController
         $insert = new Village();
         $insert->setTable($dbName . '.village_latest_temp');
         $array = array();
+        $insertTime = Carbon::createFromTimestamp(time());
+        
         foreach ($villages as $village) {
             $data = [
                 'villageID' => $village->get('id'),
@@ -510,8 +542,8 @@ class DBController
                 'points' => $village->get('points'),
                 'owner' => $village->get('owner'),
                 'bonus_id' => $village->get('bonus_id'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
+                'created_at' => $insertTime,
+                'updated_at' => $insertTime,
             ];
             $array [] = $data;
         }
@@ -539,7 +571,7 @@ class DBController
         $count = count($array);
 
         $worldUpdate->village_count = $count;
-        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->worldUpdated_at = $insertTime;
         $worldUpdate->save();
     }
 
@@ -627,6 +659,8 @@ class DBController
         $insert = new Ally();
         $insert->setTable($dbName.'.ally_latest_temp');
         $array = array();
+        $insertTime = Carbon::createFromTimestamp(time());
+        
         foreach ($allys as $ally) {
             $id = $ally->get('id');
             $data = [
@@ -637,14 +671,14 @@ class DBController
                 'points' => $ally->get('points'),
                 'village_count' => $ally->get('village_count'),
                 'rank' => $ally->get('rank'),
-                'offBash' => (is_null($allyOffs->get($id)))? null :$allyOffs->get($id)->get('off'),
+                'offBash' => (is_null($allyOffs->get($id)))? 0 :$allyOffs->get($id)->get('off'),
                 'offBashRank' => (is_null($allyOffs->get($id)))? null : $allyOffs->get($id)->get('offRank'),
-                'defBash' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('def'),
+                'defBash' => (is_null($allyDefs->get($id)))? 0 : $allyDefs->get($id)->get('def'),
                 'defBashRank' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('defRank'),
-                'gesBash' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('tot'),
+                'gesBash' => (is_null($allyTots->get($id)))? 0 : $allyTots->get($id)->get('tot'),
                 'gesBashRank' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('totRank'),
-                'created_at' => Carbon::createFromTimestamp(time()),
-                'updated_at' => Carbon::createFromTimestamp(time()),
+                'created_at' => $insertTime,
+                'updated_at' => $insertTime,
             ];
             $array []= $data;
         }
@@ -673,7 +707,7 @@ class DBController
         $count = count($array);
 
         $worldUpdate->ally_count = $count;
-        $worldUpdate->worldUpdated_at = Carbon::createFromTimestamp(time());
+        $worldUpdate->worldUpdated_at = $insertTime;
         $worldUpdate->save();
     }
 
@@ -723,6 +757,7 @@ class DBController
 
         $array = array();
         $databaseConquer = DBController::prepareConquerDupCheck($dbName);
+        $insertTime = Carbon::createFromTimestamp(time());
 
         foreach ($lines as $line) {
             $exploded = explode(',', trim($line));
@@ -730,8 +765,8 @@ class DBController
 
             $tempArr = array();
             list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
-            $tempArr['created_at'] = Carbon::createFromTimestamp(time());
-            $tempArr['updated_at'] = Carbon::createFromTimestamp(time());
+            $tempArr['created_at'] = $insertTime;
+            $tempArr['updated_at'] = $insertTime;
 
 //            $follow = \App\Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])->where('worlds_id', $worldUpdate->id)->get();
 //

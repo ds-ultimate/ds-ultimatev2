@@ -22,7 +22,7 @@ class PlayerController extends Controller
                 " auf der Welt '$server$world' vorhanden.");
 
         $statsGeneral = ['points', 'rank', 'village'];
-        $statsBash = ['gesBash', 'offBash', 'defBash', 'utBash'];
+        $statsBash = ['gesBash', 'offBash', 'defBash', 'supBash'];
 
         $datas = Player::playerDataChart($server, $world, $player);
         

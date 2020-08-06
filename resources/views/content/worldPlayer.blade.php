@@ -28,7 +28,7 @@
                             <th>{{ ucfirst(__('ui.table.bashGes')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashOff')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashDeff')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashUt')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.bashSup')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -66,7 +66,7 @@
                     { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                     { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
-                    { "data": "utBash", "render": function (value) {return numeral(value).format('0.[00] a')}, "orderable": false},
+                    { "data": "supBash", "render": function (value) {return numeral(value).format('0.[00] a')}},
                 ],
                 responsive: true,
                 {!! \App\Util\Datatable::language() !!}

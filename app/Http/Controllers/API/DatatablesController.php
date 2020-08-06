@@ -29,9 +29,6 @@ class DatatablesController extends Controller
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
             })
-            ->addColumn('utBash', function ($player){
-                return $player->gesBash - $player->offBash - $player->defBash;
-            })
             ->toJson();
     }
 
@@ -75,9 +72,6 @@ class DatatablesController extends Controller
             })
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
-            })
-            ->addColumn('utBash', function ($player){
-                return $player->gesBash - $player->offBash - $player->defBash;
             })
             ->toJson();
     }
@@ -182,17 +176,15 @@ class DatatablesController extends Controller
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
             })
-            ->addColumn('utBash', function ($player) use($days){
+            ->editColumn('supBash', function ($player) use($days){
                 $playerOld = $player->playerHistory($days);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
-                $new = $player->gesBash - $player->offBash - $player->defBash;
-                $old = $playerOld->gesBash - $playerOld->offBash - $playerOld->defBash;
-                return BasicFunctions::historyCalc($new, $old, 'utBash', false);
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'supBash', false);
             })
-            ->rawColumns(['rank','points','village_count','village_points','gesBash','offBash','defBash','utBash'])
+            ->rawColumns(['rank','points','village_count','village_points','gesBash','offBash','defBash','supBash'])
             ->toJson();
     }
 

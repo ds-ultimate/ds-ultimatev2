@@ -89,7 +89,6 @@ return array (
     'owner' => 'Besitzer',
     'bashStats' => 'Besiegte Gegner',
     'bashPointsRatio' => 'KP-Rate',
-    'bashUt' => 'Unterstützer',
     'id' => 'ID',
     'continent' => 'Kontinent',
     'coordinates' => 'Koordinaten',
@@ -97,6 +96,7 @@ return array (
     'world' => 'Welt',
     'player' => 'Spieler',
     'village' => 'Dorf',
+    'bashSup' => 'Unterstützer',
   ),
   'server' => 
   array (
@@ -173,8 +173,8 @@ return array (
     'offBash' => 'Alte Angreifer',
     'defBash' => 'Alte Verteidiger',
     'village_points' => 'Alte Punkte pro Dorf',
-    'utBash' => 'Alte Unterstützer',
     'nodata' => 'Keine Daten vorhanden',
+    'supBash' => 'Alte Unterstützer',
   ),
   'own' => 
   array (

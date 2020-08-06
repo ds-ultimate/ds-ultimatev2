@@ -8,8 +8,8 @@ return array (
     'offBash' => 'Points d\'attaquant',
     'points' => 'Points',
     'rank' => 'rang',
-    'utBash' => 'Points de supporters',
     'village' => 'villages',
+    'supBash' => 'Points de supporters',
   ),
   'titel' => 
   array (
@@ -18,8 +18,8 @@ return array (
     'offBash' => 'Des ennemis vaincus comme attaquants',
     'points' => 'points',
     'rank' => 'rang',
-    'utBash' => 'Ennemis vaincus en tant que partisans',
     'village' => 'villages',
+    'supBash' => 'Ennemis vaincus en tant que partisans',
   ),
   'who' => 
   array (

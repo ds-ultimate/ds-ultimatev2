@@ -28,7 +28,7 @@
                             <th>{{ ucfirst(__('ui.table.bashGes')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashOff')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashDeff')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashUt')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.bashSup')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -67,7 +67,7 @@
                     { "data": "gesBash"},
                     { "data": "offBash"},
                     { "data": "defBash"},
-                    { "data": "utBash", "orderable": false},
+                    { "data": "supBash"},
                 ],
                 responsive: true,
                 "drawCallback": function(settings, json) {

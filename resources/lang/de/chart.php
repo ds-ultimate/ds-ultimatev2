@@ -15,7 +15,7 @@ return array (
     'gesBash' => 'Besiegte Gegner Insgesamt',
     'offBash' => 'Besiegte Gegner als Angreifer',
     'defBash' => 'Besiegte Gegner als Verteidiger',
-    'utBash' => 'Besiegte Gegner als Unterstützer',
+    'supBash' => 'Besiegte Gegner als Unterstützer',
   ),
   'label' => 
   array (
@@ -25,6 +25,6 @@ return array (
     'gesBash' => 'Insgesamt',
     'offBash' => 'Angreifer Punkte',
     'defBash' => 'Verteidiger Punkte',
-    'utBash' => 'Unterstützer Punkte',
+    'supBash' => 'Unterstützer Punkte',
   ),
 );
