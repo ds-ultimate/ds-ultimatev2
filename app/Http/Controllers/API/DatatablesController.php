@@ -24,7 +24,7 @@ class DatatablesController extends Controller
                 return BasicFunctions::decodeName($player->name);
             })
             ->addColumn('ally', function ($player){
-                return ($player->ally_id != 0)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
+                return ($player->ally_id != 0 && $player->allyLatest != null)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
@@ -124,7 +124,7 @@ class DatatablesController extends Controller
                 return BasicFunctions::decodeName($player->name);
             })
             ->addColumn('ally', function ($player){
-                return ($player->ally_id != 0)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
+                return ($player->ally_id != 0 && $player->allyLatest != null)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
             ->editColumn('points', function ($player) use($days){
                 $playerOld = $player->playerHistory($days);

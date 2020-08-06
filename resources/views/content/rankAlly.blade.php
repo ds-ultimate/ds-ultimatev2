@@ -53,6 +53,7 @@
                     {"targets": 7, "className": 'text-right'},
                     {"targets": 8, "className": 'text-right'},
                     {"targets": 9, "className": 'text-right'},
+                    {"targets": [3, 4, 5, 7, 8, 9], "orderSequence": ["desc", "asc"]},
                 ],
                 "processing": true,
                 "serverSide": true,
