@@ -25,7 +25,7 @@ class InsertMissingBashData extends Command
      *
      * @var string
      */
-    protected $description = 'Füllt null werte in der bei den Bashpunkten';
+    protected $description = 'Füllt null werte in der Datenbank bei den Bashpunkten';
 
     /**
      * Create a new command instance.
