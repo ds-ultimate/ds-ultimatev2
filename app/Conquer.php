@@ -168,7 +168,7 @@ class Conquer extends CustomModel
             }
         } else if($this->oldAlly == null) {
             //deleted ally
-            return $oldAlly;
+            return BasicFunctions::outputName($oldAlly);
         }
         return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
     }
@@ -192,7 +192,7 @@ class Conquer extends CustomModel
             }
         } else if($this->newAlly == null) {
             //deleted ally
-            return $newAlly;
+            return BasicFunctions::outputName($newAlly);
         }
         return BasicFunctions::linkAlly($world, $newID, BasicFunctions::outputName($newAlly));
     }
