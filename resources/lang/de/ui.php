@@ -88,7 +88,7 @@ return array (
     'villageName' => 'Dorfname',
     'owner' => 'Besitzer',
     'bashStats' => 'Besiegte Gegner',
-    'bashPointsRatio' => 'KP-Rate',
+    'bashPointsRatio' => 'K/P-Rate',
     'id' => 'ID',
     'continent' => 'Kontinent',
     'coordinates' => 'Koordinaten',
@@ -97,6 +97,7 @@ return array (
     'player' => 'Spieler',
     'village' => 'Dorf',
     'bashSup' => 'Unterstützer',
+    'supDeff' => 'Unterstützung',
   ),
   'server' => 
   array (

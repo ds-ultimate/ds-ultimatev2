@@ -37,9 +37,10 @@ return array (
     'villageName' => 'village name',
     'villages' => 'villages',
     'world' => 'world',
-    'bashPointsRatio' => 'KP-Rate',
+    'bashPointsRatio' => 'K/P-Rate',
     'bonusType' => 'Bonus',
     'bashSup' => 'supporter',
+    'supDeff' => 'support',
   ),
   'allyChanges' => 
   array (

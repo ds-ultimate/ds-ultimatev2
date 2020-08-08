@@ -73,17 +73,17 @@
                             </div>
                             <div class="col-12 mt-3">
                                 <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
-                                <table id="data2" class="table table-bordered no-wrap w-100" style="border: 2px solid #a1a1a3">
+                                <table id="data2" class="table table-bordered no-wrap w-100" style="border: 1px solid #b1b1b1">
                                     <thead>
                                     <tr>
-                                        <th class="all" colspan="3" width="50%">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashGes') }}</th>
-                                        <th class="desktop" style="border-left: 2px solid #a1a1a3" colspan="3">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashOff') }}</th>
+                                        <th class="all" style="border-bottom:1px solid #dee2e6" colspan="3" width="50%">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashGes') }}</th>
+                                        <th class="desktop" style="border-bottom:1px solid #dee2e6; border-left: 1px solid #b1b1b1" colspan="3">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashOff') }}</th>
                                     </tr>
                                     <tr>
                                         <th>{{ ucfirst(__('ui.table.rank')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.points')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                                        <th style="border-left: 2px solid #a1a1a3">{{ ucfirst(__('ui.table.rank')) }}</th>
+                                        <th style="border-left: 1px solid #b1b1b1">{{ ucfirst(__('ui.table.rank')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.points')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
                                     </tr>
@@ -93,7 +93,7 @@
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBashRank) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->gesBash) }}</td>
                                         <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->gesBash/$playerData->points)*100): ('-') }}%</td>
-                                        <td style="border-left: 2px solid #a1a1a3">{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</td>
+                                        <td style="border-left: 1px solid #b1b1b1">{{ \App\Util\BasicFunctions::numberConv($playerData->offBashRank) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->offBash) }}</td>
                                         <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->offBash/$playerData->points)*100): ('-') }}%</td>
                                     </tr>
@@ -101,17 +101,17 @@
                                 </table>
                             </div>
                             <div class="col-12 mt-3">
-                                <table id="data2" class="table table-bordered no-wrap w-100" style="border: 2px solid #a1a1a3">
+                                <table id="data3" class="table table-bordered no-wrap w-100" style="border: 1px solid #b1b1b1">
                                     <thead>
                                     <tr>
-                                        <th class="all" colspan="3" width="50%">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashDeff') }}</th>
-                                        <th class="desktop" style="border-left: 2px solid #a1a1a3" colspan="3">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.supDeff') }}</th>
+                                        <th class="all" style="border-bottom:1px solid #dee2e6" colspan="3" width="50%">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.bashDeff') }}</th>
+                                        <th class="desktop" style="border-bottom:1px solid #dee2e6; border-left: 1px solid #b1b1b1" colspan="3">{{ ucfirst(__('ui.tabletitel.bashStats')) }} - {{__('ui.table.supDeff') }}</th>
                                     </tr>
                                     <tr>
                                         <th>{{ ucfirst(__('ui.table.rank')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.points')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                                        <th style="border-left: 2px solid #a1a1a3">{{ ucfirst(__('ui.table.rank')) }}</th>
+                                        <th style="border-left: 1px solid #b1b1b1">{{ ucfirst(__('ui.table.rank')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.points')) }}</th>
                                         <th>{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
                                     </tr>
@@ -121,7 +121,7 @@
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->defBashRank) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->defBash) }}</td>
                                         <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->defBash/$playerData->points)*100): ('-') }}%</td>
-                                        <td style="border-left: 2px solid #a1a1a3">{{ \App\Util\BasicFunctions::numberConv($playerData->supBashRank) }}</td>
+                                        <td style="border-left: 1px solid #b1b1b1">{{ \App\Util\BasicFunctions::numberConv($playerData->supBashRank) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->supBash) }}</td>
                                         <td>{{ ($playerData->points != 0)?\App\Util\BasicFunctions::numberConv(($playerData->supBash/$playerData->points)*100): ('-') }}%</td>
                                     </tr>
@@ -320,6 +320,15 @@
             });
 
             $('#data2').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+
+            $('#data3').DataTable({
                 dom: 't',
                 ordering: false,
                 paging: false,
