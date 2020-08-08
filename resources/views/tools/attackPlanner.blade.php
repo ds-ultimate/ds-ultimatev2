@@ -613,7 +613,7 @@ $tabList = [
             axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportWB', $attackList->edit_key]) }}', {
             })
                 .then((response) => {
-                    $('#exportWB').html(response.data);
+                    $('#exportWB').val(response.data);
                 })
                 .catch((error) => {
 
@@ -624,7 +624,7 @@ $tabList = [
             axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportBB', $attackList->edit_key]) }}', {
             })
                 .then((response) => {
-                    $('#exportBB').html(response.data);
+                    $('#exportBB').val(response.data);
                 })
                 .catch((error) => {
 
@@ -635,7 +635,7 @@ $tabList = [
             axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportIGM', $attackList->edit_key]) }}', {
             })
                 .then((response) => {
-                    $('#exportIGM').html(response.data);
+                    $('#exportIGM').val(response.data);
                 })
                 .catch((error) => {
 
