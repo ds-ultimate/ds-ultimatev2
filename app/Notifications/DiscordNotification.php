@@ -162,9 +162,10 @@ class DiscordNotification extends Notification
                     $traceStr .= "#{$trace[$i]}\n";
                 }
 
+                $traceStr =  mb_strimwidth($traceStr, 0, 800, "...");
                 //TODO improve this...
                 try {
-                    $traceStr .= URL::current();
+                    $traceStr .= "\n" . URL::current();
                 } catch (\Exception $ex) {
                 }
                 return mb_strimwidth($traceStr, 0, 1000, "...");
