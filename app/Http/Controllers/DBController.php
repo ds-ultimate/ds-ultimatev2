@@ -205,11 +205,6 @@ class DBController
         $serverArray = Server::getServer();
 
         foreach ($serverArray as $serverUrl){
-            if($serverUrl->active != 1) {
-                echo "Ignoring {$serverUrl->code}\n";
-                continue;
-            }
-            
             $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
             $worldTable = new World();
             $worldTable->setTable('worlds');
@@ -234,10 +229,14 @@ class DBController
                             $world->delete();
                         }
                     }
+                } else if($serverUrl->active != 1) {
+                    continue;
                 } else {
                     //create new entry
                     $create = true;
                     $worldNew = new World();
+                    $worldNew->worldUpdated_at = Carbon::now()->subHours(24);
+                    $worldNew->worldCleaned_at = Carbon::now()->subHours(24);
                     $worldNew->setTable('worlds');
                 }
 
