@@ -164,8 +164,8 @@ class AttackPlannerController extends BaseController
                 '%ELEMENT_ID%' => $i,
                 '%TYPE%' => "[img]".Icon::icons($item->type)."[/img]",
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
-                '%SOURCE%' => '[coord]'.$item->start_village->coordinates().'[/coord]',
-                '%TARGET%' => '[coord]'.$item->target_village->coordinates().'[/coord]',
+                '%SOURCE%' => '[coord]'.($item->start_village!=null?$item->start_village->coordinates():'???').'[/coord]',
+                '%TARGET%' => '[coord]'.($item->target_village!=null?$item->target_village->coordinates():'???').'[/coord]',
                 '%SEND%' => $date->isoFormat('L LT'),
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
             );
@@ -202,10 +202,10 @@ class AttackPlannerController extends BaseController
             $searchReplaceArrayRow = array(
                 '%TYPE%' => $item->typeIDToName(),
                 '%ATTACKER%' => $item->attackerName(),
-                '%SOURCE%' => $item->start_village->coordinates(),
+                '%SOURCE%' => ($item->start_village != null ? $item->start_village->coordinates() : '???|???'),
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
                 '%DEFENDER%' => $item->defenderName(),
-                '%TARGET%' => $item->target_village->coordinates(),
+                '%TARGET%' => ($item->target_village != null ? $item->target_village->coordinates() : '???|???'),
                 '%SEND%' => $dateSend->isoFormat('L LT'),
                 '%ARRIVE%' => $dateArrival->isoFormat('L LT'),
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"

@@ -110,15 +110,27 @@ class AttackPlannerItemController extends BaseController
             })
             ->setRowData([
                 'xStart' => function(AttackListItem $attackListItem) {
+                    if($attackListItem->start_village == null) {
+                        return '???';
+                    }
                     return $attackListItem->start_village->x;
                 },
                 'yStart' => function(AttackListItem $attackListItem) {
+                    if($attackListItem->start_village == null) {
+                        return '???';
+                    }
                     return $attackListItem->start_village->y;
                 },
                 'xTarget' => function(AttackListItem $attackListItem) {
+                    if($attackListItem->target_village == null) {
+                        return '???';
+                    }
                     return $attackListItem->target_village->x;
                 },
                 'yTarget' => function(AttackListItem $attackListItem) {
+                    if($attackListItem->target_village == null) {
+                        return '???';
+                    }
                     return $attackListItem->target_village->y;
                 },
                 'day' => function(AttackListItem $attackListItem) {
@@ -143,11 +155,17 @@ class AttackPlannerItemController extends BaseController
                 return '';
             })
             ->addColumn('start_village', function (AttackListItem $attackListItem) {
-                $village =$attackListItem->start_village;
+                $village = $attackListItem->start_village;
+                if($village == null) {
+                    return __('tool.attackPlanner.villageNotExist');
+                }
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
             ->addColumn('target_village', function (AttackListItem $attackListItem) {
-                $village =$attackListItem->target_village;
+                $village = $attackListItem->target_village;
+                if($village == null) {
+                    return __('tool.attackPlanner.villageNotExist');
+                }
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {

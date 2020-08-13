@@ -4,7 +4,6 @@ namespace App;
 
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class Ally extends CustomModel
@@ -128,17 +127,17 @@ class Ally extends CustomModel
         return $allyDatas;
 
     }
-    
+
     public function linkTag($world) {
         return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName("[".$this->tag."]"));
     }
-    
+
     public function linkIngame(World $world, $guest=false) {
         $guestPart = "game";
         if($guest) {
             $guestPart = "guest";
         }
-            
+
         return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->allyID}";
     }
 
