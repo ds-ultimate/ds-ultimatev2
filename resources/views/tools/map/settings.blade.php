@@ -77,3 +77,25 @@
         <input type="submit" class="btn btn-sm btn-success">
     </div>
 </div>
+
+@push('js')
+<script>
+    $(function () {
+        @if($wantedMap->cached_at === null)
+            $('#checkbox-show-player').change(store);
+            $('#checkbox-show-barbarian').change(store);
+            $('#checkbox-continent-numbers').change(store);
+            $('#checkbox-auto-update').change(store);
+            $('#map-zoom-value').change(store);
+            $('#center-pos-x').change(store);
+            $('#center-pos-y').change(store);
+            $('.showTextBox').change(store);
+            $('.highlightBox').change(store);
+            $('#markerFactor').change(store);
+            $('#markerFactor').on("input", function(slideEvt) {
+                $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
+            });
+        @endif
+    });
+</script>
+@endpush
