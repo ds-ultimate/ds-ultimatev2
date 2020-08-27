@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('styles')
+@push('styles')
 <style>
     #table-log {
         font-size: 0.85rem;
@@ -49,7 +49,7 @@
         white-space: nowrap;
     }
 </style>
-@endsection
+@endpush
 
 @section('content')
     <div class="row">
@@ -167,9 +167,7 @@
     </div>
 @endsection
 
-@section('scripts')
-    @parent
-    <script src="{{ asset('admin/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
+@push('js')
     <script>
         $(document).ready(function () {
             $('.table-responsive tr').on('click', function () {
@@ -192,4 +190,4 @@
             });
         });
     </script>
-@endsection
+@endpush

@@ -15,9 +15,24 @@ class BugreportsController extends Controller
     {
         abort_unless(\Gate::allows('bugreport_access'), 403);
 
-        $bugreports = Bugreport::orderBy('firstSeen')->get();
+        $header = __('admin.bugreport.title');
+        $create = [
+            'permission' => 'bugreport_create',
+            'title' => __('admin.bugreport.new'),
+            'route' => "admin.bugreports.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('user.bugreport.priority'), "priority", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(__('user.bugreport.form_title'), "title"),
+            BasicFunctions::indexEntry(__('user.bugreport.name'), "name"),
+            BasicFunctions::indexEntry(__('admin.bugreport.status'), "status"),
+            BasicFunctions::indexEntry(__('admin.bugreport.comment.title'), "comments"),
+            BasicFunctions::indexEntry(__('admin.bugreport.created_at'), "created_at"),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.bugreports";
 
-        return view('admin.bugreports.index', compact('bugreports'));
+        return view('admin.bugreports.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function indexPriority($priority)

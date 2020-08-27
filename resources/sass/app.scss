@@ -74,20 +74,20 @@
 }
 
 .bg-nav {
-    background: #edd492;
-    background: linear-gradient(180deg, #edd492 0%, #edd492 calc(100% - 12px), #fbf6e9 100%);
+    background: $secondaryBg;
+    background: linear-gradient(180deg, $secondaryBg 0%, $secondaryBg calc(100% - 12px), $primaryBg 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#edd492",endColorstr="#fbf6e9",GradientType=1);
 }
 
 .bg-footer {
-    background: #edd492;
-    background: -webkit-gradient(linear, left bottom, left top, from(#edd492), color-stop(80%, #edd492), to(#fbf6e9));
-    background: linear-gradient(0deg, #edd492 0%, #edd492 80%, #fbf6e9 100%);
+    background: $secondaryBg;
+    background: -webkit-gradient(linear, left bottom, left top, from($secondaryBg), color-stop(80%, $secondaryBg), to($primaryBg));
+    background: linear-gradient(0deg, $secondaryBg 0%, $secondaryBg 80%, $primaryBg 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#edd492",endColorstr="#fbf6e9",GradientType=1);
 }
 
 body {
-    background: #fbf6e9;
+    background: $primaryBg;
 }
 
 .cookie-bg{

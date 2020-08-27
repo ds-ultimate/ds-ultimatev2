@@ -1,14 +1,20 @@
-@props(['access', 'route', 'icon', 'name'])
+@props(['access', 'route', 'icon', 'name', 'dropdownId'])
 
 @can($access)
-    <li class="@hasSlot c-sidebar-nav-dropdown @else c-sidebar-nav-item @endif">
-        <a href="{{ ($route!="")?route($route):'#' }}" class="c-sidebar-nav-{{ ($route!="")?'link':'dropdown-toggle' }}">
-            <i class="c-sidebar-nav-icon fa-fw fas {{ $icon }}"></i> {{ $name }}
-        </a>
+    <li class="admin-nav-item">
         @hasSlot
-            <ul class="c-sidebar-nav-dropdown-items">
+            <a href="#" class="admin-nav-link" data-toggle="collapse" data-target="#{{ $dropdownId }}">
+                <i class="admin-nav-icon fa-fw fas {{ $icon }}"></i> {{ $name }}
+                <i class="admin-nav-chevron fas fa-chevron-left"></i>
+                <i class="admin-nav-chevron fas fa-chevron-down"></i>
+            </a>
+            <ul id="{{ $dropdownId }}" class="collapse admin-nav-dropdown-items" data-parent="#admin-nav-main">
                 {{ $slot }}
             </ul>
+        @else
+            <a href="{{ route($route) }}" class="admin-nav-link">
+                <i class="admin-nav-icon fa-fw fas {{ $icon }}"></i> {{ $name }}
+            </a>
         @endif
     </li>
 @endcan

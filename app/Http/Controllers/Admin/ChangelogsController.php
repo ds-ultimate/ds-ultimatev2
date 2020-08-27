@@ -13,9 +13,25 @@ class ChangelogsController extends Controller
     {
         abort_unless(\Gate::allows('changelog_access'), 403);
 
-        $changelogs = Changelog::all();
+        $header = __('admin.changelogs.title');
+        $create = [
+            'permission' => 'changelog_create',
+            'title' => __('admin.changelogs.create'),
+            'route' => "admin.changelogs.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.changelogs.id'), "id", "width:20px;", "text-center"),
+            BasicFunctions::indexEntry(__('admin.changelogs.version'), "version"),
+            BasicFunctions::indexEntry(__('admin.changelogs.form_title'), "version"),
+            BasicFunctions::indexEntry(__('admin.changelogs.url'), "repository_html_url"),
+            BasicFunctions::indexEntry(__('admin.changelogs.icon'), "icon"),
+            BasicFunctions::indexEntry(__('admin.changelogs.color'), "color"),
+            BasicFunctions::indexEntry(__('admin.changelogs.created'), "updated_at"),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.changelog";
 
-        return view('admin.changelogs.index', compact('changelogs'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
 
@@ -114,7 +130,8 @@ class ChangelogsController extends Controller
                 ],
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.changelogs.form_title'), 'title', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.changelogs.content'), 'content', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.changelogs.content')." DE", 'de', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.changelogs.content')." EN", 'en', '', false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.changelogs.url'), 'repository_html_url', '', false, false),
         ];
     }
@@ -124,7 +141,8 @@ class ChangelogsController extends Controller
             BasicFunctions::formEntryShow(__('admin.changelogs.version'), $values->version),
             BasicFunctions::formEntryShow(__('admin.changelogs.icon'), "<h1><i class='". htmlentities($values->icon) ."'></i></h1>", false),
             BasicFunctions::formEntryShow(__('admin.changelogs.form_title'), $values->title),
-            BasicFunctions::formEntryShow(__('admin.changelogs.content'), $values->content, false),
+            BasicFunctions::formEntryShow(__('admin.changelogs.content')." DE", $values->de, false),
+            BasicFunctions::formEntryShow(__('admin.changelogs.content')." EN", $values->en, false),
             BasicFunctions::formEntryShow(__('admin.changelogs.url'), $values->repository_html_url),
             BasicFunctions::formEntryShow(__('admin.changelogs.buffer'), $values->buffer, false),
             BasicFunctions::formEntryShow(__('admin.changelogs.created'), $values->created_at->diffForHumans()),

@@ -68,6 +68,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('bugreportsComments', 'BugreportsCommentController');
 
     Route::get('/appLog', 'AppLogController@index')->name('appLog');
+
+    Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
+        Route::get('/news', 'APIController@news')->name('news');
+        Route::get('/changelog', 'APIController@changelog')->name('changelog');
+        Route::get('/roles', 'APIController@roles')->name('roles');
+        Route::get('/users', 'APIController@users')->name('users');
+        Route::get('/servers', 'APIController@servers')->name('servers');
+        Route::get('/worlds', 'APIController@worlds')->name('worlds');
+        Route::get('/bugreports', 'APIController@bugreports')->name('bugreports');
+    });
 });
 
 Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {

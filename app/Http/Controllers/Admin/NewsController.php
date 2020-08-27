@@ -13,9 +13,22 @@ class NewsController extends Controller
     {
         abort_unless(\Gate::allows('news_access'), 403);
 
-        $news = News::all();
+        $header = __('admin.news.title');
+        $create = [
+            'permission' => 'news_create',
+            'title' => __('admin.news.create'),
+            'route' => "admin.news.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.news.id'), "id", "width:20px;", "text-center"),
+            BasicFunctions::indexEntry(__('admin.news.content')." DE", "content_de"),
+            BasicFunctions::indexEntry(__('admin.news.content')." EN", "content_en"),
+            BasicFunctions::indexEntry(__('admin.news.update'), "updated_at"),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.news";
 
-        return view('admin.news.index', compact('news'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

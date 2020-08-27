@@ -41,6 +41,16 @@ mix.sass('resources/sass/app.scss', 'public/css')
         whitelistPatterns: whitePatterns,
         whitelist: whiteList,
     });
+
+mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
+    .options({
+        processCssUrls: false
+    })
+    .purgeCss({
+        whitelistPatterns: whitePatterns,
+        whitelist: whiteList,
+    });
+
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
 
 
@@ -139,27 +149,6 @@ mix.copyDirectory('node_modules/@ds-ultimate/drawerjs/dist/assets/', 'public/plu
 mix.sass('resources/sass/fontawesome.scss', 'public/css');
 
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/plugin/fontawesome/');
-
-
-/**
- * coreui
- */
-
-whiteList = whiteList.concat([
-    "c-sidebar-nav-dropdown-items",
-    "c-sidebar-nav-dropdown-toggle",
-    "c-sidebar-nav-dropdown",
-    "c-show",
-]);
-mix.js('resources/js/admin_sidebar.js', 'public/js');
-mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
-    .options({
-        processCssUrls: false
-    })
-    .purgeCss({
-        whitelistPatterns: whitePatterns,
-        whitelist: whiteList,
-    });
 
 
 /**

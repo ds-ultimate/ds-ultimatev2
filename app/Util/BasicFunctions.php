@@ -220,7 +220,11 @@ class BasicFunctions
      * @return string
      */
     public static function outputName($name) {
-        return nl2br(htmlentities(urldecode($name)));
+        return self::escape(urldecode($name));
+    }
+    
+    public static function escape($text) {
+        return nl2br(htmlentities($text));
     }
 
     public static function createLog($type, $msg){
@@ -389,6 +393,16 @@ class BasicFunctions
             'name' => $name,
             'value' => $value,
             'escape' => $escape,
+        ], $optional);
+    }
+
+    public static function indexEntry($title, $data, $style = "", $class = "", $optional=array()) {
+        return array_merge([
+            'title' => $title,
+            'data' => $data,
+            'style' => $style,
+            'class' => $class,
+            'dataAdditional' => "",
         ], $optional);
     }
 }

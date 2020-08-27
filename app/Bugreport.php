@@ -53,6 +53,7 @@ class Bugreport extends Model
             case 3:
                 return __('user.bugreport.prioritySelect.critical');
         }
+        return "";
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WorldsController extends Controller
@@ -14,10 +13,28 @@ class WorldsController extends Controller
     {
         abort_unless(\Gate::allows('world_access'), 403);
 
-        $worlds = World::all();
-        $now = Carbon::now();
+        $header = __('admin.worlds.title');
+        $create = [
+            'permission' => 'world_create',
+            'title' => __('admin.worlds.create'),
+            'route' => "admin.worlds.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.worlds.id'), "id"),
+            BasicFunctions::indexEntry(__('admin.worlds.server'), "server", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(__('admin.worlds.name'), "name"),
+            BasicFunctions::indexEntry(__('admin.worlds.ally_count'), "ally_count"),
+            BasicFunctions::indexEntry(__('admin.worlds.player_count'), "player_count"),
+            BasicFunctions::indexEntry(__('admin.worlds.village_count'), "village_count"),
+            BasicFunctions::indexEntry(__('admin.worlds.url'), "url"),
+            BasicFunctions::indexEntry(__('admin.worlds.active'), "active"),
+            BasicFunctions::indexEntry(__('admin.worlds.update'), "worldUpdated_at"),
+            BasicFunctions::indexEntry(__('admin.worlds.clean'), "worldCleaned_at"),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.worlds";
 
-        return view('admin.worlds.index', compact('worlds', 'now'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

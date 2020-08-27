@@ -1,9 +1,8 @@
 {
-    "/js/admin_sidebar.js": "/js/admin_sidebar.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/css/fontawesome.css": "/css/fontawesome.css",
     "/css/admin_sidebar.css": "/css/admin_sidebar.css",
+    "/css/fontawesome.css": "/css/fontawesome.css",
     "/plugin/jquery-ui/jquery-ui.min.css": "/plugin/jquery-ui/jquery-ui.min.css",
     "/plugin/jquery-ui/jquery-ui.min.js": "/plugin/jquery-ui/jquery-ui.min.js",
     "/plugin/jquery.countdown/jquery.countdown.min.js": "/plugin/jquery.countdown/jquery.countdown.min.js",

@@ -5,13 +5,13 @@
     <div class="col-lg-12">
         <h1>{{ __('global.dashboard') }}</h1>
         <div class="card-body">
-            Willkommen im Admin Bereich von DS-Ultimate <i>(<b>by skatecram</b>)</i>
+            Willkommen im Admin Bereich von DS-Ultimate
         </div>
     </div>
 </div>
 <div class="row">
     <!-- Column -->
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-inverse bg-info">
             <div class="box bg-info text-center p-3">
                 <h1 class="font-light text-white">{{ \App\Bugreport::countNew() }}</h1>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <!-- Column -->
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-inverse bg-warning">
             <div class="box text-center p-3">
                 <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['maps']) }}</h1>
@@ -29,7 +29,7 @@
         </div>
     </div>
     <!-- Column -->
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-primary bg-danger">
             <div class="box text-center p-3">
                 <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['attackplaner']) }}</h1>
@@ -38,7 +38,7 @@
         </div>
     </div>
     <!-- Column -->
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-inverse bg-success">
             <div class="box text-center p-3">
                 <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['attacks']) }}</h1>
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-inverse bg-info">
             <div class="box text-center p-3">
                 <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['users']) }}</h1>
@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3 pb-4">
         <div class="card card-inverse bg-warning">
             <div class="box text-center p-3">
                 <h1 class="font-light text-white">

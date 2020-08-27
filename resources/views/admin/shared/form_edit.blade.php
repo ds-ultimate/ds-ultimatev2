@@ -57,13 +57,13 @@
                 
                 @case('tinymce')
                     <div class='{{ $errors->has($formEntry['id']) ? ' is-invalid' : '' }}'>
-                        <textarea name="{{ $formEntry['id'] }}" class="description w-100">{{ $value }}</textarea>
+                        <textarea name="{{ $formEntry['id'] }}" class="tinymceEdit w-100" style="height: 500px">{{ $value }}</textarea>
                     </div>
                     @break
                 
                 @case('textarea')
                     <div class='{{ $errors->has($formEntry['id']) ? ' is-invalid' : '' }}'>
-                        <textarea name="{{ $formEntry['id'] }}" class="w-100">{{ $value }}</textarea>
+                        <textarea name="{{ $formEntry['id'] }}" class="w-100" style="height: 500px">{{ $value }}</textarea>
                     </div>
                     @break
                 
@@ -109,7 +109,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('js')
 @setFalse($needTinymce)
 @setFalse($needFasPicker)
 @setFalse($needSelect2)
@@ -123,7 +123,7 @@
     <script>
         $(function() {
             tinymce.init({
-                selector:'textarea.description',
+                selector:'textarea.tinymceEdit',
                 plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount tinymcespellchecker a11ychecker imagetools textpattern help formatpainter permanentpen pageembed tinycomments mentions linkchecker',
                 toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat | addcomment',
                 mobile: {
@@ -170,9 +170,9 @@
         });
     </script>
 @endif
-@endsection
+@endpush
 
-@section('styles')
+@push('styles')
 @setFalse($needTinymce)
 @setFalse($needFasPicker)
 @setFalse($needSelect2)
@@ -189,4 +189,4 @@
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
 @endif
-@endsection
+@endpush

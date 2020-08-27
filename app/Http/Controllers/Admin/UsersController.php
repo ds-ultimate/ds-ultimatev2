@@ -15,9 +15,22 @@ class UsersController extends Controller
     {
         abort_unless(\Gate::allows('user_access'), 403);
 
-        $users = User::all();
+        $header = __('admin.users.title');
+        $create = [
+            'permission' => 'user_create',
+            'title' => __('admin.users.create'),
+            'route' => "admin.users.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.users.name'), "name"),
+            BasicFunctions::indexEntry(__('admin.users.email'), "email"),
+            BasicFunctions::indexEntry(__('admin.users.email_verified_at'), "email_verified_at"),
+            BasicFunctions::indexEntry(__('admin.users.roles'), "roles", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.users";
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

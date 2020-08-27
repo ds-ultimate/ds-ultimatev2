@@ -13,9 +13,23 @@ class ServerController extends Controller
     {
         abort_unless(\Gate::allows('server_access'), 403);
 
-        $servers = Server::all();
+        $header = __('admin.server.title');
+        $create = [
+            'permission' => 'server_create',
+            'title' => __('admin.server.create'),
+            'route' => "admin.server.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.server.id'), "id"),
+            BasicFunctions::indexEntry(__('admin.server.code'), "code"),
+            BasicFunctions::indexEntry(__('admin.server.flag'), "flag"),
+            BasicFunctions::indexEntry(__('admin.server.url'), "url"),
+            BasicFunctions::indexEntry(__('admin.server.active'), "active"),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.servers";
 
-        return view('admin.server.index', compact('servers'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

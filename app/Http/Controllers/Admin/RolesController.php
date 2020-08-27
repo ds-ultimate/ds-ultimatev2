@@ -14,9 +14,20 @@ class RolesController extends Controller
     {
         abort_unless(\Gate::allows('role_access'), 403);
 
-        $roles = Role::all();
+        $header = __('admin.roles.title');
+        $create = [
+            'permission' => 'role_create',
+            'title' => __('admin.roles.create'),
+            'route' => "admin.roles.create",
+        ];
+        $tableColumns = [
+            BasicFunctions::indexEntry(__('admin.roles.form_title'), "title"),
+            BasicFunctions::indexEntry(__('admin.roles.permissions'), "permissions", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+        ];
+        $datatableRoute = "admin.api.roles";
 
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()
