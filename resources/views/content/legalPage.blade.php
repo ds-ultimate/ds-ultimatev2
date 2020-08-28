@@ -5,19 +5,6 @@
         <h1>Impressum</h1>
         <br>
         Angaben gemäß § 5 TMG<br>
-        Dominik Eisenreich<br>
-        Döhnerstraße 12<br>
-        08060 Zwickau<br>
-        <br>
-
-        <strong>Vertreten durch: </strong><br>
-        Dominik Eisenreich<br>
-        <strong>Kontakt:</strong><br>
-        Telefon: Auf Anfrage<br>
-        E-Mail: <a href='mailto:valerius2101@gmail.com'>valerius2101@gmail.com</a><br>
-        <br>
-
-        <u><strong>URL Hoster:</strong></u><br>
         Sebastian Schurr<br>
         Berliner Platz 1 <br>
         27570 Bremerhaven<br>

@@ -71,77 +71,6 @@
                                         <div class="face front bg-white card-team">
                                             <!-- Image -->
                                             <div class="card-up">
-                                                <img class="card-img-top" height="200px" src="{{ asset('images/team/background/keyboard.jpg') }}" alt="Team member card image">
-                                            </div>
-                                            <!-- Avatar -->
-                                            <div class="avatar mx-auto white">
-                                                <img src="{{ asset('images/team/avatar/dominik.jpg') }}" class="rounded-circle img-fluid" alt="First sample avatar image">
-                                            </div>
-                                            <!-- Content -->
-                                            <div class="card-body">
-                                                <h4 class="font-weight-bold mt-1 mb-3">Dominik 'Valerius2101'</h4>
-                                                <p class="font-weight-bold dark-grey-text h5 mb-4">
-                                                    Initiator
-                                                </p>
-                                                <span class="flag-icon flag-icon-de rounded" style="width: 2.666666em; line-height: 2em;"></span>
-                                                <!-- Triggering button -->
-                                                {{--<i class="fixed-bottom">Click to rotate</i>--}}
-                                            </div>
-                                        </div>
-                                        <!-- Front Side -->
-                                        <!-- Back Side -->
-                                        <div class="face back bg-white card-team">
-                                            <!-- Content -->
-                                            {{--<div class="card-body">--}}
-                                                {{--<!-- Content -->--}}
-                                                {{--<h4 class="font-weight-bold mt-4 mb-2">--}}
-                                                    {{--<strong> </strong>--}}
-                                                {{--</h4>--}}
-                                                {{--<hr>--}}
-                                                {{--<p>--}}
-                                                    {{--<br>--}}
-                                                    {{--<br>--}}
-                                                    {{--<br>--}}
-                                                    {{--<br>--}}
-                                                {{--</p>--}}
-                                                {{--<hr>--}}
-                                                {{--<!-- Social Icons -->--}}
-                                                {{--<ul class="list-inline list-unstyled">--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg fb-ic" href="https://www.facebook.com/valerius2101.de">--}}
-                                                            {{--<i class="fab fa-facebook-f"></i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg twitch-ic" href="https://www.twitch.tv/valerius2101">--}}
-                                                            {{--<i class="fab fa-twitch"> </i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg tw-ic" href="https://twitter.com/xXValeriusXx">--}}
-                                                            {{--<i class="fab fa-twitter"> </i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                {{--</ul>--}}
-                                                {{--<!-- Triggering button -->--}}
-                                                {{--<i class="fixed-bottom">Click to rotate</i>--}}
-                                            {{--</div>--}}
-                                        </div>
-                                        <!-- Back Side -->
-                                    </div>
-                                </div>
-                                <!-- Rotating card -->
-                            </div>
-                            <!-- Grid column -->
-                            <!-- Grid column -->
-                            <div class="col-lg-4 col-md-12 mb-lg-0 mb-4">
-                                <!-- Rotating card -->
-                                <div id="card" class="card-wrapper">
-                                    <div id="card-1" class="card-rotating text-center">
-                                        <!-- Front Side -->
-                                        <div class="face front bg-white card-team">
-                                            <!-- Image -->
-                                            <div class="card-up">
                                                 <img class="card-img-top" height="200px" src="{{ asset('images/team/background/system.jpg') }}" alt="Team member card image">
                                             </div>
                                             <!-- Avatar -->
@@ -246,10 +175,6 @@
                                 <!-- Rotating card -->
                             </div>
                             <!-- Grid column -->
-                        </div>
-                        <!-- Grid row -->
-                        <!-- Grid row -->
-                        <div class="row mb-4">
                             <!-- Grid column -->
                             <div class="col-lg-4 col-md-12 mb-lg-0 mb-4">
                                 <!-- Rotating card -->
@@ -279,8 +204,8 @@
                                         <div class="face back bg-white card-team">
                                             {{--<!-- Content -->--}}
                                             {{--<div class="card-body">--}}
-                                                {{--<!-- Triggering button -->--}}
-                                                {{--<i class="fixed-bottom">Click to rotate</i>--}}
+                                            {{--<!-- Triggering button -->--}}
+                                            {{--<i class="fixed-bottom">Click to rotate</i>--}}
                                             {{--</div>--}}
                                         </div>
                                         <!-- Back Side -->
@@ -289,6 +214,10 @@
                                 <!-- Rotating card -->
                             </div>
                             <!-- Grid column -->
+                        </div>
+                        <!-- Grid row -->
+                        <!-- Grid row -->
+                        <div class="row mb-4">
                             <!-- Grid column -->
                             <div class="col-lg-4 col-md-12 mb-lg-0 mb-4">
                                 <!-- Rotating card -->
@@ -296,64 +225,29 @@
                                     <div id="card-1" class="card-rotating text-center">
                                         <!-- Front Side -->
                                         <div class="face front bg-white card-team">
-                                            <!-- Image -->
-                                            <div class="card-up">
-                                                <img class="card-img-top" height="200px" src="{{ asset('images/team/background/system.jpg') }}" alt="Team member card image">
-                                            </div>
-                                            <!-- Avatar -->
-                                            <div class="avatar mx-auto white">
-                                                <img src="{{ asset('images/team/avatar/jonas.jpg') }}" class="rounded-circle img-fluid" alt="First sample avatar image">
-                                            </div>
                                             <!-- Content -->
                                             <div class="card-body">
-                                                <h4 class="font-weight-bold mt-1 mb-3">Jonas 'EchtkPvL'</h4>
-                                                <p class="font-weight-bold dark-grey-text h5 mb-4">Systemadministrator</p>
-                                                <span class="flag-icon flag-icon-de rounded" style="width: 2.666666em; line-height: 2em;"></span>
-                                                <!-- Triggering button -->
-                                                {{--<i class="fixed-bottom">Click to rotate</i>--}}
+                                                <!-- Content -->
+                                                <h4 class="font-weight-bold mt-4 mb-2">
+                                                    <strong>
+                                                        Besonderer Dank
+                                                    </strong>
+                                                </h4>
+                                                <hr>
+                                                <p>
+                                                    <b>Dominik 'Valerius2101'</b> (Initiator) <span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
+                                                </p>
+                                                <hr>
+                                                <p>
+                                                    <b>Jonas 'EchtkPvL'</b> (Systemadministrator) <span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
+                                                </p>
+                                                <hr>
                                             </div>
                                         </div>
                                         <!-- Front Side -->
                                         <!-- Back Side -->
                                         <div class="face back bg-white card-team">
-                                            <!-- Content -->
-                                            {{--<div class="card-body">--}}
-                                                {{--<!-- Content -->--}}
-                                                {{--<h4 class="font-weight-bold mt-4 mb-2">--}}
-                                                    {{--<strong>About me</strong>--}}
-                                                {{--</h4>--}}
-                                                {{--<hr>--}}
-                                                {{--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime quae, dolores dicta.--}}
-                                                    {{--Blanditiis rem amet repellat, dolores nihil quae in mollitia asperiores ut rerum repellendus,--}}
-                                                    {{--voluptatum eum, officia laudantium quaerat?--}}
-                                                {{--</p>--}}
-                                                {{--<hr>--}}
-                                                {{--<!-- Social Icons -->--}}
-                                                {{--<ul class="list-inline list-unstyled">--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg fb-ic">--}}
-                                                            {{--<i class="fab fa-facebook-f"></i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg pin-ic">--}}
-                                                            {{--<i class="fab fa-pinterest"> </i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg ins-ic">--}}
-                                                            {{--<i class="fab fa-instagram"> </i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                    {{--<li class="list-inline-item">--}}
-                                                        {{--<a class="p-2 fa-lg tw-ic">--}}
-                                                            {{--<i class="fab fa-twitter"> </i>--}}
-                                                        {{--</a>--}}
-                                                    {{--</li>--}}
-                                                {{--</ul>--}}
-                                                {{--<!-- Triggering button -->--}}
-                                                {{--<i class="fixed-bottom">Click to rotate</i>--}}
-                                            {{--</div>--}}
+
                                         </div>
                                         <!-- Back Side -->
                                     </div>
