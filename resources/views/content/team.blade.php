@@ -235,11 +235,11 @@
                                                 </h4>
                                                 <hr>
                                                 <p>
-                                                    <b>Dominik 'Valerius2101'</b> (Initiator) <span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
+                                                    <b>Jonas 'EchtkPvL'</b> (Systemadministrator) <span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
                                                 </p>
                                                 <hr>
                                                 <p>
-                                                    <b>Jonas 'EchtkPvL'</b> (Systemadministrator) <span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
+                                                    <b>Dominik 'Valerius2101'</b><span class="flag-icon flag-icon-de rounded" style="width: 1.333333em;"></span>
                                                 </p>
                                                 <hr>
                                             </div>
