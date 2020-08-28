@@ -52,9 +52,15 @@ class SettingsController extends Controller
     }
 
     public function addConnection(Request $request){
+        $serverId = intval($request->get('server'));
+        $request->validate([
+            'player' => 'required|integer',
+            'server' => 'required|integer|exists:App\Server,id',
+            'world' => "required|integer|exists:App\World,name,server_id,{$serverId}",
+        ]);
+        
         $worldModel = new World();
         $world = $worldModel->where('server_id', $request->get('server'))->where('name', $request->get('world'))->first();
-        abort_if ($world == null, 404);
         
         if (DsConnection::where('user_id', \Auth::user()->id)->where('world_id', $world->id)->where('player_id', $request->get('player'))->count() == 0) {
             DsConnection::create([

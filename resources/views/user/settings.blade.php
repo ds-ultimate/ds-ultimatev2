@@ -413,9 +413,17 @@
                 'player': $('#player').val(),
             })
                 .then((response) => {
+
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
+                    var errors = error.response.data.errors;
+                    $.each(errors, function(i, item) {
+                        var data = {'msg':item[0].charAt(0).toUpperCase()+item[0].substr(1)}
+                        createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
+                    });
+
+
                 });
         })
 
