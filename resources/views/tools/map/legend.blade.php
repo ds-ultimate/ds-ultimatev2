@@ -20,7 +20,10 @@
                                     <div class="border" style="width: 20px; height: 20px; background-color: #{{ $mark['colour'] }}"></div>
                                 </div>
                                 <div class="col">
-                                    {!! \App\Util\BasicFunctions::linkVillage($worldData, $mark['id'], '['.$mark['x'].'|'.$mark['y'].'] '.\App\Util\BasicFunctions::decodeName($mark['name'])).' '.\App\Util\BasicFunctions::linkPlayer($worldData, $mark['owner']->playerID, '('.\App\Util\BasicFunctions::decodeName($mark['owner']->name.')')) !!}
+                                    {!! \App\Util\BasicFunctions::linkVillage($worldData, $mark['id'], '['.$mark['x'].'|'.$mark['y'].'] '.\App\Util\BasicFunctions::outputName($mark['name'])) !!}
+                                    @if($mark['owner']!=null)
+                                        {!! \App\Util\BasicFunctions::linkPlayer($worldData, $mark['owner']->playerID, '('.\App\Util\BasicFunctions::decodeName($mark['owner']->name.')')) !!}
+                                    @endif
                                 </div>
                             </div>
                         @endisset
