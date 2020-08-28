@@ -58,6 +58,7 @@ return array (
     'title' => 'News',
     'titleCreate' => 'create news',
     'update' => 'edit news',
+    'updated_at' => 'Last change',
   ),
   'roles' => 
   array (

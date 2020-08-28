@@ -34,8 +34,8 @@
             </button>
             <div id="dropdown-filter-status-div" class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdown-filter-status">
                 <a class="dropdown-item filter-item filter-all">{{ __('admin.bugreport.filter.all') }}</a>
-                <a class="dropdown-item filter-item" filter-target="status[0]">{{ __('admin.bugreport.statusSelect.open') }}</a>
-                <a class="dropdown-item filter-item" filter-target="status[1]">{{ __('admin.bugreport.statusSelect.inprogress') }}</a>
+                <a class="dropdown-item filter-item active" filter-target="status[0]">{{ __('admin.bugreport.statusSelect.open') }}</a>
+                <a class="dropdown-item filter-item active" filter-target="status[1]">{{ __('admin.bugreport.statusSelect.inprogress') }}</a>
                 <a class="dropdown-item filter-item" filter-target="status[2]">{{ __('admin.bugreport.statusSelect.resolved') }}</a>
                 <a class="dropdown-item filter-item" filter-target="status[3]">{{ __('admin.bugreport.statusSelect.close') }}</a>
             </div>

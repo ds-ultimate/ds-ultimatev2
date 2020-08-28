@@ -23,6 +23,7 @@ return array (
     'update' => 'Nachricht bearbeiten',
     'titleCreate' => 'Nachricht erstellen',
     'show' => 'Nachricht anzeigen',
+    'updated_at' => 'Letze Änderung',
   ),
   'changelogs' => 
   array (

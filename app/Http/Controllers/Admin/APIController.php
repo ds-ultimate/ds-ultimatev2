@@ -37,6 +37,9 @@ class APIController extends Controller
             ->addColumn('actions', function ($data) use($permissions, $routes) {
                 return $this->generateActions($permissions, $routes, $data->id);
             })
+            ->editColumn('updated_at', function ($data) {
+                return $data->updated_at->isoFormat("L LT");
+            })
             ->rawColumns(['content_de', 'content_en', 'actions'])
             ->toJson();
     }

@@ -23,7 +23,7 @@ class NewsController extends Controller
             BasicFunctions::indexEntry(__('admin.news.id'), "id", "width:20px;", "text-center"),
             BasicFunctions::indexEntry(__('admin.news.content')." DE", "content_de"),
             BasicFunctions::indexEntry(__('admin.news.content')." EN", "content_en"),
-            BasicFunctions::indexEntry(__('admin.news.update'), "updated_at"),
+            BasicFunctions::indexEntry(__('admin.news.updated_at'), "updated_at"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
         $datatableRoute = "admin.api.news";
