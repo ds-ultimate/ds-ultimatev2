@@ -207,6 +207,7 @@ class BasicFunctions
     /**
      * This function only decodes the Data
      * the output must be escaped properly afterwards
+     * {{ BasicFunctions::decodeName($test) }}
      *
      * @param string $name
      * @return string
@@ -216,6 +217,8 @@ class BasicFunctions
     }
 
     /**
+     *{!! BasicFunctions::outputName($test) !!}
+     * 
      * @param string $name
      * @return string
      */

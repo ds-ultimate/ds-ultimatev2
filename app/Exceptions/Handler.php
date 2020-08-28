@@ -45,9 +45,10 @@ class Handler extends ExceptionHandler
             "Symfony\\Component\\HttpKernel\\Exception\\HttpException",
             "Illuminate\\Session\\TokenMismatchException",
             "Illuminate\\Database\\Eloquent\\ModelNotFoundException",
+            "Illuminate\\Validation\\ValidationException",
             "NotificationChannels\\Discord\\Exceptions\\CouldNotSendNotification",
         ];
-        
+
         try {
             if (!in_array(get_class($exception), $ignore) && $eMessage != '') {
                 if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
