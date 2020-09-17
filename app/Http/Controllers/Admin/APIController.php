@@ -32,19 +32,27 @@ class APIController extends Controller
             'edit' => 'admin.news.edit',
             'delete' => 'admin.news.destroy',
         ];
-        
+
         $model = new News();
-        return DataTables::eloquent($model->newQuery())
+        return DataTables::eloquent($model->orderBy('order')->newQuery())
+            ->setRowAttr([
+                'data-id' => function($data) {
+                    return $data->id;
+                },
+            ])
+            ->addColumn('handle', function ($data){
+                return '<i class="fas fa-arrows-alt"></i>';
+            })
             ->addColumn('actions', function ($data) use($permissions, $routes) {
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->editColumn('updated_at', function ($data) {
                 return $data->updated_at->isoFormat("L LT");
             })
-            ->rawColumns(['content_de', 'content_en', 'actions'])
+            ->rawColumns(['handle', 'content_de', 'content_en', 'actions'])
             ->toJson();
     }
-    
+
     public function changelog()
     {
         abort_unless(\Gate::allows('changelog_access'), 403);
@@ -316,12 +324,13 @@ class APIController extends Controller
         if(\Gate::allows($permissions['edit'])) {
             $actions.= '<a class="btn btn-xs btn-info mx-2" href="' .
                 route($routes['edit'], $id) . '"><i class="far fa-edit"></i></a>';
-        } // global.edit / global.view / global.delete
+        }
         if(\Gate::allows($permissions['delete'])) {
             $actions.= '<form action="' . route($routes['delete'], $id) .
                 '" method="POST" onsubmit="return confirm(\''.__('global.areYouSure').
                 '\');" style="display: inline-block;">';
             $actions.= '<input type="hidden" name="_method" value="DELETE">';
+            $actions.= csrf_field();
             $actions.= '<button type="submit" class="btn btn-xs btn-danger mx-2"><i class="far fa-trash-alt"></i></button>';
             $actions.= '</form>';
         }

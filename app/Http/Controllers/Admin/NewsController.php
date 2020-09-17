@@ -6,6 +6,7 @@ use App\News;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
@@ -20,6 +21,7 @@ class NewsController extends Controller
             'route' => "admin.news.create",
         ];
         $tableColumns = [
+            BasicFunctions::indexEntry('', 'handle', '', 'align-middle text-center handle'),
             BasicFunctions::indexEntry(__('admin.news.id'), "id", "width:20px;", "text-center"),
             BasicFunctions::indexEntry(__('admin.news.content')." DE", "content_de"),
             BasicFunctions::indexEntry(__('admin.news.content')." EN", "content_en"),
@@ -27,14 +29,15 @@ class NewsController extends Controller
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
         $datatableRoute = "admin.api.news";
+        $handle = true;
 
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'handle'));
     }
 
     public function create()
     {
         abort_unless(\Gate::allows('news_create'), 403);
-        
+
         $formEntries = $this->generateEditFormConfig(null);
         $route = route("admin.news.store");
         $header = __('admin.news.titleCreate');
@@ -45,12 +48,15 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         abort_unless(\Gate::allows('news_create'), 403);
-        
+
         $request->validate([
             'content_de' => 'required',
             'content_en' => 'required',
         ]);
         $news = News::create($request->all());
+
+        $news->order = (new News())->count() - 1;
+        $news->save();
 
         return redirect()->route('admin.news.index');
     }
@@ -82,7 +88,7 @@ class NewsController extends Controller
     public function show(News $news)
     {
         abort_unless(\Gate::allows('news_show'), 403);
-        
+
         $formEntries = $this->generateShowFormConfig($news);
         $header = __('admin.news.show');
         $title = __('admin.news.title') . "({$news->id})";
@@ -94,6 +100,15 @@ class NewsController extends Controller
         abort_unless(\Gate::allows('news_delete'), 403);
 
         $news->delete();
+
+        $newsArray = News::orderBy('order')->get();
+
+        $order = 0;
+        foreach ($newsArray as $item){
+            $item->order = $order;
+            $item->save();
+            $order++;
+        }
 
         return back();
     }
@@ -108,14 +123,27 @@ class NewsController extends Controller
         ]);
         return response(null, 204);
     }
-    
+
+    public function reorder(Request $request)
+    {
+        $newsOrder = News::whereIn('id', $request->get('order'))->orderBy('order')->first();
+        $order = $newsOrder->order;
+        foreach ($request->get('order') as $id){
+            $news = News::find($id);
+            $news->order = $order;
+            $news->save();
+
+            $order++;
+        }
+    }
+
     private function generateEditFormConfig($values) {
         return [
             BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.news.content')." DE", 'content_de', '', false, true),
             BasicFunctions::formEntryEdit($values, 'tinymce', __('admin.news.content')." EN", 'content_en', '', false, true),
         ];
     }
-    
+
     private function generateShowFormConfig($values) {
         return [
             BasicFunctions::formEntryShow(__('admin.news.id'), $values->id),

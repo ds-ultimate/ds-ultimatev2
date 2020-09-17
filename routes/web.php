@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::get('/news', 'APIController@news')->name('news');
+        Route::post('/newsReorder', 'NewsController@reorder')->name('news.reorder');
         Route::get('/changelog', 'APIController@changelog')->name('changelog');
         Route::get('/roles', 'APIController@roles')->name('roles');
         Route::get('/users', 'APIController@users')->name('users');
@@ -97,7 +98,7 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middl
     Route::get('DsConnection', 'SettingsController@getDsConnection')->name('DsConnection');
     Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
     Route::get('socialite/destroy/{driver}', 'LoginController@destroyDriver')->name('socialiteDestroy');
-    
+
     Route::post('saveConquerHighlighting/{type}', 'SettingsController@saveConquerHighlighting')->name('saveConquerHighlighting');
 });
 

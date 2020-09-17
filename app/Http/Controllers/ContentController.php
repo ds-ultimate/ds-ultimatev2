@@ -18,7 +18,7 @@ class ContentController extends Controller
     public function index(){
         BasicFunctions::local();
         $serverArray = Server::getServer();
-        $news = News::all();
+        $news = News::orderBy('order')->get();
         return view('content.index', compact('serverArray', 'news'));
     }
 

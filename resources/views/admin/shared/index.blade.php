@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header">
         {{ $header }}
-        
+
         @can($create['permission'])
             <div class="float-right">
                 <a class="btn btn-success" href="{{ route($create['route']) }}">
@@ -13,7 +13,7 @@
             </div>
         @endcan
     </div>
-    
+
     <div class="card-body">
         <div class="table-responsive">
             <table id="table_id" class="table table-bordered table-striped table-hover datatable w-100">
@@ -26,7 +26,7 @@
                         @endforeach
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="sortable">
                 </tbody>
             </table>
         </div>
@@ -36,7 +36,7 @@
 
 @push('js')
 <script>
-    $('#table_id').DataTable({
+    var table = $('#table_id').DataTable({
         "columnDefs": [
             @foreach($tableColumns as $col)
                 {"targets": {{ $loop->index }}, "className": '{{ $col['class'] }}'},
@@ -53,6 +53,27 @@
         responsive: true,
         {!! \App\Util\Datatable::language() !!}
     });
+    
+    @forceSet($handle)
+    @if($handle)
+    $.each($('.sortable').get(), function (k,v) {
+        var s = sortable.create(v, {
+            animation: 300,
+            handle: '.handle', // handle's class
+            onEnd: function (e) {
+                axios.post('{{ route($datatableRoute . '.reorder') }}', {
+                    'order' : s.toArray(),
+                })
+                    .then((response) => {
+                        console.log(response)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            },
+        });
+    });
+    @endif
 </script>
 @endpush
 

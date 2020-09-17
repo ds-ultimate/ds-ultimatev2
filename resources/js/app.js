@@ -62,6 +62,7 @@ if (token) {
 // });
 
 window.numeral = require('numeral');
+window.sortable = require('sortablejs')
 
 window.createToast = function(data, title, time = 'now', icon = 'fas fa-sync') {
     var int = Math.floor((Math.random() * 1000) + 1);
