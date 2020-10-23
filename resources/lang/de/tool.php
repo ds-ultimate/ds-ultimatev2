@@ -252,6 +252,9 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'autoUpdate' => 'Automatisches aktualisieren',
     'autoUpdateHelp' => 'Wenn aktiviert, werden immer die aktuellen Daten benutzt um die Weltkarte zu generieren. Wenn deaktiviert wird die Map ein Mal generiert und dann immer das gespeicherte Bild verwendet.',
     'legend' => 'Legende',
+    'drawingErr' => 'Fehler in den Zeichnungen
+Bitte die Zeichenoberfläche öffnen und schließen
+Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
   ),
   'pointCalc' => 
   array (

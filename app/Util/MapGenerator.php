@@ -456,9 +456,15 @@ class MapGenerator extends PictureRender {
     }
     
     private function renderDrawing() {
-        $drawing_img=imagecreatefromstring($this->drawing_img);
-        
-        imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->width, $this->height, imagesx($drawing_img), imagesy($drawing_img));
+        try {
+            $drawing_img=imagecreatefromstring($this->drawing_img);
+            
+            imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->width, $this->height, imagesx($drawing_img), imagesy($drawing_img));
+        } catch (\ErrorException $ex) {
+            BasicFunctions::local();
+            $fg = imagecolorallocate($this->image, 255, 255, 255);
+            $this->renderCenteredText($this->width / 2, $this->height / 2, __('tool.map.drawingErr'), $fg);
+        }
     }
     
     private function renderText() {

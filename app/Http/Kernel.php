@@ -36,10 +36,12 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \App\Http\Middleware\AuthGates::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            'bindings',
         ],
 
         'api' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Session\Middleware\StartSession::class,
             'bindings',
         ],
     ];

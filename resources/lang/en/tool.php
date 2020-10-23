@@ -252,6 +252,9 @@ Attackcount: %ELEMENT_COUNT%
     'autoUpdateHelp' => 'With this enabled the map will always be generated from the current data. When deactivated the map will be generated once and this generated image will be served.',
     'cached' => 'This Map uses a cached Image, thus the automatic saving is disabled. Any changes will regenerate it from current data. The title can be changed without altering the map',
     'legend' => 'Legend',
+    'drawingErr' => 'There is an error in the drawings
+Please close and open the Drawing area
+If that problem persists please create a bug-report',
   ),
   'pointCalc' => 
   array (
