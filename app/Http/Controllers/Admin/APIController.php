@@ -20,6 +20,7 @@ class APIController extends Controller
     public function news()
     {
         abort_unless(\Gate::allows('news_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'news_show',
@@ -47,6 +48,7 @@ class APIController extends Controller
     public function changelog()
     {
         abort_unless(\Gate::allows('changelog_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'changelog_show',
@@ -83,6 +85,7 @@ class APIController extends Controller
     public function roles()
     {
         abort_unless(\Gate::allows('role_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'role_show',
@@ -114,6 +117,7 @@ class APIController extends Controller
     public function users()
     {
         abort_unless(\Gate::allows('user_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'user_show',
@@ -149,6 +153,7 @@ class APIController extends Controller
     public function servers()
     {
         abort_unless(\Gate::allows('server_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'server_show',
@@ -184,6 +189,7 @@ class APIController extends Controller
     public function worlds()
     {
         abort_unless(\Gate::allows('world_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'world_show',
@@ -241,6 +247,7 @@ class APIController extends Controller
     public function bugreports(Request $request)
     {
         abort_unless(\Gate::allows('bugreport_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
         
         $permissions = [
             'show' => 'bugreport_show',

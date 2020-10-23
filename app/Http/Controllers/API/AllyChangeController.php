@@ -11,6 +11,8 @@ class AllyChangeController extends Controller
 {
     public function getAllyAllyChanges($server, $world, $type, $allyID)
     {
+        DatatablesController::limitResults(200);
+        
         $allyChangesModel = new AllyChanges();
         $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
 
@@ -35,6 +37,8 @@ class AllyChangeController extends Controller
 
     public function getPlayerAllyChanges($server, $world, $type, $playerID)
     {
+        DatatablesController::limitResults(200);
+        
         $allyChangesModel = new AllyChanges();
         $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
 

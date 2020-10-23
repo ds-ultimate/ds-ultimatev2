@@ -100,6 +100,8 @@ class AttackPlannerItemController extends BaseController
 
     public function data(AttackList $attackList, $key){
         abort_unless($attackList->show_key == $key, 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(200);
+        
 
         $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
 
@@ -388,9 +390,9 @@ class AttackPlannerItemController extends BaseController
 
     function sendattack(Request $request){
         $attackListItem = AttackListItem::find($request->id);
+        abort_if($attackListItem === null, 404);
         abort_unless($request->key == $attackListItem->list->show_key, 403);
         $attackListItem->send = 1;
         $attackListItem->update();
     }
-
 }

@@ -14,6 +14,8 @@ class DatatablesController extends Controller
 {
     public function getPlayers($server, $world)
     {
+        static::limitResults(200);
+        
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
@@ -34,6 +36,8 @@ class DatatablesController extends Controller
 
     public function getAllys($server, $world)
     {
+        static::limitResults(200);
+        
         $allyModel = new Ally();
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
@@ -57,6 +61,8 @@ class DatatablesController extends Controller
 
     public function getAllyPlayer($server, $world, $ally)
     {
+        static::limitResults(200);
+        
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
@@ -78,6 +84,8 @@ class DatatablesController extends Controller
 
     public function getPlayerVillage($server, $world, $player)
     {
+        static::limitResults(200);
+        
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
 
@@ -105,6 +113,8 @@ class DatatablesController extends Controller
 
     public function getPlayersHistory($server, $world, $day)
     {
+        static::limitResults(50);
+        
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $playerModel = new Player();
@@ -190,6 +200,8 @@ class DatatablesController extends Controller
 
     public function getAllysHistory($server, $world, $day)
     {
+        static::limitResults(50);
+        
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $allyModel = new Ally();
@@ -274,5 +286,12 @@ class DatatablesController extends Controller
             })
             ->rawColumns(['rank','points','member_count','village_count','player_points','gesBash','offBash','defBash'])
             ->toJson();
+    }
+    
+    public static function limitResults($amount) {
+        request()->validate([
+            'length' => 'required|integer|min:1|max:'.$amount,
+            'start' => 'required|integer'
+        ]);
     }
 }

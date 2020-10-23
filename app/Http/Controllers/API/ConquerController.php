@@ -14,6 +14,8 @@ class ConquerController extends Controller
 {
     public function getAllyConquer($server, $world, $type, $allyID)
     {
+        DatatablesController::limitResults(200);
+        
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
@@ -66,6 +68,8 @@ class ConquerController extends Controller
 
     public function getPlayerConquer($server, $world, $type, $playerID)
     {
+        DatatablesController::limitResults(200);
+        
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
@@ -110,6 +114,8 @@ class ConquerController extends Controller
 
     public function getVillageConquer($server, $world, $type, $villageID)
     {
+        DatatablesController::limitResults(200);
+        
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
@@ -133,6 +139,8 @@ class ConquerController extends Controller
 
     public function getWorldConquer($server, $world, $type)
     {
+        DatatablesController::limitResults(200);
+        
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
