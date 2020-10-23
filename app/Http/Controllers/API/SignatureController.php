@@ -19,10 +19,13 @@ class SignatureController extends Controller
         $playerData = Player::player($server, $world, $id);
         
         if($playerData == null) {
-            return Response::stream(function () {
-                $filename = 'images/default/signature/bg_noData.png';
-                readfile($filename);
-            }, 200, ['content-type' => 'image/png']);
+            $img =  $this->createNoDataImg($server . $world, $id);
+            ob_start();
+            imagepng($img);
+            $imagedata = ob_get_clean();
+            imagedestroy($img);
+            return response($imagedata, 200)
+                    ->header('Content-Type', 'image/png');
         }
         
         $signature = $playerData->getSignature($worldData);
@@ -86,11 +89,17 @@ class SignatureController extends Controller
             $chart->render($statData, $playerString, Chart::chartTitel('points'), Chart::displayInvers('points'), true);
             imagecopyresampled($image, $chart->getRawImage(), 402, 7 - 5, 32, 10, 89, 56, 89, 56);//src_x -> 30
         }else{
-            $image = imagecreatefrompng('images/default/signature/bg_noData.png');
-            if($image === false) return false;
+            return false;
         }
         // Output
         imagepng($image, $targetFile);
         return true;
+    }
+    
+    private function createNoDataImg($serWorld, $id) {
+        $image = imagecreatefrompng('images/default/signature/bg_noData.png');
+        imagettftext($image, 10, 0, 56, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', 
+                "Unable to find player with id " . $id . "\nin our database for world " . $serWorld);
+        return $image;
     }
 }
