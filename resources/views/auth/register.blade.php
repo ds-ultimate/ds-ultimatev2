@@ -60,6 +60,17 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
+                        
+                        <div class="form-group row text-center">
+                            <div class="d-inline-block ml-auto mr-auto">
+                                {!! Captcha::display() !!}
+                                @if($errors->has('g-recaptcha-response'))
+                                    <div class="text-danger">
+                                        {{ $errors->first('g-recaptcha-response') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
