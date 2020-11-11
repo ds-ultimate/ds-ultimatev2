@@ -121,7 +121,7 @@ $tabList = [
 
 @push('js')
     <audio controls class="d-none">
-        <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.wav') }}" type="audio/mpeg">
+        <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.mp3') }}" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     <script type="text/javascript" src="{{ asset('plugin/jquery.countdown/jquery.countdown.min.js') }}"></script>
