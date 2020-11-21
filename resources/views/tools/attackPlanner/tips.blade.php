@@ -1,6 +1,6 @@
 <div class="tab-pane fade {{ ($active)? 'show active':'' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
-    <div class="row pt-3">
-        <table class="table table-striped mx-5">
+    <div class="row p-3">
+        <table class="table table-striped">
             <tr>
                 <th style="width: 300px">Mehrere Angriffe markieren</th>
                 <td>Es können mehrere Angriffe markiert werden in dem man die <div class="badge badge-primary h3">ctrl</div> [<div class="badge badge-primary">⌘</div>] und <div class="badge badge-primary"><i class="fas fa-arrow-up"></i></div></td>
