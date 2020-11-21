@@ -128,7 +128,7 @@ $tabList = [
     <script>
         var muteaudio = false;
         var keyArray = {};
-        var audioTiming = 0;
+        var audioTiming = 60;
         var now;
         var table =
             $('#data1').DataTable({
@@ -140,7 +140,7 @@ $tabList = [
                 @if($mode == 'edit')
                 select: true,
                 @endif
-                order:[[6, 'desc']],
+                order:[[{{ ($mode == 'edit')?'7':'6' }}, 'desc']],
                 ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
                 columns: [
                     @if($mode == 'edit')
