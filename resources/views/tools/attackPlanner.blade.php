@@ -129,6 +129,7 @@ $tabList = [
         var muteaudio = false;
         var keyArray = {};
         var audioTiming = 60;
+	var maxAudioTiming = 300;
         var now;
         var table =
             $('#data1').DataTable({
@@ -189,7 +190,7 @@ $tabList = [
                     $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline">' +
                         '<div class="col-9">' +
                             '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                            '<input type="range" class="custom-range" min="0" max="300" id="audioTiming" value="' + audioTiming + '">' +
+                            '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
                         '</div>' +
                         '<div class="col-2">' +
                             '<h5>' +
@@ -223,12 +224,12 @@ $tabList = [
 
         $(document).on('input', '#audioTiming', function () {
             var value = this.value;
-            $('#audioTimingInput').val(value > 300 ? 300 : value);
+            $('#audioTimingInput').val(value > maxAudioTiming ? maxAudioTiming : value);
             audioTiming = value;
         }).on('keyup', '#audioTimingInput', function (e) {
             var value = this.value;
-            $('#audioTimingInput').val(value > 300 ? 300 : value);
-            $('#audioTiming').val(value > 300 ? 300 : value);
+            $('#audioTimingInput').val(value > maxAudioTiming ? maxAudioTiming : value);
+            $('#audioTiming').val(value > maxAudioTiming ? maxAudioTiming : value);
             audioTiming = value;
         })
 
