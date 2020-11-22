@@ -189,7 +189,7 @@ $tabList = [
                     $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline">' +
                         '<div class="col-9">' +
                             '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                            '<input type="range" class="custom-range" min="0" max="60" id="audioTiming" value="' + audioTiming + '">' +
+                            '<input type="range" class="custom-range" min="0" max="300" id="audioTiming" value="' + audioTiming + '">' +
                         '</div>' +
                         '<div class="col-2">' +
                             '<h5>' +
@@ -223,12 +223,12 @@ $tabList = [
 
         $(document).on('input', '#audioTiming', function () {
             var value = this.value;
-            $('#audioTimingInput').val(value > 60 ? 60 : value);
+            $('#audioTimingInput').val(value > 300 ? 300 : value);
             audioTiming = value;
         }).on('keyup', '#audioTimingInput', function (e) {
             var value = this.value;
-            $('#audioTimingInput').val(value > 60 ? 60 : value);
-            $('#audioTiming').val(value > 60 ? 60 : value);
+            $('#audioTimingInput').val(value > 300 ? 300 : value);
+            $('#audioTiming').val(value > 300 ? 300 : value);
             audioTiming = value;
         })
 
