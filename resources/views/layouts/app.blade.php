@@ -40,7 +40,7 @@
 <div class="flex-center position-ref full-height">
     @include('nav.standart')
     <div class="container mb-5 pb-3">
-        <div id="toast-content" style="position: absolute; top: 60px; right: 10px; z-index: 100;">
+        <div id="toast-content" style="position: fixed; top: 60px; right: 10px; z-index: 100;">
 
         </div>
         @yield('content')

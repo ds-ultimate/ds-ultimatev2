@@ -61,10 +61,6 @@
 <script>
     var dataTable;
     $(document).ready( function () {
-        $.extend( $.fn.dataTable.defaults, {
-            responsive: true
-        } );
-
         dataTable = $('#table_id').DataTable({
             "columnDefs": [
                 {"targets": 2, "className": 'text-right'},

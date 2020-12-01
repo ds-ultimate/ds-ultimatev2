@@ -14,32 +14,32 @@
                 <h2>Auswertung (alles auf HG 0 umgerechnet in s):</h2>
                 <table class="table" id="data-table">
                     <colgroup>
-                        <col style="width: 100px">
-                        @for($i = 0; $i < 30; $i++)
+                        <col style="width: 50px">
+                        @foreach ($buildingTimes as $name => $value)
                             <col style="width: 100px">
-                        @endfor
+                        @endforeach
                     </colgroup>
                     <thead>
                     <tr>
-                        <th style="text-align: right">Stufe</th>
-                        @for($i = 0; $i < 30; $i++)
-                            <th>{{$i}}</th>
-                        @endfor
+                        <th style="text-align: right">Gebäude</th>
+                        @foreach ($buildingTimes as $name => $value)
+                            <th>{{ $name }}{{-- ucfirst(__("ui.buildings.$name")) --}}</th>
+                        @endforeach
                     </tr>
                     <tr>
-                        <th>Gebäude</th>
+                        <th>Stufe</th>
                         <th colspan="30"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($buildingTimes as $name => $value)
+                    @for($i = 0; $i < 30; $i++)
                         <tr>
-                            <th>{{ ucfirst(__("ui.buildings.$name")) }}</th>
-                            @for($i = 0; $i < 30; $i++)
+                            <th>{{ $i }}</th>
+                            @foreach ($buildingTimes as $name => $value)
                                 <td>{{ ((isset($value[$i]))?($value[$i]):("???")) }}</td>
-                            @endfor
+                            @endforeach
                         </tr>
-                    @endforeach
+                    @endfor
                     </tbody>
                 </table>
 		</div>

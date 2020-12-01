@@ -114,6 +114,17 @@
     </div>
 </div>
 
+@push('style')
+    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
+    <style>
+        .select2-container{
+            width: 1%!important;
+            flex: 1 1 auto;
+        }
+    </style>
+@endpush
+
 @push('js')
 <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
 <script>

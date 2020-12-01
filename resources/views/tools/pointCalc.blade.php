@@ -24,7 +24,7 @@
         function generateBuildingEntry($name, $conf) {
         ?>
         <tr>
-            <th><img src="{{ \App\Util\Icon::getBuildingImage($name) }}"/> {{ ucfirst(__("ui.buildings." . $name)) }}</th>
+            <th><img src="{{ \App\Util\BuildingUtils::getImage($name) }}"/> {{ ucfirst(__("ui.buildings." . $name)) }}</th>
             <td>
                 <select id="{{ $name }}-level" class="input-calc form-control form-control-sm">
                     @for ($i = intval($conf->min_level); $i <= intval($conf->max_level); $i++)
@@ -82,19 +82,19 @@
 <script>
 var buildConf = {
     @foreach ($buildConfig as $name => $value)
-        <?php $pointsBuild = \App\Util\Constants::buildingPoints($config, $name) ?>
+        <?php $buildCache = \App\Util\BuildingUtils::$BUILDINGS[$name] ?>
         "{{ $name }}": {
-            "pop": "{{ $value->pop }}",
-            "pop_factor": "{{ $value->pop_factor }}",
-            "build_time": "{{ $value->build_time }}",
-            "build_time_factor": "{{ $value->build_time_factor }}",
-            "points": "{{ $pointsBuild['points']}}",
-            "points_factor": "{{ $pointsBuild['points_factor'] }}",
+            "pop": "{{ $buildCache['pop'] }}",
+            "pop_factor": "{{ $buildCache['pop_factor'] }}",
+            "build_time": "{{ $buildCache['build_time'] }}",
+            "build_time_factor": "{{ $buildCache['build_time_factor'] }}",
+            "points": "{{ $buildCache['point']}}",
+            "points_factor": "{{ $buildCache['point_factor'] }}",
         },
     @endforeach
 }
 
-var mainFactor = 1.05;
+var mainFactor = {{ \App\Util\BuildingUtils::$MAIN_REDUCTION }};
 
 var worldSpeed = {{ $config->speed }};
 

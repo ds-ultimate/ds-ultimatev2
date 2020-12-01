@@ -129,7 +129,7 @@ $tabList = [
         var muteaudio = false;
         var keyArray = {};
         var audioTiming = 60;
-	var maxAudioTiming = 300;
+        var maxAudioTiming = 300;
         var now;
         var table =
             $('#data1').DataTable({
@@ -341,7 +341,7 @@ $tabList = [
                 .then((response) => {
                     var data = response.data;
                     table.ajax.reload();
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
+                    createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
@@ -380,7 +380,7 @@ $tabList = [
                     $('.bd-example-modal-xl').modal('hide');
                     var data = response.data;
                     table.ajax.reload();
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
+                    createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
@@ -430,7 +430,7 @@ $tabList = [
                 .then((response) => {
                     var data = response.data;
                     table.ajax.reload();
-                    createToast(data, data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
+                    createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
@@ -472,7 +472,7 @@ $tabList = [
             if (start == target){
                 var data = []
                 data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
-                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
+                createToast(data['msg'], '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                 error += 1;
             }
 
@@ -496,7 +496,7 @@ $tabList = [
             if (start == target){
                 var data = []
                 data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
-                createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
+                createToast(data['msg'], '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                 error += 1;
             }
 
@@ -521,7 +521,7 @@ $tabList = [
                 if (start == target) {
                     var data = []
                     data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
-                    createToast(data, '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
+                    createToast(data['msg'], '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
                     error += 1;
                 }
             }

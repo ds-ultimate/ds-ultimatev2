@@ -25,10 +25,11 @@
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.5",
         "filp/whoops": "^2.0",
+        "laravel/tinker": "^2.0",
         "nunomaduro/collision": "^4.1",
-        "phpunit/phpunit": "^9.0",
-        "laravel/tinker": "^2.0"
+        "phpunit/phpunit": "^9.0"
     },
     "repositories": [
         {

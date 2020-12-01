@@ -419,7 +419,7 @@
                 .catch((error) => {
                     var errors = error.response.data.errors;
                     $.each(errors, function(i, item) {
-                        var data = {'msg':item[0].charAt(0).toUpperCase()+item[0].substr(1)}
+                        var data = item[0].charAt(0).toUpperCase()+item[0].substr(1)
                         createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                     });
 
@@ -433,7 +433,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
@@ -447,7 +447,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                     connectionTable.ajax.reload();
                 })
                 .catch((error) => {
@@ -462,7 +462,7 @@
             })
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
                 })
                 .catch((error) => {
                 });
@@ -514,7 +514,7 @@
                     storingMap = false;
 
                     var data = response.data;
-                    createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
                 })
                 .catch((error) => {
 

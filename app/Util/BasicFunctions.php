@@ -326,6 +326,21 @@ class BasicFunctions
     public static function sign( $number ) {
         return ( $number > 0 ) ? 1 : (( $number < 0 ) ? -1 : 0 );
     }
+    
+    public static function flattenArray($array) {
+        if (!is_array($array)) {
+            // nothing to do if it's not an array
+            return array($array);
+        }
+
+        $result = array();
+        foreach ($array as $value) {
+            // explode the sub-array, and add the parts
+            $result = array_merge($result, static::flattenArray($value));
+        }
+
+        return $result;
+    }
 
     public static function modelHistoryCalc($newModel, $oldModel, $type, $invert = false){
         if ($newModel->$type != $oldModel->$type){

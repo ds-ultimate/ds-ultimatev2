@@ -223,6 +223,17 @@ class CollectDataController extends BaseController
             if($woodLevel != $data->level) {
                 echo "Changing level from {$data->level} to $woodLevel at {$data->id}<br>\n";
                 $data->level = $woodLevel;
+                if($data->building == 'main') {
+                    $res = (new BuildTime())->where('rawdata_id', $data->rawdata_id)->get();
+                    foreach($res as $entry) {
+                        if($entry->id != $data->id) {
+                            $entry->mainLevel = $data->level;
+                            $entry->save();
+                        }
+                    }
+                    $data->mainLevel = $data->level;
+                }
+                $data->save();
             }
             
             $parts = explode(":", $data->buildtime);
@@ -231,8 +242,8 @@ class CollectDataController extends BaseController
                 continue;
             }
             $time = ($parts[0]*60 + $parts[1])*60 + $parts[2];
-            $timeMinWithoutConf = ($time - 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
-            $timeMaxWithoutConf = ($time + 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
+            $timeMinWithoutConf = ($time - 1) * $worldConf->speed * pow(1.05, $data->mainLevel);
+            $timeMaxWithoutConf = ($time + 1) * $worldConf->speed * pow(1.05, $data->mainLevel);
             
             if(!isset($results[$data->building])) {
                 $results[$data->building] = array();
@@ -252,6 +263,7 @@ class CollectDataController extends BaseController
             }
         }
         
+        $all = [];
         $finalRes = array();
         foreach($results as $name => $val) {
             $finalRes[$name] = array();
@@ -264,7 +276,29 @@ class CollectDataController extends BaseController
                 }
                 
                 $finalRes[$name][$lv] = "$min-$max";
+                
+                $minExtr = $data['min'] / \App\Util\BuildingUtils::$BUILDINGS[$name]['build_time'];
+                $maxExtr = $data['max'] / \App\Util\BuildingUtils::$BUILDINGS[$name]['build_time'];
+                if(! isset($all[$lv])) $all[$lv] = [];
+                if(! isset($all[$lv]['min']) || $all[$lv]['min'] < $minExtr) {
+                    $all[$lv]['min'] = $minExtr;
+                }
+                if(! isset($all[$lv]['max']) || $all[$lv]['max'] > $maxExtr) {
+                    $all[$lv]['max'] = $maxExtr;
+                }
             }
+        }
+        $finalRes['all_min'] = [];
+        $finalRes['all_max'] = [];
+        foreach($all as $lv => $data) {
+            $min = $data['min'];
+            $max = $data['max'];
+            if($min > $max) {
+                echo "Warn $min bigger than $max !! @all, $lv <br>\n";
+            }
+            
+            $finalRes['all_min'][$lv] = "$min";
+            $finalRes['all_max'][$lv] = "$max";
         }
         
         return $finalRes;

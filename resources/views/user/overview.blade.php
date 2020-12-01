@@ -340,7 +340,7 @@
             axios.delete('{{ route('index') }}/tools/map/' + mapId + '/' + mapKey)
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('tool.map.title') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('tool.map.title') }}", "{{ __('global.now') }}");
 
                     $('#map-' + mapId).remove();
                     $('#ownMaps').children(':first').click();
@@ -358,7 +358,7 @@
             axios.delete('{{ route('index') }}/tools/attackPlanner/' + attackPlannerId + '/' + attackPlannerKey)
                 .then((response) => {
                     var data = response.data;
-                    createToast(data, "{{ __('tool.attackPlanner.title') }}", "{{ __('global.now') }}");
+                    createToast(data['msg'], "{{ __('tool.attackPlanner.title') }}", "{{ __('global.now') }}");
 
                     $('#attackList-' + attackPlannerId).remove();
                     $('#ownAttackList').children().eq(1).click();

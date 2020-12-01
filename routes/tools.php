@@ -44,9 +44,25 @@ Route::get('/{server}/{world}/maptop10p', 'Tools\MapController@mapTop10P')->name
 //Point calculator
 Route::get('/{server}/{world}/tools/pointCalc', 'Tools\PointCalcController@index')->name('pointCalc');
 
+
 //TableGenerator
 Route::get('/{server}/{world}/tools/tableGenerator', 'Tools\TableGeneratorController@index')->name('tableGenerator');
 Route::post('/tools/tableGenerator', 'Tools\TableGeneratorController@data')->name('tableGeneratorData');
+
+
+//Account manager database
+Route::get('/tools/accMgrDB/index', 'Tools\AccMgrDB@index')->name('accMgrDB.index');
+Route::get('/tools/accMgrDB/create', 'Tools\AccMgrDB@create')->name('accMgrDB.create');
+Route::post('/tools/accMgrDB/import', 'Tools\AccMgrDB@import')->name('accMgrDB.import');
+Route::post('/tools/accMgrDB/save', 'Tools\AccMgrDB@save')->name('accMgrDB.save');
+Route::get('/tools/accMgrDB/show/{template}', 'Tools\AccMgrDB@show')->name('accMgrDB.show');
+Route::get('/tools/accMgrDB/show/{template}/{key}', 'Tools\AccMgrDB@show')->name('accMgrDB.show_key');
+Route::get('/tools/accMgrDB/edit/{template}', 'Tools\AccMgrDB@edit')->name('accMgrDB.edit');
+Route::delete('/tools/accMgrDB/delete', 'Tools\AccMgrDB@delete')->name('accMgrDB.delete');
+Route::get('/{server}/{world}/tools/accountmanagerdatabase/index', 'Tools\AccMgrDB@index_world')->name('accMgrDB.index_world');
+Route::get('/tools/accMgrDB/api/index/{server?}/{world?}', 'Tools\AccMgrDB@api')->name('accMgrDB.index_api');
+Route::post('/tools/accMgrDB/api/rating/{template}', 'Tools\AccMgrDB@apiRating')->name('accMgrDB.rating_api');
+
 //Data Collection
 Route::get('/tools/datacollectionHQ/index', 'Tools\CollectDataController@index')->name('collectData');
 Route::get('/tools/datacollectionHQ/stats', 'Tools\CollectDataController@stats')->name('collectDataStats');

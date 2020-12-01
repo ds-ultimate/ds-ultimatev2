@@ -39,7 +39,10 @@ class Navigation
                 self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.history') . ")", 'rankAlly', $serverCodeName, false),
             ]);
             $retArray[] = self::navElement('ui.conquer.all', 'worldConquer', [$worldArg->server->code, $worldArg->name, 'all']);
-            $tools = [];
+        }
+        
+        $tools = [];
+        if($worldArg !== null) {
             $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', $serverCodeName);
             if($worldArg->config != null && $worldArg->units != null) {
                 $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', $serverCodeName);
@@ -51,8 +54,11 @@ class Navigation
                 $tools[] = self::navElement('tool.pointCalc.title', 'tools.pointCalc', $serverCodeName);
             }
             $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', $serverCodeName);
-            $retArray[] = self::navDropdown('ui.server.tools', $tools);
+            $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', $serverCodeName);
+        } else {
+            $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index');
         }
+        $retArray[] = self::navDropdown('ui.server.tools', $tools);
         
         return $retArray;
     }

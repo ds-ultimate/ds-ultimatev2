@@ -32,6 +32,7 @@ class World extends Model
         'url',
         'config',
         'units',
+        'buildings',
         'active',
     ];
 
