@@ -24,7 +24,8 @@ Route::get('/userskripte/verlaufe_und_karten.js', function() {
 
 Route::post('/api/time', function (){
     return response()->json([
-        'time' => \Carbon\Carbon::now()->timestamp
+        'time' => \Carbon\Carbon::now()->timestamp,
+        'millis' => \Carbon\Carbon::now()->milli,
     ]);
 })->name('api.time');
 

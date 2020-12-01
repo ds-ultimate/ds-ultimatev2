@@ -120,17 +120,15 @@ $tabList = [
 @endsection
 
 @push('js')
-    <audio controls class="d-none">
+    <audio id="audio-elm" controls class="d-none">
         <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.mp3') }}" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
-    <script type="text/javascript" src="{{ asset('plugin/jquery.countdown/jquery.countdown.min.js') }}"></script>
     <script>
         var muteaudio = false;
         var keyArray = {};
         var audioTiming = 60;
         var maxAudioTiming = 300;
-        var now;
         var table =
             $('#data1').DataTable({
                 ordering: true,
@@ -714,64 +712,73 @@ $tabList = [
                 muteaudio = true;
             }
         }
-
+        
+        var timeDiff = null;
         function countdown(){
+            if(timeDiff == null) {
+                var localTime = new Date().getTime() / 1000;
+                var serverPage = parseInt({{ \Carbon\Carbon::now()->timestamp }}{{ \Carbon\Carbon::now()->milli }}) / 1000;
+                timeDiff = localTime - serverPage;
+            }
+            
             axios.post('{{ route('api.time') }}')
                 .then((response) => {
+                    var localTime = new Date().getTime() / 1000;
                     now = parseInt(response.data['time']);
+                    now+= parseInt(response.data['millis']) / 1000;
+                    timeDiff = localTime - now;
+                    
                     $('countdown').each(function () {
                         var date = $(this).attr('date');
-                        startTimer(now, date, $(this));
+                        startTimer(date, $(this));
                     })
                 })
                 .catch((error) => {
-                    now = parseInt({{ \Carbon\Carbon::now()->timestamp }});
-                    startTimer(now, date, $(this));
+                    startTimer(date, $(this));
                 });
         }
-
-        function startTimer(now, arrive, display) {
-            var duration = arrive - now;
-            var timer = duration, days, hours, minutes, seconds;
+        
+        function startTimer(arrive, display) {
+            var duration = arrive - new Date().getTime() / 1000 - timeDiff;
+            var days, hours, minutes, seconds;
             var timerPlay = false;
             if (duration < 0){
                 display.parent().html("00:00:00").addClass("bg-danger text-white");
             }else {
                 var interval = setInterval(function () {
+                    duration = arrive - new Date().getTime() / 1000 - timeDiff;
+                    days = Math.floor(duration / 86400);
+                    hours = Math.floor((duration - days * 86400) / 3600);
+                    minutes = Math.floor((duration - days * 86400 - hours * 3600) / 60);
+                    seconds = Math.floor(duration - days * 86400 - hours * 3600 - minutes * 60);
 
-                    days = Math.floor(timer / 86400);
-                    hours = Math.floor((timer - days * 86400) / 3600);
-                    minutes = Math.floor((timer - days * 86400 - hours * 3600) / 60);
-                    seconds = timer - days * 86400 - hours * 3600 - minutes * 60;
-
-                    days = days < 1 ? "" : days + " Tage ";
+                    days = days < 1 ? "" : (days < 2 ? "1 Tag " : days + " Tage ");
                     hours = hours < 10 ? "0" + hours : hours;
                     minutes = minutes < 10 ? "0" + minutes : minutes;
                     seconds = seconds < 10 ? "0" + seconds : seconds;
                     display.html(days + hours + ":" + minutes + ":" + seconds);
 
-                    if (--timer < 0) {
+                    if (duration == 0) {
                         display.parent().addClass("bg-danger text-white");
                         clearInterval(interval);
                     }
-                    if (timer < audioTiming && !timerPlay) {
+                    if (duration < audioTiming && !timerPlay) {
                         audio();
                         timerPlay = true;
                     }
                 }, 1000);
             }
         }
-
+        
         function audio(){
             if(!muteaudio){
-                var $audio = $('audio');
+                var $audio = $('#audio-elm');
                 var audio = $audio[0];
                 audio.volume = 0.2;
                 audio.play();
-                var audioTime = setInterval(function () {
-                    audio.pause()
-                    audio.currentTime = 0
-                    clearInterval(audioTime)
+                setTimeout(function () {
+                    audio.pause();
+                    audio.currentTime = 0;
                 }, 2000)
             }
         }

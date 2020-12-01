@@ -60,8 +60,6 @@ mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', fa
 mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.css', 'public/plugin/jquery-ui/jquery-ui.min.css');
 mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.js', 'public/plugin/jquery-ui/jquery-ui.min.js');
 
-mix.copy('node_modules/jquery-countdown/dist/jquery.countdown.min.js', 'public/plugin/jquery.countdown/jquery.countdown.min.js');
-
 
 /*
  * Tinymce (wysiwyg editor for backend)
