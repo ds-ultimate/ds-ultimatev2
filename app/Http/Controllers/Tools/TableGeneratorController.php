@@ -17,7 +17,6 @@ use App\World;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Log;
 
 class TableGeneratorController extends BaseController
 {
@@ -39,7 +38,6 @@ class TableGeneratorController extends BaseController
     public function playerByAlly(Request $request){
         $world = World::find($request->get('world'));
         $playerModel = new Player();
-        Log::debug($request->all());
         $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
