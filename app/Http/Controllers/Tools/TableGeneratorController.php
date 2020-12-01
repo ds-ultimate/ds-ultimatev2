@@ -17,6 +17,7 @@ use App\World;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 
 class TableGeneratorController extends BaseController
 {
@@ -38,9 +39,16 @@ class TableGeneratorController extends BaseController
     public function playerByAlly(Request $request){
         $world = World::find($request->get('world'));
         $playerModel = new Player();
+        Log::debug($request->all());
         $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
-        $start = "[quote][table]\n[**]".(($request->get('number'))? 'Nr.[||]':'') ."Spieler". (($request->get('points'))? '[||]Punkte':'') . str_repeat('[||]', $request->get('columns')) . "[/**]\n";
+        $start = "[quote][table]\n[**]".
+            (($request->get('number'))? 'Nr.[||]':'').
+            "Spieler".
+            (($request->get('points'))? '[||]Punkte':'').
+            (($request->get('showPointDiff'))? '[||]&darr;120&darr;[||]&uarr;120&uarr;':'').
+            str_repeat('[||]', $request->get('columns')).
+            "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
         $number = 1;
@@ -54,7 +62,13 @@ class TableGeneratorController extends BaseController
                 $output = $start;
             }
 
-            $output .= '[*]'. (($request->get('number'))? $number++.'.[|]':'') .'[player]'. BasicFunctions::decodeName($player->name) .'[/player]'. (($request->get('points'))? '[|]'. BasicFunctions::numberConv($player->points):''). str_repeat('[|]', $request->get('columns')) . "\n";
+            $output .= '[*]'.
+                (($request->get('number'))? $number++.'.[|]':'').
+                '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
+                (($request->get('points'))? '[|]'. BasicFunctions::numberConv($player->points):'').
+                (($request->get('showPointDiff'))? BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2).'[|]':'').
+                str_repeat('[|]', $request->get('columns')) .
+                "\n";
         }
 
         $output .= $end;
@@ -69,7 +83,10 @@ class TableGeneratorController extends BaseController
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
         $villages = $villageModel->where('owner', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
-        $start = "[quote][table]\n[**]".(($request->get('number'))? 'Nr.[||]':'') ."Dorf". (($request->get('points'))? '[||]Punkte':'') . str_repeat('[||]', $request->get('columns')) . "[/**]\n";
+        $start = "[quote][table]\n[**]".
+            (($request->get('number'))? 'Nr.[||]':'') ."Dorf".
+            (($request->get('points'))? '[||]Punkte':'').
+            str_repeat('[||]', $request->get('columns')) . "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
         $number = 1;
@@ -83,7 +100,10 @@ class TableGeneratorController extends BaseController
                 $output = $start;
             }
 
-            $output .= '[*]'. (($request->get('number'))? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'. (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):''). str_repeat('[|]', $request->get('columns')) . "\n";
+            $output .= '[*]'.
+                (($request->get('number'))? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'.
+                (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):'').
+                str_repeat('[|]', $request->get('columns'))."\n";
         }
 
         $output .= $end;

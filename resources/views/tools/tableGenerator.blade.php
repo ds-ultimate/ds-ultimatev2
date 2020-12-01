@@ -96,6 +96,12 @@
                                             {{__('ui.showPoints')}}
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="showPointDiff" id="showPointDiff" value="showPointDiff">
+                                        <label class="form-check-label" for="showPointDiff">
+                                            {{__('ui.showPointDiff')}}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -178,6 +184,11 @@
             }else{
                 $('#sorting').prop("disabled", false)
             }
+            if($(this).val() == 'playerByAlly'){
+                $('#showPointDiff').prop("disabled", false)
+            }else{
+                $('#showPointDiff').prop("disabled", true)
+            }
             select.attr('id', data).val(null);
             $('#tableOutput').val('');
             select.select2("destroy");
@@ -211,6 +222,7 @@
                     'name': $('#name').is(":checked")? true : false,
                     'points': $('#points').is(":checked")? true : false,
                     'history': $('#history').is(":checked")? true : false,
+                    'showPointDiff': $('#showPointDiff').is(":checked")? true : false,
                     'columns': $('#columns').val(),
                     'selectType': $('select[name=selectType]').val(),
                 })
