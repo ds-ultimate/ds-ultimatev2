@@ -36,14 +36,15 @@ class TableGeneratorController extends BaseController
     }
 
     public function playerByAlly(Request $request){
+        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'').
-            "Spieler".
-            (($request->get('points'))? '[||]Punkte':'').
+            __('ui.table.player').
+            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
             (($request->get('showPointDiff'))? '[||]&darr;120&darr;[||]&uarr;120&uarr;':'').
             str_repeat('[||]', $request->get('columns')).
             "[/**]\n";
@@ -77,13 +78,15 @@ class TableGeneratorController extends BaseController
     }
 
     public function villageByPlayer(Request $request){
+        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
         $villages = $villageModel->where('owner', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
-            (($request->get('number'))? 'Nr.[||]':'') ."Dorf".
-            (($request->get('points'))? '[||]Punkte':'').
+            (($request->get('number'))? 'Nr.[||]':'') .
+            __('ui.table.village').
+            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
             str_repeat('[||]', $request->get('columns')) . "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
@@ -112,11 +115,17 @@ class TableGeneratorController extends BaseController
     }
 
     public function villageByAlly(Request $request){
+        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
         $players = $playerModel->where('ally_id', $request->get('selectType'))->get();
-        $start = "[quote][table]\n[**]".(($request->get('number'))? 'Nr.[||]':'') ."Dorf". (($request->get('points'))? '[||]Punkte':'') . str_repeat('[||]', $request->get('columns')) . "[/**]\n";
+        $start = "[quote][table]\n[**]".
+            (($request->get('number'))? 'Nr.[||]':'').
+            __('ui.table.village').
+            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
+            str_repeat('[||]', $request->get('columns')).
+            "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
         $number = 1;

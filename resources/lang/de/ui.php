@@ -157,6 +157,7 @@ return array (
     'map' => 'Übersichtskarte',
     'current' => 'Aktuell',
     'history' => 'Verlauf',
+    'toggle' => 'Umschalten',
   ),
   'ingame' => 
   array (
@@ -265,4 +266,5 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'archive' => 'Archiv',
   'showLessWorlds' => 'weniger Welten anzeigen',
   'showMoreWorlds' => 'mehr Welten anzeigen',
+  'showPointDiff' => '120er-Bereich anzeigen',
 );

@@ -157,6 +157,7 @@ return array (
     'map' => 'Map',
     'current' => 'Current',
     'history' => 'History',
+    'toggle' => 'Toggle',
   ),
   'ingame' => 
   array (
@@ -265,4 +266,5 @@ It is not specified which village you have to give the name to, but it must belo
   'archive' => 'archive',
   'showLessWorlds' => 'show less worlds',
   'showMoreWorlds' => 'show more worlds',
+  'showPointDiff' => 'Show 120% range',
 );
