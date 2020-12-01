@@ -53,9 +53,13 @@ class InsertMissingConquerData extends Command
     }
     
     private function insertMissing(World $worldModel) {
-        $conquerModel = new Conquer();
         $server = $worldModel->server->code;
         $world = $worldModel->name;
+        if(! BasicFunctions::existTable(BasicFunctions::getDatabaseName($server, $world), 'conquer')) {
+            return;
+        }
+        
+        $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world) . '.conquer');
         
         $todo = $conquerModel->whereNull('old_owner_name')

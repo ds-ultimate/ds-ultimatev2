@@ -303,6 +303,10 @@ class AttackPlannerItemController extends BaseController
         if (count($request->items) > 0){
             foreach ($request->items as $item){
                 $attackListItem = AttackListItem::find($item);
+                if($item == null) {
+                    continue;
+                }
+                
                 if (in_array('multiedit_type_checkbox', $request->checkboxes)){
                     $attackListItem->type = $request->type;
                 }
