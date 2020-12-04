@@ -252,7 +252,7 @@
                     createToast("{{ __('tool.accMgrDB.save_success') }}", "{{ __('global.save') }}", 'now', 'fas fa-check');
                 }
                 
-                if(forceSave && oldId == -1) {
+                if(forceSave) {
                     window.location.href = "{{ route('tools.accMgrDB.index') }}";
                 }
                 
