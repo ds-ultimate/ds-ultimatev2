@@ -169,7 +169,8 @@ class AccMgrDB extends BaseController
             $showKey = $model->show_key;
         } else {
             $id = -1;
-            $export=null;
+            $export = null;
+            $showKey = null;
         }
         $formEntries = [
             BasicFunctions::formEntryEdit($model, "text", __('tool.accMgrDB.name'), "name", __('tool.accMgrDB.name_def'), false, true),
