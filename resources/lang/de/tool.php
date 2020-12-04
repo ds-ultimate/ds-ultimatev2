@@ -306,5 +306,6 @@ Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
     'showLink' => 'Ansehen Link',
     'copy' => 'Kopieren',
     'showLinkDesc' => 'Mit diesem Link kann die Ausbauvorlage angesehen werden, allerdings nicht editiert',
+    'save_error' => 'Die Vorlage konnte nicht gespeichert werden. Sind Gebäude vorhanden?',
   ),
 );

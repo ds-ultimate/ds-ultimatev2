@@ -306,5 +306,6 @@ If that problem persists please create a bug-report',
     'copy' => 'Copy',
     'showLink' => 'View Link',
     'showLinkDesc' => 'This Links gives show access to the template',
+    'save_error' => 'The template could not be saved. Are there any buildings?',
   ),
 );

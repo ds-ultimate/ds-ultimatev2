@@ -234,10 +234,11 @@
             }
         }
         data += '&' + $.param(buildings);
-
+        
         axios.post($('#form_save_template').attr('action'), data)
             .then((response) => {
                 var dat = response.data;
+                var oldId = $('#id_input').val();
                 currentLevel = dat.buildings;
                 $('#table_detailed tbody').html(dat.html);
                 $('#id_input').val(dat.id);
@@ -250,8 +251,8 @@
                 if(data.saved) {
                     createToast("{{ __('tool.accMgrDB.save_success') }}", "{{ __('global.save') }}", 'now', 'fas fa-check');
                 }
-
-                if(forceSave && $('#id_input').val() == -1) {
+                
+                if(forceSave && oldId == -1) {
                     window.location.href = "{{ route('tools.accMgrDB.index') }}";
                 }
                 
@@ -266,7 +267,16 @@
                 }, 400);
             })
             .catch((error) => {
-
+                createToast("{{ __("tool.accMgrDB.save_error") }}", "{{ __('global.save') }}", 'now', 'fas fa-exclamation-circle text-danger');
+                setTimeout(function() {
+                    storing = false;
+                    if(storeNeeded) {
+                        storeNeeded = false;
+                        var nextForc = forceNext;
+                        forceNext = false;
+                        save(nextForc);
+                    }
+                }, 400);
             });
     }
 </script>
