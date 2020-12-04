@@ -66,5 +66,15 @@
             </div>
         </div>
     </div>
+    <!-- Column -->
+    <div class="col-sm-6 col-lg-3 pb-4">
+        <div class="card card-primary bg-danger">
+            <div class="box text-center p-3">
+                <h1 class="font-light text-white">{{ \App\Util\BasicFunctions::numberConv($counter['accMgrDB']) }}</h1>
+                <h6 class="text-white">{{ __('tool.accMgrDB.title') }}</h6>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
 </div>
 @endsection

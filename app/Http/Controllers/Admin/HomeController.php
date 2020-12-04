@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Tool\AccMgrDB\AccountManagerTemplate;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\Tool\Map\Map;
@@ -15,6 +16,7 @@ class HomeController
         $counter['maps'] = (new Map())->count();
         $counter['attackplaner'] = (new AttackList())->count();
         $counter['attacks'] = (new AttackListItem())->count();
+        $counter['accMgrDB'] = (new AccountManagerTemplate())->count();
         $counter['users'] = $users->count();
         $twitter = 0;
         $facebook = 0;
