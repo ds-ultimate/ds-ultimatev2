@@ -52,7 +52,11 @@ class AppServiceProvider extends ServiceProvider
                         $newCangelog = false;
                     }
                 }else{
-                    $newCangelog = $changelog->created_at->diffInDays() < 5;
+                    if (isset($newCangelog)) {
+                        $newCangelog = $changelog->created_at->diffInDays() < 5;
+                    }else{
+                        $newCangelog = false;
+                    }
                 }
             }
 
