@@ -65,7 +65,7 @@ class TableGeneratorController extends BaseController
                 (($request->get('number'))? $number++.'.[|]':'').
                 '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
                 (($request->get('points'))? '[|]'. BasicFunctions::numberConv($player->points):'').
-                (($request->get('showPointDiff'))? BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2).'[|]':'').
+                (($request->get('showPointDiff'))? '[|]'.BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2):'').
                 str_repeat('[|]', $request->get('columns')) .
                 "\n";
         }
