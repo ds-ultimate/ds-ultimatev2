@@ -61,7 +61,7 @@
                         <tbody>
                         @foreach ($buildConfig as $name => $value)
                             <?php $buildCache = \App\Util\BuildingUtils::$BUILDINGS[$name] ?>
-                            @if($buildCache['max'] >= 0)
+                            @if($buildCache['max_level'] >= 0)
                                 {!! generateBuildingEntry($name, $value) !!}
                             @endif
                         @endforeach
@@ -86,7 +86,7 @@
 var buildConf = {
     @foreach ($buildConfig as $name => $value)
         <?php $buildCache = \App\Util\BuildingUtils::$BUILDINGS[$name] ?>
-        @if($buildCache['max'] >= 0)
+        @if($buildCache['max_level'] >= 0)
         "{{ $name }}": {
             "pop": "{{ $buildCache['pop'] }}",
             "pop_factor": "{{ $buildCache['pop_factor'] }}",
