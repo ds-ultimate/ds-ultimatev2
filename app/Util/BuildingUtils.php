@@ -61,6 +61,11 @@ class BuildingUtils {
         'wall' => ['min_level' => 0, 'max_level' => 20, 'wood' => 50, 'stone' => 100, 'iron' => 20, 'pop' => 5, 'build_time' => 3600, 'point' => 8,
             'wood_factor' => 1.26, 'stone_factor' => 1.275, 'iron_factor' => 1.26, 'pop_factor' => 1.17, 'build_time_factor' => 1.2, 'point_factor' => 1.2,
         ],
+        //not buildable in normal villages -> ingore for point calc
+        //also none of that information is shown in /interface.php?func=get_building_info exept for max=30 min=1
+        'university' => ['min_level' => -1, 'max_level' => -1, 'wood' => -1, 'stone' => -1, 'iron' => -1, 'pop' => -1, 'build_time' => -1, 'point' => -1,
+            'wood_factor' => -1, 'stone_factor' => -1, 'iron_factor' => -1, 'pop_factor' => -1, 'build_time_factor' => -1, 'point_factor' => -1,
+        ],
     ];
     
     public static $MAIN_REDUCTION = 1.05;

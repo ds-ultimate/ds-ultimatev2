@@ -27,7 +27,7 @@ class AccMgrDB extends BaseController
 
         $worldData = World::getWorld($server, $world);
         $worldArray = [$worldData->server->code, $worldData->name];
-        return view('tools.accMgrDB.index', compact('worldArray'));
+        return view('tools.accMgrDB.index', compact('worldArray', 'server', 'worldData'));
     }
     
     public function api($server=null, $world=null) {
