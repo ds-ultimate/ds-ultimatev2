@@ -6,7 +6,12 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ __('tool.accMgrDB.title') }}</h1>
+            <h1 class="font-weight-normal">
+                {{ __('tool.accMgrDB.title') }}
+                @isset($worldData)
+                    [{{ $worldData->displayName() }}]
+                @endisset
+            </h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -15,6 +20,9 @@
                 {{ __('tool.accMgrDB.title') }}
             </h1>
             <h4>
+                @isset($worldData)
+                    {{ $worldData->displayName() }}
+                @endisset
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
@@ -25,21 +33,34 @@
                 <a id="createNew" href="{{ route('tools.accMgrDB.create') }}" class="btn btn-success ml-2">
                     <i class="fas fa-plus-circle"></i>
                 </a>
-                <button id="import-toggle" type="button" class="btn btn-success dropdown-toggle ml-2" data-toggle="dropdown">
-                    <i class="fas fa-file-import"></i>
-                </button>
-                <div id="dropdown-settings-div" class="dropdown-menu dropdown-menu-left p-3" aria-labelledby="dropdown-settings">
-                    <form id="form_import" action="{{ route("tools.accMgrDB.import") }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @method("POST")
-                        <div class="form-group">
-                            <h4><label for="import_data">{{ __('tool.accMgrDB.import_label') }}</label></h4>
-                            <input type="text" id="import_data" name="data"  class="form-control" value="" required>
-                        </div>
-                        <div>
-                            <input class="btn btn-danger" type="submit" value="{{ __('tool.accMgrDB.import') }}">
-                        </div>
-                    </form>
+                <div class="btn-group">
+                    <button id="import-toggle" type="button" class="btn btn-success dropdown-toggle ml-2" data-toggle="dropdown">
+                        <i class="fas fa-file-import"></i>
+                    </button>
+                    <div id="import-toggle-div" class="dropdown-menu dropdown-menu-left p-3" aria-labelledby="import-toggle">
+                        <form id="form_import" action="{{ route("tools.accMgrDB.import") }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method("POST")
+                            <div class="form-group">
+                                <h4><label for="import_data">{{ __('tool.accMgrDB.import_label') }}</label></h4>
+                                <input type="text" id="import_data" name="data"  class="form-control" value="" required>
+                            </div>
+                            <div>
+                                <input class="btn btn-danger" type="submit" value="{{ __('tool.accMgrDB.import') }}">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="filter-toggle" type="button" class="btn btn-success dropdown-toggle ml-2" data-toggle="dropdown">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <div id="filter-toggle-div" class="dropdown-menu dropdown-menu-left p-3" aria-labelledby="filter-toggle">
+                        <a id="filter-watchtower" class="dropdown-item db-filter{{ ($hasSetting["watchtower"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.watchtower') }}</a>
+                        <a id="filter-church" class="dropdown-item db-filter{{ ($hasSetting["church"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.church') }}</a>
+                        <a id="filter-statue" class="dropdown-item db-filter{{ ($hasSetting["statue"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.statue') }}</a>
+                    </div>
                 </div>
             @endauth
         </div>
@@ -75,7 +96,17 @@
             "processing": true,
             "serverSide": true,
             "order": [[ 0, "desc" ]],
-            "ajax": "{{ route('tools.accMgrDB.index_api', $worldArray) }}",
+            "ajax": {
+                url: "{{ route('tools.accMgrDB.index_api') }}",
+                data: function(d) {
+                    return $.extend({}, d, {
+                        "watchtower": ($("#filter-watchtower").hasClass('active') ? 1 : 0),
+                        "church": ($("#filter-church").hasClass('active') ? 1 : 0),
+                        "statue": ($("#filter-statue").hasClass('active') ? 1 : 0),
+                    });
+                }
+                
+            },
             "columns": [
                 { "data": "name" },
                 { "data": "rating", "searchable": false},
@@ -104,6 +135,12 @@
                 .catch((error) => {
 
                 });
+        });
+        
+        $('.db-filter').click(function (e) {
+            e.stopPropagation();
+            $(this).toggleClass('active');
+            dataTable.draw(false);
         });
     });
 

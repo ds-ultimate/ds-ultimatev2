@@ -60,7 +60,7 @@ Route::get('/tools/accMgrDB/show/{template}/{key}', 'Tools\AccMgrDB@show')->name
 Route::get('/tools/accMgrDB/edit/{template}', 'Tools\AccMgrDB@edit')->name('accMgrDB.edit');
 Route::delete('/tools/accMgrDB/delete', 'Tools\AccMgrDB@delete')->name('accMgrDB.delete');
 Route::get('/{server}/{world}/tools/accountmanagerdatabase/index', 'Tools\AccMgrDB@index_world')->name('accMgrDB.index_world');
-Route::get('/tools/accMgrDB/api/index/{server?}/{world?}', 'Tools\AccMgrDB@api')->name('accMgrDB.index_api');
+Route::get('/tools/accMgrDB/api/index', 'Tools\AccMgrDB@api')->name('accMgrDB.index_api');
 Route::post('/tools/accMgrDB/api/rating/{template}', 'Tools\AccMgrDB@apiRating')->name('accMgrDB.rating_api');
 
 //Data Collection

@@ -17,8 +17,13 @@ class AccMgrDB extends BaseController
 {
     public function index(){
         BasicFunctions::local();
-        $worldArray = [];
-        return view('tools.accMgrDB.index', compact('worldArray'));
+        
+        $hasSetting = [];
+        $hasSetting['watchtower'] = true;
+        $hasSetting['church'] = true;
+        $hasSetting['statue'] = true;
+        
+        return view('tools.accMgrDB.index', compact('hasSetting'));
     }
     
     public function index_world($server, $world){
@@ -26,49 +31,46 @@ class AccMgrDB extends BaseController
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        $worldArray = [$worldData->server->code, $worldData->name];
-        return view('tools.accMgrDB.index', compact('worldArray', 'server', 'worldData'));
+        
+        $buildingConfig = simplexml_load_string($worldData->buildings);
+        $unitConfig = simplexml_load_string($worldData->units);
+
+        $hasSetting = [];
+        $hasSetting['watchtower'] = isset($buildingConfig->watchtower);
+        $hasSetting['church'] = isset($buildingConfig->church);
+        $hasSetting['statue'] = isset($unitConfig->knight);
+        
+        return view('tools.accMgrDB.index', compact('server', 'worldData', 'hasSetting'));
     }
     
-    public function api($server=null, $world=null) {
+    public function api(Request $request) {
+        $reqData = $request->validate([
+            'watchtower' => 'required|boolean',
+            'church' => 'required|boolean',
+            'statue' => 'required|boolean',
+        ]);
+        
         BasicFunctions::local();
-        $filter = null;
-        if($server !== null && $world !== null) {
-            World::existWorld($server, $world);
-            
-            $worldData = World::getWorld($server, $world);
-            $buildingConfig = simplexml_load_string($worldData->buildings);
-            $unitConfig = simplexml_load_string($worldData->units);
-            
-            $hasWatchtower = isset($buildingConfig->watchtower);
-            $hasChurch = isset($buildingConfig->church);
-            $hasStatue = isset($unitConfig->knight);
-            $filter = function($query) use($hasWatchtower, $hasChurch, $hasStatue) {
-                if(! $hasWatchtower) {
-                    $query = $query->where('contains_watchtower', false);
-                }
-                if(! $hasChurch) {
-                    $query = $query->where('contains_church', false);
-                }
-                if(! $hasStatue) {
-                    $query = $query->where('contains_statue', false);
-                }
-            };
-        }
         
         $model = new AccountManagerTemplate();
-        $dataTbl = DataTables::eloquent($model->newQuery());
-        if($filter !== null) {
-            $dataTbl = $dataTbl->filter($filter, true);
-        }
-        return $dataTbl->filter(function($query) {
-                return $query->where(function($query) {
-                    $query = $query->where('public', true);
+        
+        return DataTables::eloquent($model->newQuery())
+            ->filter(function($query) use($reqData) {
+                $query->where(function($query) {
+                    $query->where('public', true);
                     if(\Auth::check()) {
-                        $query = $query->orWhere('user_id', \Auth::user()->id);
+                        $query->orWhere('user_id', \Auth::user()->id);
                     }
-                    return $query;
                 });
+                if(! $reqData['watchtower']) {
+                    $query->where('contains_watchtower', false);
+                }
+                if(! $reqData['church']) {
+                    $query->where('contains_church', false);
+                }
+                if(! $reqData['statue']) {
+                    $query->where('contains_statue', false);
+                }
             }, true)
             ->addColumn('actions', function ($data) {
                 $actions = '<a class="btn btn-xs btn-primary mx-2" href="' .
