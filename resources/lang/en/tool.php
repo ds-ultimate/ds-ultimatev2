@@ -307,5 +307,11 @@ If that problem persists please create a bug-report',
     'showLink' => 'View Link',
     'showLinkDesc' => 'This Links gives show access to the template',
     'save_error' => 'The template could not be saved. Are there any buildings?',
+    'filter' => 
+    array (
+      'church' => 'may contain a church',
+      'statue' => 'may contain a statue',
+      'watchtower' => 'may contain a watchtower',
+    ),
   ),
 );

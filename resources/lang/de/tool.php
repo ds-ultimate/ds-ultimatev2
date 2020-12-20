@@ -307,5 +307,11 @@ Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
     'copy' => 'Kopieren',
     'showLinkDesc' => 'Mit diesem Link kann die Ausbauvorlage angesehen werden, allerdings nicht editiert',
     'save_error' => 'Die Vorlage konnte nicht gespeichert werden. Sind Gebäude vorhanden?',
+    'filter' => 
+    array (
+      'watchtower' => 'Darf einen Wachturm enthalten',
+      'church' => 'Darf eine Kirche enthalten',
+      'statue' => 'Darf eine Statue enthalten',
+    ),
   ),
 );
