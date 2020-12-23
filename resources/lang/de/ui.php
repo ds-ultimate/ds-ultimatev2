@@ -254,6 +254,7 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
     'wall' => 'Wall',
     'barracks' => 'Kaserne',
     'church_f' => 'Erste Kirche',
+    'university' => 'Universität',
   ),
   'signature' => 'Signatur',
   'sorting' => 'Sortierung',
