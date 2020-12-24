@@ -43,19 +43,33 @@ class Navigation
         
         $tools = [];
         if($worldArg !== null) {
-            $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', $serverCodeName);
             if($worldArg->config != null && $worldArg->units != null) {
+                $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', $serverCodeName);
                 $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', $serverCodeName);
+            } else {
+                $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.missingConfig');
+                $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
-            if($worldArg->units != null) {
-                $tools[] = self::navElement('tool.map.title', 'tools.mapNew', $serverCodeName);
-            }
+            $tools[] = self::navElement('tool.map.title', 'tools.mapNew', $serverCodeName);
+            
             if($worldArg->config != null && $worldArg->buildings != null) {
                 $tools[] = self::navElement('tool.pointCalc.title', 'tools.pointCalc', $serverCodeName);
+            } else {
+                $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
             $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', $serverCodeName);
-            $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', $serverCodeName);
+            
+            if($worldArg->config != null && $worldArg->units != null) {
+                $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', $serverCodeName);
+            } else {
+                $tools[] = self::navElementDisabled('tool.accMgrDB.title', 'ui.nav.disabled.missingConfig');
+            }
         } else {
+            $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.map.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.tableGenerator.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index');
         }
         $retArray[] = self::navDropdown('ui.server.tools', $tools);
@@ -99,7 +113,28 @@ class Navigation
             'title' => $title,
             'link' => route($route, $routeArgs),
             'subElements' => null,
-            'icon' => $icon
+            'icon' => $icon,
+            'tooltip' => null,
+            'enabled' => true,
+        ];
+    }
+    
+    public static function navElementDisabled($title, $tooltip, $translatedTitle=true, $translatedTooltip=true) {
+        $id = str_replace(".", "", $title);
+        if($translatedTitle) {
+            $title = ucfirst(__($title));
+        }
+        if($translatedTooltip) {
+            $tooltip = ucfirst(__($tooltip));
+        }
+        return [
+            'id' => $id,
+            'title' => $title,
+            'link' => "",
+            'subElements' => null,
+            'icon' => null,
+            'tooltip' => $tooltip,
+            'enabled' => false,
         ];
     }
     
@@ -114,6 +149,8 @@ class Navigation
             'link' => null,
             'subElements' => $subelements,
             'icon' => null,
+            'tooltip' => null,
+            'enabled' => true,
         ];
     }
 }

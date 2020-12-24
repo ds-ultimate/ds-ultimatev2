@@ -25,7 +25,7 @@ class DistanceCalcController extends BaseController
             abort(404, __('tool.distCalc.notAvailable'));
         }
 
-        $unitConfig = simplexml_load_string($worldData->units);
+        $unitConfig = $worldData->unitConfig();
         $config = simplexml_load_string($worldData->config);
         
         return view('tools.distanceCalc', compact('worldData', 'server', 'unitConfig', 'config'));

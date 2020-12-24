@@ -33,7 +33,7 @@ class AccMgrDB extends BaseController
         $worldData = World::getWorld($server, $world);
         
         $buildingConfig = simplexml_load_string($worldData->buildings);
-        $unitConfig = simplexml_load_string($worldData->units);
+        $unitConfig = $worldData->unitConfig();
 
         $hasSetting = [];
         $hasSetting['watchtower'] = isset($buildingConfig->watchtower);

@@ -104,10 +104,11 @@ return array (
     'code' => 'Code',
     'dsLink' => 'Die Stämme Link',
     'worlds' => 'Welten',
-    'show' => 'Welten anzeigen',
+    'show' => 'Auswählen',
     'title' => 'Server',
     'ranking' => 'Rangliste',
     'tools' => 'Tools',
+    'choose' => 'Wähle deinen Server aus',
   ),
   'footer' => 
   array (
@@ -158,6 +159,11 @@ return array (
     'current' => 'Aktuell',
     'history' => 'Verlauf',
     'toggle' => 'Umschalten',
+    'disabled' => 
+    array (
+      'missingConfig' => 'Dieses Feature ist bei der ausgewählten Welt nicht verfügbar',
+      'noWorld' => 'Um dieses Feature nutzen zu können muss eine Welt ausgewählt werden',
+    ),
   ),
   'ingame' => 
   array (
@@ -268,4 +274,8 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'showLessWorlds' => 'weniger Welten anzeigen',
   'showMoreWorlds' => 'mehr Welten anzeigen',
   'showPointDiff' => '120er-Bereich anzeigen',
+  'index' => 
+  array (
+    'help' => 'um die meisten Funktionen der Seite nutzen zu können musst du einen Server und eine Welt auswählen',
+  ),
 );

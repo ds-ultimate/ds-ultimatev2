@@ -14,6 +14,7 @@
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
+    <link href="{{ asset('plugin/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
     @if (config('app.debug') == false)
         <!-- Matomo -->
         <script type="text/javascript">

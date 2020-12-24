@@ -75,11 +75,12 @@ return array (
   array (
     'code' => 'code',
     'dsLink' => 'Tribal Wars link',
-    'show' => 'show worlds',
+    'show' => 'Choose',
     'title' => 'server',
     'worlds' => 'worlds',
     'ranking' => 'Ranking',
     'tools' => 'Tools',
+    'choose' => 'Choose your server',
   ),
   'tabletitel' => 
   array (
@@ -158,6 +159,11 @@ return array (
     'current' => 'Current',
     'history' => 'History',
     'toggle' => 'Toggle',
+    'disabled' => 
+    array (
+      'missingConfig' => 'This feature is not available for the selected world',
+      'noWorld' => 'In order to use this feature you must select a world',
+    ),
   ),
   'ingame' => 
   array (
@@ -268,4 +274,8 @@ It is not specified which village you have to give the name to, but it must belo
   'showLessWorlds' => 'show less worlds',
   'showMoreWorlds' => 'show more worlds',
   'showPointDiff' => 'Show 120% range',
+  'index' => 
+  array (
+    'help' => 'in order to use most of the functions of this site you need to choose a server and a world',
+  ),
 );

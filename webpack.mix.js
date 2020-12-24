@@ -55,7 +55,7 @@ mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', fa
 
 
 /*
- * jqueryUi + jquery.countdown
+ * jqueryUi
  */
 mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.css', 'public/plugin/jquery-ui/jquery-ui.min.css');
 mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.js', 'public/plugin/jquery-ui/jquery-ui.min.js');

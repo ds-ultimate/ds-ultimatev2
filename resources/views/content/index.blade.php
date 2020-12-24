@@ -23,9 +23,10 @@
                 <h1 class="font-weight-normal">{{ config('app.name') }}</h1>
             </div>
         </div>
-        @if (count($news) > 0)
-        <!-- News -->
-        <div class="col col-md-1"></div>
+    </div>
+    @if (count($news) > 0)
+    <!-- News -->
+    <div class="row justify-content-center">
         <div class="col-12 col-md-10 mt-1 mb-3">
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="10000" style="background-color: #fbf6e9; border: 1px solid #edd492; border-radius: 0.25rem;">
                 <div class="card-body">
@@ -58,14 +59,26 @@
                 </div>
             </div>
         </div>
-        <div class="col col-md-1"></div>
-        <!-- ENDE News -->
-        @endif
-        <!-- Normale Welten -->
-        <div class="col-12 col-md-6 mt-2">
+    </div>
+    <!-- ENDE News -->
+    @endif
+    <!-- Help Text -->
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">{{ __('ui.server.title') }}:</h2>
+                    {{ ucfirst(__("ui.index.help")) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ENDE Help Text -->
+    <!-- Normale Welten -->
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ __('ui.server.choose') }}:</h2>
                     <table class="table table-hover table-striped text-break">
                         <thead>
                         <tr>
@@ -91,8 +104,8 @@
                 </div>
             </div>
         </div>
-        <!-- ENDE Normale Welten -->
     </div>
+    <!-- ENDE Normale Welten -->
 @endsection
 
 @push('js')
