@@ -48,12 +48,12 @@ class UpdateWorldData extends Command
                     $server = $dbWorld->server->code;
                     $world = $dbWorld->name;
                     foreach(explode(",", $this->argument('part')) as $part) {
-                        UpdateWorldData::updateWorldData($server, $world, $part);
+                        static::updateWorldData($server, $world, $part);
                     }
                 }
             } else {
                 foreach(explode(",", $this->argument('part')) as $part) {
-                    UpdateWorldData::updateWorldData($server, $world, $part);
+                    static::updateWorldData($server, $world, $part);
                 }
             }
         }

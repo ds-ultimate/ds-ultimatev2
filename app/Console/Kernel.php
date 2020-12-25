@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo("storage/logs/cron-critical.log");
 
         /*
-         * Update WorldData
+         * Clean WorldData
          */
         $schedule->command("update:nextClean")
             ->everyFiveMinutes()
@@ -73,6 +73,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('update:world')
             ->dailyAt('23:55')
+            ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        //run this only there was at least one insert per world / will ignore entries if enty date != current date
+        $schedule->command('update:worldHistory')
+            ->dailyAt('3:05')
             ->appendOutputTo("storage/logs/cron-critical.log");
         
         $schedule->command('session:gc')
