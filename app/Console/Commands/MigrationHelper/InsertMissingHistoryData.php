@@ -46,7 +46,7 @@ class InsertMissingHistoryData extends Command
      */
     public function handle()
     {
-        BasicFunctions::ignoreErrs();
+        //BasicFunctions::ignoreErrs();
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '10000M');
         
@@ -161,6 +161,10 @@ class InsertMissingHistoryData extends Command
         echo "Reading Player\n";
         $playerNames = [];
         for($num = 0; $num < config('dsUltimate.hash_player'); $num++) {
+            if(!BasicFunctions::existTable($dbName, "player_$num")) {
+                continue;
+            }
+            
             $res = DB::select("SELECT * FROM $dbName.player_$num ORDER BY 'created_at' ASC");
             foreach($res as $entry) {
                 $playerNames[$entry->playerID] = $entry->name;
@@ -172,6 +176,10 @@ class InsertMissingHistoryData extends Command
         echo "Reading Ally\n";
         $allyNames = [];
         for($num = 0; $num < config('dsUltimate.hash_ally'); $num++) {
+            if(! BasicFunctions::existTable($dbName, "ally_$num")) {
+                continue;
+            }
+            
             $res = DB::select("SELECT * FROM $dbName.ally_$num ORDER BY 'created_at' ASC");
             foreach($res as $entry) {
                 $allyNames[$entry->allyID] = [
@@ -269,6 +277,7 @@ class InsertMissingHistoryData extends Command
             }
             $villages[$key] = $running;
         }
+	//dd($keys, $dates);
         unset($running);
         
         $finalPlayerData = [];
@@ -422,7 +431,7 @@ class InsertMissingHistoryData extends Command
     }
     
     private static function getDates($dbName) {
-        $res = (new Village())->setTable("$dbName.village_0")->orderBy('created_at', 'ASC')->first();
+        $res = (new Village())->setTable("$dbName.village_1")->orderBy('created_at', 'ASC')->first();
         $dates = [];
         $tempCarb = Carbon::parse($res->created_at);
         $target = Carbon::now()->format("Y-m-d");
