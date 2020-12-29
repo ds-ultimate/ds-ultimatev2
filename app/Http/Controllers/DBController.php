@@ -182,7 +182,7 @@ class DBController
     }
     
     public static function historyIndexTable($dbName) {
-        Schema::create($dbName.'_history.index', function(Blueprint $table) {
+        Schema::create($dbName.'.index', function(Blueprint $table) {
             $table->increments('id');
             $table->text('date');
             $table->timestamps();
@@ -276,11 +276,7 @@ class DBController
                     BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
                     continue;
                 }
-                if (DB::statement('CREATE DATABASE ' . $name . '_history') !== true) {
-                    BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name\_history' konnte nicht erstellt werden.");
-                    continue;
-                }
-                static::historyIndexTable($dbName);
+                static::historyIndexTable($name);
                 BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
             }
         }

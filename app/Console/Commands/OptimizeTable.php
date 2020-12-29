@@ -78,13 +78,7 @@ class OptimizeTable extends Command
         
         switch($target) {
             case "history":
-                $model = new HistoryIndex();
-                $model->setTable("{$dbName}_history.index");
-                foreach($model->get() as $histIdx) {
-                    $tables[] = "{$dbName}_history.`village_{$histIdx->date}`";
-                    $tables[] = "{$dbName}_history.`player_{$histIdx->date}`";
-                    $tables[] = "{$dbName}_history.`ally_{$histIdx->date}`";
-                }
+                $tables[] = "{$dbName}.index";
                 break;
             
             case "ally":

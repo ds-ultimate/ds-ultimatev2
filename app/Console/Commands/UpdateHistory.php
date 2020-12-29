@@ -58,14 +58,14 @@ class UpdateHistory extends Command
                 $server = $dbWorld->server->code;
                 $world = $dbWorld->name;
                 $dbName = BasicFunctions::getDatabaseName($server, $world);
-                echo "For $dbName\n";
+                //echo "For $dbName\n";
                 $date = Carbon::now()->format("Y-m-d");
                 static::updateWorldHistory($dbName, $date, "v");
                 static::updateWorldHistory($dbName, $date, "p");
                 static::updateWorldHistory($dbName, $date, "a");
 
                 $histIdx = new HistoryIndex();
-                $histIdx->setTable($dbName . "_history.index");
+                $histIdx->setTable($dbName . ".index");
                 $histIdx->date = $date;
                 $histIdx->save();
             }
@@ -77,7 +77,7 @@ class UpdateHistory extends Command
             static::updateWorldHistory($dbName, $date, "a");
 
             $histIdx = new HistoryIndex();
-            $histIdx->setTable($dbName . "_history.index");
+            $histIdx->setTable($dbName . ".index");
             $histIdx->date = $date;
             $histIdx->save();
         }
@@ -85,58 +85,68 @@ class UpdateHistory extends Command
     }
     
     public static function updateWorldHistory($dbName, $date, $part) {
+        if(!file_exists(config('dsUltimate.history_directory') . "{$dbName}")) {
+            mkdir(config('dsUltimate.history_directory') . "{$dbName}", 0777, true);
+        }
+        
         switch ($part) {
             case "village":
             case "v":
                 $model = new Village();
                 $fromTable = $dbName . ".village_latest";
-                $toTable = $dbName . "_history.village_$date";
-                if(BasicFunctions::existTable($dbName . "_history", "village_$date")) {
-                    return;
-                }
-                DBController::villageLatestTable($dbName . "_history", $date);
+                $toFile = config('dsUltimate.history_directory') . "{$dbName}/village_$date.gz";
+                $entryCallback = function($entry) {
+                    return "{$entry->villageID};{$entry->name};{$entry->x};{$entry->y};"
+                        . "{$entry->points};{$entry->owner};{$entry->bonus_id};";
+                };
                 break;
 
             case "player":
             case "p":
                 $model = new Player();
                 $fromTable = $dbName . ".player_latest";
-                $toTable = $dbName . "_history.player_$date";
-                if(BasicFunctions::existTable($dbName . "_history", "player_$date")) {
-                    return;
-                }
-                DBController::playerLatestTable($dbName . "_history", $date);
+                $toFile = config('dsUltimate.history_directory') . "{$dbName}/player_$date.gz";
+                $entryCallback = function($entry) {
+                    return "{$entry->playerID};{$entry->name};{$entry->ally_id};"
+                        . "{$entry->points};{$entry->village_count};{$entry->rank};"
+                        . "{$entry->offBash};{$entry->offBashRank};"
+                        . "{$entry->defBash};{$entry->defBashRank};"
+                        . "{$entry->supBash};{$entry->supBashRank};"
+                        . "{$entry->gesBash};{$entry->gesBashRank}";
+                };
                 break;
 
             case "ally":
             case "a":
                 $model = new Ally();
                 $fromTable = $dbName . ".ally_latest";
-                $toTable = $dbName . "_history.ally_$date";
-                if(BasicFunctions::existTable($dbName . "_history", "ally_$date")) {
-                    return;
-                }
-                DBController::allyLatestTable($dbName . "_history", $date);
+                $toFile = config('dsUltimate.history_directory') . "{$dbName}/ally_$date.gz";
+                $entryCallback = function($entry) {
+                    return "{$entry->allyID};{$entry->name};{$entry->tag};{$entry->member_count};"
+                        . "{$entry->points};{$entry->village_count};{$entry->rank};"
+                        . "{$entry->offBash};{$entry->offBashRank};"
+                        . "{$entry->defBash};{$entry->defBashRank};"
+                        . "{$entry->gesBash};{$entry->gesBashRank}";
+                };
                 break;
         }
         
         //READ
-        $data = [];
         $res = DB::select("SELECT * FROM $fromTable");
+        $file = gzopen($toFile, "w9");
+        if($file === false ) {
+            echo "Unable to open file for $dbName";
+            return;
+        }
         foreach($res as $entry) {
             //Check date
             $entryDate = explode(" ", $entry->created_at)[0];
             if($date == $entryDate) {
-                $data[] = (array) $entry;
+                gzwrite($file, $entryCallback($entry) . "\n");
             } else {
                 echo "Warning wrong date found $server$world $part@{$entry->id} -> $date / $entryDate\n";
             }
         }
-        
-        //WRITE
-        $model->setTable($toTable);
-        foreach (array_chunk($data, 3000) as $t){
-            $model->insert($t);
-        }
+        gzclose($file);
     }
 }
