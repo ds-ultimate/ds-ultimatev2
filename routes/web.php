@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'ContentController@index')->name('index');
+Route::get('/', [\App\Http\Controllers\ContentController::class, 'index'])->name('index');
 
 Auth::routes(['verify' => true]);
 
@@ -40,103 +40,103 @@ Route::get('/setlocale/{locale}',function($lang){
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['dashboard']], function () {
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
+    Route::delete('roles/destroy', [\App\Http\Controllers\Admin\RolesController::class, 'massDestroy'])->name('roles.massDestroy');
+    Route::resource('roles', \App\Http\Controllers\Admin\RolesController::class);
 
-    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-    Route::resource('users', 'UsersController');
+    Route::delete('users/destroy', [\App\Http\Controllers\Admin\UsersController::class,'massDestroy'])->name('users.massDestroy');
+    Route::resource('users', \App\Http\Controllers\Admin\UsersController::class);
 
-    Route::delete('server/destroy', 'ServerController@massDestroy')->name('server.massDestroy');
-    Route::resource('server', 'ServerController');
+    Route::delete('server/destroy', [\App\Http\Controllers\Admin\ServerController::class, 'massDestroy'])->name('server.massDestroy');
+    Route::resource('server', \App\Http\Controllers\Admin\ServerController::class);
 
-    Route::delete('worlds/destroy', 'WorldsController@massDestroy')->name('worlds.massDestroy');
-    Route::resource('worlds', 'WorldsController');
+    Route::delete('worlds/destroy', [\App\Http\Controllers\Admin\WorldsController::class, 'massDestroy'])->name('worlds.massDestroy');
+    Route::resource('worlds', \App\Http\Controllers\Admin\WorldsController::class);
 
-    Route::delete('news/destroy', 'NewsController@massDestroy')->name('news.massDestroy');
-    Route::resource('news', 'NewsController');
+    Route::delete('news/destroy', [\App\Http\Controllers\Admin\NewsController::class, 'massDestroy'])->name('news.massDestroy');
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
 
-    Route::delete('changelogs/destroy', 'ChangelogsController@massDestroy')->name('changelogs.massDestroy');
-    Route::resource('changelogs', 'ChangelogsController');
+    Route::delete('changelogs/destroy', [\App\Http\Controllers\Admin\ChangelogsController::class, 'massDestroy'])->name('changelogs.massDestroy');
+    Route::resource('changelogs', \App\Http\Controllers\Admin\ChangelogsController::class);
 
-    Route::delete('bugreports/destroy', 'BugreportsController@massDestroy')->name('bugreports.massDestroy');
-    Route::get('bugreports/priority/{priority}', 'BugreportsController@indexPriority')->name('bugreports.priority');
-    Route::get('bugreports/status/{status}', 'BugreportsController@indexStatus')->name('bugreports.status');
-    Route::get('bugreports/new', 'BugreportsController@indexNew')->name('bugreports.new');
-    Route::resource('bugreports', 'BugreportsController');
+    Route::delete('bugreports/destroy', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'massDestroy'])->name('bugreports.massDestroy');
+    Route::get('bugreports/priority/{priority}', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexPriority'])->name('bugreports.priority');
+    Route::get('bugreports/status/{status}', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexStatus'])->name('bugreports.status');
+    Route::get('bugreports/new', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexNew'])->name('bugreports.new');
+    Route::resource('bugreports', \App\Http\Controllers\Admin\BugreportsCommentController::class);
 
-    Route::resource('bugreportsComments', 'BugreportsCommentController');
+    Route::resource('bugreportsComments', \App\Http\Controllers\Admin\BugreportsCommentController::class);
 
-    Route::get('/appLog', 'AppLogController@index')->name('appLog');
+    Route::get('/appLog', [\App\Http\Controllers\Admin\AppLogController::class, 'index'])->name('appLog');
 
     Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
-        Route::get('/news', 'APIController@news')->name('news');
-        Route::post('/newsReorder', 'NewsController@reorder')->name('news.reorder');
-        Route::get('/changelog', 'APIController@changelog')->name('changelog');
-        Route::get('/roles', 'APIController@roles')->name('roles');
-        Route::get('/users', 'APIController@users')->name('users');
-        Route::get('/servers', 'APIController@servers')->name('servers');
-        Route::get('/worlds', 'APIController@worlds')->name('worlds');
-        Route::get('/bugreports', 'APIController@bugreports')->name('bugreports');
+        Route::get('/news', [\App\Http\Controllers\Admin\APIController::class, 'news'])->name('news');
+        Route::post('/newsReorder', [\App\Http\Controllers\Admin\NewsController::class, 'reorder'])->name('news.reorder');
+        Route::get('/changelog', [\App\Http\Controllers\Admin\APIController::class, 'changelog'])->name('changelog');
+        Route::get('/roles', [\App\Http\Controllers\Admin\APIController::class, 'roles'])->name('roles');
+        Route::get('/users', [\App\Http\Controllers\Admin\APIController::class, 'users'])->name('users');
+        Route::get('/servers', [\App\Http\Controllers\Admin\APIController::class, 'servers'])->name('servers');
+        Route::get('/worlds', [\App\Http\Controllers\Admin\APIController::class, 'worlds'])->name('worlds');
+        Route::get('/bugreports', [\App\Http\Controllers\Admin\APIController::class, 'bugreports'])->name('bugreports');
     });
 });
 
 Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {
-    Route::get('/bugreport', 'FormController@bugreport')->name('bugreport');
-    Route::post('/bugreport/store', 'FormController@bugreportStore')->name('bugreport.store');
+    Route::get('/bugreport', [\App\Http\Controllers\FormController::class, 'bugreport'])->name('bugreport');
+    Route::post('/bugreport/store', [\App\Http\Controllers\FormController::class, 'bugreportStore'])->name('bugreport.store');
 });
 
 Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middleware' => ['verified']], function () {
-    Route::get('overview/{page}', 'HomeController@overview')->name('overview');
-    Route::get('settings/{page}', 'HomeController@settings')->name('settings');
-    Route::post('uploadeImage', 'SettingsController@imgUploade')->name('uploadeImage');
-    Route::post('destroyImage', 'SettingsController@imgDestroy')->name('destroyImage');
-    Route::post('addConnection', 'SettingsController@addConnection')->name('addConnection');
-    Route::post('saveSettingsAccount', 'SettingsController@saveSettingsAccount')->name('saveSettingsAccount');
-    Route::post('saveMapSettings', 'SettingsController@saveMapSettings')->name('saveMapSettings');
-    Route::post('destroyConnection', 'SettingsController@destroyConnection')->name('destroyConnection');
-    Route::get('DsConnection', 'SettingsController@getDsConnection')->name('DsConnection');
-    Route::post('DsConnection', 'SettingsController@checkConnection')->name('checkDsConnection');
-    Route::get('socialite/destroy/{driver}', 'LoginController@destroyDriver')->name('socialiteDestroy');
+    Route::get('overview/{page}', [\App\Http\Controllers\User\HomeController::class, 'overview'])->name('overview');
+    Route::get('settings/{page}', [\App\Http\Controllers\User\HomeController::class, 'settings'])->name('settings');
+    Route::post('uploadeImage', [\App\Http\Controllers\User\SettingsController::class, 'imgUploade'])->name('uploadeImage');
+    Route::post('destroyImage', [\App\Http\Controllers\User\SettingsController::class, 'imgDestroy'])->name('destroyImage');
+    Route::post('addConnection', [\App\Http\Controllers\User\SettingsController::class, 'addConnection'])->name('addConnection');
+    Route::post('saveSettingsAccount', [\App\Http\Controllers\User\SettingsController::class, 'saveSettingsAccount'])->name('saveSettingsAccount');
+    Route::post('saveMapSettings', [\App\Http\Controllers\User\SettingsController::class, 'saveMapSettings'])->name('saveMapSettings');
+    Route::post('destroyConnection', [\App\Http\Controllers\User\SettingsController::class, 'destroyConnection'])->name('destroyConnection');
+    Route::get('DsConnection', [\App\Http\Controllers\User\SettingsController::class, 'getDsConnection'])->name('DsConnection');
+    Route::post('DsConnection', [\App\Http\Controllers\User\SettingsController::class, 'checkConnection'])->name('checkDsConnection');
+    Route::get('socialite/destroy/{driver}', [\App\Http\Controllers\User\LoginController::class, 'destroyDriver'])->name('socialiteDestroy');
 
-    Route::post('saveConquerHighlighting/{type}', 'SettingsController@saveConquerHighlighting')->name('saveConquerHighlighting');
+    Route::post('saveConquerHighlighting/{type}', [\App\Http\Controllers\User\SettingsController::class, 'saveConquerHighlighting'])->name('saveConquerHighlighting');
 });
 
-Route::get('redirect/{driver}', 'User\LoginController@redirectToProvider')->name('loginRedirect');
-Route::get('redirect/{driver}/callback', 'User\LoginController@handleProviderCallback');
+Route::get('redirect/{driver}', [\App\Http\Controllers\User\LoginController::class, 'redirectToProvider'])->name('loginRedirect');
+Route::get('redirect/{driver}/callback', [\App\Http\Controllers\User\LoginController::class, 'handleProviderCallback']);
 
-Route::get('/sitemap.xml', 'ContentController@sitemap');
+Route::get('/sitemap.xml', [\App\Http\Controllers\ContentController::class, 'sitemap']);
 Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::get('/changelog', 'ContentController@changelog')->name('changelog');
+Route::get('/changelog', [\App\Http\Controllers\ContentController::class, 'changelog'])->name('changelog');
 
 Route::view('/team', 'content.team')->name('team');
 
-Route::post('/search/{server}', 'SearchController@searchForm')->name('searchForm');
-Route::get('/search/{server}/{type}/{search}', 'SearchController@search')->name('search');
+Route::post('/search/{server}', [\App\Http\Controllers\SearchController::class, 'searchForm'])->name('searchForm');
+Route::get('/search/{server}/{type}/{search}', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
-Route::get('/{server}', 'ContentController@server')->name('server');
+Route::get('/{server}', [\App\Http\Controllers\ContentController::class, 'server'])->name('server');
 
-Route::get('/{server}/{world}', 'ContentController@world')->name('world');
+Route::get('/{server}/{world}', [\App\Http\Controllers\ContentController::class, 'world'])->name('world');
 
-Route::get('/{server}/{world}/allys', 'ContentController@allys')->name('worldAlly');
-Route::get('/{server}/{world}/allys/ranks', 'AllyController@rank')->name('rankAlly');
-Route::get('/{server}/{world}/players', 'ContentController@players')->name('worldPlayer');
-Route::get('/{server}/{world}/players/ranks', 'PlayerController@rank')->name('rankPlayer');
-Route::get('/{server}/{world}/player/{player}', 'PlayerController@player')->name('player');
-Route::get('/{server}/{world}/ally/{ally}', 'AllyController@ally')->name('ally');
-Route::get('/{server}/{world}/village/{village}', 'VillageController@village')->name('village');
+Route::get('/{server}/{world}/allys', [\App\Http\Controllers\ContentController::class, 'allys'])->name('worldAlly');
+Route::get('/{server}/{world}/allys/ranks', [\App\Http\Controllers\AllyController::class, 'rank'])->name('rankAlly');
+Route::get('/{server}/{world}/players', [\App\Http\Controllers\ContentController::class, 'players'])->name('worldPlayer');
+Route::get('/{server}/{world}/players/ranks', [\App\Http\Controllers\PlayerController::class, 'rank'])->name('rankPlayer');
+Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
+Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\AllyController::class, 'ally'])->name('ally');
+Route::get('/{server}/{world}/village/{village}', [\App\Http\Controllers\VillageController::class, 'village'])->name('village');
 
-Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', 'AllyController@allyChanges')->name('allyAllyChanges');
-Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', 'PlayerController@allyChanges')->name('playerAllyChanges');
+Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'allyChanges'])->name('allyAllyChanges');
+Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'allyChanges'])->name('playerAllyChanges');
 
-Route::get('/{server}/{world}/conquer/{type}', 'ContentController@conquer')->name('worldConquer');
-Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', 'AllyController@conquer')->name('allyConquer');
-Route::get('/{server}/{world}/player/conquer/{type}/{player}', 'PlayerController@conquer')->name('playerConquer');
-Route::get('/{server}/{world}/village/conquer/{type}/{village}', 'VillageController@conquer')->name('villageConquer');
+Route::get('/{server}/{world}/conquer/{type}', [\App\Http\Controllers\ContentController::class, 'conquer'])->name('worldConquer');
+Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'conquer'])->name('allyConquer');
+Route::get('/{server}/{world}/player/conquer/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'conquer'])->name('playerConquer');
+Route::get('/{server}/{world}/village/conquer/{type}/{village}', [\App\Http\Controllers\VillageController::class, 'conquer'])->name('villageConquer');
 
 
-Route::get('api/{server}/{world}/signature/{type}/{player}', 'API\SignatureController@signature')->name('api.signature');
+Route::get('api/{server}/{world}/signature/{type}/{player}', [\App\Http\Controllers\API\SignatureController::class, 'signature'])->name('api.signature');
