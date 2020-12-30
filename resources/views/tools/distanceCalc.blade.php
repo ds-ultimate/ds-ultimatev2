@@ -244,7 +244,7 @@
         }
 
         function convertTime(input){
-            var input1 = Math.ceil( input * 60);
+            var input1 = Math.round( input * 60);
             var seconds = (input1 % 60);
             var input2 = Math.floor(input1 / 60);
             var minutes = input2 % 60;
@@ -252,6 +252,7 @@
             var hour = input3 % 24;
             var day = Math.floor(input3 / 24);
             
+            //console.log(input, input1, seconds, input2, minutes, input3, hour, day);
             return day + '&nbsp;{{ __('tool.distCalc.days') }}' + '&nbsp;' + pad(hour) + ':' + pad(minutes) + ':' + pad(seconds);
         }
 
@@ -298,8 +299,11 @@
                     start.find('tr:nth-child(4) td').html('-');
                 });
 
-
-            var dis = (Math.round(Math.sqrt(Math.pow(xStart.val() - xTarget.val(), 2) + Math.pow(yStart.val() - yTarget.val(), 2)) * 1000) / 1000);
+            var xDis = xStart.val() - xTarget.val();
+            var yDis = yStart.val() - yTarget.val();
+            var dis = Math.sqrt(xDis * xDis + yDis * yDis);
+            //console.log(dis);
+            
             $('#spearTime').html(convertTime({{ round((float)$unitConfig->spear->speed, 3) }} * dis));
             $('#swordTime').html(convertTime({{ round((float)$unitConfig->sword->speed, 3) }} * dis));
             $('#axeTime').html(convertTime({{ round((float)$unitConfig->axe->speed, 3) }} * dis));
