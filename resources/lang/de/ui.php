@@ -29,6 +29,7 @@ return array (
       'win' => 'Gewinne',
       'loose' => 'Verluste',
     ),
+    'daily' => 'Adelsrangliste Täglich',
   ),
   'world' => 
   array (

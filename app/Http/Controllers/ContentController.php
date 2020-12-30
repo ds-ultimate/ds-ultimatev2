@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ally;
 use App\Changelog;
+use App\Conquer;
 use App\News;
 use App\Player;
 use App\Server;
@@ -103,6 +104,18 @@ class ContentController extends Controller
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
                 'allHighlight', 'userHighlight'));
+    }
+
+    public function conquereDaily($server, $world){
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+        $conquer = new Conquer();
+        $conquer->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+        $fistconquer = $conquer->first();
+
+        return view('content.conquerDaily', compact('server', 'worldData', 'fistconquer'));
     }
 
     public function sitemap() {

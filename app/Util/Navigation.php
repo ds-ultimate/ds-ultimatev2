@@ -7,7 +7,7 @@ class Navigation
 {
     public static function generateNavArray($serverArg, $worldArg) {
         $retArray = [];
-        
+
         if($serverArg !== null) {
             $serverNav = [];
             foreach(World::worldsCollection($serverArg) as $worlds) {
@@ -28,7 +28,7 @@ class Navigation
             $retArray[] = self::navElement('ui.titel.worldOverview', 'server', [$serverArg]);
             $retArray[] = self::navDropdown('ui.server.worlds', $serverNav);
         }
-        
+
         if($worldArg !== null) {
             $serverCodeName = [$worldArg->server->code, $worldArg->name];
             $retArray[] = self::navDropdown('ui.server.ranking', [
@@ -38,9 +38,12 @@ class Navigation
                 self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.current') . ")", 'worldAlly', $serverCodeName, false),
                 self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.history') . ")", 'rankAlly', $serverCodeName, false),
             ]);
-            $retArray[] = self::navElement('ui.conquer.all', 'worldConquer', [$worldArg->server->code, $worldArg->name, 'all']);
+            $retArray[] = self::navDropdown('ui.conquer.all', [
+                self::navElement(ucfirst(__('ui.conquer.all')) . " " . __('ui.nav.history'), 'worldConquer', [$worldArg->server->code, $worldArg->name, 'all'], false),
+                self::navElement('ui.conquer.daily', 'conquerDaily', [$worldArg->server->code, $worldArg->name]),
+            ]);
         }
-        
+
         $tools = [];
         if($worldArg !== null) {
             if($worldArg->config != null && $worldArg->units != null) {
@@ -51,14 +54,14 @@ class Navigation
                 $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
             $tools[] = self::navElement('tool.map.title', 'tools.mapNew', $serverCodeName);
-            
+
             if($worldArg->config != null && $worldArg->buildings != null) {
                 $tools[] = self::navElement('tool.pointCalc.title', 'tools.pointCalc', $serverCodeName);
             } else {
                 $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
             $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', $serverCodeName);
-            
+
             if($worldArg->config != null && $worldArg->units != null) {
                 $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', $serverCodeName);
             } else {
@@ -73,10 +76,10 @@ class Navigation
             $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index');
         }
         $retArray[] = self::navDropdown('ui.server.tools', $tools);
-        
+
         return $retArray;
     }
-    
+
     public static function generateMobileNavArray($serverArg, $worldArg) {
         $navArray = self::generateNavArray($serverArg, $worldArg);
         $navArray[] = self::navDropdown('ui.language', [
@@ -94,7 +97,7 @@ class Navigation
             }
             $userOpt[] = self::navElement('ui.personalSettings.title', 'user.settings', ['settings-profile']);
             $userOpt[] = self::navElement('user.logout', 'logout');
-            
+
             $navArray[] = self::navDropdown(\Auth::user()->name , $userOpt, false);
         } else {
             $navArray[] = self::navElement('user.login', 'login');
@@ -102,7 +105,7 @@ class Navigation
         }
         return $navArray;
     }
-    
+
     public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null) {
         $id = str_replace(".", "", $title);
         if($translated) {
@@ -118,7 +121,7 @@ class Navigation
             'enabled' => true,
         ];
     }
-    
+
     public static function navElementDisabled($title, $tooltip, $translatedTitle=true, $translatedTooltip=true) {
         $id = str_replace(".", "", $title);
         if($translatedTitle) {
@@ -137,7 +140,7 @@ class Navigation
             'enabled' => false,
         ];
     }
-    
+
     public static function navDropdown($title, $subelements, $translated=true) {
         $id = str_replace(".", "", $title);
         if($translated) {

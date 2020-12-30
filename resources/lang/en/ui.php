@@ -65,6 +65,7 @@ return array (
       'self' => 'self',
       'win' => 'gains',
     ),
+    'daily' => 'Conquer ranking daily',
   ),
   'player' => 
   array (

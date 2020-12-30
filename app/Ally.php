@@ -132,11 +132,12 @@ class Ally extends CustomModel
         return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName("[".$this->tag."]"));
     }
 
+    public function linkName($world) {
+        return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName($this->name));
+    }
+
     public function linkIngame(World $world, $guest=false) {
-        $guestPart = "game";
-        if($guest) {
-            $guestPart = "guest";
-        }
+        $guest ? $guestPart = "guest" : $guestPart = "game";
 
         return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->allyID}";
     }

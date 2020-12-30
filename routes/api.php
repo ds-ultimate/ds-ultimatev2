@@ -49,8 +49,9 @@ Route::group(['middleware' => 'throttle:120,1'], function() {
     Route::get('/{server}/{world}/playerConquer/{type}/{ally}', [\App\Http\Controllers\API\ConquerController::class, 'getPlayerConquer'])->name('playerConquer');
     Route::get('/{server}/{world}/villageConquer/{type}/{ally}', [\App\Http\Controllers\API\ConquerController::class, 'getVillageConquer'])->name('villageConquer');
     Route::get('/{server}/{world}/worldConquer/{type}', [\App\Http\Controllers\API\ConquerController::class, 'getWorldConquer'])->name('worldConquer');
+    Route::get('/{server}/{world}/conquerDaily/{type}', [\App\Http\Controllers\API\DatatablesController::class, 'getConquerDaily'])->name('conquerDaily');
+    Route::get('/{server}/{world}/conquerDaily/{type}/{day}', [\App\Http\Controllers\API\DatatablesController::class, 'getConquerDaily']);
 });
-
 
 Route::group(['middleware' => 'throttle:60,1'], function() {
     /*

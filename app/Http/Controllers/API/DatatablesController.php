@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Ally;
+use App\Conquer;
 use App\Player;
 use App\Village;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
+use App\World;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class DatatablesController extends Controller
@@ -15,7 +18,7 @@ class DatatablesController extends Controller
     public function getPlayers($server, $world)
     {
         static::limitResults(200);
-        
+
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
@@ -37,7 +40,7 @@ class DatatablesController extends Controller
     public function getAllys($server, $world)
     {
         static::limitResults(200);
-        
+
         $allyModel = new Ally();
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
 
@@ -62,7 +65,7 @@ class DatatablesController extends Controller
     public function getAllyPlayer($server, $world, $ally)
     {
         static::limitResults(200);
-        
+
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
@@ -85,7 +88,7 @@ class DatatablesController extends Controller
     public function getPlayerVillage($server, $world, $player)
     {
         static::limitResults(200);
-        
+
         $villageModel = new Village();
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
 
@@ -114,7 +117,7 @@ class DatatablesController extends Controller
     public function getPlayersHistory($server, $world, $day)
     {
         static::limitResults(50);
-        
+
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $playerModel = new Player();
@@ -201,7 +204,7 @@ class DatatablesController extends Controller
     public function getAllysHistory($server, $world, $day)
     {
         static::limitResults(50);
-        
+
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
         $allyModel = new Ally();
@@ -250,7 +253,7 @@ class DatatablesController extends Controller
             })
             ->addColumn('player_points', function ($ally) use($days){
                 $allyOld = $ally->allyHistory($days);
-                
+
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
@@ -287,7 +290,76 @@ class DatatablesController extends Controller
             ->rawColumns(['rank','points','member_count','village_count','player_points','gesBash','offBash','defBash'])
             ->toJson();
     }
-    
+
+    public function getConquerDaily($server, $world, $type, $day=false)
+    {
+        static::limitResults(1000);
+
+        $conquerModel = new Conquer();
+        $day = $day ?? Carbon::now();
+        $table = BasicFunctions::getDatabaseName($server, $world);
+        $conquerModel->setTable($table.'.conquer');
+        $world = World::getWorld($server, $world);
+        $datas = $conquerModel->newQuery();
+
+        return DataTables::eloquent($datas)
+            ->filter(function ($data) use ($type, $table, $day){
+                $date = Carbon::createFromFormat('Y-m-d', $day);
+                switch ($type){
+                    case 'player':
+                        $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                            ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                            ->select('new_owner', DB::raw('count(*) as total'))
+                            ->groupBy('new_owner')
+                            ->orderBy('total', 'desc')
+                            ->get();
+                        break;
+                    case 'ally':
+                        $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                            ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                            ->where('new_ally', '!=', 0)
+                            ->select('new_ally', DB::raw('count(*) as total'))
+                            ->groupBy('new_ally')
+                            ->orderBy('total', 'desc')
+                            ->get();
+                        break;
+                    default:
+                        abort(404, "Unknown type");
+                }
+            })
+            ->addIndexColumn()
+            ->editColumn('name', function ($conquer) use ($world, $type){
+                switch ($type){
+                    case 'player':
+                        return $conquer->newPlayer != null ? $conquer->newPlayer->link($world) : __('ui.player.deleted');
+                    case 'ally':
+                        return $conquer->newAlly != null ? $conquer->newAlly->linkName($world) : __('ui.ally.deleted');
+                    default:
+                        return 'error';
+                }
+            })
+            ->addColumn('tag', function ($conquer) use ($world, $type){
+                switch ($type){
+                    case 'player':
+                        if ($conquer->newPlayer != null){
+                            $ally = $conquer->newPlayer->allyLatest;
+                            return $ally != null ? $ally->linkTag($world) : '-';
+                        }else{
+                            return '-';
+                        }
+                    case 'ally':
+                        return $conquer->newAlly != null ? $conquer->newAlly->linkTag($world) : __('ui.ally.deleted');
+                    default:
+                        return 'error';
+                }
+            })
+            ->addColumn('total', function ($conquer){
+                return $conquer->total;
+            })
+            ->rawColumns(['name', 'tag'])
+            ->toJson();
+    }
+
     public static function limitResults($amount) {
         request()->validate([
             'length' => 'required|integer|min:1|max:'.$amount,

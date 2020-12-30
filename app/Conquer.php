@@ -7,6 +7,10 @@ use App\Util\BasicFunctions;
 class Conquer extends CustomModel
 {
     protected $table = 'conquer';
+    protected $dates = [
+        'updated_at',
+        'created_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -25,7 +29,7 @@ class Conquer extends CustomModel
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table[0].'.player_latest');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -34,7 +38,7 @@ class Conquer extends CustomModel
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $table[0].'.ally_latest');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -81,7 +85,7 @@ class Conquer extends CustomModel
     public static function allyConquerCounts($server, $world, $allyID){
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-        
+
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
 
@@ -89,7 +93,7 @@ class Conquer extends CustomModel
         foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
             $allyPlayers[] = $player->playerID;
         }
-        
+
         $conquer = collect();
         $conquer->put('old', $conquerModel->whereIn('old_owner', $allyPlayers)->whereNotIn('new_owner', $allyPlayers)->count());
         $conquer->put('new', $conquerModel->whereNotIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers)->count());
@@ -114,13 +118,13 @@ class Conquer extends CustomModel
 
         return $conquer;
     }
-    
+
     public function linkVillageCoordsWithName($world) {
         if($this->village == null) return ucfirst (__("ui.player.deleted"));
         return BasicFunctions::linkVillage($world, $this->village_id,
                 '['.$this->village->coordinates().'] '.BasicFunctions::outputName($this->village->name));
     }
-    
+
     public function linkOldPlayer($world) {
         if($this->old_owner == 0) return ucfirst(__('ui.player.barbarian'));
         $oldName = $this->old_owner_name;
@@ -131,10 +135,10 @@ class Conquer extends CustomModel
                 $oldName = $this->oldPlayer->name;
             }
         }
-        
+
         return BasicFunctions::linkPlayer($world, $this->old_owner, BasicFunctions::outputName($oldName));
     }
-    
+
     public function linkNewPlayer($world) {
         if($this->new_owner == 0) return ucfirst(__('ui.player.barbarian'));
         $newName = $this->new_owner_name;
@@ -145,10 +149,10 @@ class Conquer extends CustomModel
                 $newName = $this->newPlayer->name;
             }
         }
-        
+
         return BasicFunctions::linkPlayer($world, $this->new_owner, BasicFunctions::outputName($newName));
     }
-    
+
     public function linkOldAlly($world) {
         if($this->old_owner == 0) return "-";
         $oldAlly = $this->old_ally_tag;
@@ -172,7 +176,7 @@ class Conquer extends CustomModel
         }
         return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
     }
-    
+
     public function linkNewAlly($world) {
         if($this->new_owner == 0) return "-";
         $newAlly = $this->new_ally_tag;
@@ -196,14 +200,14 @@ class Conquer extends CustomModel
         }
         return BasicFunctions::linkAlly($world, $newID, BasicFunctions::outputName($newAlly));
     }
-    
+
     /**
      * 0 ... normal
      * 1 ... internal
      * 2 ... self
      * 3 ... barbarian
      * 4 ... deletion
-     * 
+     *
      * @return integer Type of the conquer
      */
     function getConquerType() {
@@ -213,7 +217,7 @@ class Conquer extends CustomModel
         if($this->getOldAllyID() == $this->getNewAllyID()) return 1;
         return 0;
     }
-    
+
     public static $REFERTO_VILLAGE = 0;
     public static $REFERTO_PLAYER = 1;
     public static $REFERTO_ALLY = 2;
@@ -242,7 +246,7 @@ class Conquer extends CustomModel
         }
         return 0;
     }
-    
+
     private function getOldAllyID() {
         $oldAllyID = $this->old_ally;
         if($this->old_ally_name == null &&
@@ -251,7 +255,7 @@ class Conquer extends CustomModel
         }
         return $oldAllyID;
     }
-    
+
     private function getNewAllyID() {
         $newAllyID = $this->new_ally;
         if($this->new_ally_name == null &&

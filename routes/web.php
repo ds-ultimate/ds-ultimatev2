@@ -137,6 +137,7 @@ Route::get('/{server}/{world}/conquer/{type}', [\App\Http\Controllers\ContentCon
 Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'conquer'])->name('allyConquer');
 Route::get('/{server}/{world}/player/conquer/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'conquer'])->name('playerConquer');
 Route::get('/{server}/{world}/village/conquer/{type}/{village}', [\App\Http\Controllers\VillageController::class, 'conquer'])->name('villageConquer');
+Route::get('/{server}/{world}/conquerDaily', [\App\Http\Controllers\ContentController::class, 'conquereDaily'])->name('conquerDaily');
 
 
 Route::get('api/{server}/{world}/signature/{type}/{player}', [\App\Http\Controllers\API\SignatureController::class, 'signature'])->name('api.signature');
