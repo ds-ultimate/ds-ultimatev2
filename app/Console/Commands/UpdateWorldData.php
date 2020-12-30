@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\DBController;
+use App\Console\DatabaseUpdate\DoAlly;
+use App\Console\DatabaseUpdate\DoConquer;
+use App\Console\DatabaseUpdate\DoPlayer;
+use App\Console\DatabaseUpdate\DoVillage;
 use Illuminate\Console\Command;
 
 class UpdateWorldData extends Command
@@ -64,22 +67,22 @@ class UpdateWorldData extends Command
         switch ($part) {
             case "village":
             case "v":
-                DBController::latestVillages($server, $world);
+                DoVillage::run($server, $world);
                 break;
 
             case "player":
             case "p":
-                DBController::latestPlayer($server, $world);
+                DoPlayer::run($server, $world);
                 break;
 
             case "ally":
             case "a":
-                DBController::latestAlly($server, $world);
+                DoAlly::run($server, $world);
                 break;
 
             case "conquer":
             case "c":
-                DBController::conquer($server, $world);
+                DoConquer::run($server, $world);
                 break;
         }
     }

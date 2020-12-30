@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\DBController;
+use App\Console\DatabaseUpdate\DoClean;
+use App\Console\DatabaseUpdate\UpdateUtil;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -40,7 +41,7 @@ class UpdateNextClean extends Command
     public function handle()
     {
         \App\Util\BasicFunctions::ignoreErrs();
-        if(! DBController::cleanNeeded()) {
+        if(! UpdateUtil::cleanNeeded()) {
             echo "No Clean needed\n";
             return 0;
         }
@@ -56,9 +57,9 @@ class UpdateNextClean extends Command
                 break;
             }
             
-            //DBController::cleanOldEntries($world, 'v');
-            DBController::cleanOldEntries($world, 'p');
-            DBController::cleanOldEntries($world, 'a');
+            //DoClean::run($world, 'v');
+            DoClean::run($world, 'p');
+            DoClean::run($world, 'a');
         }
         return 0;
     }

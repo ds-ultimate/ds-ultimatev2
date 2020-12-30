@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\DBController;
+use App\Console\DatabaseUpdate\DoWorld;
+use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 
 class UpdateWorld extends Command
@@ -38,8 +39,8 @@ class UpdateWorld extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        DBController::getWorld();
+        BasicFunctions::ignoreErrs();
+        DoWorld::run();
         return 0;
     }
 }

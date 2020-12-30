@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Console\DatabaseUpdate\DoConquer;
 use App\Util\BasicFunctions;
-use App\Http\Controllers\DBController;
 use Illuminate\Console\Command;
 
 class UpdateConquer extends Command
@@ -39,12 +39,12 @@ class UpdateConquer extends Command
      */
     public function handle()
     {
-        UpdateConquer::updateConquer($this->argument('server'), $this->argument('world'), $this->output);
+        static::updateConquer($this->argument('server'), $this->argument('world'), $this->output);
         return 0;
     }
     
     public static function updateConquer($server, $world, $output) {
-        \App\Util\BasicFunctions::ignoreErrs();
+        BasicFunctions::ignoreErrs();
         $progress = true;
         if($server == "no-progress") {
             $progress = false;
@@ -52,7 +52,7 @@ class UpdateConquer extends Command
         }
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
-            DBController::conquer($server, $world);
+            DoConquer::run($server, $world);
         } else {
             $worlds = BasicFunctions::getWorldQuery()->get();
             
@@ -62,7 +62,7 @@ class UpdateConquer extends Command
             }
             
             foreach ($worlds as $world){
-                DBController::conquer($world->server->code, $world->name);
+                DoConquer::run($world->server->code, $world->name);
                 if($progress) {
                     $bar->advance();
                 }

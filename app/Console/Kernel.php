@@ -2,8 +2,7 @@
 
 namespace App\Console;
 
-use App\Util\BasicFunctions;
-use App\Http\Controllers\DBController;
+use App\Console\DatabaseUpdate\UpdateUtil;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command("update:nextWorld")
             ->everyFiveMinutes()
             ->withoutOverlapping()
-            ->skip(! DBController::updateNeeded())
+            ->skip(! UpdateUtil::updateNeeded())
             ->onSuccess(function (){
                 Log::info('World -> Success');
             })
@@ -48,7 +47,7 @@ class Kernel extends ConsoleKernel
         $schedule->command("update:nextClean")
             ->everyFiveMinutes()
             ->withoutOverlapping()
-            ->skip(! DBController::cleanNeeded())
+            ->skip(! UpdateUtil::cleanNeeded())
             ->onSuccess(function (){
                 Log::info('Clean -> Success');
             })

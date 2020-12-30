@@ -3,11 +3,11 @@
 namespace App\Console\Commands\MigrationHelper;
 
 use App\Ally;
+use App\Console\DatabaseUpdate\TableGenerator;
 use App\HistoryIndex;
 use App\Player;
 use App\Village;
 use App\World;
-use App\Http\Controllers\DBController;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -78,13 +78,13 @@ class InsertMissingHistoryData extends Command
         echo "Doing 30-Ally\n";
         $datesAlly = static::doInserting($dbName, config('dsUltimate.hash_ally'), "ally", new Ally(),
             function($db, $tbl) {
-                DBController::allyLatestTable($db, $tbl);
+                TableGenerator::allyLatestTable($db, $tbl);
             }, $bar);
         
         echo "Doing 30-Player\n";
         $datesPlayer = static::doInserting($dbName, config('dsUltimate.hash_player'), "player", new Player(),
             function($db, $tbl) {
-                DBController::playerLatestTable($db, $tbl);
+                TableGenerator::playerLatestTable($db, $tbl);
             }, $bar);
         
         static::specialVillageInsert($dbName, $datesAlly, $datesPlayer, $dates, $bar);
@@ -323,7 +323,7 @@ class InsertMissingHistoryData extends Command
                 return ($a['points'] > $b['points']) ? -1 : 1;
             });
             
-            DBController::villageLatestTable($dbName."_history", $key);
+            TableGenerator::villageLatestTable($dbName."_history", $key);
             $model = new Village();
             $model->setTable("{$dbName}_history.village_$key");
             foreach(array_chunk($villages[$key], 3000) as $chunk) {
@@ -376,7 +376,7 @@ class InsertMissingHistoryData extends Command
                 return ($a['points'] > $b['points']) ? -1 : 1;
             });
             
-            DBController::playerLatestTable($dbName."_history", $key);
+            TableGenerator::playerLatestTable($dbName."_history", $key);
             $model = new Player();
             $model->setTable("{$dbName}_history.player_$key");
             foreach(array_chunk($finalPlayerData[$key], 3000) as $chunk) {
@@ -394,7 +394,7 @@ class InsertMissingHistoryData extends Command
                 $finalAllyData[$key][$idx]['rank'] = $idx;
             }
             
-            DBController::allyLatestTable($dbName."_history", $key);
+            TableGenerator::allyLatestTable($dbName."_history", $key);
             $model = new Ally();
             $model->setTable("{$dbName}_history.ally_$key");
             foreach(array_chunk($finalAllyData[$key], 3000) as $chunk) {

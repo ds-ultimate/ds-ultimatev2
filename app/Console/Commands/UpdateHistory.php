@@ -7,7 +7,6 @@ use App\HistoryIndex;
 use App\Player;
 use App\Village;
 use App\World;
-use App\Http\Controllers\DBController;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;

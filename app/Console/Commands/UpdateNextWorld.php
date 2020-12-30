@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\DBController;
+use App\Console\DatabaseUpdate\UpdateUtil;
+use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -39,17 +40,17 @@ class UpdateNextWorld extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        if(! DBController::updateNeeded()) {
+        BasicFunctions::ignoreErrs();
+        if(! UpdateUtil::updateNeeded()) {
             echo "No Update needed\n";
             return 0;
         }
         
-        $cnt = \App\Util\BasicFunctions::getWorldQuery()->count();
+        $cnt = BasicFunctions::getWorldQuery()->count();
         $toDo = ceil($cnt/(config('dsUltimate.db_update_every_hours') * 12));
         
         for($i = 0; $i < $toDo; $i++) {
-            $world = \App\Util\BasicFunctions::getWorldQuery()
+            $world = BasicFunctions::getWorldQuery()
                     ->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
                     - (60 * 60) * config('dsUltimate.db_update_every_hours')))
                     ->orderBy('worldUpdated_at', 'ASC')->first();
