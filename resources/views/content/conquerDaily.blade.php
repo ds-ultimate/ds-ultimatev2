@@ -98,7 +98,7 @@
                 "columns": [
                     { "data": "DT_RowIndex"},
                     { "data": "name"},
-                    { "data": "tag"},
+                    { "data": "ally"},
                     { "data": "total"},
                 ],
                 responsive: true,

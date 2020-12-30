@@ -7,6 +7,25 @@ use App\Util\BasicFunctions;
 class Conquer extends CustomModel
 {
     protected $table = 'conquer';
+    
+    protected $fillable = [
+        'village_id',
+        'timestamp',
+        'new_owner',
+        'old_owner',
+        'id',
+        'old_owner_name',
+        'new_owner_name',
+        'old_ally',
+        'new_ally',
+        'old_ally_name',
+        'new_ally_name',
+        'old_ally_tag',
+        'new_ally_tag',
+        'created_at',
+        'updated_at',
+    ];
+    
     protected $dates = [
         'updated_at',
         'created_at',
@@ -153,15 +172,23 @@ class Conquer extends CustomModel
         return BasicFunctions::linkPlayer($world, $this->new_owner, BasicFunctions::outputName($newName));
     }
 
-    public function linkOldAlly($world) {
+    public function linkOldAlly($world, $useTag=true) {
         if($this->old_owner == 0) return "-";
-        $oldAlly = $this->old_ally_tag;
+        if($useTag) {
+            $oldAlly = $this->old_ally_tag;
+        } else {
+            $oldAlly = $this->old_ally_name;
+        }
         $oldID = $this->old_ally;
         if($oldAlly == null) {
             if($this->oldPlayer == null || $this->oldPlayer->allyLatest == null) {
                 return "-";
             } else {
-                $oldAlly = "[{$this->oldPlayer->allyLatest->tag}]";
+                if($useTag) {
+                    $oldAlly = "[{$this->oldPlayer->allyLatest->tag}]";
+                } else {
+                    $oldAlly = "{$this->oldPlayer->allyLatest->name}";
+                }
                 $oldID = $this->oldPlayer->ally_id;
             }
         } else if($oldAlly == "") {
@@ -177,15 +204,23 @@ class Conquer extends CustomModel
         return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
     }
 
-    public function linkNewAlly($world) {
+    public function linkNewAlly($world, $useTag=true) {
         if($this->new_owner == 0) return "-";
-        $newAlly = $this->new_ally_tag;
+        if($useTag) {
+            $newAlly = $this->new_ally_tag;
+        } else {
+            $newAlly = $this->new_ally_name;
+        }
         $newID = $this->new_ally;
         if($newAlly == null) {
             if($this->newPlayer == null || $this->newPlayer->allyLatest == null) {
                 return "-";
             } else {
-                $newAlly = "[{$this->newPlayer->allyLatest->tag}]";
+                if($useTag) {
+                    $newAlly = "[{$this->newPlayer->allyLatest->tag}]";
+                } else {
+                    $newAlly = "{$this->newPlayer->allyLatest->name}";
+                }
                 $newID = $this->newPlayer->ally_id;
             }
         } else if($newAlly == "") {

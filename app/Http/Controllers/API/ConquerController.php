@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\World;
 use App\Player;
 use App\Conquer;
+use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ConquerController extends Controller
@@ -15,6 +16,7 @@ class ConquerController extends Controller
     public function getAllyConquer($server, $world, $type, $allyID)
     {
         DatatablesController::limitResults(200);
+        World::existWorld($server, $world);
         
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
@@ -69,6 +71,7 @@ class ConquerController extends Controller
     public function getPlayerConquer($server, $world, $type, $playerID)
     {
         DatatablesController::limitResults(200);
+        World::existWorld($server, $world);
         
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
@@ -115,6 +118,7 @@ class ConquerController extends Controller
     public function getVillageConquer($server, $world, $type, $villageID)
     {
         DatatablesController::limitResults(200);
+        World::existWorld($server, $world);
         
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
@@ -140,6 +144,7 @@ class ConquerController extends Controller
     public function getWorldConquer($server, $world, $type)
     {
         DatatablesController::limitResults(200);
+        World::existWorld($server, $world);
         
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
@@ -191,6 +196,112 @@ class ConquerController extends Controller
             ->removeColumn('new_owner')->removeColumn('old_owner')
             ->removeColumn('old_ally')->removeColumn('new_ally')
             ->removeColumn('old_ally_tag')->removeColumn('new_ally_tag')
+            ->toJson();
+    }
+
+    public function getConquerDaily($server, $world, $type, $day=false)
+    {
+        DatatablesController::limitResults(100);
+        World::existWorld($server, $world);
+
+        switch ($type) {
+            case 'player':
+                return $this->getConquerDailyPlayer($server, $world, $day);
+                break;
+            
+            case 'ally':
+                return $this->getConquerDailyAlly($server, $world, $day);
+                break;
+            
+            default:
+                abort(404);
+        }
+    }
+    
+    private function getConquerDailyPlayer($server, $world, $day) {
+        $table = BasicFunctions::getDatabaseName($server, $world);
+        $worldModel = World::getWorld($server, $world);
+        
+        $conquerModel = new Conquer();
+        $conquerModel->setTable($table.'.conquer');
+        $datas = $conquerModel->newQuery();
+        
+        $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
+
+        return DataTables::eloquent($datas)
+            ->filter(function ($data) use ($table, $date){
+                $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->select('new_owner', DB::raw('count(*) as total'))
+                    ->groupBy('new_owner')
+                    ->orderBy('total', 'desc')
+                    ->get();
+            })
+            ->addIndexColumn()
+            ->editColumn('name', function ($conquer) use ($worldModel, $conquerModel, $date){
+                $referConquer = $conquerModel->where('new_owner', $conquer->new_owner)
+                    ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->first();
+                
+                return $referConquer->linkNewPlayer($worldModel);
+            })
+            ->addColumn('ally', function ($conquer) use ($worldModel, $conquerModel, $date){
+                $referConquer = $conquerModel->where('new_owner', $conquer->new_owner)
+                    ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->first();
+                
+                return $referConquer->linkNewAlly($worldModel);
+            })
+            ->addColumn('total', function ($conquer){
+                return $conquer->total;
+            })
+            ->rawColumns(['name', 'ally'])
+            ->toJson();
+    }
+    
+    private function getConquerDailyAlly($server, $world, $day) {
+        $table = BasicFunctions::getDatabaseName($server, $world);
+        $worldModel = World::getWorld($server, $world);
+        
+        $conquerModel = new Conquer();
+        $conquerModel->setTable($table.'.conquer');
+        $datas = $conquerModel->newQuery();
+        
+        $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
+
+        return DataTables::eloquent($datas)
+            ->filter(function ($data) use ($table, $date){
+                $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->where('new_ally', '!=', 0)
+                    ->select('new_ally', DB::raw('count(*) as total'))
+                    ->groupBy('new_ally')
+                    ->orderBy('total', 'desc')
+                    ->get();
+            })
+            ->addIndexColumn()
+            ->editColumn('name', function ($conquer) use ($worldModel, $conquerModel, $date){
+                $referConquer = $conquerModel->where('new_ally', $conquer->new_ally)
+                    ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->first();
+                
+                return $referConquer->linkNewAlly($worldModel, false);
+            })
+            ->addColumn('tag', function ($conquer) use ($worldModel, $conquerModel, $date){
+                $referConquer = $conquerModel->where('new_ally', $conquer->new_ally)
+                    ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
+                    ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
+                    ->first();
+                
+                return $referConquer->linkNewAlly($worldModel, true);
+            })
+            ->addColumn('total', function ($conquer){
+                return $conquer->total;
+            })
+            ->rawColumns(['name', 'tag'])
             ->toJson();
     }
 }
