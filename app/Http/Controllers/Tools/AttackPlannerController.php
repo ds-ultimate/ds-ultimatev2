@@ -91,7 +91,7 @@ class AttackPlannerController extends BaseController
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
         $mode = 'edit';
-        $now = Carbon::createFromTimestamp(time());
+        $now = Carbon::now();
 
         $stats['total'] = $attackList->items()->count();
         $stats['start_village'] = $attackList->items()->get()->groupBy('start_village_id')->count();
@@ -130,7 +130,7 @@ class AttackPlannerController extends BaseController
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
         $mode = 'show';
-        $now = Carbon::createFromTimestamp(time());
+        $now = Carbon::now();
 
         $ownPlanners = array();
         if(\Auth::check()) {
@@ -156,7 +156,7 @@ class AttackPlannerController extends BaseController
         $count = count($items);
         $rowTemplate = __('tool.attackPlanner.export.BB.default.row');
         $i = 1;
-        $now = Carbon::parse(Carbon::now())->locale(App::getLocale());
+        $now = Carbon::now()->locale(App::getLocale());
         $row = "";
         foreach ($items as $item){
             $date = Carbon::parse($item->send_time)->locale(App::getLocale());
@@ -194,7 +194,7 @@ class AttackPlannerController extends BaseController
         $items = $attackList->items;
         $rowTemplate = __('tool.attackPlanner.export.IGM.default.row');
         $i = 1;
-        $now = Carbon::parse(Carbon::now())->locale(App::getLocale());
+        $now = Carbon::now()->locale(App::getLocale());
         $row = "";
         foreach ($items as $item){
             $dateSend = Carbon::parse($item->send_time)->locale(App::getLocale());

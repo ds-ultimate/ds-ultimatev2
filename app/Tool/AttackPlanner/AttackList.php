@@ -53,7 +53,7 @@ class AttackList extends Model
     }
 
     public function nextAttack(){
-        $item = $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->first();
+        $item = $this->items->where('send_time', '>', Carbon::now())->first();
         if (!isset($item->send_time)){
             return '-';
         }
@@ -62,11 +62,11 @@ class AttackList extends Model
     }
 
     public function outdatedCount(){
-        return $this->items->where('send_time', '<', Carbon::createFromTimestamp(time()))->count();
+        return $this->items->where('send_time', '<', Carbon::now())->count();
     }
 
     public function attackCount(){
-        return $this->items->where('send_time', '>', Carbon::createFromTimestamp(time()))->count();
+        return $this->items->where('send_time', '>', Carbon::now())->count();
     }
     
     public function getTitle() {

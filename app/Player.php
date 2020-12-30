@@ -135,8 +135,10 @@ class Player extends CustomModel
         $tabelNr = $playerID % config('dsUltimate.hash_player');
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
-        $time = Carbon::createFromTimestamp(time());
-        $playerDataArray = $playerModel->where('playerID', $playerID)->where('created_at', '>', $time->subDays($dayDelta+1))->orderBy('updated_at', 'ASC')->get();
+        $playerDataArray = $playerModel
+                ->where('playerID', $playerID)
+                ->where('created_at', '>', Carbon::now()->subDays($dayDelta+1))
+                ->orderBy('updated_at', 'ASC')->get();
 
         $playerDatas = collect();
 
