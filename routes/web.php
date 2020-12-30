@@ -15,11 +15,8 @@ Route::get('/', [\App\Http\Controllers\ContentController::class, 'index'])->name
 
 Auth::routes(['verify' => true]);
 
-Route::get('/test', function () {
-    $model = new \App\Conquer();
-    $model->setTable(\App\Util\BasicFunctions::getDatabaseName("de", "183"). ".conquer");
-    dd($model->count());
-});
+//Route::get('/test', function () {
+//});
 
 Route::get('/userskripte/verlaufe_und_karten.js', function() {
     return Redirect::to('/userskripte/verlaufe_und_karten.user.js', 301);
