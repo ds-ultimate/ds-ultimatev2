@@ -16,6 +16,9 @@ Route::get('/', [\App\Http\Controllers\ContentController::class, 'index'])->name
 Auth::routes(['verify' => true]);
 
 Route::get('/test', function () {
+    $model = new \App\Conquer();
+    $model->setTable(\App\Util\BasicFunctions::getDatabaseName("de", "183"). ".conquer");
+    dd($model->count());
 });
 
 Route::get('/userskripte/verlaufe_und_karten.js', function() {
@@ -39,7 +42,7 @@ Route::get('/setlocale/{locale}',function($lang){
 })->name('locale');
 
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['dashboard']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['dashboard']], function () {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
     Route::delete('roles/destroy', [\App\Http\Controllers\Admin\RolesController::class, 'massDestroy'])->name('roles.massDestroy');
@@ -87,7 +90,7 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
     Route::post('/bugreport/store', [\App\Http\Controllers\FormController::class, 'bugreportStore'])->name('bugreport.store');
 });
 
-Route::group(['prefix' => 'user', 'as' => 'user.', 'namespace' => 'User', 'middleware' => ['verified']], function () {
+Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['verified']], function () {
     Route::get('overview/{page}', [\App\Http\Controllers\User\HomeController::class, 'overview'])->name('overview');
     Route::get('settings/{page}', [\App\Http\Controllers\User\HomeController::class, 'settings'])->name('settings');
     Route::post('uploadeImage', [\App\Http\Controllers\User\SettingsController::class, 'imgUploade'])->name('uploadeImage');
