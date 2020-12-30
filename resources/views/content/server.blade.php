@@ -139,9 +139,9 @@
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
-                                            @if('world_access')
+                                            @can('world_access')
                                                 {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
-                                            @endif
+                                            @endcan
                                         @endauth
                                     </td>
                                     <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
@@ -210,9 +210,9 @@
                                             <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                                 @auth
-                                                    @if('world_access')
+                                                    @can('world_access')
                                                         {!! \App\Util\BasicFunctions::worldStatus($world->active) !!}
-                                                    @endif
+                                                    @endcan
                                                 @endauth
                                             </td>
                                             <td>{!! \App\Util\BasicFunctions::linkWorldPlayer($world, \App\Util\BasicFunctions::numberConv($world->player_count)) !!}</td>
