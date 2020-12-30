@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
     ];
-    
+
     /**
      * Define the application's command schedule.
      *
@@ -55,7 +55,7 @@ class Kernel extends ConsoleKernel
                 Log::critical('Clean -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
-            
+
         /*
          * Update Conquers
          */
@@ -73,16 +73,20 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:world')
             ->dailyAt('23:55')
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
+        $schedule->command('update:statistic')
+            ->dailyAt('23:55')
+            ->appendOutputTo("storage/logs/cron-critical.log");
+
         //run this only there was at least one insert per world / will ignore entries if enty date != current date
         $schedule->command('update:worldHistory')
             ->dailyAt('3:05')
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
         $schedule->command('session:gc')
             ->everyFifteenMinutes()
             ->runInBackground();
-        
+
         /*
          * Map Caching
          */
