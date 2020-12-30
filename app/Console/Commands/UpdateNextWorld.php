@@ -62,7 +62,16 @@ class UpdateNextWorld extends Command
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
-            WorldStatistic::todayWorldStatistic($world)->increaseDailyUpdates();
+
+            $statistic = WorldStatistic::todayWorldStatistic($world);
+
+            if ($statistic){
+                $statistic->increaseDailyUpdates();
+            }else{
+                $statistic = new WorldStatistic();
+                $statistic->daily_updates = 1;
+                $statistic->save();
+            }
         }
         return 0;
     }
