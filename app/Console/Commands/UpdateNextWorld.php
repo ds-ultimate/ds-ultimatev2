@@ -69,6 +69,7 @@ class UpdateNextWorld extends Command
                 $statistic->increaseDailyUpdates();
             }else{
                 $statistic = new WorldStatistic();
+                $statistic->world_id = $world->id;
                 $statistic->daily_updates = 1;
                 $statistic->save();
             }
