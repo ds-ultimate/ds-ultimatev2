@@ -19,7 +19,7 @@ class AddSpeedToServerTable extends Migration
      */
     public function up()
     {
-        /*
+        
         Schema::table('server', function (Blueprint $table) {
             $table->boolean('speed_active')->default(false);
         });
@@ -47,7 +47,7 @@ class AddSpeedToServerTable extends Migration
                 $map->delete();
             }
         }
-        */
+        
         Schema::create('speed_worlds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('server_id');
