@@ -1,8 +1,8 @@
 <?php
 
 use App\World;
+use App\Console\DatabaseUpdate\TableGenerator;
 use App\Util\BasicFunctions;
-use App\Http\Controllers\DBController;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +22,7 @@ class CreateHistoryDatabases extends Migration
             if (DB::statement('CREATE DATABASE ' . $dbName . '_history') !== true) {
                 echo("DB '$dbName\_history' konnte nicht erstellt werden.");
             }
-            DBController::historyIndexTable($dbName);
+            TableGenerator::historyIndexTable($dbName);
         }
     }
 

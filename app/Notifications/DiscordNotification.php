@@ -81,7 +81,7 @@ class DiscordNotification extends Notification
                 'title' => null,
                 'description' => '```css
                 ['.$world->displayName().']```: Update Error '.$input['file'].'
-                Dieses Datei konnte nicht geöffnet werden ['.$input['file'].']('.$input['url'].')',
+                Die Datei konnte nicht geöffnet werden ['.$input['file'].']('.$input['url'].')',
                 'color' => 13632027,
                 'timestamp' => Carbon::now()->format('c'),
                 'footer' => [

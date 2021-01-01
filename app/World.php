@@ -207,6 +207,14 @@ class World extends Model
             return ucfirst(__('ui.world.normal'));
         }
     }
+    
+    public function isSpeed() {
+        return static::isSpeedName($this->name);
+    }
+    
+    public static function isSpeedName($name) {
+        return strpos($name, 's') !== false;
+    }
 
     public function unitConfig(){
         return simplexml_load_string($this->units);

@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Console\DatabaseUpdate\UpdateUtil;
-use App\Util\BasicFunctions;
 use App\WorldStatistic;
+use App\Console\DatabaseUpdate\UpdateUtil;
+use App\Console\DatabaseUpdate\WorldHistory;
+use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -46,10 +47,10 @@ class UpdateNextWorld extends Command
             echo "No Update needed\n";
             return 0;
         }
-
+        
         $cnt = BasicFunctions::getWorldQuery()->count();
         $toDo = ceil($cnt/(config('dsUltimate.db_update_every_hours') * 12));
-
+        
         for($i = 0; $i < $toDo; $i++) {
             $world = BasicFunctions::getWorldQuery()
                     ->where('worldUpdated_at', '<',
@@ -58,20 +59,25 @@ class UpdateNextWorld extends Command
             if($world == null) {
                 break;
             }
-
+            
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
             UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
-
+            
             $statistic = WorldStatistic::todayWorldStatistic($world);
-
-            if ($statistic){
+            
+            if($statistic) {
                 $statistic->increaseDailyUpdates();
-            }else{
+            } else {
                 $statistic = new WorldStatistic();
                 $statistic->world_id = $world->id;
                 $statistic->daily_updates = 1;
                 $statistic->save();
+            }
+            
+            if($world->isSpeed()) {
+                //save history data every time
+                WorldHistory::run($world->server->code, $world->name, true);
             }
         }
         return 0;

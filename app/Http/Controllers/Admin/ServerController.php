@@ -24,6 +24,7 @@ class ServerController extends Controller
             BasicFunctions::indexEntry(__('admin.server.code'), "code"),
             BasicFunctions::indexEntry(__('admin.server.flag'), "flag"),
             BasicFunctions::indexEntry(__('admin.server.url'), "url"),
+            BasicFunctions::indexEntry(__('admin.server.speed_active'), "speed_active"),
             BasicFunctions::indexEntry(__('admin.server.active'), "active"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
@@ -53,6 +54,7 @@ class ServerController extends Controller
             'url' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
+        ($request->speed_active === 'on')? $request->merge(['speed_active' => 1]) : $request->merge(['speed_active' => 0]);
         $server = Server::create($request->all());
 
         return redirect()->route('admin.server.index');
@@ -79,6 +81,7 @@ class ServerController extends Controller
             'url' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
+        ($request->speed_active === 'on')? $request->merge(['speed_active' => 1]) : $request->merge(['speed_active' => 0]);
         $server->update($request->all());
 
         return redirect()->route('admin.server.index');
@@ -125,6 +128,7 @@ class ServerController extends Controller
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.server.url'), 'url', '', false, true),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.server.active'), 'active', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.server.speed_active'), 'speed_active', '', false, false),
         ];
     }
     
@@ -136,6 +140,9 @@ class ServerController extends Controller
             BasicFunctions::formEntryShow(__('admin.server.url'), $values->url),
             BasicFunctions::formEntryShow(__('admin.server.active'),
                     ($values->active == 1)? '<span class="fas fa-check" style="color: green"></span>' :
+                    '<span class="fas fa-times" style="color: red"></span>', false),
+            BasicFunctions::formEntryShow(__('admin.server.speed_active'),
+                    ($values->spee_active == 1)? '<span class="fas fa-check" style="color: green"></span>' :
                     '<span class="fas fa-times" style="color: red"></span>', false),
         ];
     }

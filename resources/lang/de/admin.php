@@ -13,6 +13,7 @@ return array (
     'titleCreate' => 'Server erstellen',
     'update' => 'Server editieren',
     'show' => 'Server anzeigen',
+    'speed_active' => 'Speed-Welten aktiv',
   ),
   'news' => 
   array (

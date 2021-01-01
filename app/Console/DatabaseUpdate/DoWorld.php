@@ -27,6 +27,10 @@ class DoWorld
                     continue;
                 }
                 $worldName = substr($world, 2);
+                if(World::isSpeedName($worldName)) {
+                    //ignore speed worlds here since we have a seperate update system for them
+                    continue;
+                }
 
                 if ($worldModel->where('server_id', $serverModel->id)->where('name', $worldName)->count() >= 1){
                     //world exists already -> update
@@ -91,6 +95,9 @@ class DoWorld
         $worldModel = new World();
 
         foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
+            if($world->isSpeed()) {
+                continue;
+            }
             if($world->active != null) {
                 BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
             }

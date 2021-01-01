@@ -13,7 +13,7 @@ class CreateWorldsTable extends Migration
      */
     public function up()
     {
-        \App\Http\Controllers\DBController::worldTable();
+        \App\Console\DatabaseUpdate\TableGenerator::worldTable();
     }
 
     /**

@@ -82,6 +82,7 @@ return array (
     'titleCreate' => 'create server',
     'update' => 'edit server',
     'url' => 'Update url',
+    'speed_active' => 'Spped-Worlds active',
   ),
   'serverManagement' => 
   array (

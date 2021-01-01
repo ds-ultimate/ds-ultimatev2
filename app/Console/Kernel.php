@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\UpdateSpeedWorldBackend;
 use App\Console\DatabaseUpdate\UpdateUtil;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -78,11 +79,24 @@ class Kernel extends ConsoleKernel
             ->dailyAt('23:55')
             ->appendOutputTo("storage/logs/cron-critical.log");
 
-        //run this only there was at least one insert per world / will ignore entries if enty date != current date
+        //run this only when there was at least one insert per world / will ignore entries if enty date != current date
         $schedule->command('update:worldHistory')
             ->dailyAt('3:05')
             ->appendOutputTo("storage/logs/cron-critical.log");
+        
 
+        //speed servers
+        //loads the upcoming speed worlds into the database
+        $schedule->command('update:speedWorld')
+            ->dailyAt('23:50')
+            ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        $schedule->command('update:speedWorldBackend')
+            ->everyFifteenMinutes()
+            ->skip(UpdateSpeedWorldBackend::canSkip())
+            ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        
         $schedule->command('session:gc')
             ->everyFifteenMinutes()
             ->runInBackground();
