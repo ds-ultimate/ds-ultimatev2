@@ -43,7 +43,7 @@ class DoStatistic
             $statistic->total_barbarian_village = $village->where('owner', 0)->count();
             $statistic->total_conquere = $conqer->count();
             $statistic->daily_conquer = $conqer->where('timestamp', '>', $day->getTimestamp())->count();
-            $statistic->daily_ally_changes = $allyChanges->count();
+            $statistic->daily_ally_changes = $allyChanges->where('created_at', '>', $day)->count();
 
         }else{
             $statistic = new WorldStatistic();
@@ -54,7 +54,7 @@ class DoStatistic
             $statistic->total_barbarian_village = $village->where('owner', 0)->count();
             $statistic->total_conquere = $conqer->count();
             $statistic->daily_conquer = $conqer->where('timestamp', '>', $day->getTimestamp())->count();
-            $statistic->daily_ally_changes = $allyChanges->count();
+            $statistic->daily_ally_changes = $allyChanges->where('created_at', '>', $day)->count();
         }
         $statistic->save();
     }
