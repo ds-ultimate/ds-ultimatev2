@@ -48,7 +48,7 @@ class UpdateStatistic extends Command
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             DoStatistic::run($this->argument('server'), $this->argument('world'));
         }else{
-            $worlds = BasicFunctions::getWorldQuery();
+            $worlds = BasicFunctions::getWorldQuery()->get();
             foreach ($worlds as $world){
                 DoStatistic::run($world->server->code, $world->name);
             }
