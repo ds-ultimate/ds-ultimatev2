@@ -151,7 +151,7 @@ class DoPlayer
         $insert = new Player();
         $insert->setTable($dbName.'.player_latest_temp');
         $arrayAllyChange = array();
-        $insertTime = Carbon::createFromTimestamp(time());
+        $insertTime = Carbon::now();
         
         foreach ($players as $player) {
             $id = $player->get('id');

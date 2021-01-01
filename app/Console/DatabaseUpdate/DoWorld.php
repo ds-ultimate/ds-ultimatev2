@@ -17,32 +17,34 @@ class DoWorld
 
         $serverArray = Server::getServer();
 
-        foreach ($serverArray as $serverUrl){
-            $worldFile = file_get_contents($serverUrl->url.'/backend/get_servers.php');
-            $worldTable = new World();
-            $worldTable->setTable('worlds');
+        foreach ($serverArray as $serverModel){
+            $worldFile = file_get_contents($serverModel->url.'/backend/get_servers.php');
+            $worldModel = new World();
             $worldArray = unserialize($worldFile);
             foreach ($worldArray as $world => $link){
-                if($serverUrl->code != substr($world, 0, 2)) {
-                    echo "Ignoring {$serverUrl->code} / {$world}\n";
+                if($serverModel->code != substr($world, 0, 2)) {
+                    echo "Ignoring {$serverModel->code} / {$world}\n";
                     continue;
                 }
                 $worldName = substr($world, 2);
 
-                if ($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->count() >= 1){
+                if ($worldModel->where('server_id', $serverModel->id)->where('name', $worldName)->count() >= 1){
                     //world exists already -> update
                     $create = false;
                     $worldNew = null;
-                    foreach($worldTable->where('server_id', $serverUrl->id)->where('name', $worldName)->get() as $world) {
+                    foreach($worldModel->where('server_id', $serverModel->id)->where('name', $worldName)->get() as $world) {
                         if($worldNew == null) {
                             $worldNew = $world;
-                            $world->worldCheck_at = Carbon::createFromTimestamp(time());
+                            if($world->active == null) {
+                                $world->active = 1;
+                            }
+                            $world->worldCheck_at = Carbon::now();
                             $world->update();
                         } else {
                             $world->delete();
                         }
                     }
-                } else if($serverUrl->active != 1) {
+                } else if($serverModel->active != 1) {
                     continue;
                 } else {
                     //create new entry
@@ -53,7 +55,7 @@ class DoWorld
                     $worldNew->setTable('worlds');
                 }
 
-                $worldNew->server_id = $serverUrl->id;
+                $worldNew->server_id = $serverModel->id;
                 $worldNew->name = $worldName;
                 $worldNew->url = $link;
                 $txtConf = file_get_contents("$link/interface.php?func=get_config");
@@ -62,7 +64,7 @@ class DoWorld
                 $worldNew->units = $txtUnits;
                 $txtBuildings = file_get_contents("$link/interface.php?func=get_building_info");
                 $worldNew->buildings = $txtBuildings;
-                $worldNew->worldCheck_at = Carbon::createFromTimestamp(time());
+                $worldNew->worldCheck_at = Carbon::now();
 
                 if ($worldNew->save() !== true){
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
@@ -88,7 +90,7 @@ class DoWorld
 
         $worldModel = new World();
 
-        foreach ($worldModel->where('worldCheck_at', '<', Carbon::createFromTimestamp(time() - (60 * 30)))->get() as $world ){
+        foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
             if($world->active != null) {
                 BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
             }

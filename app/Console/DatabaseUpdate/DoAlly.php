@@ -98,7 +98,7 @@ class DoAlly
         $insert = new Ally();
         $insert->setTable($dbName.'.ally_latest_temp');
         $array = array();
-        $insertTime = Carbon::createFromTimestamp(time());
+        $insertTime = Carbon::now();
         
         foreach ($allys as $ally) {
             $id = $ally->get('id');

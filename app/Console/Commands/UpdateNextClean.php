@@ -50,8 +50,8 @@ class UpdateNextClean extends Command
         
         for($i = 0; $i < $toDo; $i++) {
             $world = \App\Util\BasicFunctions::getWorldQuery()
-                    ->where('worldCleaned_at', '<', Carbon::createFromTimestamp(time()
-                    - (60 * 60) * config('dsUltimate.db_clean_every_hours')))
+                    ->where('worldCleaned_at', '<', Carbon::now()
+                        ->subHours(config('dsUltimate.db_clean_every_hours')))
                     ->orderBy('worldCleaned_at', 'ASC')->first();
             if($world == null) {
                 break;

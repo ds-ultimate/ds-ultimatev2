@@ -59,7 +59,7 @@ class DoConquer
 
         $array = array();
         $databaseConquer = static::prepareConquerDupCheck($dbName);
-        $insertTime = Carbon::createFromTimestamp(time());
+        $insertTime = Carbon::now();
 
         foreach ($lines as $line) {
             $exploded = explode(',', trim($line));

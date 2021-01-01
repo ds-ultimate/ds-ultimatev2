@@ -53,7 +53,7 @@ class DoVillage
         $insert = new Village();
         $insert->setTable($dbName . '.village_latest_temp');
         $array = array();
-        $insertTime = Carbon::createFromTimestamp(time());
+        $insertTime = Carbon::now();
         
         foreach ($villages as $village) {
             $data = [

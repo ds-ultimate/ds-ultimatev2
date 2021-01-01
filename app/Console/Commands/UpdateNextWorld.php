@@ -52,8 +52,8 @@ class UpdateNextWorld extends Command
 
         for($i = 0; $i < $toDo; $i++) {
             $world = BasicFunctions::getWorldQuery()
-                    ->where('worldUpdated_at', '<', Carbon::createFromTimestamp(time()
-                    - (60 * 60) * config('dsUltimate.db_update_every_hours')))
+                    ->where('worldUpdated_at', '<',
+                        Carbon::now()->subHours(config('dsUltimate.db_update_every_hours')))
                     ->orderBy('worldUpdated_at', 'ASC')->first();
             if($world == null) {
                 break;

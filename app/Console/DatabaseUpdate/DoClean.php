@@ -10,7 +10,12 @@ use Carbon\Carbon;
 
 class DoClean
 {
-    public static function run(){
+    public static function run($world, $type){
+        $days = config('dsUltimate.db_save_day');
+        if($world->isSpeed()) {
+            $days = config('dsUltimate.db_save_day_speed');
+        }
+        
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         switch($type) {
             case 'a':
@@ -35,11 +40,11 @@ class DoClean
         for ($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++){
             if (BasicFunctions::existTable($dbName, "{$tablePrefix}_{$i}") === true) {
                 $model->setTable("$dbName.{$tablePrefix}_{$i}");
-                $delete = $model->where('updated_at', '<', Carbon::createFromTimestamp(time() - (60 * 60 * 24) * config('dsUltimate.db_save_day')));
+                $delete = $model->where('updated_at', '<', Carbon::now()->subDays($days));
                 $delete->delete();
             }
         }
-        $world->worldCleaned_at = Carbon::createFromTimestamp(time());
+        $world->worldCleaned_at = Carbon::now();
         $world->save();
     }
 }
