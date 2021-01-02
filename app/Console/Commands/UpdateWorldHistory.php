@@ -50,7 +50,7 @@ class UpdateWorldHistory extends Command
             foreach((new World())->where("active", 1)->get() as $dbWorld) {
                 $server = $dbWorld->server->code;
                 $world = $dbWorld->name;
-                WorldHistory::run($server, $world, $world->isSpeed());
+                WorldHistory::run($server, $world, $dbWorld->isSpeed());
             }
         } else {
             WorldHistory::run($server, $world, World::isSpeedName($world));
