@@ -13,12 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'throttle:60,1'], function() {
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
-    });
-});
-
 Route::group(['middleware' => 'throttle:10,1'], function() {
     Route::post('/git/webhook', [\App\Http\Controllers\API\GitController::class, 'index'])->name('git');
 });
