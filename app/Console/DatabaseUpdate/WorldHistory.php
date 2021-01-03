@@ -88,7 +88,7 @@ class WorldHistory
             //Check date
             if($isSpeed) {
                 $exploded = explode(" ", $entry->created_at);
-                $entryDate = $exploded[0] . "_" . explode(":", $exploded[1]);
+                $entryDate = $exploded[0] . "_" . explode(":", $exploded[1])[0];
             } else {
                 $entryDate = explode(" ", $entry->created_at)[0];
             }
