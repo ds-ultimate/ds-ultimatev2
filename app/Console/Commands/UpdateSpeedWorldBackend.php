@@ -50,13 +50,13 @@ class UpdateSpeedWorldBackend extends Command
         $curActive = (new SpeedWorld())
             ->orWhere(function ($query) {
                 return $query
-                    ->where('planned_start', '>=', time())
-                    ->where('planned_end', '<=', time())
+                    ->where('planned_start', '<=', time())
+                    ->where('planned_end', '>=', time())
                     ->where('started', false);
             })
             ->orWhere(function ($query) {
                 return $query
-                    ->where('planned_end', '>=', time())
+                    ->where('planned_end', '<=', time())
                     ->where('started', true);
             })
             ->count();

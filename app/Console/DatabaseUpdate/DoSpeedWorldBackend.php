@@ -2,6 +2,7 @@
 
 namespace App\Console\DatabaseUpdate;
 
+use App\Log;
 use App\Server;
 use App\SpeedWorld;
 use App\World;
@@ -44,8 +45,8 @@ class DoSpeedWorldBackend
 
                 $curActive = (new SpeedWorld())
                         ->where('server_id', $serverModel->id)
-                        ->where('planned_start', '>=', time())
-                        ->where('planned_end', '<=', time())
+                        ->where('planned_start', '<=', time())
+                        ->where('planned_end', '>=', time())
                         ->get();
                 
                 if(count($curActive) < 1) {
@@ -87,7 +88,7 @@ class DoSpeedWorldBackend
                     $worldNew->buildings = $txtBuildings;
                     $worldNew->worldCheck_at = Carbon::now();
                     
-                    $world = $serverModel . $worldNew->name;
+                    $world = $serverModel->code . $worldNew->name;
                     if ($worldNew->save() !== true){
                         BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
                         continue;

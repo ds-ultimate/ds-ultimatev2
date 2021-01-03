@@ -20,9 +20,9 @@ class WorldHistory
         } else {
             $date = Carbon::now()->format("Y-m-d");
         }
-        static::runInternal($dbName, $date, "v");
-        static::runInternal($dbName, $date, "p");
-        static::runInternal($dbName, $date, "a");
+        static::runInternal($dbName, $date, "v", $isSpeed);
+        static::runInternal($dbName, $date, "p", $isSpeed);
+        static::runInternal($dbName, $date, "a", $isSpeed);
 
         $histIdx = new HistoryIndex();
         $histIdx->setTable($dbName . ".index");
@@ -30,7 +30,7 @@ class WorldHistory
         $histIdx->save();
     }
     
-    private static function runInternal($dbName, $date, $part) {
+    private static function runInternal($dbName, $date, $part, $isSpeed) {
         if(!file_exists(config('dsUltimate.history_directory') . "{$dbName}")) {
             mkdir(config('dsUltimate.history_directory') . "{$dbName}", 0777, true);
         }
@@ -86,7 +86,12 @@ class WorldHistory
         }
         foreach($res as $entry) {
             //Check date
-            $entryDate = explode(" ", $entry->created_at)[0];
+            if($isSpeed) {
+                $exploded = explode(" ", $entry->created_at);
+                $entryDate = $exploded[0] . "_" . explode(":", $exploded[1]);
+            } else {
+                $entryDate = explode(" ", $entry->created_at)[0];
+            }
             if($date == $entryDate) {
                 gzwrite($file, $entryCallback($entry) . "\n");
             } else {
