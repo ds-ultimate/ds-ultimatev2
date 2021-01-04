@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Ally;
 use App\Player;
+use App\Server;
 use App\Village;
+use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\Chart;
 use App\Util\ImageChart;
@@ -22,6 +24,7 @@ class PictureController extends Controller
     public function getAllySizedPic($server, $world, $allyID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
+        $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
             return "Invalid type";
         }
@@ -49,6 +52,7 @@ class PictureController extends Controller
     public function getPlayerSizedPic($server, $world, $playerID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
+        $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
             return "Invalid type";
         }
@@ -75,6 +79,7 @@ class PictureController extends Controller
     public function getVillageSizedPic($server, $world, $villageID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
+        $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
             return "Invalid type";
         }
@@ -131,5 +136,20 @@ class PictureController extends Controller
                 'height' => $height,
             );
         }
+    }
+    
+    private function fixWorldNameSpeed($server, $world) {
+        if(World::isSpeedName($world)) {
+            //find first speed world with correct update url and use that?
+            $serverData = Server::getServerByCode($server);
+            $model = new World();
+            $first = $model
+                ->where("server_id", $serverData->id)
+                ->where("url", "LIKE", "%" . BasicFunctions::likeSaveEscape($world) . "%")
+                ->where("active", 1)
+                ->first();
+            return $first->name;
+        }
+        return $world;
     }
 }
