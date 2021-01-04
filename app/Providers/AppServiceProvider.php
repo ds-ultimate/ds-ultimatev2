@@ -32,35 +32,37 @@ class AppServiceProvider extends ServiceProvider
             BasicFunctions::local();
 
             $changelog = Changelog::orderBy('created_at', 'desc')->first();
-            if (\Auth::check()){
+            if ($changelog == null) {
+                $newChangelog = false;
+            } else if (\Auth::check()){
                 $user = \Auth::user();
-                if (\Session::get('last_seen_changelog')) {
+                if(\Session::get('last_seen_changelog')) {
                     $lastSeenChangelog = \Session::get('last_seen_changelog');
-                    if ($lastSeenChangelog > $user->profile->last_seen_changelog) {
+                    if($lastSeenChangelog > $user->profile->last_seen_changelog) {
                         $user->profile->last_seen_changelog = $lastSeenChangelog;
                         $user->profile->save();
                     }
                 }
 
-                $newCangelog = $changelog->created_at > $user->profile->last_seen_changelog;
+                $newChangelog = $changelog->created_at > $user->profile->last_seen_changelog;
 
-            }else{
+            } else {
                 if (\Session::get('last_seen_changelog')) {
                     if (\Session::get('last_seen_changelog') < $changelog->created_at) {
-                        $newCangelog = true;
-                    }else{
-                        $newCangelog = false;
+                        $newChangelog = true;
+                    } else {
+                        $newChangelog = false;
                     }
-                }else{
-                    if (isset($newCangelog)) {
-                        $newCangelog = $changelog->created_at->diffInDays() < 5;
-                    }else{
-                        $newCangelog = false;
+                } else {
+                    if(isset($newChangelog)) {
+                        $newChangelog = $changelog->created_at->diffInDays() < 5;
+                    } else {
+                        $newChangelog = false;
                     }
                 }
             }
 
-            $view->with('newCangelog', $newCangelog);
+            $view->with('newCangelog', $newChangelog);
 
         });
 

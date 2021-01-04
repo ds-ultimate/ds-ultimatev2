@@ -52,10 +52,12 @@ class DoSpeedWorldBackend
                 if(count($curActive) < 1) {
                     $input = new \Exception("World in backend but not in planned " . $link . " at " . $serverModel->code);
                     Notification::send(new Log(), new DiscordNotification('exception', null, $input));
+                    continue;
                 }
                 if(count($curActive) > 1) {
                     $input = new \Exception("Please add support for more than one speed world " . $serverModel->code);
                     Notification::send(new Log(), new DiscordNotification('exception', null, $input));
+                    continue;
                 }
                 $worldName = $curActive[0]->name;
                 $curActive[0]->started = true;
@@ -93,6 +95,9 @@ class DoSpeedWorldBackend
                         BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");
                         continue;
                     }
+                    
+                    $curActive[0]->world_id = $worldNew->id;
+                    $curActive[0]->update();
 
                     BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                     $name = BasicFunctions::getDatabaseName('', '').$world;
