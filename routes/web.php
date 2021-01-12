@@ -61,10 +61,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
     Route::resource('changelogs', \App\Http\Controllers\Admin\ChangelogsController::class);
 
     Route::delete('bugreports/destroy', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'massDestroy'])->name('bugreports.massDestroy');
-    Route::get('bugreports/priority/{priority}', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexPriority'])->name('bugreports.priority');
-    Route::get('bugreports/status/{status}', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexStatus'])->name('bugreports.status');
-    Route::get('bugreports/new', [\App\Http\Controllers\Admin\BugreportsCommentController::class, 'indexNew'])->name('bugreports.new');
-    Route::resource('bugreports', \App\Http\Controllers\Admin\BugreportsCommentController::class);
+    Route::get('bugreports/priority/{priority}', [\App\Http\Controllers\Admin\BugreportsController::class, 'indexPriority'])->name('bugreports.priority');
+    Route::get('bugreports/status/{status}', [\App\Http\Controllers\Admin\BugreportsController::class, 'indexStatus'])->name('bugreports.status');
+    Route::get('bugreports/new', [\App\Http\Controllers\Admin\BugreportsController::class, 'indexNew'])->name('bugreports.new');
+    Route::resource('bugreports', \App\Http\Controllers\Admin\BugreportsController::class);
 
     Route::resource('bugreportsComments', \App\Http\Controllers\Admin\BugreportsCommentController::class);
 

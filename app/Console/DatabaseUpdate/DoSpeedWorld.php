@@ -42,8 +42,8 @@ class DoSpeedWorld
                 
                 $num = $matches[1];
                 $name = "s" . $num;
-                $start = Carbon::parse($matches[2]);
-                $end = Carbon::parse($matches[3]);
+                $start = Carbon::parse(static::monthTranslate($matches[2]));
+                $end = Carbon::parse(static::monthTranslate($matches[3]));
                 
                 //update existing rounds
                 //use number as unique identifier
@@ -147,5 +147,37 @@ class DoSpeedWorld
         }
         
         return $cursor;
+    }
+    
+    public static function monthTranslate($input) {
+        $replace = [
+            "Jän",
+            "Feb",
+            "Mär",
+            "Apr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Dez",
+        ];
+        $replacements = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ];
+        return str_replace($replace, $replacements, $input);
     }
 }
