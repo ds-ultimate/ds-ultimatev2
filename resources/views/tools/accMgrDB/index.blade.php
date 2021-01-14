@@ -57,7 +57,7 @@
                 <button id="filter-toggle" type="button" class="btn btn-success dropdown-toggle ml-2" data-toggle="dropdown">
                     <i class="fas fa-filter"></i>
                 </button>
-                <div id="filter-toggle-div" class="dropdown-menu dropdown-menu-left p-3" aria-labelledby="filter-toggle">
+                <div id="filter-toggle-div" class="dropdown-menu dropdown-menu-right p-3" aria-labelledby="filter-toggle">
                     <a id="filter-watchtower" class="dropdown-item db-filter{{ ($hasSetting["watchtower"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.watchtower') }}</a>
                     <a id="filter-church" class="dropdown-item db-filter{{ ($hasSetting["church"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.church') }}</a>
                     <a id="filter-statue" class="dropdown-item db-filter{{ ($hasSetting["statue"] ? " active" : "") }}">{{ __('tool.accMgrDB.filter.statue') }}</a>
