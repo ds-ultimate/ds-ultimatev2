@@ -41,6 +41,8 @@ return array (
     'bonusType' => 'Bonus',
     'bashSup' => 'supporter',
     'supDeff' => 'support',
+    'allyKillsPercent' => 'Kills/Ally',
+    'playerPointPercent' => 'Kills/Points',
   ),
   'allyChanges' => 
   array (

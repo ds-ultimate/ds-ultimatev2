@@ -82,6 +82,30 @@ class DatatablesController extends Controller
             ->toJson();
     }
 
+    public function getAllyPlayerBashRanking($server, $world, $ally)
+    {
+        static::limitResults(200);
+
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+
+        $querry = $playerModel->newQuery();
+        $querry->where('ally_id', $ally);
+
+        return DataTables::eloquent($querry)
+            ->editColumn('name', function ($player){
+                return BasicFunctions::decodeName($player->name);
+            })
+            ->addColumn('allyKillsPercent', function ($player){
+                return ($player->gesBash == 0 || $player->allyLatest->gesBash == 0)? 0 : round(($player->gesBash/$player->allyLatest->gesBash)*100, 1).'%';
+            })
+            ->addColumn('playerPointPercent', function ($player){
+                return ($player->points == 0 || $player->gesBash == 0)? 0 : round(($player->gesBash/$player->points)*100, 1).'%';
+            })
+            ->toJson();
+    }
+
+
     public function getPlayerVillage($server, $world, $player)
     {
         static::limitResults(200);

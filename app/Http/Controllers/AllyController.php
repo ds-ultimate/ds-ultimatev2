@@ -26,7 +26,7 @@ class AllyController extends Controller
         $statsBash = ['gesBash', 'offBash', 'defBash'];
 
         $datas = Ally::allyDataChart($server, $world, $ally);
-        
+
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
             $chartJS .= Chart::generateChart($datas, $statsGeneral[$i]);
@@ -34,13 +34,27 @@ class AllyController extends Controller
         for ($i = 0; $i < count($statsBash); $i++){
             $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
         }
-        
+
         $conquer = Conquer::allyConquerCounts($server, $world, $ally);
         $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
-        
+
         return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
     }
-    
+
+    public function allyBashRanking($server, $world, $ally)
+    {
+        BasicFunctions::local();
+        World::existWorld($server, $world);
+
+        $worldData = World::getWorld($server, $world);
+
+        $allyData = Ally::ally($server, $world, $ally);
+        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
+            " auf der Welt '$server$world' vorhanden.");
+
+        return view('content.allyBashRanking', compact('allyData', 'worldData', 'server'));
+    }
+
     public function allyChanges($server, $world, $type, $allyID){
         BasicFunctions::local();
         World::existWorld($server, $world);
@@ -49,7 +63,7 @@ class AllyController extends Controller
         $allyData = Ally::ally($server, $world, $allyID);
         abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
                 " auf der Welt '$server$world' vorhanden.");
-        
+
         switch($type) {
             case "all":
                 $typeName = ucfirst(__('ui.allyChanges.all'));
@@ -66,7 +80,7 @@ class AllyController extends Controller
 
         return view('content.allyAllyChange', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
     }
-    
+
     public function conquer($server, $world, $type, $allyID){
         BasicFunctions::local();
         World::existWorld($server, $world);
@@ -92,7 +106,7 @@ class AllyController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        
+
         $allHighlight = ['s', 'i', 'b', 'd', 'w', 'l'];
         if(\Auth::check()) {
             $profile = \Auth::user()->profile;
@@ -100,12 +114,12 @@ class AllyController extends Controller
         } else {
             $userHighlight = $allHighlight;
         }
-        
+
         $who = BasicFunctions::decodeName($allyData->name).
                 " [".BasicFunctions::decodeName($allyData->tag)."]";
         $routeDatatableAPI = route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['ally']);
-        
+
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
                 'allHighlight', 'userHighlight'));

@@ -99,6 +99,8 @@ return array (
     'village' => 'Dorf',
     'bashSup' => 'Unterstützer',
     'supDeff' => 'Unterstützung',
+    'allyKillsPercent' => 'Kills/Stamm',
+    'playerPointPercent' => 'Kills/Punkte',
   ),
   'server' => 
   array (

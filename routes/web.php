@@ -128,6 +128,7 @@ Route::get('/{server}/{world}/players', [\App\Http\Controllers\ContentController
 Route::get('/{server}/{world}/players/ranks', [\App\Http\Controllers\PlayerController::class, 'rank'])->name('rankPlayer');
 Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
 Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\AllyController::class, 'ally'])->name('ally');
+Route::get('/{server}/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\AllyController::class, 'allyBashRanking'])->name('ally');
 Route::get('/{server}/{world}/village/{village}', [\App\Http\Controllers\VillageController::class, 'village'])->name('village');
 
 Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'allyChanges'])->name('allyAllyChanges');
