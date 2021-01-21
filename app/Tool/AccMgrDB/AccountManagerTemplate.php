@@ -163,7 +163,7 @@ class AccountManagerTemplate extends Model
         }
         
         $generated .= static::$NAME_DELIMINTER . $this->name . static::$NAME_DELIMINTER . chr(51);
-        return "[construction_template]" . base64_encode($generated) . "[/construction_template]";
+        return base64_encode($generated);
     }
     
     public static function importDS($input) {
