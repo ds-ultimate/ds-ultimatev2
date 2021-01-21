@@ -69,7 +69,7 @@
                 "serverSide": true,
                 "ajax": "{{ route('api.allyPlayerBashRanking', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
                 "columns": [
-                    { "data": "rank" },
+                    { "data": "DT_RowIndex" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
                     { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },

@@ -93,14 +93,15 @@ class DatatablesController extends Controller
         $querry->where('ally_id', $ally);
 
         return DataTables::eloquent($querry)
+            ->addIndexColumn()
             ->editColumn('name', function ($player){
                 return BasicFunctions::decodeName($player->name);
             })
             ->addColumn('allyKillsPercent', function ($player){
-                return ($player->gesBash == 0 || $player->allyLatest->gesBash == 0)? 0 : round(($player->gesBash/$player->allyLatest->gesBash)*100, 1).'%';
+                return ($player->gesBash == 0 || $player->allyLatest->gesBash == 0)? 0 .'%': round(($player->gesBash/$player->allyLatest->gesBash)*100, 1).'%';
             })
             ->addColumn('playerPointPercent', function ($player){
-                return ($player->points == 0 || $player->gesBash == 0)? 0 : round(($player->gesBash/$player->points)*100, 1).'%';
+                return ($player->points == 0 || $player->gesBash == 0) ? 0 .'%' : round(($player->gesBash/$player->points)*100, 1).'%';
             })
             ->toJson();
     }
