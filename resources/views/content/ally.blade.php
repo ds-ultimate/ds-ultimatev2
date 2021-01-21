@@ -72,7 +72,9 @@
                             </tbody>
                         </table>
                         <br>
-                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
+                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}
+                            <a class="h6" href="{{ route('allyBashRanking', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}">{{ __('ui.tabeltitel.allyBashRanking') }}</a>
+                        </h5>
                         <table id="data2" class="table table-bordered no-wrap w-100">
                             <thead>
                             <tr>

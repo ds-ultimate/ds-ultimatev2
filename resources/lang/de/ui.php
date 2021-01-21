@@ -281,4 +281,8 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   array (
     'help' => 'um die meisten Funktionen der Seite nutzen zu können musst du einen Server und eine Welt auswählen',
   ),
+  'tabeltitel' => 
+  array (
+    'allyBashRanking' => 'Interne Basherliste',
+  ),
 );
