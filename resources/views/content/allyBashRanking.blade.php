@@ -71,14 +71,19 @@
                 "columns": [
                     { "data": "DT_RowIndex" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "gesBash" , "render": function (value) {return numeral(value).format('0.[00] a')}},
-                    { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
-                    { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
-                    { "data": "supBash", "render": function (value) {return numeral(value).format('0.[00] a')}},
+                    { "data": "gesBash"},
+                    { "data": "offBash"},
+                    { "data": "defBash"},
+                    { "data": "supBash"},
                     { "data": "allyKillsPercent"},
                     { "data": "playerPointPercent"},
                 ],
                 responsive: true,
+                "drawCallback": function(settings, json) {
+                    $('[data-toggle="popover"]').popover({
+                        html : true,
+                    });
+                },
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

@@ -97,12 +97,45 @@ class DatatablesController extends Controller
             ->editColumn('name', function ($player){
                 return BasicFunctions::decodeName($player->name);
             })
+            ->editColumn('gesBash', function ($player){
+                $playerOld = $player->playerHistory(1);
+
+                if($playerOld == null){
+                    return __('ui.old.nodata');
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'gesBash', false);
+            })
+            ->editColumn('offBash', function ($player){
+                $playerOld = $player->playerHistory(1);
+
+                if($playerOld == null){
+                    return __('ui.old.nodata');
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'offBash', false);
+            })
+            ->editColumn('defBash', function ($player){
+                $playerOld = $player->playerHistory(1);
+
+                if($playerOld == null){
+                    return __('ui.old.nodata');
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
+            })
+            ->editColumn('supBash', function ($player){
+                $playerOld = $player->playerHistory(1);
+
+                if($playerOld == null){
+                    return __('ui.old.nodata');
+                }
+                return BasicFunctions::modelHistoryCalc($player, $playerOld, 'supBash', false);
+            })
             ->addColumn('allyKillsPercent', function ($player){
                 return ($player->gesBash == 0 || $player->allyLatest->gesBash == 0)? 0 .'%': round(($player->gesBash/$player->allyLatest->gesBash)*100, 1).'%';
             })
             ->addColumn('playerPointPercent', function ($player){
                 return ($player->points == 0 || $player->gesBash == 0) ? 0 .'%' : round(($player->gesBash/$player->points)*100, 1).'%';
             })
+            ->rawColumns(['gesBash','offBash','defBash','supBash'])
             ->toJson();
     }
 
