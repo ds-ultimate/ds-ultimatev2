@@ -57,6 +57,7 @@
 
             $('#table_id').DataTable({
                 "columnDefs": [
+		    {"targets": 0, 'orderable': false},
                     {"targets": 3, "className": 'text-right'},
                     {"targets": 4, "className": 'text-right'},
                     {"targets": 5, "className": 'text-right'},
