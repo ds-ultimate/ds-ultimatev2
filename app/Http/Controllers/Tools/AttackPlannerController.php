@@ -166,7 +166,7 @@ class AttackPlannerController extends BaseController
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
                 '%SOURCE%' => '[coord]'.($item->start_village!=null?$item->start_village->coordinates():'???').'[/coord]',
                 '%TARGET%' => '[coord]'.($item->target_village!=null?$item->target_village->coordinates():'???').'[/coord]',
-                '%SEND%' => $date->isoFormat('L LT'),
+                '%SEND%' => $date->format('Y-m-d H:i:s') . ":" . $item->ms,
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
             );
             $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
@@ -206,8 +206,8 @@ class AttackPlannerController extends BaseController
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
                 '%DEFENDER%' => $item->defenderName(),
                 '%TARGET%' => ($item->target_village != null ? $item->target_village->coordinates() : '???|???'),
-                '%SEND%' => $dateSend->isoFormat('L LT'),
-                '%ARRIVE%' => $dateArrival->isoFormat('L LT'),
+                '%SEND%' => $dateSend->format('Y-m-d H:i:s') . ":" . $item->ms,
+                '%ARRIVE%' => $dateArrival->format('Y-m-d H:i:s') . ":" . $item->ms,
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
             );
             $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
