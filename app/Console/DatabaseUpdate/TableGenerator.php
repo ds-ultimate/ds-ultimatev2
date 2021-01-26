@@ -173,4 +173,65 @@ class TableGenerator
             $table->timestamps();
         });
     }
+    
+    public static function playerTopTable($dbName) {
+        Schema::create($dbName.'.player_top', function (Blueprint $table) {
+            $table->integer('playerID');
+            $table->string('name', 288);
+            $table->integer('village_count_top');
+            $table->date('village_count_date');
+            $table->integer('points_top');
+            $table->date('points_date');
+            $table->integer('rank_top');
+            $table->date('rank_date');
+            $table->bigInteger('offBash_top')->nullable();
+            $table->date('offBash_date')->nullable();
+            $table->integer('offBashRank_top')->nullable();
+            $table->date('offBashRank_date')->nullable();
+            $table->bigInteger('defBash_top')->nullable();
+            $table->date('defBash_date')->nullable();
+            $table->integer('defBashRank_top')->nullable();
+            $table->date('defBashRank_date')->nullable();
+            $table->bigInteger('supBash_top')->nullable();
+            $table->date('supBash_date')->nullable();
+            $table->integer('supBashRank_top')->nullable();
+            $table->date('supBashRank_date')->nullable();
+            $table->bigInteger('gesBash_top')->nullable();
+            $table->date('gesBash_date')->nullable();
+            $table->integer('gesBashRank_top')->nullable();
+            $table->date('gesBashRank_date')->nullable();
+            $table->timestamps();
+            $table->primary('playerID', 'primary_playerID');
+        });
+    }
+    
+    public static function allyTopTable($dbName) {
+        Schema::create($dbName.'.ally_top', function (Blueprint $table) {
+            $table->integer('allyID');
+            $table->string('name', 384);
+            $table->string('tag', 72);
+            $table->integer('member_count_top');
+            $table->date('member_count_date');
+            $table->integer('village_count_top');
+            $table->date('village_count_date');
+            $table->integer('points_top');
+            $table->date('points_date');
+            $table->integer('rank_top');
+            $table->date('rank_date');
+            $table->bigInteger('offBash_top')->nullable();
+            $table->date('offBash_date')->nullable();
+            $table->integer('offBashRank_top')->nullable();
+            $table->date('offBashRank_date')->nullable();
+            $table->bigInteger('defBash_top')->nullable();
+            $table->date('defBash_date')->nullable();
+            $table->integer('defBashRank_top')->nullable();
+            $table->date('defBashRank_date')->nullable();
+            $table->bigInteger('gesBash_top')->nullable();
+            $table->date('gesBash_date')->nullable();
+            $table->integer('gesBashRank_top')->nullable();
+            $table->date('gesBashRank_date')->nullable();
+            $table->timestamps();
+            $table->primary('allyID', 'primary_allyID');
+        });
+    }
 }

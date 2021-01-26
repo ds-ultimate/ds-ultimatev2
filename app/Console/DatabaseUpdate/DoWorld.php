@@ -87,7 +87,14 @@ class DoWorld
                     BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
                     continue;
                 }
+                TableGenerator::allyChangeTable($name);
+                TableGenerator::allyLatestTable($name, 'latest_temp');
+                TableGenerator::conquerTable($name);
                 TableGenerator::historyIndexTable($name);
+                TableGenerator::playerLatestTable($name, 'latest_temp');
+                TableGenerator::villageLatestTable($name, 'latest_temp');
+                TableGenerator::playerTopTable($name);
+                TableGenerator::allyTopTable($name);
                 BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
             }
         }

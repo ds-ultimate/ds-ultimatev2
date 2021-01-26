@@ -126,6 +126,19 @@ class Kernel extends ConsoleKernel
                 Log::critical('ConquerData -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        /*
+         * Insert Conquer Data
+         */
+        $schedule->command("update:generateTops no-progress")
+            ->dailyAt('03:05')
+            ->onSuccess(function (){
+                Log::info('generateTops -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('generateTops -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
     }
 
     /**

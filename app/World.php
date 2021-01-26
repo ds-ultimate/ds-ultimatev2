@@ -18,6 +18,7 @@ class World extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+        'worldTop_at',
         'worldUpdated_at',
         'worldCleaned_at',
     ];

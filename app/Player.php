@@ -9,7 +9,6 @@ use Illuminate\Support\Carbon;
 
 class Player extends CustomModel
 {
-    private $hash = 59;
     protected $primaryKey = 'playerID';
     protected $fillable = [
         'playerID',
@@ -28,6 +27,11 @@ class Player extends CustomModel
         'gesBashRank',
     ];
 
+    protected $dates = [
+        'updated_at',
+        'created_at',
+    ];
+
     public $timestamps = true;
 
     /**
@@ -39,7 +43,6 @@ class Player extends CustomModel
         parent::__construct($attributes);
 
         $this->hash = config('dsUltimate.hash_player');
-
     }
 
     /**

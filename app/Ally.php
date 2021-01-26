@@ -8,8 +8,27 @@ use Illuminate\Support\Carbon;
 
 class Ally extends CustomModel
 {
-    private $hash = 29;
     protected $primaryKey = 'allyID';
+    protected $fillable = [
+        'allyID',
+        'name',
+        'tag',
+        'member_count',
+        'village_count',
+        'points',
+        'rank',
+        'offBash',
+        'offBashRank',
+        'defBash',
+        'defBashRank',
+        'gesBash',
+        'gesBashRank',
+    ];
+
+    protected $dates = [
+        'updated_at',
+        'created_at',
+    ];
 
     public function __construct(array $attributes = [])
     {
