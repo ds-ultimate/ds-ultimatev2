@@ -138,7 +138,11 @@ class GenerateTopsFromHist extends Command
             $file = gzopen(config('dsUltimate.history_directory') . "{$dbName}/{$typeN}_{$history->date}.gz", "r");
             
             $i = 0;
-            $date = Carbon::parse($history->date);
+            if(! $world->isSpeed()) {
+                $date = Carbon::parse($history->date);
+            } else {
+                $date = Carbon::parse(str_replace("_", " ", $history->date) . ":00:00");
+            }
             while(! gzeof($file)) {
                 $line = str_replace("\n", "", gzgets($file));
                 if($line == "") continue;
