@@ -101,7 +101,7 @@ class AttackPlannerItemController extends BaseController
     public function data(AttackList $attackList, $key){
         abort_unless($attackList->show_key == $key, 403);
         \App\Http\Controllers\API\DatatablesController::limitResults(200);
-        
+
 
         $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
 
@@ -306,10 +306,15 @@ class AttackPlannerItemController extends BaseController
                 if($item == null) {
                     continue;
                 }
-                
+
                 if (in_array('multiedit_type_checkbox', $request->checkboxes)){
                     $attackListItem->type = $request->type;
                 }
+
+                if (in_array('multiedit_note_checkbox', $request->checkboxes)){
+                    $attackListItem->note = $request->note;
+                }
+
                 if (in_array('multiedit_start_checkbox', $request->checkboxes) || in_array('multiedit_target_checkbox', $request->checkboxes)){
                     if (in_array('multiedit_start_checkbox', $request->checkboxes)){
                         $xStart = $request->xStart;
