@@ -48,6 +48,9 @@ class UpdateWorldHistory extends Command
         
         if($server == null || $world == null || $server == "null" || $world == "null" || ($server == "*" && $world == "*")) {
             foreach((new World())->where("active", 1)->get() as $dbWorld) {
+                if($dbWorld->isSpeeed()) {
+                    continue;
+                }
                 $server = $dbWorld->server->code;
                 $world = $dbWorld->name;
                 WorldHistory::run($server, $world, $dbWorld->isSpeed());
