@@ -81,6 +81,10 @@ class DoGenerateTops
         }
         
         for($num = 0; $num < $hashSize; $num++) {
+            if (BasicFunctions::existTable($dbName, "{$typeN}_$num") === false){
+                continue;
+            }
+            
             $curModel = null;
             $model->setTable("$dbName.{$typeN}_$num");
             if($world->worldTop_at !== null) {
