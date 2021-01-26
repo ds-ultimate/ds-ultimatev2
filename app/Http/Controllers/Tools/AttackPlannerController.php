@@ -141,7 +141,7 @@ class AttackPlannerController extends BaseController
 
     public function exportWB(AttackList $attackList){
         /** @var  AttackListItem */
-        $items = $attackList->items;
+        $items = $attackList->items()->take(400)->get();
         $export = "";
         foreach ($items as $item){
             $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
@@ -152,7 +152,7 @@ class AttackPlannerController extends BaseController
     public function exportBB(AttackList $attackList){
         BasicFunctions::local();
         /** @var  AttackListItem */
-        $items = $attackList->items;
+        $items = $attackList->items()->take(400)->get();
         $count = count($items);
         $rowTemplate = __('tool.attackPlanner.export.BB.default.row');
         $i = 1;
@@ -166,7 +166,7 @@ class AttackPlannerController extends BaseController
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
                 '%SOURCE%' => '[coord]'.($item->start_village!=null?$item->start_village->coordinates():'???').'[/coord]',
                 '%TARGET%' => '[coord]'.($item->target_village!=null?$item->target_village->coordinates():'???').'[/coord]',
-                '%SEND%' => $date->format('Y-m-d H:i:s') . ":" . $item->ms,
+                '%SEND%' => $date->isoFormat('L LT'),
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
             );
             $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
@@ -191,7 +191,7 @@ class AttackPlannerController extends BaseController
     public function exportIGM(AttackList $attackList){
         BasicFunctions::local();
         /** @var  AttackListItem */
-        $items = $attackList->items;
+        $items = $attackList->items()->take(400)->get();
         $rowTemplate = __('tool.attackPlanner.export.IGM.default.row');
         $i = 1;
         $now = Carbon::now()->locale(App::getLocale());
@@ -206,8 +206,8 @@ class AttackPlannerController extends BaseController
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
                 '%DEFENDER%' => $item->defenderName(),
                 '%TARGET%' => ($item->target_village != null ? $item->target_village->coordinates() : '???|???'),
-                '%SEND%' => $dateSend->format('Y-m-d H:i:s') . ":" . $item->ms,
-                '%ARRIVE%' => $dateArrival->format('Y-m-d H:i:s') . ":" . $item->ms,
+                '%SEND%' => $dateSend->isoFormat('L LT'),
+                '%ARRIVE%' => $dateArrival->isoFormat('L LT'),
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&mode=command&target=".$item->target_village_id."&type=0&spear=0&sword=0&axe=0&spy=0&light=0&heavy=0&ram=0&catapult=0&knight=0&snob=0\"]Versammlungsplatz[/url]"
             );
             $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
