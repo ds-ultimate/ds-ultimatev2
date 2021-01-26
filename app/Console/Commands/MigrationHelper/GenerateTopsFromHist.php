@@ -141,6 +141,7 @@ class GenerateTopsFromHist extends Command
             $date = Carbon::parse($history->date);
             while(! gzeof($file)) {
                 $line = str_replace("\n", "", gzgets($file));
+                if($line == "") continue;
                 $elm = explode(";", $line);
                 
                 if(isset($curData[$elm[0]])) {
