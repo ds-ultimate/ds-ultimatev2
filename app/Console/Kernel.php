@@ -131,7 +131,7 @@ class Kernel extends ConsoleKernel
          * Insert Conquer Data
          */
         $schedule->command("update:generateTops no-progress")
-            ->dailyAt('03:05')
+            ->dailyAt('00:35')
             ->onSuccess(function (){
                 Log::info('generateTops -> Success');
             })

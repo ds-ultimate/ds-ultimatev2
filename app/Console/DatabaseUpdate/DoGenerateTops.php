@@ -133,7 +133,7 @@ class DoGenerateTops
                 }
                 $i++;
                 if($progress && $i % 100 == 0) {
-                    echo "\r$dbName $typeN doing: $num at: $i  inseted:$changed      ";
+                    echo "\r$dbName $typeN doing: $num at: $i  inserted:$changed      ";
                 }
             }
             if($curModel !== null) {
