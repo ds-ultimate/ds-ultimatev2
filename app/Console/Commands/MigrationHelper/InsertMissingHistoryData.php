@@ -66,6 +66,10 @@ class InsertMissingHistoryData extends Command
     private function insertMissing(World $worldModel) {
         $dbName = BasicFunctions::getDatabaseName($worldModel->server->code, $worldModel->name);
         echo "Doing world $dbName\n";
+        if (DB::statement('CREATE DATABASE ' . $dbName . '_history') !== true) {
+            echo("DB '$dbName\_history' konnte nicht erstellt werden.");
+        }
+        TableGenerator::historyIndexTable($dbName . "_history");
 
         $dates = self::getDates($dbName);
         $progLen = 3;
@@ -261,6 +265,8 @@ class InsertMissingHistoryData extends Command
                     $timestampsUsed[$entryDate] = $entry->created_at;
                 }
                 if($timestampsUsed[$entryDate] == $entry->created_at) {
+                    $villages[$entryDate][$entry->villageID] = (array) $entry;
+                } else if(! isset($villages[$entryDate][$entry->villageID])) {
                     $villages[$entryDate][$entry->villageID] = (array) $entry;
                 }
             }
