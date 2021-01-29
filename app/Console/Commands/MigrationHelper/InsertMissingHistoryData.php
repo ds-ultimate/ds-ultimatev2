@@ -302,7 +302,7 @@ class InsertMissingHistoryData extends Command
                 if(! isset($finalPlayerData[$key][$vill['owner']])) {
                     $finalPlayerData[$key][$vill['owner']] = [
                         'playerID' => $vill['owner'],
-                        'name' => $playerNames[$vill['owner']] ?? "Unknown",
+                        'name' => $playerNames[$vill['owner']] ?? "Unknown " . $vill['owner'],
                         'ally_id' => $playerAlly[$key][$vill['owner']] ?? 0,
                         'village_count' => 0,
                         'points' => 0,
@@ -349,7 +349,7 @@ class InsertMissingHistoryData extends Command
                 
                 if(! isset($finalAllyData[$key][$player['ally_id']])) {
                     $nameArr = $allyNames[$player['ally_id']] ?? [
-                        "Unknown",
+                        "Unknown " . $player['ally_id'],
                         "Unkn",
                     ];
                     
