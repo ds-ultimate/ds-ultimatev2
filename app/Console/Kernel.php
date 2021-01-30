@@ -128,7 +128,7 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo("storage/logs/cron-critical.log");
         
         /*
-         * Insert Conquer Data
+         * Update Top values
          */
         $schedule->command("update:generateTops no-progress")
             ->dailyAt('00:35')
