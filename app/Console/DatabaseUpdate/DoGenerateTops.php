@@ -124,6 +124,11 @@ class DoGenerateTops
                     }
                 }
                 
+                foreach($copy as $cp) {
+                    if($curModel->$cp != $elm->$cp) {
+                        $curModel->$cp = $elm->$cp;
+                    }
+                }
                 foreach($values as $val) {
                     if( ($val[3] > 0 && $curModel->{$val[1]} < $elm->{$val[0]}) ||
                         ($val[3] < 0 && $curModel->{$val[1]} > $elm->{$val[0]})) {
