@@ -110,6 +110,8 @@ class DoSpeedWorldBackend
                         continue;
                     }
                     TableGenerator::historyIndexTable($name);
+                    TableGenerator::allyTopTable($name)
+                    TableGenerator::playerTopTable($name)
                     BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
                 }
             }
