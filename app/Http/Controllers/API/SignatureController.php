@@ -61,7 +61,7 @@ class SignatureController extends Controller
                 imagettftext($image, 10, 90, 18, 70 - 8 - 5, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
             }
             $flag = imagecreatetruecolor(16, 12);
-            imagecopyresampled($flag, imagecreatefrompng('images/default/signature/' . $server . '.png'), 0, 0, 0, 0, 16, 12, 640, 480);
+            imagecopyresampled($flag, imagecreatefrompng('images/default/signature/' . $worldData->server->flag . '.png'), 0, 0, 0, 0, 16, 12, 640, 480);
             imagecopyresampled($image, $flag, 27, 8 - 5, 0, 0, 16, 12, 16, 12);
             imagettftext($image, 10, 0, 56, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', \App\Util\BasicFunctions::decodeName($playerData->name));
             imagettftext($image, 10, 0, 300, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_i.ttf', 'by DS-Ultimate');
