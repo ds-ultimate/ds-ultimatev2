@@ -171,7 +171,7 @@ class DatatablesController extends Controller
 
     public function getPlayersHistory($server, $world, $day)
     {
-        static::limitResults(50);
+        static::limitResults(110);
 
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
@@ -258,7 +258,7 @@ class DatatablesController extends Controller
 
     public function getAllysHistory($server, $world, $day)
     {
-        static::limitResults(50);
+        static::limitResults(110);
 
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
