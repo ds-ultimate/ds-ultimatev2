@@ -712,12 +712,21 @@ $tabList = [
             }
         }
         
-        var timeDiff = null;
         function countdown(){
+            update_delay();
+            $('countdown').each(function () {
+                var date = $(this).attr('date');
+                startTimer(date, $(this));
+            });
+        }
+        
+        var timeDiff = null;
+        function update_delay() {
             if(timeDiff == null) {
                 var localTime = new Date().getTime() / 1000;
                 var serverPage = parseInt({{ \Carbon\Carbon::now()->timestamp }}{{ \Carbon\Carbon::now()->milli }}) / 1000;
                 timeDiff = localTime - serverPage;
+                //console.log("Server delay", timeDiff);
             }
             
             axios.post('{{ route('api.time') }}')
@@ -726,48 +735,55 @@ $tabList = [
                     now = parseInt(response.data['time']);
                     now+= parseInt(response.data['millis']) / 1000;
                     timeDiff = localTime - now;
-                    
-                    $('countdown').each(function () {
-                        var date = $(this).attr('date');
-                        startTimer(date, $(this));
-                    })
+                    //console.log("Ajax delay", timeDiff);
                 })
                 .catch((error) => {
-                    startTimer(date, $(this));
                 });
         }
         
         function startTimer(arrive, display) {
             var duration = arrive - new Date().getTime() / 1000 - timeDiff;
-            var days, hours, minutes, seconds;
-            var timerPlay = false;
             if (duration < 0){
                 display.parent().html("00:00:00").addClass("bg-danger text-white");
             }else {
-                var interval = setInterval(function () {
-                    duration = arrive - new Date().getTime() / 1000 - timeDiff;
-                    days = Math.floor(duration / 86400);
-                    hours = Math.floor((duration - days * 86400) / 3600);
-                    minutes = Math.floor((duration - days * 86400 - hours * 3600) / 60);
-                    seconds = Math.floor(duration - days * 86400 - hours * 3600 - minutes * 60);
-
-                    days = days < 1 ? "" : (days < 2 ? "1 Tag " : days + " Tage ");
-                    hours = hours < 10 ? "0" + hours : hours;
-                    minutes = minutes < 10 ? "0" + minutes : minutes;
-                    seconds = seconds < 10 ? "0" + seconds : seconds;
-                    display.html(days + hours + ":" + minutes + ":" + seconds);
-
-                    if (duration == 0) {
-                        display.parent().addClass("bg-danger text-white");
-                        clearInterval(interval);
-                    }
-                    if (duration < audioTiming && !timerPlay) {
-                        audio();
-                        timerPlay = true;
-                    }
-                }, 1000);
+                countdownUpdateElements.push({
+                    "arrive": arrive,
+                    "display": display,
+                    "timerPlay": false
+                })
             }
         }
+        
+        var countdownUpdateElements = [];
+        
+        function update_allCountdowns() {
+            var days, hours, minutes, seconds;
+            countdownUpdateElements.forEach(function(elm) {
+                duration = elm.arrive - new Date().getTime() / 1000 - timeDiff;
+                days = Math.floor(duration / 86400);
+                hours = Math.floor((duration - days * 86400) / 3600);
+                minutes = Math.floor((duration - days * 86400 - hours * 3600) / 60);
+                seconds = Math.floor(duration - days * 86400 - hours * 3600 - minutes * 60);
+
+                days = days < 1 ? "" : (days < 2 ? "1 Tag " : days + " Tage ");
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                elm.display.html(days + hours + ":" + minutes + ":" + seconds);
+
+                if (duration <= 0) {
+                    elm.display.parent().addClass("bg-danger text-white");
+                    countdownUpdateElements = countdownUpdateElements.filter(function(elmInner) {return elm != elmInner});
+                }
+                if (duration < audioTiming && !elm.timerPlay) {
+                    audio();
+                    elm.timerPlay = true;
+                }
+            })
+        }
+        
+        var intervalUpdateCntdown = setInterval(update_allCountdowns, 1000);
+        var intervalUpdateDelay = setInterval(update_delay, 300000);
         
         function audio(){
             if(!muteaudio){
