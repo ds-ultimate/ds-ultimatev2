@@ -35,9 +35,14 @@
         </div>
     </div>
     <div class="form-inline mb-2">
-        <div class="col-lg-6 input-group">
-            <label for="map-zoom-value" class="col-lg-4">{{ __('tool.map.zoom') }}</label>
-            <select class="form-control col-lg-2" id="map-zoom-value" name="zoomValue">
+        <div class="col-lg-3 input-group">
+            <input id="map-zoom-auto-hid" name="zoomAutoHere" type="hidden" value="true" />
+            <input id="map-zoom-auto" name="zoomAuto" type="checkbox" class="form-check-input" {{ ($wantedMap->autoDimensions)?('checked="checked"'):('') }}/>
+            <label for="map-zoom-auto">{{ __('tool.map.autoZoom') }}</label>
+        </div>
+        <div class="col-lg-3 input-group">
+            <label for="map-zoom-value" class="mr-2">{{ __('tool.map.zoom') }}</label>
+            <select class="form-control" id="map-zoom-value" name="zoomValue">
                 <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
                 <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
                 <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
@@ -86,6 +91,7 @@
             $('#checkbox-show-barbarian').change(store);
             $('#checkbox-continent-numbers').change(store);
             $('#checkbox-auto-update').change(store);
+            $('#map-zoom-auto').change(store);
             $('#map-zoom-value').change(store);
             $('#center-pos-x').change(store);
             $('#center-pos-y').change(store);

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\User;
 use App\DsConnection;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Tools\MapController;
-use App\Server;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\Map\Map;
-use App\World;
+use App\Tool\AnimHistMap\AnimHistMapMap;
+use App\Tool\AnimHistMap\AnimHistMapJob;
 
 class HomeController extends Controller
 {
@@ -32,8 +32,10 @@ class HomeController extends Controller
         $attackLists = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         $attackListsFollow = \Auth::user()->followAttackList()->get();
         $mapsFollow = \Auth::user()->followMap()->get();
+        $animatedMaps = AnimHistMapMap::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
+        $renderedAnimatedMaps = AnimHistMapJob::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         
-        return view('user.overview', compact('page', 'maps', 'attackLists', 'attackListsFollow', 'mapsFollow'));
+        return view('user.overview', compact('page', 'maps', 'attackLists', 'attackListsFollow', 'mapsFollow', 'animatedMaps', 'renderedAnimatedMaps'));
     }
 
     public function settings($page){

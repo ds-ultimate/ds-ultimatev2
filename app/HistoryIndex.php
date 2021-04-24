@@ -19,4 +19,10 @@ class HistoryIndex extends Model
         'id',
         'date',
     ];
+    
+    public static function find($dbName, $id) {
+        $model = new HistoryIndex();
+        $model->setTable("$dbName.index");
+        return $model->where('id', $id)->first();
+    }
 }

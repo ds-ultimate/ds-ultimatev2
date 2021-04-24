@@ -67,6 +67,11 @@ class Navigation
             } else {
                 $tools[] = self::navElementDisabled('tool.accMgrDB.title', 'ui.nav.disabled.missingConfig');
             }
+            
+            
+            if(\Gate::allows('anim_hist_map_beta')) {
+                $tools[] = self::navElement('tool.animHistMap.title', 'tools.animHistMap.create', $serverCodeName);
+            }
         } else {
             $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.noWorld');
@@ -74,6 +79,10 @@ class Navigation
             $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.tableGenerator.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index');
+            
+            if(\Gate::allows('anim_hist_map_beta')) {
+                $tools[] = self::navElementDisabled('tool.animHistMap.title', 'ui.nav.disabled.noWorld');
+            }
         }
         $retArray[] = self::navDropdown('ui.server.tools', $tools);
 

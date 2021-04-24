@@ -90,7 +90,7 @@ Attackcount: %ELEMENT_COUNT%
     'destroySuccess' => 'Attack plan successfully deleted',
     'fastSwitch' => 'own attack plans',
     'notAvailable' => 'The attack planner is not available for this world',
-    'withoutTitle' => 'This attack planner has no title and is therefor used when pressing attack planner. In order to create a new attack planner you need to give this one a title',
+    'withoutTitle' => 'This attack planner has no title and is therefor used when pressing "attack planner". In order to create a new attack planner you need to give this one a title',
     'errorKoordTitle' => 'Village coordinates',
     'errorUnitCount' => 'number is too large',
     'errorUnitTitle' => 'Unit size',
@@ -247,7 +247,7 @@ Attackcount: %ELEMENT_COUNT%
     'destroyError' => 'The map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Map successfully deleted',
     'fastSwitch' => 'own maps',
-    'withoutTitle' => 'This map has no title and is therefor used when pressing world map. In order to create a new map you need to give this one a title',
+    'withoutTitle' => 'This map has no title and is therefor used when pressing "world map". In order to create a new map you need to give this one a title',
     'autoUpdate' => 'Automatic updates',
     'autoUpdateHelp' => 'With this enabled the map will always be generated from the current data. When deactivated the map will be generated once and this generated image will be served.',
     'cached' => 'This Map uses a cached Image, thus the automatic saving is disabled. Any changes will regenerate it from current data. The title can be changed without altering the map',
@@ -255,6 +255,7 @@ Attackcount: %ELEMENT_COUNT%
     'drawingErr' => 'There is an error in the drawings
 Please close and open the Drawing area
 If that problem persists please create a bug-report',
+    'autoZoom' => 'automatic zoom',
   ),
   'pointCalc' => 
   array (
@@ -313,5 +314,41 @@ If that problem persists please create a bug-report',
       'statue' => 'may contain a statue',
       'watchtower' => 'may contain a watchtower',
     ),
+  ),
+  'animHistMap' => 
+  array (
+    'editLink' => 'Edit Link',
+    'editLinkDesc' => 'Everybody with this link can edit the animated Map. Be careful!',
+    'download' => 
+    array (
+      'gif' => 'Download gif',
+      'mp4' => 'Download mp4',
+      'zip' => 'Download zip',
+    ),
+    'edit' => 'Edit Markers',
+    'fastSwitch' => 'Own animated maps',
+    'legend' => 'Legend',
+    'links' => 'Links for sharing',
+    'previewSelect' => 'preview day',
+    'render' => 
+    array (
+      'finished' => 'finished',
+      'gif' => 'creating gif',
+      'image' => 'rendering image {numImage} of {totalImage}',
+      'mp4' => 'creating mp4',
+      'queue' => 'in queue',
+      'zip' => 'creating zip',
+    ),
+    'renderNow' => 'create now!',
+    'rerun' => 'create again',
+    'settings' => 'Generation settings',
+    'showLink' => 'View link',
+    'showLinkDesc' => 'This links gives show access to the animated map',
+    'title' => 'Animate map',
+    'withoutTitle' => 'This animated map has no title and is therefor used when pressing "animated world map". In order to create a new animated map you need to give this one a title',
+    'destroyError' => 'The animated map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
+    'destroySuccess' => 'Animated map successfully deleted',
+    'renderedDestroyError' => 'The rendered animated map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
+    'renderedDestroySuccess' => 'Rendered animated map successfully deleted',
   ),
 );

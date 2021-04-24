@@ -75,7 +75,7 @@ class HistoryDataToDisk extends Command
         
         $bar = $this->output->createProgressBar(3 * count($dates));
         
-        mkdir(config('dsUltimate.history_directory') . "{$dbName}", 0777, true);
+        mkdir(storage_path(config('dsUltimate.history_directory') . $dbName), 0777, true);
         
         static::partToDisk($dbName, $dates, "ally",
             function($entry) {
@@ -115,7 +115,7 @@ class HistoryDataToDisk extends Command
         foreach($dates as $date){
             $res = DB::select("SELECT * FROM {$dbName}_history.`{$type}_$date`");
             
-            $fileName = config('dsUltimate.history_directory') . "{$dbName}/{$type}_$date.gz";
+            $fileName = storage_path(config('dsUltimate.history_directory') . "{$dbName}/{$type}_$date.gz");
             $file = gzopen($fileName, "w9");
             foreach($res as $entry) {
                 gzwrite($file, $entryToLineCallback($entry) . "\n");

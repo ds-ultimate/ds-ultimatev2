@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Tools\RenderAnimatedMaps;
 use App\Console\Commands\UpdateSpeedWorldBackend;
 use App\Console\DatabaseUpdate\UpdateUtil;
 use Illuminate\Console\Scheduling\Schedule;
@@ -100,6 +101,21 @@ class Kernel extends ConsoleKernel
         $schedule->command('session:gc')
             ->everyFifteenMinutes()
             ->runInBackground();
+        
+        /*
+         * Generate next animatedWorldMap
+         */
+        $schedule->command("animHistMap:render")
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->skip(! RenderAnimatedMaps::renderNeeded())
+            ->onSuccess(function (){
+                Log::info('Render -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('Render -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
 
         /*
          * Map Caching

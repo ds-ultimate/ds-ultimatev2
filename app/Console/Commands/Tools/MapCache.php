@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Tools;
 
 use App\Tool\Map\Map;
-use App\Util\MapGenerator;
+use App\Util\SQLMapGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 
@@ -43,8 +43,8 @@ class MapCache extends Command
         \App\Util\BasicFunctions::ignoreErrs();
         
         $maps = (new Map())->whereNull('cached_at')->where('shouldUpdate', false)->get();
-        if (!file_exists(config('tools.map.cacheDir'))) {
-            mkdir(config('tools.map.cacheDir'), 0777, true);
+        if (!file_exists(storage_path(config('tools.map.cacheDir')))) {
+            mkdir(storage_path(config('tools.map.cacheDir')), 0777, true);
         }
         
         foreach ($maps as $map){
@@ -65,17 +65,16 @@ class MapCache extends Command
     
     private function cacheMap(Map $map, $size) {
         try {
-            $mapGen = new MapGenerator($map->world, [
+            $mapGen = new SQLMapGenerator($map->world, [
                 'width' => $size,
                 'height' => $size,
             ], false);
 
             $map->prepareRendering($mapGen);
 
-            $mapGen->setFont("public/fonts/arial.ttf");
             $mapGen->render();
 
-            $mapGen->saveTo(config('tools.map.cacheDir')."{$map->id}-$size", "png");
+            $mapGen->saveTo(storage_path(config('tools.map.cacheDir')."{$map->id}-$size"), "png");
         } catch (\Exception $ex) {
             return true;
         }

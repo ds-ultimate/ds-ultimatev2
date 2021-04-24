@@ -2,34 +2,29 @@
 
 namespace App\Util;
 
-use App\Ally;
-use App\Player;
 use App\Village;
-use App\World;
-use Illuminate\Support\Facades\DB;
 
-class MapGenerator extends PictureRender {
+abstract class AbstractMapGenerator extends PictureRender {
     private $font;
     private $show_errs;
-    private $world;
     
-    private $ally;
-    private $player;
-    private $village;
+    protected $ally;
+    protected $player;
+    protected $village;
     private $skin;
     private $opaque;
     
     
-    private $playerColour;
+    protected $playerColour;
     public static $DEFAULT_PLAYER_COLOUR = [130, 60, 10];
-    private $barbarianColour;
+    protected $barbarianColour;
     public static $DEFAULT_BARBARIAN_COLOUR = [150, 150, 150];
     private $backgroundColour;
     public static $DEFAULT_BACKGROUND_COLOUR = [88, 118, 27];
     private $gridColour;
     public static $DEFAULT_GRID_COLOUR = [0, 0, 0, 30]; //ca 30% deckkraft
     
-    private $mapDimension;
+    protected $mapDimension;
     public static $DEFAULT_DIMENSIONS = [
         'xs' => 0,
         'xe' => 1000,
@@ -41,7 +36,7 @@ class MapGenerator extends PictureRender {
     private $height;
     private $fieldWidth;
     private $fieldHeight;
-    private $autoResize;
+    protected $autoResize;
     private $markerFactor;
         
     public static $LAYER_MARK = 0;
@@ -56,14 +51,20 @@ class MapGenerator extends PictureRender {
     
     private $showContinentNumbers = true;
     
+    public static $ANCHOR_TOP_LEFT = 1;
+    public static $ANCHOR_TOP_RIGHT = 2;
+    public static $ANCHOR_BOTTOM_LEFT = 3;
+    public static $ANCHOR_BOTTOM_RIGHT = 4;
+    public static $ANCHOR_MID_MID = 5;
+    
     /*
      * Variables that are holding Data got from Database
      */
-    private $dataAlly;
-    private $dataPlayer;
-    private $dataVillage;
+    protected $dataAlly;
+    protected $dataPlayer;
+    protected $dataVillage;
     
-    public function __construct(World $world, $dim=null, $show_errs=false) {
+    public function __construct($dim=null, $show_errs=false) {
         $std_aspect = 1/1;
         if(isset($dim["height"]) && isset($dim["width"])) {
             $img_height = $dim["height"];
@@ -84,28 +85,27 @@ class MapGenerator extends PictureRender {
         
         if($image === false) die("Error");
 
-        $this -> setFont("fonts/NotoMono-Regular.ttf");
+        $this -> setFont(public_path("/fonts/NotoMono-Regular.ttf"));
         $this -> image = $image;
         $this -> width= $img_width;
         $this -> height = $img_height;
         $this -> show_errs = $show_errs;
-        $this -> world = $world;
         
         $this -> ally = array();
         $this -> player = array();
         $this -> village = array();
         $this -> setSkin('symbol');
         $this ->setLayerOrder(array(
-            MapGenerator::$LAYER_MARK,
-            MapGenerator::$LAYER_PICTURE,
-            MapGenerator::$LAYER_TEXT,
-            MapGenerator::$LAYER_GRID,
+            AbstractMapGenerator::$LAYER_MARK,
+            AbstractMapGenerator::$LAYER_PICTURE,
+            AbstractMapGenerator::$LAYER_TEXT,
+            AbstractMapGenerator::$LAYER_GRID,
         ));
         $this -> setOpaque(100);
-        $this -> setMapDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
-        $this -> setPlayerColour(MapGenerator::$DEFAULT_PLAYER_COLOUR);
-        $this -> setBarbarianColour(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
-        $this -> setBackgroundColour(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+        $this -> setMapDimensions(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
+        $this -> setPlayerColour(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
+        $this -> setBarbarianColour(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+        $this -> setBackgroundColour(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR);
         $this -> setAutoResize(false);
         $this -> setMarkerFactor(0.2);
     }
@@ -126,27 +126,27 @@ class MapGenerator extends PictureRender {
         
         foreach($this->layerOrder as $layer) {
             switch ($layer) {
-                case MapGenerator::$LAYER_MARK:
+                case AbstractMapGenerator::$LAYER_MARK:
                     $this->renderMarks('barb');
                     $this->renderMarks('play');
                     $this->renderMarks('mark');
                     break;
                 
-                case MapGenerator::$LAYER_PICTURE:
+                case AbstractMapGenerator::$LAYER_PICTURE:
                     $this->renderPictures('barb');
                     $this->renderPictures('play');
                     $this->renderPictures('mark');
                     break;
                 
-                case MapGenerator::$LAYER_TEXT:
+                case AbstractMapGenerator::$LAYER_TEXT:
                     $this->renderText();
                     break;
                 
-                case MapGenerator::$LAYER_GRID:
+                case AbstractMapGenerator::$LAYER_GRID:
                     $this->renderGrid();
                     break;
                     
-                case MapGenerator::$LAYER_DRAWING:
+                case AbstractMapGenerator::$LAYER_DRAWING:
                     $this->renderDrawing();
                     break;
             }
@@ -184,158 +184,11 @@ class MapGenerator extends PictureRender {
         }
     }
     
-    private function grabAlly() {
-        //Translate ally marks into player marks + Text
-        if(count($this->ally) > 0) {
-            $allyModel = new Ally();
-            $allyModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.ally_latest');
-            $evaluateModel = false;
-            
-            foreach($this->ally as $ally) {
-                if($ally['showText']) {
-                    $allyModel = $allyModel->orWhere('allyID', $ally['id']);
-                    $evaluateModel = true;
-                }
-                $this->dataAlly[$ally['id']] = $ally;
-            }
-            
-            if($evaluateModel) {
-                foreach($allyModel->get() as $ally) {
-                    $this->dataAlly[$ally->allyID]['name'] = BasicFunctions::decodeName($ally->name);
-                    $this->dataAlly[$ally->allyID]['tag'] = BasicFunctions::decodeName($ally->tag);
-                }
-            }
-        }
-        
-        
-        if(count($this->dataAlly) > 0) {
-            $playerModel = new Player();
-            $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
-            foreach($this->dataAlly as $ally) {
-                $playerModel = $playerModel->orWhere('ally_id', $ally['id']);
-            }
-
-            foreach($playerModel->get() as $player) {
-                $this->dataPlayer[$player->playerID] = array(
-                    "id" => (int) $player->playerID,
-                    "colour" => $this->dataAlly[$player->ally_id]['colour'],
-                    "name" => BasicFunctions::decodeName($player->name),
-                    "showText" => false,
-                    "highLight" => $this->dataAlly[$player->ally_id]['highLight'],
-                    "allyID" => $player->ally_id,
-                    "villNum" => 0,
-                    "villX" => 0,
-                    "villY" => 0,
-                );
-            }
-        }
-    }
+    protected abstract function grabAlly();
     
-    private function grabPlayer() {
-        //Translate player marks into village marks + Text
-        if(count($this->player) > 0) {
-            $playerModel = new Player();
-            $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
-            $evaluateModel = false;
-            
-            foreach($this->player as $player) {
-                $this->dataPlayer[$player['id']] = $player;
-                
-                if($player['showText']) {
-                    $playerModel = $playerModel->orWhere('playerID', $player['id']);
-                    $evaluateModel = true;
-                }
-            }
-
-            if($evaluateModel) {
-                foreach($playerModel->get() as $player) {
-                    $this->dataPlayer[$player->playerID]['name'] = BasicFunctions::decodeName($player->name);
-                }
-            }
-        }
-    }
+    protected abstract function grabPlayer();
     
-    private function grabVillage() {
-        //DO NOT use Laravel functions here as they use way more memory than this code
-        $tableName = "`".BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'`.`village_latest`';
-        $res = DB::select("SELECT name, x, y, points, bonus_id, villageID, owner FROM $tableName WHERE".
-                " x >= ".intval($this->mapDimension['xs']).
-                " AND y >= ".intval($this->mapDimension['ys']).
-                " AND x < ".intval($this->mapDimension['xe']).
-                " AND y < ".intval($this->mapDimension['ye']));
-        
-        $tmpVillage = array();
-        foreach($this->village as $village) {
-            $tmpVillage[$village['id']] = $village;
-        }
-        
-        $realSize = [
-            'xs' => 450,
-            'ys' => 450,
-            'xe' => 550,
-            'ye' => 550,
-        ];
-        foreach($res as $village) {
-            if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
-            if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
-            if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
-            if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
-            
-            if(isset($tmpVillage[$village->villageID])) {
-                $this->dataVillage['mark'][$village->villageID] = $tmpVillage[$village->villageID];
-                //For real village markers
-                $this->dataVillage['mark'][$village->villageID]['name'] = $village->name;
-                $this->dataVillage['mark'][$village->villageID]['x'] = $village->x;
-                $this->dataVillage['mark'][$village->villageID]['y'] = $village->y;
-                $this->dataVillage['mark'][$village->villageID]['owner'] = $village->owner;
-                $this->dataVillage['mark'][$village->villageID]['points'] = $village->points;
-                $this->dataVillage['mark'][$village->villageID]['bonus_id'] = $village->bonus_id;
-                $this->dataVillage['mark'][$village->villageID]['marked'] = true;
-            } else {
-                $tmp = array(
-                    "id" => (int) $village->villageID,
-                    "colour" => ($village->owner != 0)?($this->playerColour):($this->barbarianColour),
-                    "name" => $village->name,
-                    "x" => $village->x,
-                    "y" => $village->y,
-                    "owner" => $village->owner,
-                    "points" => $village->points,
-                    "bonus_id" => $village->bonus_id,
-                    "showText" => false,
-                    "highLight" => false,
-                    "marked" => false,
-                );
-                
-                if (isset($this->dataPlayer[$village->owner]) && $village->owner != 0) {
-                    //For player / ally markers
-                    $this->dataVillage['mark'][$village->villageID] = $tmp;
-                    $this->dataVillage['mark'][$village->villageID]['colour'] =
-                            $this->dataPlayer[$village->owner]['colour'];
-                    $this->dataVillage['mark'][$village->villageID]['marked'] = true;
-                    $this->dataVillage['mark'][$village->villageID]['highLight'] =
-                            $this->dataPlayer[$village->owner]['highLight'];
-                    
-                    //add village to player weight
-                    $this->dataPlayer[$village->owner]['villNum']++;
-                    $this->dataPlayer[$village->owner]['villX'] += $village->x;
-                    $this->dataPlayer[$village->owner]['villY'] += $village->y;
-                } else if($village->owner != 0) {
-                    $this->dataVillage['play'][$village->villageID] = $tmp;
-                } else {
-                    $this->dataVillage['barb'][$village->villageID] = $tmp;
-                }
-            }
-        }
-        
-        if($this->autoResize) {
-            //Add border
-            $realSize['xs'] = ($realSize['xs'] >= 10)?($realSize['xs']-10):(0);
-            $realSize['ys'] = ($realSize['ys'] >= 10)?($realSize['ys']-10):(0);
-            $realSize['xe'] = ($realSize['xe'] <= 990)?($realSize['xe']+10):(0);
-            $realSize['ye'] = ($realSize['ye'] <= 990)?($realSize['ye']+10):(0);
-            $this->setMapDimensions($realSize);
-        }
-    }
+    protected abstract function grabVillage();
     
     private function renderMarks($type) {
         foreach($this->dataVillage[$type] as $village) {
@@ -538,6 +391,50 @@ class MapGenerator extends PictureRender {
         return $this->skinCache[$name];
     }
     
+    
+    /**
+     * Fuciton for rendering aligned Text into the map
+     * Anchor is used to define ref point of text box
+     * 0, 0 will always be displayed top left
+     */
+    public function renderAlignedText($anchor, $relX, $relY, $size, $text, $color) {
+        if($color[0] > 255 || $color[0] < 0 ||
+                $color[1] > 255 || $color[1] < 0 ||
+                $color[2] > 255 || $color[2] < 0) {
+            throw new \InvalidArgumentException("Invalid color given");
+        }
+        
+        $col = imagecolorallocate($this->image, (int) $color[0], (int) $color[1], (int) $color[2]);
+        $box = imagettfbbox($size, 0, $this->font, $text);
+        
+        switch ($anchor) {
+            case self::$ANCHOR_BOTTOM_LEFT:
+                $x = ((int) $relX) - $box[0];
+                $y = ((int) $relY) - $box[1];
+                break;
+            case self::$ANCHOR_BOTTOM_RIGHT:
+                $x = ((int) $relX) - $box[2];
+                $y = ((int) $relY) - $box[3];
+                break;
+            case self::$ANCHOR_TOP_RIGHT:
+                $x = ((int) $relX) - $box[4];
+                $y = ((int) $relY) - $box[5];
+                break;
+            case self::$ANCHOR_TOP_LEFT:
+                $x = ((int) $relX) - $box[6];
+                $y = ((int) $relY) - $box[7];
+                break;
+            case self::$ANCHOR_MID_MID:
+                $x = ((int) $relX) - ($box[0] + $box[4]) / 2;
+                $y = ((int) $relY) - ($box[1] + $box[5]) / 2;
+                break;
+            default:
+                throw new \InvalidArgumentException("Invalid anchor given");
+        }
+        
+        imagettftext($this->image, $size, 0, $x, $y, $col, $this->font, $text);
+    }
+    
     public function markAlly($allyID, $colour, $showText=null, $highLight=null) {
         $showText = (boolean) $showText;
         $showText = ($showText != null)?($showText):(false);
@@ -614,11 +511,11 @@ class MapGenerator extends PictureRender {
         $retval = true;
         $tmp = array();
         foreach($layerOrder as $layer) {
-            if($layer == MapGenerator::$LAYER_MARK ||
-                    $layer == MapGenerator::$LAYER_PICTURE ||
-                    $layer == MapGenerator::$LAYER_TEXT ||
-                    $layer == MapGenerator::$LAYER_GRID ||
-                    ($layer == MapGenerator::$LAYER_DRAWING && $this->drawing_img != null && $this->drawing_img != "")) {
+            if($layer == AbstractMapGenerator::$LAYER_MARK ||
+                    $layer == AbstractMapGenerator::$LAYER_PICTURE ||
+                    $layer == AbstractMapGenerator::$LAYER_TEXT ||
+                    $layer == AbstractMapGenerator::$LAYER_GRID ||
+                    ($layer == AbstractMapGenerator::$LAYER_DRAWING && $this->drawing_img != null && $this->drawing_img != "")) {
                 $tmp[] = $layer;
             }
             else if($this->show_errs) {
@@ -650,6 +547,20 @@ class MapGenerator extends PictureRender {
         
         $this->mapDimension = $tmp;
         return $this;
+    }
+    
+    /**
+     * Set shown koordinate range of the map
+     * 
+     * @param type $dimensions
+     * Requires an array containing:
+     * xs: First Column (x Position) to be shown
+     * ys: First Row (y Position) to be shown
+     * xe: Column (x Position) where the map should end (exclusive)
+     * ye: Row (y Position) where the map should end (exclusive)
+     */
+    public function getMapDimensions() {
+        return $this->mapDimension;
     }
     
     public function setPlayerColour($col) {

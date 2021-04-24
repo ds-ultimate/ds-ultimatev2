@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Conquer;
 use App\Ally;
+use App\AllyTop;
 use App\Player;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
@@ -37,8 +38,9 @@ class AllyController extends Controller
 
         $conquer = Conquer::allyConquerCounts($server, $world, $ally);
         $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
+        $allyTop = AllyTop::ally($server, $world, $ally);
 
-        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
+        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTop'));
     }
 
     public function allyBashRanking($server, $world, $ally)

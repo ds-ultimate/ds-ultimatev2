@@ -26,6 +26,8 @@ Route::group(['middleware' => 'throttle:240,1'], function() {
 
     Route::get('/{server}/{world}/select2Player', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Player'])->name('select2Player');
     Route::get('/{server}/{world}/select2Ally', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Ally'])->name('select2Ally');
+    Route::get('/{server}/{world}/select2PlayerTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2PlayerTop'])->name('select2PlayerTop');
+    Route::get('/{server}/{world}/select2AllyTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2AllyTop'])->name('select2AllyTop');
 });
 
 Route::group(['middleware' => 'throttle:120,1'], function() {

@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1614009727 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/gifencoder.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<time.h>
+	"globals.h"
+	"gifencoder.h"
+	"lzwCompressor.h"
+
+1613950215 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/gifencoder.h
+	"lodepng.h"
+
+1613847226 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/lodepng.h
+	<string.h>
+	<vector>
+	<string>
+	"lodepng.h"
+	<iostream>
+	"lodepng.h"
+
+1613935349 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/lzwCompressor.h
+
+1613847125 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/lodepng.c
+	"lodepng.h"
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+
+1614009410 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/lzwCompressor.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"lzwCompressor.h"
+	"globals.h"
+
+1614009617 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/globals.h
+
+1614012425 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoder/main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"globals.h"
+	"lodepng.h"
+	"gifencoder.h"
+

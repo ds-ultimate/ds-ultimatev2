@@ -6,7 +6,7 @@ use App\Ally;
 use App\Player;
 use App\Village;
 use App\World;
-use App\Util\MapGenerator;
+use App\Util\AbstractMapGenerator;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -96,10 +96,10 @@ class Map extends Model
                 $markerStr .= $type[1] . ":". ((int) $marker['id']) . ":" . $marker['colour'];
 
                 $markerOptions = "";
-                if(isset(($marker['textHere'])) && isset(($marker['text'])) && $marker['text'] == "on") {
+                if(isset($marker['textHere']) && isset($marker['text']) && $marker['text'] == "on") {
                     $markerOptions .= "t";
                 }
-                if(isset(($marker['hLightHere'])) && isset(($marker['hLight'])) && $marker['hLight'] == "on") {
+                if(isset($marker['hLightHere']) && isset($marker['hLight']) && $marker['hLight'] == "on") {
                     $markerOptions .= "h";
                 }
 
@@ -172,7 +172,7 @@ class Map extends Model
                 return $parts[1];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
 
     public function getDefBarbarianColour() {
@@ -182,7 +182,7 @@ class Map extends Model
                 return $parts[2];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
 
     public function getBackgroundColour() {
@@ -192,13 +192,13 @@ class Map extends Model
                 return $parts[0];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
 
     public function setDefaultColours($background, $player, $barbarian) {
-        $defCol = ((Map::checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
-        $defCol .= ((Map::checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
-        $defCol .= ((Map::checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
+        $defCol = ((Map::checkHex($background))?($background):(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($player))?($player):(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($barbarian))?($barbarian):(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR));
         $this->defaultColours = $defCol;
     }
 
@@ -256,7 +256,7 @@ class Map extends Model
 
     public function getDimensions() {
         if(!isset($this->dimensions) || $this->dimensions == null) {
-            return MapGenerator::$DEFAULT_DIMENSIONS;
+            return AbstractMapGenerator::$DEFAULT_DIMENSIONS;
         }
         $parts = explode(";", $this->dimensions);
         return [
@@ -268,10 +268,10 @@ class Map extends Model
     }
 
     /**
-     * Configure given MapGenerator for rendering this map
-     * @param \App\Util\MapGenerator $generator Generator to Configure
+     * Configure given AbstractMapGenerator for rendering this map
+     * @param \App\Util\AbstractMapGenerator $generator Generator to Configure
      */
-    public function prepareRendering(MapGenerator $generator) {
+    public function prepareRendering(AbstractMapGenerator $generator) {
         if(isset($this->markers) && $this->markers != null) {
             foreach(explode(";", $this->markers) as $marker) {
                 $parts = explode(":", $marker);
@@ -319,8 +319,11 @@ class Map extends Model
                 }
             }
         }
-
-        if(isset($this->dimensions) && $this->dimensions != null) {
+        
+        if($this->autoDimensions) {
+            $generator->setAutoResize(true);
+        } else if(isset($this->dimensions) && $this->dimensions != null) {
+            $generator->setAutoResize(false);
             $parts = explode(";", $this->dimensions);
             if(count($parts) == 4) {
                 $generator->setMapDimensions([
@@ -357,12 +360,12 @@ class Map extends Model
     }
 
     public function getLayerConfiguration() {
-        $layers = [MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID, MapGenerator::$LAYER_TEXT];
+        $layers = [AbstractMapGenerator::$LAYER_MARK, AbstractMapGenerator::$LAYER_GRID, AbstractMapGenerator::$LAYER_TEXT];
 
         if(isset($this->drawing_dim) && $this->drawing_dim != null && $this->drawing_dim != "" &&
                 isset($this->drawing_png) && $this->drawing_png != null && $this->drawing_png != "" &&
                 isset($this->drawing_obj) && $this->drawing_obj != null && $this->drawing_obj != "") {
-            $layers[] = MapGenerator::$LAYER_DRAWING;
+            $layers[] = AbstractMapGenerator::$LAYER_DRAWING;
         }
         return $layers;
     }

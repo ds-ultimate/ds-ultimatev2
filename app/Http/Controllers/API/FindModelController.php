@@ -39,7 +39,7 @@ class FindModelController extends Controller
     public function getSelect2Player($server, $world){
         $playerModel = new Player();
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-        return $this->select2return($playerModel, array('name'), function($rawData) {
+        return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
             return array(
                 'id' => $rawData->playerID,
                 'text' => BasicFunctions::decodeName($rawData->name),
@@ -50,7 +50,29 @@ class FindModelController extends Controller
     public function getSelect2Ally($server, $world){
         $allyModel = new Ally();
         $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-        return $this->select2return($allyModel, array('name', 'tag'), function($rawData) {
+        return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
+            return array(
+                'id' => $rawData->allyID,
+                'text' => BasicFunctions::decodeName($rawData->name) . ' [' . BasicFunctions::decodeName($rawData->tag) . ']',
+            );
+        });
+    }
+
+    public function getSelect2PlayerTop($server, $world){
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_top');
+        return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
+            return array(
+                'id' => $rawData->playerID,
+                'text' => BasicFunctions::decodeName($rawData->name),
+            );
+        });
+    }
+
+    public function getSelect2AllyTop($server, $world){
+        $allyModel = new Ally();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_top');
+        return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
             return array(
                 'id' => $rawData->allyID,
                 'text' => BasicFunctions::decodeName($rawData->name) . ' [' . BasicFunctions::decodeName($rawData->tag) . ']',
@@ -58,7 +80,7 @@ class FindModelController extends Controller
         });
     }
     
-    private function select2return(\Illuminate\Database\Eloquent\Model $model, $searchIn, callable $extractOne) {
+    private function select2return(\Illuminate\Database\Eloquent\Model $model, $searchIn, $idRow, callable $extractOne) {
         $getArray = \Illuminate\Support\Facades\Request::input();
         $perPage = 50;
         $search = (isset($getArray['search']))?('%'.BasicFunctions::likeSaveEscape(urlencode($getArray['search'])).'%'):('%');
@@ -66,6 +88,10 @@ class FindModelController extends Controller
         
         foreach($searchIn as $row) {
             $model = $model->orWhere($row, 'like', $search);
+        }
+        if(ctype_digit($getArray['search'])) {
+            //search by ID
+            $model = $model->orWhere($idRow, 'like', '%' . intval($getArray['search']) . '%');
         }
         
         $dataAll = $model->offset($perPage*$page)->limit($perPage+1)->get();

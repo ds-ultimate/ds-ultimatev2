@@ -45,7 +45,7 @@ return array (
     'editLink' => 'Editierungs Link',
     'showLink' => 'Ansehen Link',
     'editLink_helper' => 'Jeder der diesen Link hat kann den Angriffsplan editieren. Sei daher vorsichtig und gib den Link nur Leuten denen du vertraust!',
-    'showLink_helper' => 'Mit diesem Link kann der Angriffsplan angesehen werden, allerdings nicht editieren',
+    'showLink_helper' => 'Mit diesem Link kann der Angriffsplan angesehen werden, allerdings nicht editiert werden',
     'export' => 
     array (
       'BB' => 
@@ -90,7 +90,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'destroyError' => 'Der Angriffsplan konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'fastSwitch' => 'Eigene Angriffspläne',
     'notAvailable' => 'Der Angriffsplaner ist auf dieser Welt nicht verfügbar',
-    'withoutTitle' => 'Dieser Angriffsplaner hat keinen Titel und wird daher immer standardmäßig beim Klick auf Angriffsplaner benutzt. Um damit einen neuen Angriffsplaner zu erstellen muss ein Titel vergeben werden.',
+    'withoutTitle' => 'Dieser Angriffsplaner hat keinen Titel und wird daher immer standardmäßig beim Klick auf "Angriffsplaner" benutzt. Um damit einen neuen Angriffsplaner zu erstellen muss ein Titel vergeben werden.',
     'errorKoordTitle' => 'Dorf Koordinaten',
     'errorUnitTitle' => 'Einheitengrösse',
     'errorUnitCount' => 'anzahl ist zu gross',
@@ -247,7 +247,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'fastSwitch' => 'Eignene Weltkarten',
     'destroySuccess' => 'Weltkarte erfolgreich gelöscht',
     'destroyError' => 'Die Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
-    'withoutTitle' => 'Diese Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf Weltkarte benutzt. Um damit eine neue Weltkarte zu erstellen muss ein Titel vergeben werden.',
+    'withoutTitle' => 'Diese Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf "Weltkarte" benutzt. Um damit eine neue Weltkarte zu erstellen muss ein Titel vergeben werden.',
     'cached' => 'Diese Map benutzt ein gespeichertes Bild, daher ist das automatische Speichern deaktiviert. Veränderungen an den Einstellungen werden die Map von den aktuellen Daten neu generieren. Der Titel kann verändert werden, ohne dass sich die Map verändert.',
     'autoUpdate' => 'Automatisches aktualisieren',
     'autoUpdateHelp' => 'Wenn aktiviert, werden immer die aktuellen Daten benutzt um die Weltkarte zu generieren. Wenn deaktiviert wird die Map ein Mal generiert und dann immer das gespeicherte Bild verwendet.',
@@ -255,6 +255,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'drawingErr' => 'Fehler in den Zeichnungen
 Bitte die Zeichenoberfläche öffnen und schließen
 Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
+    'autoZoom' => 'Automatischer Zoom',
   ),
   'pointCalc' => 
   array (
@@ -313,5 +314,41 @@ Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
       'church' => 'Darf eine Kirche enthalten',
       'statue' => 'Darf eine Statue enthalten',
     ),
+  ),
+  'animHistMap' => 
+  array (
+    'render' => 
+    array (
+      'finished' => 'Fertig',
+      'queue' => 'In der Warteschlange',
+      'mp4' => 'Erstelle MP4 Video',
+      'gif' => 'Erstelle Gif',
+      'image' => 'Rendere Bild {numImage} von {totalImage}',
+      'zip' => 'Erstelle zip',
+    ),
+    'title' => 'Animierte Weltkarte',
+    'edit' => 'Markierungen editieren',
+    'links' => 'Links zum Teilen',
+    'settings' => 'Generelle Einstellungen',
+    'legend' => 'Legende',
+    'fastSwitch' => 'Eigene animierte Karten',
+    'withoutTitle' => 'Diese animierte Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf "animierte Weltkarte" benutzt. Um damit eine neue animierte Weltkarte zu erstellen muss ein Titel vergeben werden.',
+    'renderNow' => 'Jetzt erstellen!',
+    'previewSelect' => 'Vorschau Tag',
+    'rerun' => 'Nochmal erstellen',
+    'download' => 
+    array (
+      'mp4' => 'mp4 herunterladen',
+      'zip' => 'zip herunterladen',
+      'gif' => 'Gif herunterladen',
+    ),
+    'editLink' => 'Editierungs Link',
+    'editLinkDesc' => 'Jeder der diesen Link hat kann die animierte Karte editieren. Sei daher vorsichtig und gib den Link nur Leuten denen du vertraust!',
+    'showLink' => 'Ansehen Link',
+    'showLinkDesc' => 'Mit diesem Link kann die animierte Weltkarte angesehen werden, allerdings nicht editiert werden',
+    'destroySuccess' => 'Animierte Weltkarte erfolgreich gelöscht',
+    'destroyError' => 'Die animierte Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
+    'renderedDestroySuccess' => 'Fertige animierte Weltkarte erfolgreich gelöscht',
+    'renderedDestroyError' => 'Die fertige animierte Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
   ),
 );

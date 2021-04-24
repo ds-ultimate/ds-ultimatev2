@@ -191,6 +191,8 @@ return array (
   array (
     'maps' => 'Eigene Karten',
     'attackplanner' => 'Eigene Angriffspläne',
+    'animatedMap' => 'Eigene animierte Karten',
+    'renderedAnimatedMap' => 'Eigene fertige animierte Karten',
   ),
   'noTitle' => 'Kein Titel',
   'siteNotFound' => 'Seite nicht gefunden',

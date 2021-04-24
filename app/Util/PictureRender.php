@@ -12,6 +12,8 @@ class PictureRender {
             case "jpg":
             case "jpeg":
                 return $this->outputJPEG();
+            case "gif":
+                return $this->outputGIF();
             case "base64":
                 return $this->outputBase64();
             default:
@@ -35,6 +37,16 @@ class PictureRender {
         imagedestroy($this->image);
         return response($imagedata, 200)
                 ->header('Content-Type', 'image/jpeg');
+    }
+
+    private function outputGIF() {
+        ob_start();
+        imagegif($this->image);
+        $imagedata = ob_get_clean();
+        imagedestroy($this->image);
+        
+        return response($imagedata, 200)
+                ->header('Content-Type', 'image/gif');
     }
 
     private function outputBase64() {

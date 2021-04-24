@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Tools;
 
 use App\Tool\Map\Map;
+use App\Util\AbstractMapGenerator;
 use App\Util\BasicFunctions;
 use App\Util\ImageCached;
-use App\Util\MapGenerator;
+use App\Util\SQLMapGenerator;
 use App\World;
 use App\Player;
 
@@ -211,6 +212,10 @@ class MapController extends BaseController
             $wantedMap->shouldUpdate = (isset($getArray['autoUpdate']))?(1):(0);
         }
 
+        if(isset($getArray['zoomAutoHere'])) {
+            $wantedMap->autoDimensions = (isset($getArray['zoomAuto']))?(1):(0);
+        }
+
         $wantedMap->cached_at = null;
         $wantedMap->save();
 
@@ -225,7 +230,7 @@ class MapController extends BaseController
         switch($getArray['type']) {
             case "image":
                 if(!isset($wantedMap->dimensions) || $wantedMap->dimensions == null)
-                    $wantedMap->setDimensions(MapGenerator::$DEFAULT_DIMENSIONS);
+                    $wantedMap->setDimensions(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
                 $wantedMap->drawing_dim = $wantedMap->dimensions;
                 $wantedMap->drawing_png = \App\Util\PictureRender::base64ToPng($getArray['data']);
@@ -257,9 +262,9 @@ class MapController extends BaseController
 
         if($options == null && $wantedMap->cached_at !== null) {
             //use cached version
-            $map = new ImageCached("../".config('tools.map.cacheDir').$wantedMap->id, $this->decodeDimensions($width, $height), $this->debug);
+            $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
         } else {
-            $map = new MapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
+            $map = new SQLMapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
             $wantedMap->prepareRendering($map);
 
             if($options != null) {
@@ -268,14 +273,14 @@ class MapController extends BaseController
                         $layers = $wantedMap->getLayerConfiguration();
                         $final = array();
                         foreach($layers as $layer)
-                            if($layer != MapGenerator::$LAYER_DRAWING)
+                            if($layer != AbstractMapGenerator::$LAYER_DRAWING)
                                 $final[] = $layer;
 
                         $map->setLayerOrder($final);
                         break;
                     case "pureDrawing":
-                        if(array_search(MapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
-                            $map->setLayerOrder([MapGenerator::$LAYER_DRAWING]);
+                        if(array_search(AbstractMapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
+                            $map->setLayerOrder([AbstractMapGenerator::$LAYER_DRAWING]);
                         else
                             $map->setLayerOrder([]);
                         $map->setBackgroundColour([0,0,0,127]);
@@ -303,7 +308,7 @@ class MapController extends BaseController
         BasicFunctions::local();
         $world = World::getWorld($server, $world);
 
-        $map = new MapGenerator($world, $this->decodeDimensions($width, $height), $this->debug);
+        $map = new SQLMapGenerator($world, $this->decodeDimensions($width, $height), $this->debug);
         switch($type) {
             case 'a':
                 $map->markAlly($id, [255, 255, 255], false, true);
@@ -317,7 +322,7 @@ class MapController extends BaseController
             default:
                 abort(404, "Wrong diagram type $type");
         }
-        $map->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
+        $map->setLayerOrder([AbstractMapGenerator::$LAYER_MARK, AbstractMapGenerator::$LAYER_GRID]);
         $map->setMapDimensions([
             'xs' => 0,
             'ys' => 0,
@@ -359,7 +364,7 @@ class MapController extends BaseController
         $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
-        $map = new MapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
+        $map = new SQLMapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
 
         $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
         $i = 0;
@@ -367,7 +372,7 @@ class MapController extends BaseController
             $map->markPlayer($player->playerID, $color[$i], false, true);
             $i++;
         }
-        $map->setLayerOrder([MapGenerator::$LAYER_MARK, MapGenerator::$LAYER_GRID]);
+        $map->setLayerOrder([AbstractMapGenerator::$LAYER_MARK, AbstractMapGenerator::$LAYER_GRID]);
         $map->setMapDimensions([
             'xs' => 0,
             'ys' => 0,
@@ -389,7 +394,7 @@ class MapController extends BaseController
         $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
-        $map = new MapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
+        $map = new SQLMapGenerator($world, $this->decodeDimensions(800, 800), $this->debug);
 
         $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
 

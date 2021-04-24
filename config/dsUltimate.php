@@ -17,5 +17,5 @@ return [
         'en'
     ],
     
-    'history_directory' => env('HISTORY_DIRECTORY', 'storage/app/history/'),
+    'history_directory' => env('HISTORY_DIRECTORY', 'app/history/'),
 ];

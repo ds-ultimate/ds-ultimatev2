@@ -30,8 +30,8 @@ class SignatureController extends Controller
         
         $signature = $playerData->getSignature($worldData);
         if(!$signature->isCached()) {
-            if (!file_exists('../'.config('tools.signature.cacheDir'))) {
-                mkdir('../'.config('tools.signature.cacheDir'), 0777, true);
+            if (!file_exists(storage_path(config('tools.signature.cacheDir')))) {
+                mkdir(storage_path(config('tools.signature.cacheDir')), 0777, true);
             }
             
             if($this->createSignature($signature->getCacheFile(), $server, $world, $type, $id)) {
@@ -42,10 +42,7 @@ class SignatureController extends Controller
             }
         }
         
-        return Response::stream(function () use($signature) {
-            $filename = $signature->getCacheFile();
-            readfile($filename);
-        }, 200, ['content-type' => 'image/png']);
+        return response()->file($signature->getCacheFile());
     }
     
     private function createSignature($targetFile, $server, $world, $type, $id) {
@@ -53,7 +50,7 @@ class SignatureController extends Controller
         $worldData = \App\World::getWorld($server, $world);
         $playerData = \App\Player::player($server, $world, $id);
         if ($playerData != false && $type == 'player') {
-            $image = imagecreatefrompng('images/default/signature/bg.png');
+            $image = imagecreatefrompng(public_path('images/default/signature/bg.png'));
             if ($image === false) return false;
             if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
                 imagettftext($image, 9, 90, 15, 70 - 8 - 4, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
@@ -61,7 +58,7 @@ class SignatureController extends Controller
                 imagettftext($image, 10, 90, 18, 70 - 8 - 5, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
             }
             $flag = imagecreatetruecolor(16, 12);
-            imagecopyresampled($flag, imagecreatefrompng('images/default/signature/' . $worldData->server->flag . '.png'), 0, 0, 0, 0, 16, 12, 640, 480);
+            imagecopyresampled($flag, imagecreatefrompng(public_path('images/default/signature/' . $worldData->server->flag . '.png')), 0, 0, 0, 0, 16, 12, 640, 480);
             imagecopyresampled($image, $flag, 27, 8 - 5, 0, 0, 16, 12, 16, 12);
             imagettftext($image, 10, 0, 56, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', \App\Util\BasicFunctions::decodeName($playerData->name));
             imagettftext($image, 10, 0, 300, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_i.ttf', 'by DS-Ultimate');
@@ -82,7 +79,7 @@ class SignatureController extends Controller
             $name = \App\Util\BasicFunctions::decodeName($playerData->name);
             $playerString = __('chart.who.player') . ": $name";
 
-            $chart = new ImageChart("fonts/NotoMono-Regular.ttf", [
+            $chart = new ImageChart(public_path("fonts/NotoMono-Regular.ttf"), [
                 'width' => 124, //124
                 'height' => 75, //75
             ], false);
@@ -97,8 +94,8 @@ class SignatureController extends Controller
     }
     
     private function createNoDataImg($serWorld, $id) {
-        $image = imagecreatefrompng('images/default/signature/bg_noData.png');
-        imagettftext($image, 10, 0, 56, 20 - 5, imagecolorallocate($image, 49, 32, 6), 'fonts/arial_b.ttf', 
+        $image = imagecreatefrompng(public_path('images/default/signature/bg_noData.png'));
+        imagettftext($image, 10, 0, 56, 20 - 5, imagecolorallocate($image, 49, 32, 6), public_path('fonts/arial_b.ttf'), 
                 "Unable to find player with id " . $id . "\nin our database for world " . $serWorld);
         return $image;
     }

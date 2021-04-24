@@ -31,8 +31,8 @@ class WorldHistory
     }
     
     private static function runInternal($dbName, $date, $part, $isSpeed) {
-        if(!file_exists(config('dsUltimate.history_directory') . "{$dbName}")) {
-            mkdir(config('dsUltimate.history_directory') . "{$dbName}", 0777, true);
+        if(!file_exists(storage_path(config('dsUltimate.history_directory') . $dbName))) {
+            mkdir(storage_path(config('dsUltimate.history_directory') . $dbName), 0777, true);
         }
         
         switch ($part) {
@@ -40,7 +40,7 @@ class WorldHistory
             case "v":
                 $model = new Village();
                 $fromTable = $dbName . ".village_latest";
-                $toFile = config('dsUltimate.history_directory') . "{$dbName}/village_$date.gz";
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/village_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->villageID};{$entry->name};{$entry->x};{$entry->y};"
                         . "{$entry->points};{$entry->owner};{$entry->bonus_id};";
@@ -51,7 +51,7 @@ class WorldHistory
             case "p":
                 $model = new Player();
                 $fromTable = $dbName . ".player_latest";
-                $toFile = config('dsUltimate.history_directory') . "{$dbName}/player_$date.gz";
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/player_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->playerID};{$entry->name};{$entry->ally_id};"
                         . "{$entry->points};{$entry->village_count};{$entry->rank};"
@@ -66,7 +66,7 @@ class WorldHistory
             case "a":
                 $model = new Ally();
                 $fromTable = $dbName . ".ally_latest";
-                $toFile = config('dsUltimate.history_directory') . "{$dbName}/ally_$date.gz";
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/ally_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->allyID};{$entry->name};{$entry->tag};{$entry->member_count};"
                         . "{$entry->points};{$entry->village_count};{$entry->rank};"

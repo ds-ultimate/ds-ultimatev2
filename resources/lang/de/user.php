@@ -54,6 +54,8 @@ return array (
       'cancel' => 'Nein',
       'mapContent' => 'Es wird nicht mehr möglich sein die Karte anzusehen oder zu bearbeiten',
       'attackPlanContent' => 'Es wird nicht mehr möglich sein den Angriffsplan anzusehen oder zu bearbeiten',
+      'animatedMapContent' => 'Es wird nicht mehr möglich sein die animierte Karte anzusehen oder zu bearbeiten',
+      'renderedAnimatedMapContent' => 'Es wird nicht mehr möglich sein die fertige animierte Karte anzusehen. Alle Verlinkungen darauf werden invalid',
     ),
   ),
 );

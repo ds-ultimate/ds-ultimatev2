@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
+
 class PlayerTop extends CustomModel
 {
     protected $primaryKey = 'playerID';
@@ -64,5 +66,18 @@ class PlayerTop extends CustomModel
     {
         $table = explode('.', $this->table);
         return $this->myhasMany('App\AllyChanges', 'player_id', 'playerID', $table[0].'.ally_changes');
+    }
+
+    /**
+     * @param string $server
+     * @param $world
+     * @param int $player
+     * @return $this
+     */
+    public static function player($server, $world, $player){
+        $playerModel = new PlayerTop();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_top');
+
+        return $playerModel->find($player);
     }
 }

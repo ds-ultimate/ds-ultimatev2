@@ -135,7 +135,8 @@ class GenerateTopsFromHist extends Command
         $hist->setTable("$dbName.index");
         
         foreach($hist->get() as $history) {
-            $file = gzopen(config('dsUltimate.history_directory') . "{$dbName}/{$typeN}_{$history->date}.gz", "r");
+            $fileName = storage_path(config('dsUltimate.history_directory') . "{$dbName}/{$typeN}_{$history->date}.gz");
+            $file = gzopen($fileName, "r");
             
             $i = 0;
             if(! $world->isSpeed()) {

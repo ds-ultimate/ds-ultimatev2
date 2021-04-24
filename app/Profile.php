@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Tool\Map\Map;
-use App\Util\MapGenerator;
+use App\Util\AbstractMapGenerator;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
@@ -57,7 +57,7 @@ class Profile extends Model
                 return $parts[1];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_PLAYER_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
 
     public function getDefBarbarianColour() {
@@ -67,7 +67,7 @@ class Profile extends Model
                 return $parts[2];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_BARBARIAN_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
 
     public function getBackgroundColour() {
@@ -77,13 +77,13 @@ class Profile extends Model
                 return $parts[0];
             }
         }
-        return Map::RGBToHex(MapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+        return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
 
     public function setDefaultColours($background, $player, $barbarian) {
-        $defCol = ((Map::checkHex($background))?($background):(MapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
-        $defCol .= ((Map::checkHex($player))?($player):(MapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
-        $defCol .= ((Map::checkHex($barbarian))?($barbarian):(MapGenerator::$DEFAULT_BARBARIAN_COLOUR));
+        $defCol = ((Map::checkHex($background))?($background):(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($player))?($player):(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR)) . ";";
+        $defCol .= ((Map::checkHex($barbarian))?($barbarian):(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR));
         $this->map_defaultColours = $defCol;
     }
 
@@ -133,7 +133,7 @@ class Profile extends Model
 
     public function getDimensions() {
         if(!isset($this->map_dimensions) || $this->map_dimensions == null) {
-            return MapGenerator::$DEFAULT_DIMENSIONS;
+            return AbstractMapGenerator::$DEFAULT_DIMENSIONS;
         }
         $parts = explode(";", $this->map_dimensions);
         return [

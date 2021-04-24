@@ -9,7 +9,7 @@ function generateMenuEntry($entry, $level=0) {
                 @if($entry['enabled'])
                     <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
                 @else
-                    <span class="nav-link d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}"">
+                    <span class="nav-link d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
                         <a id="{{ $entry['id'] }}" class="nav-link btn-link disabled nav-tooltip" href="#">{{ $entry['title']}}</a>
                     </span>
                 @endif
@@ -19,7 +19,7 @@ function generateMenuEntry($entry, $level=0) {
                 @if($entry['enabled'])
                     <a id="{{ $entry['id'] }}" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
                 @else
-                    <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}"">
+                    <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
                         <a id="{{ $entry['id'] }}" class="btn-link disabled" href="#">{{ $entry['title']}}</a>
                     </span>
                 @endif
@@ -66,7 +66,7 @@ function generateMobileMenuEntry($entry, $level=0) {
                     @isset($entry['icon'])<span class="{{ $entry['icon'] }} mr-1"></span>@endisset{{ $entry['title']}}
                 </a>
             @else
-                <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}"">
+                <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
                     <a id="{{ $entry['id'] }}" class="nav-link btn-link disabled" style="padding-left: {{ $level * 10 }}px">
                         @isset($entry['icon'])<span class="{{ $entry['icon'] }} mr-1"></span>@endisset{{ $entry['title']}}
                     </a>

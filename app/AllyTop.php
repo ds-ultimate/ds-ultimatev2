@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Util\BasicFunctions;
+
 class AllyTop extends CustomModel
 {
     protected $primaryKey = 'allyID';
@@ -71,5 +73,19 @@ class AllyTop extends CustomModel
     {
         $table = explode('.', $this->table);
         return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $table[0].'.ally_changes');
+    }
+
+    /**
+     * @param string $server
+     * @param $world
+     * @param  int $ally
+     * @return $this
+     */
+    public static function ally($server, $world, $ally){
+        $allyModel = new AllyTop();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_top');
+
+        return $allyModel->find($ally);
+
     }
 }

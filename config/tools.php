@@ -2,10 +2,13 @@
 
 return [
     'map' => [
-        'cacheDir' => 'storage/app/mapCache/',
+        'cacheDir' => 'app/mapCache/',
     ],
     'signature' => [
-        'cacheDir' => 'storage/app/signatureCache/',
+        'cacheDir' => 'app/signatureCache/',
         'cacheDuration' => 24 * 60 * 60,
+    ],
+    'animHistMap' => [
+        'renderDir' => 'app/animatedMaps/',
     ],
 ];

@@ -191,6 +191,8 @@ return array (
   array (
     'attackplanner' => 'Own attacklists',
     'maps' => 'Own maps',
+    'animatedMap' => 'Own animated Maps',
+    'renderedAnimatedMap' => 'Own rendered animated maps',
   ),
   'noTitle' => 'No title',
   'siteNotFound' => 'Site not found',

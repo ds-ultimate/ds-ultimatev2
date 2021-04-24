@@ -50,6 +50,8 @@ return array (
       'title' => 'Really delete?',
       'attackPlanContent' => 'It will not be possible to access the attack plan anymore',
       'mapContent' => 'It will not be possible to access the map anymore',
+      'animatedMapContent' => 'It will not be possible to access the animated map anymore',
+      'renderedAnimatedMapContent' => 'It will not be possible to access the rendered animated map anymore. All links to this rendered animated map will be invalid',
     ),
   ),
   'title' => 

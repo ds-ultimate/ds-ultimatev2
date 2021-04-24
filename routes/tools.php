@@ -63,6 +63,20 @@ Route::get('/{server}/{world}/tools/accountmanagerdatabase/index', [\App\Http\Co
 Route::get('/tools/accMgrDB/api/index', [\App\Http\Controllers\Tools\AccMgrDB::class, 'api'])->name('accMgrDB.index_api');
 Route::post('/tools/accMgrDB/api/rating/{template}', [\App\Http\Controllers\Tools\AccMgrDB::class, 'apiRating'])->name('accMgrDB.rating_api');
 
+
+//Animated world history map
+Route::get('/{server}/{world}/tools/animHistMap/create', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'create'])->name('animHistMap.create');
+Route::get('/tools/animHistMap/renderStatus/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'renderStatus'])->name('animHistMap.renderStatus');
+Route::get('/tools/animHistMap/renderRerun/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'renderRerun'])->name('animHistMap.renderRerun');
+Route::get('/tools/animHistMap/api/renderStatus/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'apiRenderStatus'])->name('animHistMap.apiRenderStatus');
+Route::get('/tools/animHistMap/renderDownload/{wantedJob}/{key}/{format}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'download'])->name('animHistMap.download');
+Route::get('/tools/animHistMap/{wantedMap}/preview/{key}/{histIdx}.{ext}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'preview'])->name('animHistMap.preview');
+Route::get('/tools/animHistMap/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'mode'])->name('animHistMap.mode');
+Route::post('/tools/animHistMap/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'modePost'])->name('animHistMap.modePost');
+Route::delete('/tools/animHistMap/{wantedMap}/delete/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'destroyAnimHistMapMap'])->name('animHistMap.destroyAnimHistMapMap');
+Route::delete('/tools/animHistJob/{wantedJob}/delete/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'destroyAnimHistMapJob'])->name('animHistMap.destroyAnimHistMapJob');
+
+
 //Data Collection
 Route::get('/tools/datacollectionHQ/index', [\App\Http\Controllers\Tools\CollectDataController::class, 'index'])->name('collectData');
 Route::get('/tools/datacollectionHQ/stats', [\App\Http\Controllers\Tools\CollectDataController::class, 'stats'])->name('collectDataStats');
