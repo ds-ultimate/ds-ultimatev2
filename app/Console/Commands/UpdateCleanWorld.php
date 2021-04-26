@@ -40,8 +40,6 @@ class UpdateCleanWorld extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        
         $server = $this->argument('server');
         $world = $this->argument('world');
         

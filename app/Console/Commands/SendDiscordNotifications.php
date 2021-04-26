@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Console\DatabaseUpdate\DoWorld;
-use App\Util\BasicFunctions;
+use App\Notifications\DiscordNotificationQueueElement;
 use Illuminate\Console\Command;
 
-class UpdateWorld extends Command
+class SendDiscordNotifications extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update:world';
+    protected $signature = 'send:discordNotifications';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Aktualisiert die Welten in der Datenbank';
+    protected $description = 'Hintergrund Job fürs senden von Notificaions';
 
     /**
      * Create a new command instance.
@@ -39,7 +38,12 @@ class UpdateWorld extends Command
      */
     public function handle()
     {
-        DoWorld::run();
+        $model = new DiscordNotificationQueueElement();
+        while(($data = $model->first()) !== null) {
+            $data->send();
+            sleep(1);
+        }
+        
         return 0;
     }
 }

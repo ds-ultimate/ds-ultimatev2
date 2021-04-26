@@ -2,12 +2,9 @@
 
 namespace App\Exceptions;
 
-use App\Log;
-use App\Notifications\DiscordNotification;
+use App\Notifications\DiscordNotificationQueueElement;
 use Throwable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 
 class Handler extends ExceptionHandler
 {
@@ -51,8 +48,11 @@ class Handler extends ExceptionHandler
 
         try {
             if (!in_array(get_class($exception), $ignore) && $eMessage != '') {
-                if (config('services.discord.active') === 'ignore' OR config('services.discord.active') === true && config('app.debug') === false) {
-                    Notification::send(new Log(), new DiscordNotification('exception', null, $exception));
+                if (
+                    config('services.discord.active') === 'ignore' ||
+                    (config('services.discord.active') === true && config('app.debug') === false)
+                ) {
+                    DiscordNotificationQueueElement::exception($exception);
                 }
             }
         } catch (Exception $ex) {

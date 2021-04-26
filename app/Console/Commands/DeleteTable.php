@@ -39,8 +39,6 @@ class DeleteTable extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        
         $worlds = BasicFunctions::getWorldQuery()->get();
 
         $bar = $this->output->createProgressBar(count($worlds));

@@ -44,9 +44,6 @@ class InsertMissingBashData extends Command
      */
     public function handle()
     {
-        BasicFunctions::ignoreErrs();
-        
-        
         $worlds = (new World())->get();
         foreach ($worlds as $world){
             $this->insertMissing($world);

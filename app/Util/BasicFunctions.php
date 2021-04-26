@@ -280,13 +280,6 @@ class BasicFunctions
         return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
     }
 
-    public static function ignoreErrs() {
-        set_error_handler(function($severity, $message, $file, $line) {
-            echo "We got an errror[$severity] at $file:$line:\n$message\nBut we are ignoring it\n";
-            return;
-        });
-    }
-
     /**
      * @param $toEscape
      * @return mixed

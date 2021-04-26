@@ -89,7 +89,7 @@ class FindModelController extends Controller
         foreach($searchIn as $row) {
             $model = $model->orWhere($row, 'like', $search);
         }
-        if(ctype_digit($getArray['search'])) {
+        if(isset($getArray['search']) && ctype_digit($getArray['search'])) {
             //search by ID
             $model = $model->orWhere($idRow, 'like', '%' . intval($getArray['search']) . '%');
         }

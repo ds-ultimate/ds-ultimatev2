@@ -40,7 +40,6 @@ class UpdateNextClean extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
         if(! UpdateUtil::cleanNeeded()) {
             echo "No Clean needed\n";
             return 0;

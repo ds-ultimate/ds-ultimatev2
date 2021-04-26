@@ -44,7 +44,6 @@ class UpdateConquer extends Command
     }
     
     public static function updateConquer($server, $world, $output) {
-        BasicFunctions::ignoreErrs();
         $progress = true;
         if($server == "no-progress") {
             $progress = false;
@@ -52,7 +51,7 @@ class UpdateConquer extends Command
         }
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
-            DoConquer::run($server, $world);
+            DoConquer::run(\App\World::getWorld($server, $world));
         } else {
             $worlds = BasicFunctions::getWorldQuery()->get();
             
@@ -62,7 +61,7 @@ class UpdateConquer extends Command
             }
             
             foreach ($worlds as $world){
-                DoConquer::run($world->server->code, $world->name);
+                DoConquer::run($world);
                 if($progress) {
                     $bar->advance();
                 }

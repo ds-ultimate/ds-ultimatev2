@@ -3,22 +3,21 @@
 namespace App\Console\DatabaseUpdate;
 
 use App\Conquer;
-use App\Log;
-use App\Notifications\DiscordNotification;
+use App\Notifications\DiscordNotificationQueueElement;
 use App\Player;
 use App\Util\BasicFunctions;
 use App\World;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Notification;
 
 class DoConquer
 {
-    public static function run($server, $world){
+    public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1500M');
-
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $worldUpdate = World::getWorld($server, $world);
+        $server = $world->server->code;
+        $worldName = $world->name;
+        $dbName = BasicFunctions::getDatabaseName($server, $worldName);
+        $minTime = Carbon::now()->subHour()->subMinutes(5);
 
         if (BasicFunctions::existTable($dbName, 'conquer') === false) {
             TableGenerator::conquerTable($dbName);
@@ -32,29 +31,11 @@ class DoConquer
             $latest = $first->timestamp;
 
         if(time() - $latest > 60 * 60 * 23) {
-            $lines = gzfile("$worldUpdate->url/map/conquer.txt.gz");
-            if (!is_array($lines)) {
-                BasicFunctions::createLog("ERROR_update[$server$world]", "conquer.txt.gz konnte nicht ge&ouml;ffnet werden");
-                $input =[
-                    'world' => $worldUpdate,
-                    'file' => 'conquer.txt',
-                    'url' => $worldUpdate->url.'/map/conquer.txt'
-                ];
-                Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-                return;
-            }
+            $lines = DoWorldData::loadGzippedFile($world, "conquer.txt.gz", $minTime);
+            if($lines === false) return false;
         } else {
-            $lines = gzfile("$worldUpdate->url/interface.php?func=get_conquer&since=" . ($latest - 1));
-            if (!is_array($lines)) {
-                BasicFunctions::createLog("ERROR_update[$server$world]", "interface.php?func=get_conquer konnte nicht ge&ouml;ffnet werden");
-                $input =[
-                    'world' => $worldUpdate,
-                    'file' => 'conquer interface',
-                    'url' => $worldUpdate->url.'/interface.php?func=get_conquer&since=' . ($latest - 1)
-                ];
-                Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-                return;
-            }
+            $lines = DoWorldData::loadUncompressedFile($world, "/interface.php?func=get_conquer&since=" . ($latest - 1), "interface.php?func=get_conquer");
+            if($lines === false) return false;
         }
 
         $array = array();
@@ -62,7 +43,9 @@ class DoConquer
         $insertTime = Carbon::now();
 
         foreach ($lines as $line) {
-            $exploded = explode(',', trim($line));
+            $line = trim($line);
+            if($line == "") continue;
+            $exploded = explode(',', $line);
             if(static::conquerInsideDB($databaseConquer, $exploded)) continue;
 
             $tempArr = array();
@@ -70,18 +53,7 @@ class DoConquer
             $tempArr['created_at'] = $insertTime;
             $tempArr['updated_at'] = $insertTime;
 
-//            $follow = \App\Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])->where('worlds_id', $worldUpdate->id)->get();
-//
-//            if ($follow->count() > 0){
-//                $input = [
-//                    'world' => $worldUpdate,
-//                    'conquere' => [$tempArr['village_id'],$tempArr['timestamp'],$tempArr['new_owner'],$tempArr['old_owner']]
-//                ];
-//
-//                Follow::conquereNotification($follow, $input);
-//            }
-
-            $old = Player::player($server, $world, $tempArr['old_owner']);
+            $old = Player::player($server, $worldName, $tempArr['old_owner']);
             if($tempArr['old_owner'] == 0) {
                 $tempArr['old_owner_name'] = "";
                 $tempArr['old_ally'] = 0;
@@ -99,7 +71,7 @@ class DoConquer
                 $tempArr['old_ally_tag'] = ($old->allyLatest != null)?$old->allyLatest->tag:"";
             }
 
-            $new = Player::player($server, $world, $tempArr['new_owner']);
+            $new = Player::player($server, $worldName, $tempArr['new_owner']);
             if($tempArr['new_owner'] == 0) {
                 $tempArr['new_owner_name'] = "";
                 $tempArr['new_ally'] = 0;
@@ -118,6 +90,11 @@ class DoConquer
             }
 
             $array[] = $tempArr;
+//
+//            $follow = \App\Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])->where('worlds_id', $world->id)->get();
+//            if ($follow->count() > 0){
+//                Follow::conquereNotification($follow, $world, $tempArr);
+//            }
         }
 
         $insert = new Conquer();

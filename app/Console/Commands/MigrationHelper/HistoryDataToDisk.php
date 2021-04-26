@@ -41,7 +41,6 @@ class HistoryDataToDisk extends Command
      */
     public function handle()
     {
-        //BasicFunctions::ignoreErrs();
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '2000M');
         

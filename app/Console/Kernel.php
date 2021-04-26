@@ -155,6 +155,14 @@ class Kernel extends ConsoleKernel
                 Log::critical('generateTops -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        /*
+         * Send out Discord notifications
+         */
+        $schedule->command("send:discordNotifications")
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->appendOutputTo("storage/logs/cron-critical.log");
     }
 
     /**

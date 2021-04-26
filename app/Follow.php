@@ -2,9 +2,8 @@
 
 namespace App;
 
-use App\Notifications\DiscordNotification;
+use App\Notifications\DiscordNotificationQueueElement;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Notification;
 
 class Follow extends Model
 {
@@ -13,11 +12,9 @@ class Follow extends Model
         'worlds_id'
     ];
 
-    public static function conquereNotification($follow, $input){
-        //TODO: Queues
+    public static function conquereNotification($follow, $worldUpdate, $conquerArr){
         foreach($follow as $user){
-            Notification::send(User::find($user->user_id), new DiscordNotification('conquere', null, $input));
-            sleep(0.5);
+            DiscordNotificationQueueElement::conquerNotification(User::find($user->user_id), $worldUpdate, $conquerArr);
         }
     }
 }

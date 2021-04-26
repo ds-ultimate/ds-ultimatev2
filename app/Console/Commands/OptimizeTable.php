@@ -41,8 +41,6 @@ class OptimizeTable extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        
         $worlds = (new World())->get();
         
         echo "Reading worlds\n";

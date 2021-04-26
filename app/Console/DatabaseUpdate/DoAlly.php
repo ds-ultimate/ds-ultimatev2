@@ -3,39 +3,27 @@
 namespace App\Console\DatabaseUpdate;
 
 use App\Ally;
-use App\Log;
-use App\Notifications\DiscordNotification;
 use App\Util\BasicFunctions;
 use App\World;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
 class DoAlly
 {
-    public static function run($server, $world){
+    public static function run(World $world){
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '1500M');
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $worldUpdate = World::getWorld($server, $world);
+        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $minTime = Carbon::now()->subHour()->subMinutes(5);
 
         Schema::dropIfExists("$dbName.ally_latest_temp");
         if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
             TableGenerator::allyLatestTable($dbName, 'latest_temp');
         }
 
-        $lines = gzfile("$worldUpdate->url/map/ally.txt.gz");
-        if(!is_array($lines)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "ally.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'ally.txt',
-                'url' => $worldUpdate->url.'/map/ally.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
+        $lines = DoWorldData::loadGzippedFile($world, "ally.txt.gz", $minTime);
+        if($lines === false) return false;
 
         $allys = collect();
         $allyOffs = collect();
@@ -43,6 +31,8 @@ class DoAlly
         $allyTots = collect();
 
         foreach ($lines as $line){
+            $line = trim($line);
+            if($line == "") continue;
             list($id, $name, $tag, $members, $villages, $points, $points_all, $rank) = explode(',', $line);
             $ally = collect();
             $ally->put('id', (int)$id);
@@ -55,12 +45,11 @@ class DoAlly
             $allys->put($ally->get('id'),$ally);
         }
 
-        $offs = gzfile("$worldUpdate->url/map/kill_att_tribe.txt.gz");
-        if(!is_array($offs)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_att_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
-            return;
-        }
+        $offs = DoWorldData::loadGzippedFile($world, "kill_att_tribe.txt.gz", $minTime);
+        if($offs === false) return false;
         foreach ($offs as $off){
+            $off = trim($off);
+            if($off == "") continue;
             list($rank, $id, $kills) = explode(',', $off);
             $allyOff = collect();
             $allyOff->put('offRank', (int)$rank);
@@ -69,12 +58,11 @@ class DoAlly
 
         }
 
-        $defs = gzfile("$worldUpdate->url/map/kill_def_tribe.txt.gz");
-        if(!is_array($defs)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_def_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
-            return;
-        }
+        $defs = DoWorldData::loadGzippedFile($world, "kill_def_tribe.txt.gz", $minTime);
+        if($defs === false) return false;
         foreach ($defs as $def){
+            $def = trim($def);
+            if($def == "") continue;
             list($rank, $id, $kills) = explode(',', $def);
             $allyDef = collect();
             $allyDef->put('defRank', (int)$rank);
@@ -82,12 +70,11 @@ class DoAlly
             $allyDefs->put($id, $allyDef);
         }
 
-        $tots = gzfile("$worldUpdate->url/map/kill_all_tribe.txt.gz");
-        if(!is_array($tots)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all_tribe.txt.gz konnte nicht ge&ouml;ffnet werden");
-            return;
-        }
+        $tots = DoWorldData::loadGzippedFile($world, "kill_def_tribe.txt.gz", $minTime);
+        if($tots === false) return false;
         foreach ($tots as $tot){
+            $tot = trim($tot);
+            if($tot == "") continue;
             list($rank, $id, $kills) = explode(',', $tot);
             $allyTot = collect();
             $allyTot->put('totRank', (int)$rank);
@@ -144,9 +131,7 @@ class DoAlly
         }
 
         $count = count($array);
-
-        $worldUpdate->ally_count = $count;
-        $worldUpdate->worldUpdated_at = $insertTime;
-        $worldUpdate->save();
+        $world->ally_count = $count;
+        return true;
     }
 }

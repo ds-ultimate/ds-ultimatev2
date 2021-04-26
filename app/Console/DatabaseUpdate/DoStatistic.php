@@ -2,20 +2,13 @@
 
 namespace App\Console\DatabaseUpdate;
 
-use App\Ally;
 use App\AllyChanges;
 use App\Conquer;
-use App\Log;
-use App\Notifications\DiscordNotification;
-use App\Player;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
 use App\WorldStatistic;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Schema;
 
 class DoStatistic
 {

@@ -2,24 +2,21 @@
 
 namespace App\Console\DatabaseUpdate;
 
-use App\Log;
-use App\Notifications\DiscordNotification;
 use App\Player;
 use App\AllyChanges;
 use App\Util\BasicFunctions;
 use App\World;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
 class DoPlayer
 {
-    public static function run($server, $world){
+    public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $worldUpdate = World::getWorld($server, $world);
+        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $minTime = Carbon::now()->subHour()->subMinutes(5);
 
         Schema::dropIfExists("$dbName.player_latest_temp");
         if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
@@ -33,18 +30,9 @@ class DoPlayer
         if (BasicFunctions::existTable($dbName, 'player_latest') === false){
             TableGenerator::playerLatestTable($dbName, 'latest');
         }
-
-        $lines = gzfile("$worldUpdate->url/map/player.txt.gz");
-        if(!is_array($lines)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "player.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'player.txt',
-                'url' => $worldUpdate->url.'/map/player.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
+        
+        $lines = DoWorldData::loadGzippedFile($world, "player.txt.gz", $minTime);
+        if($lines === false) return false;
 
         $players = collect();
         $playerOffs = collect();
@@ -52,7 +40,9 @@ class DoPlayer
         $playerSups = collect();
         $playerTots = collect();
 
-        foreach ($lines as $line){
+        foreach($lines as $line) {
+            $line = trim($line);
+            if($line == "") continue;
             list($id, $name, $ally, $villages, $points, $rank) = explode(',', $line);
             $player = collect();
             $player->put('id', (int)$id);
@@ -63,19 +53,12 @@ class DoPlayer
             $player->put('rank', (int)$rank);
             $players->put($player->get('id'),$player);
         }
-
-        $offs = gzfile("$worldUpdate->url/map/kill_att.txt.gz");
-        if(!is_array($offs)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_att.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'kill_att.txt',
-                'url' => $worldUpdate->url.'/map/kill_att.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
-        foreach ($offs as $off){
+        
+        $offs = DoWorldData::loadGzippedFile($world, "kill_att.txt.gz", $minTime);
+        if($offs === false) return false;
+        foreach($offs as $off) {
+            $off = trim($off);
+            if($off == "") continue;
             list($rank, $id, $kills) = explode(',', $off);
             $playerOff = collect();
             $playerOff->put('offRank', (int)$rank);
@@ -83,18 +66,11 @@ class DoPlayer
             $playerOffs->put($id, $playerOff);
         }
 
-        $defs = gzfile("$worldUpdate->url/map/kill_def.txt.gz");
-        if(!is_array($defs)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_def.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'kill_def.txt',
-                'url' => $worldUpdate->url.'/map/kill_def.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
-        foreach ($defs as $def){
+        $defs = DoWorldData::loadGzippedFile($world, "kill_def.txt.gz", $minTime);
+        if($defs === false) return false;
+        foreach($defs as $def) {
+            $def = trim($def);
+            if($def == "") continue;
             list($rank, $id, $kills) = explode(',', $def);
             $playerDef = collect();
             $playerDef->put('defRank', (int)$rank);
@@ -102,18 +78,11 @@ class DoPlayer
             $playerDefs->put($id, $playerDef);
         }
 
-        $sups = gzfile("$worldUpdate->url/map/kill_sup.txt.gz");
-        if(!is_array($defs)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_sup.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'kill_sup.txt',
-                'url' => $worldUpdate->url.'/map/kill_sup.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
-        foreach ($sups as $sup){
+        $sups = DoWorldData::loadGzippedFile($world, "kill_sup.txt.gz", $minTime);
+        if($sups === false) return false;
+        foreach($sups as $sup) {
+            $sup = trim($sup);
+            if($sup == "") continue;
             list($rank, $id, $kills) = explode(',', $sup);
             $playerSup = collect();
             $playerSup->put('supRank', (int)$rank);
@@ -121,26 +90,19 @@ class DoPlayer
             $playerSups->put($id, $playerSup);
         }
 
-        $tots = gzfile("$worldUpdate->url/map/kill_all.txt.gz");
-        if(!is_array($tots)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "kill_all.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'kill_all.txt',
-                'url' => $worldUpdate->url.'/map/kill_all.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
-        foreach ($tots as $tot){
+        $tots = DoWorldData::loadGzippedFile($world, "kill_all.txt.gz", $minTime);
+        if($tots === false) return false;
+        foreach($tots as $tot) {
+            $tot = trim($tot);
+            if($tot == "") continue;
             list($rank, $id, $kills) = explode(',', $tot);
             $playerTot = collect();
             $playerTot->put('totRank', (int)$rank);
             $playerTot->put('tot', (int)$kills);
             $playerTots->put($id, $playerTot);
         }
-
-
+        
+        
         $playerChange = new Player();
         $playerChange->setTable($dbName . '.player_latest');
         $databasePlayer = array();
@@ -216,9 +178,7 @@ class DoPlayer
         }
 
         $count = count($arrayPlayer);
-
-        $worldUpdate->player_count = $count;
-        $worldUpdate->worldUpdated_at = $insertTime;
-        $worldUpdate->save();
+        $world->player_count = $count;
+        return true;
     }
 }

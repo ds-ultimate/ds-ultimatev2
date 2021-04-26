@@ -2,42 +2,34 @@
 
 namespace App\Console\DatabaseUpdate;
 
-use App\Log;
-use App\Notifications\DiscordNotification;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 
 class DoVillage
 {
-    public static function run($server, $world){
+    public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1800M');
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $worldUpdate = World::getWorld($server, $world);
+        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $minTime = Carbon::now()->subHour()->subMinutes(5);
 
         Schema::dropIfExists("$dbName.village_latest_temp");
         if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
             TableGenerator::villageLatestTable($dbName, 'latest_temp');
         }
 
-        $lines = gzfile("$worldUpdate->url/map/village.txt.gz");
-        if (!is_array($lines)) {
-            BasicFunctions::createLog("ERROR_update[$server$world]", "village.txt.gz konnte nicht ge&ouml;ffnet werden");
-            $input =[
-                'world' => $worldUpdate,
-                'file' => 'village.txt',
-                'url' => $worldUpdate->url.'/map/village.txt'
-            ];
-            Notification::send(new Log(), new DiscordNotification('worldUpdate', null, $input));
-            return;
-        }
+        $lines = DoWorldData::loadGzippedFile($world, "village.txt.gz", $minTime);
+        if($lines === false) return false;
+        
         $villages = collect();
+        
         foreach ($lines as $line) {
+            $line = trim($line);
+            if($line == "") continue;
             list($id, $name, $x, $y, $owner, $points, $bonus_id) = explode(',', $line);
             $village = collect();
             $village->put('id', (int)$id);
@@ -92,9 +84,8 @@ class DoVillage
 
         $count = count($array);
 
-        $worldUpdate->village_count = $count;
-        $worldUpdate->worldUpdated_at = $insertTime;
-        $worldUpdate->save();
+        $world->village_count = $count;
+        return true;
     }
     
     private static function prepareVillageChangeCheck($dbName) {

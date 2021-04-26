@@ -41,7 +41,6 @@ class UpdateStatistic extends Command
      */
     public function handle()
     {
-        BasicFunctions::ignoreErrs();
         $server = $this->argument('server');
         $world = $this->argument('world');
 

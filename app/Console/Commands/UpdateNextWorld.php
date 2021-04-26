@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\WorldStatistic;
 use App\Console\DatabaseUpdate\UpdateUtil;
-use App\Console\DatabaseUpdate\WorldHistory;
+use App\Console\DatabaseUpdate\DoWorldData;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -42,7 +41,6 @@ class UpdateNextWorld extends Command
      */
     public function handle()
     {
-        BasicFunctions::ignoreErrs();
         if(! UpdateUtil::updateNeeded()) {
             echo "No Update needed\n";
             return 0;
@@ -60,25 +58,7 @@ class UpdateNextWorld extends Command
                 break;
             }
             
-            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'v');
-            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'p');
-            UpdateWorldData::updateWorldData($world->server->code, $world->name, 'a');
-            
-            $statistic = WorldStatistic::todayWorldStatistic($world);
-            
-            if($statistic) {
-                $statistic->increaseDailyUpdates();
-            } else {
-                $statistic = new WorldStatistic();
-                $statistic->world_id = $world->id;
-                $statistic->daily_updates = 1;
-                $statistic->save();
-            }
-            
-            if($world->isSpeed()) {
-                //save history data every time
-                WorldHistory::run($world->server->code, $world->name, true);
-            }
+            DoWorldData::run($world, 'v,p,a');
         }
         return 0;
     }

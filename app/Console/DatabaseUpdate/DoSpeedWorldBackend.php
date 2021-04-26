@@ -2,15 +2,13 @@
 
 namespace App\Console\DatabaseUpdate;
 
-use App\Log;
 use App\Server;
 use App\SpeedWorld;
 use App\World;
-use App\Notifications\DiscordNotification;
+use App\Notifications\DiscordNotificationQueueElement;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class DoSpeedWorldBackend
 {
@@ -51,12 +49,12 @@ class DoSpeedWorldBackend
                 
                 if(count($curActive) < 1) {
                     $input = new \Exception("World in backend but not in planned " . $link . " at " . $serverModel->code);
-                    Notification::send(new Log(), new DiscordNotification('exception', null, $input));
+                    DiscordNotificationQueueElement::exception($input);
                     continue;
                 }
                 if(count($curActive) > 1) {
                     $input = new \Exception("Please add support for more than one speed world " . $serverModel->code);
-                    Notification::send(new Log(), new DiscordNotification('exception', null, $input));
+                    DiscordNotificationQueueElement::exception($input);
                     continue;
                 }
                 $worldName = $curActive[0]->name;

@@ -40,8 +40,6 @@ class MapCache extends Command
      */
     public function handle()
     {
-        \App\Util\BasicFunctions::ignoreErrs();
-        
         $maps = (new Map())->whereNull('cached_at')->where('shouldUpdate', false)->get();
         if (!file_exists(storage_path(config('tools.map.cacheDir')))) {
             mkdir(storage_path(config('tools.map.cacheDir')), 0777, true);
