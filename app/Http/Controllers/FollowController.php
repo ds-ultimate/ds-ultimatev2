@@ -27,23 +27,24 @@ class FollowController extends Controller
     }
 
     public function createFollow(Request $request){
+        abort_unless(\Gate::allows('discord_bot_beta'), 403);
         $model = self::getModel($request->get('model'));
         $world = World::find($request->get('world'));
         $class = 'App\\'.$model;
         $classFunktion = lcfirst($request->get('model'));
         $item = $class::$classFunktion($world->server->code, $world->name, $request->get('id'));
 
-        $follow = $item->follows()->where(['user_id' => \Auth::user()->id, 'worlds_id' => $world->id])->first();
+        $follow = $item->follows()->where(['user_id' => \Auth::user()->id, 'world_id' => $world->id])->first();
 
         $function = 'follow'.$model;
 
         if ($follow  == null){
             \Auth::user()->$function()->save($item);
-            $followItem = Follow::where(['user_id' => \Auth::user()->id,'followable_id' => $request->get('id'), 'followable_type' => $class, 'worlds_id' => null])->first();
-            $followItem->worlds_id = $world->id;
+            $followItem = Follow::where(['user_id' => \Auth::user()->id,'followable_id' => $request->get('id'), 'followable_type' => $class, 'world_id' => null])->first();
+            $followItem->world_id = $world->id;
             $followItem->save();
         }else{
-            $follow->$function()->where('worlds_id', $world->id)->detach($item->id);
+            $follow->$function()->where('world_id', $world->id)->detach($item->id);
         }
     }
 

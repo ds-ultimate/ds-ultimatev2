@@ -41,6 +41,7 @@ class SendDiscordNotifications extends Command
         $model = new DiscordNotificationQueueElement();
         while(($data = $model->first()) !== null) {
             $data->send();
+            //TODO fix timeout
             sleep(1);
         }
         

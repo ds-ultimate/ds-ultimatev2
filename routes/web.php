@@ -115,6 +115,8 @@ Route::get('/changelog', [\App\Http\Controllers\ContentController::class, 'chang
 
 Route::view('/team', 'content.team')->name('team');
 
+Route::post('/follow', [\App\Http\Controllers\FollowController::class, 'createFollow'])->name('web.follow');
+
 Route::post('/search/{server}', [\App\Http\Controllers\SearchController::class, 'searchForm'])->name('searchForm');
 Route::get('/search/{server}/{type}/{search}', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 

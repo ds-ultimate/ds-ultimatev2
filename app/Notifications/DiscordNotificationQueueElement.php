@@ -3,10 +3,13 @@
 namespace App\Notifications;
 
 use App\Log;
-use App\World;
+use App\Player;
 use App\User;
+use App\Village;
+use App\World;
+use App\Util\BasicFunctions;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 
@@ -16,15 +19,25 @@ class DiscordNotificationQueueElement extends Model
     
     protected $fillable = [
         'notification_data',
+        'user_id',
     ];
 
     public $timestamps = [
         'created_at',
         'updated_at',
     ];
+
+    public function user()
+    {
+        return $this->hasOne('App\User', 'id', 'user_id');
+    }
     
     public function send() {
-        Notification::send(new Log(), new DiscordNotification($this));
+        if($this->user_id == null) {
+            Notification::send(new Log(), new DiscordNotification($this));
+        } else {
+            Notification::send($this->user, new DiscordNotification($this));
+        }
         $this->delete();
     }
     
@@ -93,13 +106,13 @@ class DiscordNotificationQueueElement extends Model
         static::encodeMessage($message);
     }
     
-    public function conquere(User $user, $world, $conquerArr){
+    public static function conquere($user_id, $world, $conquerArr){
         $old = Player::player($world->server->code, $world->name, $conquerArr['old_owner']);
         $new = Player::player($world->server->code, $world->name, $conquerArr['new_owner']);
         $village = Village::village($world->server->code, $world->name, $conquerArr['village_id']);
         $time = Carbon::createFromTimestamp($conquerArr['timestamp']);
 
-        if (isset($old)){
+        if ($old !== null && $new !== null){
             if ($old->ally_id == $new->ally_id){
                 $color = 3447003;
             }else{
@@ -129,13 +142,13 @@ class DiscordNotificationQueueElement extends Model
             ],
         ];
         
-        static::encodeMessage($message);
+        static::encodeMessage($message, $user_id);
     }
 
-    public static function conquerePlayer($world, $player, $icon){
-        if (isset($player)){
+    private static function conquerePlayer($world, $player, $icon){
+        if ($player !== null){
             $output = $icon.' ['.BasicFunctions::decodeName($player->name).']('.route('player',[$world->server->code, $world->name, $player->playerID]).') ';
-            if ($player->ally_id != 0){
+            if ($player->ally_id != 0 && $player->ally_latest !== null){
                 $output .= '[['.BasicFunctions::decodeName($player->allyLatest->tag).']]('.route('ally', [$world->server->code, $world->name, $player->allyLatest->allyID]).')';
             }
             $output .= "\n Punkte: ".BasicFunctions::numberConv($player->points)."\n Dörfer: ".BasicFunctions::numberConv($player->village_count);
@@ -173,7 +186,7 @@ class DiscordNotificationQueueElement extends Model
         }
     }
     
-    private static function encodeMessage($message) {
+    private static function encodeMessage($message, $user_id=null) {
         $encoded = static::recursiveEncode($message);
         $asData = "";
         $first = true;
@@ -185,6 +198,7 @@ class DiscordNotificationQueueElement extends Model
         
         $model = new DiscordNotificationQueueElement();
         $model->notification_data = $asData;
+        $model->user_id = $user_id;
         $model->save();
     }
     

@@ -132,13 +132,15 @@
                                 <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
                             </div>
                             <div class="col">
-{{--                            @auth--}}
-{{--                                @if($playerData->follows()->where(['user_id' => Auth::user()->id, 'worlds_id' => $worldData->id])->count() > 0)--}}
-{{--                                    <div class="float-right"><a id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star text-warning">{{__('ui.player.discordNotification.addFollow')}}</a></div>--}}
-{{--                                @else--}}
-{{--                                        <div class="float-right"><a id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star text-muted">{{__('ui.player.discordNotification.addFollow')}}</a></div>--}}
-{{--                                @endif--}}
-{{--                            @endauth--}}
+                            @auth
+                                @can('discord_bot_beta')
+                                @if($playerData->follows()->where(['user_id' => Auth::user()->id, 'world_id' => $worldData->id])->count() > 0)
+                                    <div class="float-right"><a id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star text-warning">{{__('ui.player.discordNotification.addFollow')}}</a></div>
+                                @else
+                                    <div class="float-right"><a id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star text-muted">{{__('ui.player.discordNotification.addFollow')}}</a></div>
+                                @endif
+                                @endcan
+                            @endauth
                             </div>
                         </div>
                         <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
@@ -361,9 +363,10 @@
         } );
 
         @auth
+        @can('discord_bot_beta')
         function changeFollow() {
             var icon = $('#follow-icon');
-            axios.post('{{ route('tools.follow') }}',{
+            axios.post('{{ route('web.follow') }}',{
                 model: 'Player',
                 id: '{{ $playerData->playerID }}',
                 world: '{{ $worldData->id }}',
@@ -379,6 +382,7 @@
 
                 });
         }
+        @endcan('discord_bot_beta')
         @endauth
     </script>
     {!! $chartJS !!}

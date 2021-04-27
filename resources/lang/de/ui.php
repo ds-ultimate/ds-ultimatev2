@@ -5,6 +5,10 @@ return array (
   array (
     'deleted' => 'Gelöscht',
     'barbarian' => 'Barbaren',
+    'discordNotification' => 
+    array (
+      'addFollow' => 'Discord benachrichtigungen bei Adelungen',
+    ),
   ),
   'allyChanges' => 
   array (

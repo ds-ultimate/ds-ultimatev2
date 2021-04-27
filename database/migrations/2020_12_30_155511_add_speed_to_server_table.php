@@ -19,7 +19,6 @@ class AddSpeedToServerTable extends Migration
      */
     public function up()
     {
-        
         Schema::table('server', function (Blueprint $table) {
             $table->boolean('speed_active')->default(false);
         });

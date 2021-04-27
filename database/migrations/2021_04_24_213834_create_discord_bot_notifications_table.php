@@ -16,6 +16,10 @@ class CreateDiscordBotNotificationsTable extends Migration
         Schema::create('discord_bot_notifications', function (Blueprint $table) {
             $table->id();
             $table->text('notification_data');
+            
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+            
             $table->timestamps();
         });
     }

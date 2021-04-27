@@ -3,10 +3,10 @@
 namespace App\Console\DatabaseUpdate;
 
 use App\Conquer;
-use App\Notifications\DiscordNotificationQueueElement;
+use App\Follow;
 use App\Player;
-use App\Util\BasicFunctions;
 use App\World;
+use App\Util\BasicFunctions;
 use Carbon\Carbon;
 
 class DoConquer
@@ -90,11 +90,14 @@ class DoConquer
             }
 
             $array[] = $tempArr;
-//
-//            $follow = \App\Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])->where('worlds_id', $world->id)->get();
-//            if ($follow->count() > 0){
-//                Follow::conquereNotification($follow, $world, $tempArr);
-//            }
+
+            $follows = Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])
+                    ->where('followable_type', 'App\\Player')
+                    ->where('world_id', $world->id)
+                    ->get();
+            if ($follows->count() > 0){
+                Follow::conquereNotification($follows, $world, $tempArr);
+            }
         }
 
         $insert = new Conquer();

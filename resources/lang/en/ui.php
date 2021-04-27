@@ -73,6 +73,10 @@ return array (
   array (
     'barbarian' => 'barbarian',
     'deleted' => 'deleted',
+    'discordNotification' => 
+    array (
+      'addFollow' => 'Discord notifications for conquers',
+    ),
   ),
   'server' => 
   array (

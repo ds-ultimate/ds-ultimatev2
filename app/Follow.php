@@ -9,12 +9,14 @@ class Follow extends Model
 {
     public $timestamps = false;
     protected $fillable =[
-        'worlds_id'
+        'worlds_id',
+        'followable_id',
+        'followable_type',
     ];
 
-    public static function conquereNotification($follow, $worldUpdate, $conquerArr){
-        foreach($follow as $user){
-            DiscordNotificationQueueElement::conquerNotification(User::find($user->user_id), $worldUpdate, $conquerArr);
+    public static function conquereNotification($follows, $worldUpdate, $conquerArr){
+        foreach($follows as $follow){
+            DiscordNotificationQueueElement::conquere($follow->user_id, $worldUpdate, $conquerArr);
         }
     }
 }
