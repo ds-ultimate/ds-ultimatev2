@@ -153,9 +153,9 @@ mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public
  * bootstrap confirmation
  */
 
-mix.copy([
-    'node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.min.js'
-], 'public/plugin/bootstrap-confirmation/');
+mix.scripts([
+    'node_modules/bootstrap-confirmation2/dist/bootstrap-confirmation.js'
+], 'public/plugin/bootstrap-confirmation/bootstrap-confirmation.min.js');
 
 /**
  * JQuery Flip
