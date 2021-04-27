@@ -75,7 +75,7 @@ return array (
     'deleted' => 'deleted',
     'discordNotification' => 
     array (
-      'addFollow' => 'Discord notifications for conquers',
+      'addFollow' => 'Discordnotifications for conquers',
     ),
   ),
   'server' => 

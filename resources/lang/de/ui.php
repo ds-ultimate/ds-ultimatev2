@@ -7,7 +7,7 @@ return array (
     'barbarian' => 'Barbaren',
     'discordNotification' => 
     array (
-      'addFollow' => 'Discord benachrichtigungen bei Adelungen',
+      'addFollow' => 'Discordbenachrichtigungen bei Adelungen',
     ),
   ),
   'allyChanges' => 
