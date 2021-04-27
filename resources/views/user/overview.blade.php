@@ -256,7 +256,7 @@
                                 <div class="col-2">
                                     @if (count($renderedAnimatedMaps) > 0)
                                     <div id="renderedAnimatedMap-own-side-panel">
-                                        <a id="editButtonRenderedAnimatedMap" href="{{ route('tools.animHistMap.mode', [$renderedAnimatedMaps->get(0)->id, 'edit', $renderedAnimatedMaps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
+                                        <a id="editButtonRenderedAnimatedMap" href="{{ route("tools.animHistMap.renderStatus", [$renderedAnimatedMaps->get(0)->id, $renderedAnimatedMaps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
                                         <a id="deleteButtonRenderedAnimatedMap" data-toggle="confirmation" data-content="{{ __('user.confirm.destroy.renderedAnimatedMapContent') }}" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
                                     </div>
                                     @endif
