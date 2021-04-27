@@ -290,7 +290,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function download(AnimHistMapJob $wantedJob, $key, $format) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
         abort_unless($key == $wantedJob->show_key, 403);
         
         switch($format) {
