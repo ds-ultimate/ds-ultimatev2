@@ -35,7 +35,7 @@ class DiscordNotificationQueueElement extends Model
     public function send() {
         if($this->user_id == null) {
             Notification::send(new Log(), new DiscordNotification($this));
-        } else {
+        } else if($this->user->routeNotificationForDiscord() !== null) {
             Notification::send($this->user, new DiscordNotification($this));
         }
         $this->delete();
