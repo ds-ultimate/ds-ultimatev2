@@ -12,7 +12,7 @@ require('laravel-mix-purgecss');
  |
  */
 
-let whitePatterns =
+let safelist =
 [
     /flag-icon.*/,
     /col-.*/,
@@ -20,9 +20,6 @@ let whitePatterns =
     /.*page.*/,
     /.*popover.*/,
     /.*datepicker.*/,
-];
-let whiteList =
-[
     "arrow",
     "fade",
     "row",
@@ -38,8 +35,7 @@ mix.sass('resources/sass/app.scss', 'public/css')
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: whitePatterns,
-        whitelist: whiteList,
+        safelist: safelist,
     });
 
 mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
@@ -47,8 +43,7 @@ mix.sass('resources/sass/admin_sidebar.scss', 'public/css')
         processCssUrls: false
     })
     .purgeCss({
-        whitelistPatterns: whitePatterns,
-        whitelist: whiteList,
+        safelist: safelist,
     });
 
 mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', false);
