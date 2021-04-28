@@ -51,7 +51,7 @@ return array (
     'village' => 'Dorf',
     'worldOverview' => 'Weltenübersicht',
     'overview' => 'Übersicht',
-    'searchLimited' => 'Es werden nur die ersten $limit Einträge angezeigt, weil ihre suche zu viele Ergebnisse lieferte',
+    'searchLimited' => 'Es werden nur die ersten $limit Einträge angezeigt, weil ihre Suche zu viele Ergebnisse lieferte',
     'settings' => 'Einstellungen',
   ),
   'tabletitel' => 
@@ -168,7 +168,7 @@ return array (
     'toggle' => 'Umschalten',
     'disabled' => 
     array (
-      'missingConfig' => 'Dieses Feature ist bei der ausgewählten Welt nicht verfügbar',
+      'missingConfig' => 'Dieses Feature ist bei der ausgewählten Welt nicht verfügbar.',
       'noWorld' => 'Um dieses Feature nutzen zu können muss eine Welt ausgewählt werden',
     ),
   ),
@@ -201,7 +201,7 @@ return array (
   'noTitle' => 'Kein Titel',
   'siteNotFound' => 'Seite nicht gefunden',
   'notAllowed' => 'Unzulässig',
-  'notAllowedDesc' => 'Du darfst diese Seite nicht betreten',
+  'notAllowedDesc' => 'Du darfst diese Seite nicht betreten.',
   'personalSettings' => 
   array (
     'title' => 'Einstellungen',
@@ -217,10 +217,10 @@ return array (
     'connectionNiceTroll' => '<img src="https://www.kotzendes-einhorn.de/blog/wp-content/uploads/2014/02/Troll-face.png" height="200" width="200">',
     'connectionTooEarly' => 'Warte auf die nächste Aktualisierung der Welt',
     'connectionSuccess' => 'Die Verbindung ist erfolgreich bestätigt',
-    'connectionError' => 'Die Verbindung konnte nicht bestätigt werden, bitte überprüfe ob der Dorfname Richtig gesetzt ist',
+    'connectionError' => 'Die Verbindung konnte nicht bestätigt werden, bitte überprüfe ob der Dorfname richtig gesetzt ist',
     'skypeShow' => 'Skype Name anzeigen',
     'discordShow' => 'Discord Name anzeigen',
-    'uploadeImage' => 'Bild Hochladen',
+    'uploadeImage' => 'Bild hochladen',
     'deleteImage' => 'Bild löschen',
     'workInProgress' => 'Aktuell noch nicht möglich',
     'account_help' => 'Hier kannst du dich mit anderen Konten verbinden.
@@ -240,7 +240,7 @@ Sobald die Verbindung in der Liste ist, generiert DS-Ultimate eine zufällige Ze
 Diese Zeichenkette muss dann als Dorfname gesetzt werden.
 <br>
 Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt kannst du die Verbindung bestätigen lassen.',
-    'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung Trennen',
+    'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung trennen',
     'map' => 'Welkartenvorlage',
   ),
   'follow' => 
@@ -285,7 +285,7 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'showPointDiff' => '120er-Bereich anzeigen',
   'index' => 
   array (
-    'help' => 'um die meisten Funktionen der Seite nutzen zu können musst du einen Server und eine Welt auswählen',
+    'help' => 'Um die meisten Funktionen der Seite nutzen zu können, musst du einen Server und eine Welt auswählen',
   ),
   'tabeltitel' => 
   array (

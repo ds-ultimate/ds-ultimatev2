@@ -2,7 +2,7 @@
 
 return array (
   'accepted' => ':attribute muss akzeptiert werden.',
-  'active_url' => ':attribute ist keine gültige Internet-Adresse.',
+  'active_url' => ':attribute ist keine gültige Internetadresse.',
   'after' => ':attribute muss ein Datum nach dem :date sein.',
   'after_or_equal' => ':attribute muss ein Datum nach dem :date oder gleich dem :date sein.',
   'alpha' => ':attribute darf nur aus Buchstaben bestehen.',
