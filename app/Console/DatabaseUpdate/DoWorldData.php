@@ -75,7 +75,8 @@ class DoWorldData
             return false;
         }
         if($file->modificationTime()->lessThan($minTime)) {
-            DiscordNotificationQueueElement::worldUpdate($world, $name . ' too old - ' . $file->modificationTime(), $url);
+            //This is just error spam. Maybe just send broken servers once?
+            //DiscordNotificationQueueElement::worldUpdate($world, $name . ' too old - ' . $file->modificationTime(), $url);
             return false;
         }
         return explode("\n", $file->responseData());
