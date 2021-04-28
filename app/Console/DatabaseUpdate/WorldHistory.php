@@ -95,7 +95,7 @@ class WorldHistory
             if($date == $entryDate) {
                 gzwrite($file, $entryCallback($entry) . "\n");
             } else {
-                echo "Warning wrong date found $dbName $part@{$entry->id} -> $date / $entryDate\n";
+                echo "Warning wrong date found $dbName $fromTable $part -> $date / $entryDate\n";
             }
         }
         gzclose($file);
