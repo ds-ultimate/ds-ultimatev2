@@ -15,7 +15,7 @@
         "@fonticonpicker/fonticonpicker": "^3.1.1",
         "@fortawesome/fontawesome-free": "^5.14.0",
         "@popperjs/core": "^2.6.0",
-        "@ttskch/select2-bootstrap4-theme": "^1.4.0",
+        "@ttskch/select2-bootstrap4-theme": "github:tagliala/select2-bootstrap4-theme#feature/refactor-as-custom-select",
         "axios": "^0.21.1",
         "bootstrap": "^4.5.2",
         "bootstrap-colorpicker": "^3.2.0",
