@@ -329,7 +329,6 @@ If that problem persists please create a bug-report',
     'fastSwitch' => 'Own animated maps',
     'legend' => 'Legend',
     'links' => 'Links for sharing',
-    'previewSelect' => 'preview day',
     'render' => 
     array (
       'finished' => 'finished',
@@ -350,5 +349,6 @@ If that problem persists please create a bug-report',
     'destroySuccess' => 'Animated map successfully deleted',
     'renderedDestroyError' => 'The rendered animated map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'renderedDestroySuccess' => 'Rendered animated map successfully deleted',
+    'preview' => 'preview',
   ),
 );

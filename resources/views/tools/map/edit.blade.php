@@ -297,6 +297,11 @@
 
         $('.colour-picker-map', context).colorpicker({
             useHashPrefix: false,
+            template: '<div class="colorpicker">' +
+                '<div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div>' +
+                '<div class="colorpicker-hue"><i class="colorpicker-guide"></i></div>' +
+                '<div class="colorpicker-bar"><input class="color-io" type="text"></div>' +
+                '</div>',
             extensions: [{
                 name: 'swatches',
                 options: {
@@ -308,7 +313,29 @@
                 }
             }]
         });
+        
+        $('.colour-picker-map').on('colorpickerChange', function(e) {
+            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+            var io = $(".color-io", $("#" + popID));
 
+            if (e.value === io.val() || !e.color || !e.color.isValid()) {
+                // do not replace the input value if the color is invalid or equals
+                return;
+            }
+
+            io.val(e.color.string());
+            // initialize the input on colorpicker creation
+        });
+        $('.colour-picker-map').on("colorpickerShow", function(e) {
+            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+            var io = $(".color-io", $("#" + popID));
+            io.val(e.color.string());
+
+            io.on('change keyup', function () {
+                e.colorpicker.setValue(io.val());
+            });
+        });
+        
         $('.data-input-map').change(function() {
             if(this.value != null && this.value != "") {
                 addNewParts(this, null);

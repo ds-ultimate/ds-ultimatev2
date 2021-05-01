@@ -334,7 +334,6 @@ Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
     'fastSwitch' => 'Eigene animierte Weltkarten',
     'withoutTitle' => 'Diese animierte Weltkarte hat keinen Titel und wird daher immer standardmäßig beim Klick auf "animierte Weltkarte" benutzt. Um damit eine neue animierte Weltkarte zu erstellen muss ein Titel vergeben werden.',
     'renderNow' => 'Jetzt erstellen!',
-    'previewSelect' => 'Vorschau Tag',
     'rerun' => 'Nochmal erstellen',
     'download' => 
     array (
@@ -350,5 +349,6 @@ Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
     'destroyError' => 'Die animierte Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst, melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'renderedDestroySuccess' => 'Fertig animierte Weltkarte erfolgreich gelöscht',
     'renderedDestroyError' => 'Die fertig animierte Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst, melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
+    'preview' => 'Vorschau',
   ),
 );

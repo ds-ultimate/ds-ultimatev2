@@ -96,7 +96,12 @@
                         </div>
                     </form>
                     <div class="form-inline mb-2 col-lg-12">
-                        <label for="previewSelect" class="col-lg-auto">{{ ucfirst(__('tool.animHistMap.previewSelect')) }}</label>
+                        <div class="d-flex">
+                            <i class="fas fa-play-circle h3 text-success" id="startPreviewAuto"></i><label for="startPreviewAuto" class="col-lg-auto">{{ ucfirst(__('tool.animHistMap.preview')) }}</label>
+                        </div>
+                        <div class="d-none">
+                            <i class="fas fa-pause-circle h3 text-success" id="pausePreviewAuto""></i><label for="pausePreviewAuto" class="col-lg-auto">{{ ucfirst(__('tool.animHistMap.preview')) }}</label>
+                        </div>
                         <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="{{ $histIdxs->count() - 1 }}" step="1" id="previewSelect" value="0" name="previewSelect">
                         <div id="previewSelectText" class="ml-4">{{ $histIdxs[0]->date }}</div>
                     </div>
@@ -113,13 +118,23 @@
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script>
     $(function () {
-        $('.colour-picker-map').on('colorpickerHide', store);
+        $('#mapEditForm').on('submit', function (e) {
+            e.preventDefault();
+            store();
+        });
+        
+        @if($wantedMap->cached_at === null)
+            $('.colour-picker-map').on('colorpickerHide', store);
+            $('.data-input-map').change(store);
+        @endif
     });
-
-    $('#mapEditForm').on('submit', function (e) {
-        e.preventDefault();
-        store();
-    });
+    
+    @if($wantedMap->cached_at === null)
+        function addStoreNewElements(context) {
+            $('.colour-picker-map', context).on('colorpickerHide', store);
+            $('.data-input-map', context).change(store);
+        }
+    @endif
 
     var storing = false;
     var storeNeeded = false;
@@ -141,7 +156,7 @@
                 reloadMap();
             })
             .catch((error) => {
-
+                storing = false;
             });
     }
 </script>
@@ -159,6 +174,8 @@
             reloadMap();
         });
         $('#previewSelect').trigger("input");
+        $('#startPreviewAuto').click(startAnimation);
+        $('#pausePreviewAuto').click(pauseAnimation);
     });
     
     function copy(type) {
@@ -173,7 +190,6 @@
     var reloading = false;
     var reloadNeeded = false;
     function reloadMap() {
-        console.log("reloadMap #1", reloading, reloadNeeded);
         if(reloading) {
             reloadNeeded = true;
             return;
@@ -191,13 +207,11 @@
             type: "GET",
             url: url + "?" + Math.floor(Math.random() * 9000000 + 1000000),
             success: function(data){
-                console.log("reloadMap #2", reloading, reloadNeeded);
                 $('#previewContainer').html(
                     '<img id="previewImage" class="p-0" src="' + data + '" />'
                 );
 
                 setTimeout(function() {
-                    console.log("reloadMap #3", reloading, reloadNeeded);
                     var elm = $('#previewContainer')[0];
                     elm.style.widht = "";
                     elm.style.height = "";
@@ -212,5 +226,21 @@
             },
         });
     };
+    
+    var intervalAnimation = -1;
+    function startAnimation(e) {
+        intervalAnimation = setInterval(function() {
+            $("#previewSelect").val(parseInt($("#previewSelect").val()) + 1);
+            $('#previewSelect').trigger("input"); //will do map reload
+        }, 500);
+        $('#startPreviewAuto').parent().removeClass('d-flex').addClass('d-none');
+        $('#pausePreviewAuto').parent().addClass('d-flex').removeClass('d-none');
+    }
+    
+    function pauseAnimation(e) {
+        clearInterval(intervalAnimation);
+        $('#startPreviewAuto').parent().addClass('d-flex').removeClass('d-none');
+        $('#pausePreviewAuto').parent().removeClass('d-flex').addClass('d-none');
+    }
 </script>
 @endpush

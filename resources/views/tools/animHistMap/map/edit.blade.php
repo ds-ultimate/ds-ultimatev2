@@ -168,7 +168,6 @@
                 edit.show();
             })
             .catch((error) => {
-                console.log(error);
             });
     }
     
@@ -194,10 +193,6 @@
             $('.'+this.attributes['aria-for'].nodeValue).prop('checked', this.checked);
         });
         addCustomLibs(null);
-        
-        @if($wantedMap->cached_at === null)
-            $('.data-input-map').change(store);
-        @endif
     });
     
     var maxIndex = {
@@ -257,6 +252,7 @@
     }
 
     function addCustomLibs(context) {
+        if(context != null) addStoreNewElements(context);
         context = (context)?($(context)):($(document));
 
         $('.select2-player', context).select2({
@@ -298,6 +294,11 @@
 
         $('.colour-picker-map', context).colorpicker({
             useHashPrefix: false,
+            template: '<div class="colorpicker">' +
+                '<div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div>' +
+                '<div class="colorpicker-hue"><i class="colorpicker-guide"></i></div>' +
+                '<div class="colorpicker-bar"><input class="color-io" type="text"></div>' +
+                '</div>',
             extensions: [{
                 name: 'swatches',
                 options: {
@@ -309,20 +310,42 @@
                 }
             }]
         });
+        
+        $('.colour-picker-map').on('colorpickerChange', function(e) {
+            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+            var io = $(".color-io", $("#" + popID));
 
-        $('.data-input-map').change(function() {
+            if (e.value === io.val() || !e.color || !e.color.isValid()) {
+                // do not replace the input value if the color is invalid or equals
+                return;
+            }
+
+            io.val(e.color.string());
+            // initialize the input on colorpicker creation
+        });
+        $('.colour-picker-map').on("colorpickerShow", function(e) {
+            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+            var io = $(".color-io", $("#" + popID));
+            io.val(e.color.string());
+
+            io.on('change keyup', function () {
+                e.colorpicker.setValue(io.val());
+            });
+        });
+        
+        $('.data-input-map', context).change(function() {
             if(this.value != null && this.value != "") {
                 addNewParts(this, null);
             }
         });
 
-        $('.checked-data-input-map').change(function() {
+        $('.checked-data-input-map', context).change(function() {
             if(this.value != null && this.value != "") {
                 checkPart(this, null);
             }
         });
         
-        $('.coord-data-input').bind('paste', function(e) {
+        $('.coord-data-input', context).bind('paste', function(e) {
             var target = this.id.substring(0, this.id.lastIndexOf("-"));
             var pastedData = e.originalEvent.clipboardData.getData('text');
             var coords = pastedData.split("|");
