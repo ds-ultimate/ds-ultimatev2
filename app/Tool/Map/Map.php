@@ -225,7 +225,7 @@ class Map extends Model
 
     public function barbarianEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return barbarianEnabledDefault();
+            return $this->barbarianEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
@@ -247,7 +247,7 @@ class Map extends Model
 
     public function playerEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return playerEnabledDefault();
+            return $this->playerEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
