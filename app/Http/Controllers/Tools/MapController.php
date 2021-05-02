@@ -50,7 +50,7 @@ class MapController extends BaseController
         $mapModel->edit_key = Str::random(40);
         $mapModel->show_key = Str::random(40);
         $mapModel->save();
-        return redirect()->route('tools.mapToolMode', [$mapModel->id, 'edit', $mapModel->edit_key]);
+        return redirect()->route('tools.map.mode', [$mapModel->id, 'edit', $mapModel->edit_key]);
     }
 
     public function mode(Map $wantedMap, $action, $key){
