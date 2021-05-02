@@ -80,7 +80,7 @@
                     </ul>
                     <div class="card-body tab-content">
                         @foreach($tabList as $key => $tab)
-                            @include('tools.animHistMap.map.'.$key, ['active' => $tab['active']])
+                            @include('tools.map.'.$key, ['active' => $tab['active'], 'mapType' => "animHistMap"])
                         @endforeach
                     </div>
                 </form>
@@ -118,47 +118,45 @@
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script>
     $(function () {
-        $('#mapEditForm').on('submit', function (e) {
-            e.preventDefault();
-            store();
-        });
-        
         @if($wantedMap->cached_at === null)
+            $('#mapEditForm').on('submit', function (e) {
+                e.preventDefault();
+                store();
+            });
+
             $('.colour-picker-map').on('colorpickerHide', store);
-            $('.data-input-map').change(store);
         @endif
     });
-    
+
     @if($wantedMap->cached_at === null)
         function addStoreNewElements(context) {
             $('.colour-picker-map', context).on('colorpickerHide', store);
-            $('.data-input-map', context).change(store);
+        }
+
+        var storing = false;
+        var storeNeeded = false;
+        function store() {
+            if(storing) {
+                storeNeeded = true;
+                return;
+            }
+            storing = true;
+            axios.post('{{ route('tools.animHistMap.modePost', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
+                .then((response) => {
+                    setTimeout(function() {
+                        if(storeNeeded) {
+                            storeNeeded = false
+                            store();
+                        }
+                    }, 400);
+                    storing = false;
+                    reloadMap();
+                })
+                .catch((error) => {
+                    storing = false;
+                });
         }
     @endif
-
-    var storing = false;
-    var storeNeeded = false;
-    function store() {
-        if(storing) {
-            storeNeeded = true;
-            return;
-        }
-        storing = true;
-        axios.post('{{ route('tools.animHistMap.modePost', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
-            .then((response) => {
-                setTimeout(function() {
-                    if(storeNeeded) {
-                        storeNeeded = false
-                        store();
-                    }
-                }, 400);
-                storing = false;
-                reloadMap();
-            })
-            .catch((error) => {
-                storing = false;
-            });
-    }
 </script>
 @endif
 <script>
@@ -225,7 +223,7 @@
                 }, 500);
             },
         });
-    };
+    }
     
     var intervalAnimation = -1;
     function startAnimation(e) {

@@ -44,7 +44,7 @@
                 <div class="dropdown-menu" aria-labelledby="ownedMaps">
                     @foreach($ownMaps as $map)
                         <a class="dropdown-item" href="{{
-                            route('tools.mapToolMode', [$map->id, 'edit', $map->edit_key])
+                            route('tools.map.mode', [$map->id, 'edit', $map->edit_key])
                             }}">{{ $map->getTitle().' ['.$map->world->displayName().']' }}</a>
                     @endforeach
                 </div>
@@ -75,7 +75,7 @@
                 </div>
             @endif
             <div class="card mt-2">
-                <form id="mapEditForm" action="{{ route('tools.mapToolMode', [$wantedMap->id, 'saveEdit', $wantedMap->edit_key]) }}" method="post">
+                <form id="mapEditForm" action="{{ route('tools.map.mode', [$wantedMap->id, 'saveEdit', $wantedMap->edit_key]) }}" method="post">
                     @csrf
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         @foreach($tabList as $key => $tab)
@@ -86,7 +86,7 @@
                     </ul>
                     <div class="card-body tab-content">
                         @foreach($tabList as $key => $tab)
-                            @include('tools.map.'.$key, ['active' => $tab['active']])
+                            @include('tools.map.'.$key, ['active' => $tab['active'], 'mapType' => "map"])
                         @endforeach
                     </div>
                 </form>
@@ -134,15 +134,19 @@
 <script>
     $(function () {
         @if($wantedMap->cached_at === null)
+            $('#mapEditForm').on('submit', function (e) {
+                e.preventDefault();
+                store();
+            });
+
             $('.colour-picker-map').on('colorpickerHide', store);
         @endif
     });
 
     @if($wantedMap->cached_at === null)
-        $('#mapEditForm').on('submit', function (e) {
-            e.preventDefault();
-            store();
-        });
+        function addStoreNewElements(context) {
+            $('.colour-picker-map', context).on('colorpickerHide', store);
+        }
 
         var storing = false;
         var storeNeeded = false;
@@ -152,7 +156,7 @@
                 return;
             }
             storing = true;
-            axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
+            axios.post('{{ route('tools.map.mode', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
                 .then((response) => {
                     mapDimensions = [
                         response.data.xs,
@@ -243,7 +247,7 @@
                             '<a class="float-right btn btn-primary btn-sm" onclick="copy(\''+targetID+'\')">{{ ucfirst(__('tool.map.copy')) }}</a>' +
                         '</div>' +
                         '<div class="col-md-8 col-lg-9">' +
-                            '<input id="link-'+targetID+'" type="text" class="border form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.mapToolMode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
+                            '<input id="link-'+targetID+'" type="text" class="border form-control-plaintext form-control-sm disabled" value="[url={{ route('tools.map.mode', [$wantedMap->id, 'show', $wantedMap->show_key]) }}][img]'+sizeRoutes[targetID][1]+'[/img][/url]" />' +
                             '<small class="form-control-feedback">{{ ucfirst(__('tool.map.forumLinkDesc')) }}</small>' +
                         '</div>' +
                     '</div>' +

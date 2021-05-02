@@ -256,6 +256,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
 Bitte die Zeichenoberfläche öffnen und schließen
 Sollte der Fehler bestehen bleiben bitte einen Bug-Report erstellen',
     'autoZoom' => 'Automatischer Zoom',
+    'resetDefault' => 'Reset',
   ),
   'pointCalc' => 
   array (

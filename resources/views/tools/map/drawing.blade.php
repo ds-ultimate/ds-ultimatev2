@@ -185,7 +185,7 @@
         $('#canvas-editor').append(drawer.getHtml());
         drawer.onInsert();
 
-        axios.get('{{ route('tools.mapToolMode', [$wantedMap->id, 'getCanvas', $wantedMap->edit_key]) }}')
+        axios.get('{{ route("tools.$mapType.mode", [$wantedMap->id, 'getCanvas', $wantedMap->edit_key]) }}')
             .then((response) => {
                 canvasDataObject = response.data;
             })
@@ -199,7 +199,7 @@
     function saveCanvas(type, data) {
         var convertedData = "type="+type;
         convertedData += "&data="+encodeURIComponent(data);
-        axios.post('{{ route('tools.mapToolMode', [$wantedMap->id, 'saveCanvas', $wantedMap->edit_key]) }}', convertedData)
+        axios.post('{{ route("tools.$mapType.mode", [$wantedMap->id, 'saveCanvas', $wantedMap->edit_key]) }}', convertedData)
             .then((response) => {
                 if(type == 'image') {
                     reloadMap();

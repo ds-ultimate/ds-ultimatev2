@@ -4,12 +4,15 @@
             <span class='input-group-text colorpicker-input-addon'><i></i></span>
             <input name='default[background]' id="bg-colour" type='hidden' value='{{ $wantedMap->getBackgroundColour() }}'/>
         </div>
-        <label class='form-control'>{{ __('tool.map.defaultBackground') }}</label>
+        <label class='form-control'>
+            <i class="fas fa-undo mr-2 map-reset" newValue="{{ $wantedMap->getDefResetBackgroundColour() }}" data-toggle="tooltip" title="{{ __('tool.map.resetDefault') }}"></i>
+            {{ __('tool.map.defaultBackground') }}
+        </label>
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
             <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
-            <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-show-player" name="showPlayer" type="checkbox" defVal="{{ $wantedMap->playerEnabledDefault() }}" class="form-check-input resetable" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
             <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
         </div>
         <div id='default-player-div' class='col-lg-9 input-group'>
@@ -17,13 +20,16 @@
                 <span class='input-group-text colorpicker-input-addon'><i></i></span>
                 <input name='default[player]' id="player-colour" type='hidden' value='{{ $wantedMap->getDefPlayerColour() }}'/>
             </div>
-            <label class='form-control'>{{ __('tool.map.defaultPlayer') }}</label>
+            <label class='form-control'>
+                <i class="fas fa-undo mr-2 map-reset" newValue="{{ $wantedMap->getDefResetPlayerColour() }}" data-toggle="tooltip" title="{{ __('tool.map.resetDefault') }}"></i>
+                {{ __('tool.map.defaultPlayer') }}
+            </label>
         </div>
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
             <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
-            <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" defVal="{{ $wantedMap->barbarianEnabledDefault() }}" class="form-check-input resetable" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
             <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
         </div>
         <div id='default-barbarian-div' class='col-lg-9 input-group'>
@@ -31,18 +37,21 @@
                 <span class='input-group-text colorpicker-input-addon'><i></i></span>
                 <input name='default[barbarian]' type='hidden' id="barbarian-colour" value='{{ $wantedMap->getDefBarbarianColour() }}'/>
             </div>
-            <label class='form-control'>{{ __('tool.map.defaultBarbarian') }}</label>
+            <label class='form-control'>
+                <i class="fas fa-undo mr-2 map-reset" newValue="{{ $wantedMap->getDefResetBarbarianColour() }}" data-toggle="tooltip" title="{{ __('tool.map.resetDefault') }}"></i>
+                {{ __('tool.map.defaultBarbarian') }}
+            </label>
         </div>
     </div>
     <div class="form-inline mb-2">
         <div class="col-lg-3 input-group">
             <input id="map-zoom-auto-hid" name="zoomAutoHere" type="hidden" value="true" />
-            <input id="map-zoom-auto" name="zoomAuto" type="checkbox" class="form-check-input" {{ ($wantedMap->autoDimensions)?('checked="checked"'):('') }}/>
+            <input id="map-zoom-auto" name="zoomAuto" type="checkbox" defVal="true" class="form-check-input resetable" {{ ($wantedMap->autoDimensions)?('checked="checked"'):('') }}/>
             <label for="map-zoom-auto">{{ __('tool.map.autoZoom') }}</label>
         </div>
         <div class="col-lg-3 input-group">
             <label for="map-zoom-value" class="mr-2">{{ __('tool.map.zoom') }}</label>
-            <select class="form-control" id="map-zoom-value" name="zoomValue">
+            <select class="form-control resetable" defVal="{{ $defMapDimensions['w'] }}" id="map-zoom-value" name="zoomValue">
                 <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
                 <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
                 <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
@@ -57,28 +66,31 @@
         </div>
         <div id="center-pos-div" class="input-group col-lg-6 mb-2">
             <label for="center-pos-x" class="col-lg-4">{{ __('tool.map.center') }}</label>
-            <input id="center-pos-x" name="centerX" class="form-control mr-1" placeholder="500" type="text" value="{{ $mapDimensions['cx'] }}"/>|
-            <input id="center-pos-y" name="centerY" class="form-control ml-1" placeholder="500" type="text" value="{{ $mapDimensions['cy'] }}"/>
+            <input id="center-pos-x" name="centerX" class="form-control mr-1 resetable" defVal="{{ $defMapDimensions['cx'] }}" placeholder="{{ $defMapDimensions['cx'] }}" type="text" value="{{ $mapDimensions['cx'] }}"/>|
+            <input id="center-pos-y" name="centerY" class="form-control ml-1 resetable" defVal="{{ $defMapDimensions['cy'] }}" placeholder="{{ $defMapDimensions['cy'] }}" type="text" value="{{ $mapDimensions['cy'] }}"/>
         </div>
     </div>
     <div class="form-inline mb-2 col-lg-6">
         <label for="markerFactor" class="col-lg-auto">{{ ucfirst(__('tool.map.markerFactor')) }}</label>
-        <input type="range" class="custom-range w-auto flex-lg-fill" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
+        <input type="range" class="custom-range w-auto flex-lg-fill resetable" defVal="{{ $wantedMap->makerFactorDefault() }}" min="0" max="0.4" step="0.01" id="markerFactor" value="{{ $wantedMap->makerFactor }}" name="markerFactor">
         <div id="markerFactorText" class="ml-4">{{ intval($wantedMap->markerFactor*100) }}%</div>
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-4">
             <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
-            <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input resetable" defVal="true" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
             <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
         </div>
-        <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
-            <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
-            <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input" {{ ($wantedMap->shouldUpdate)?('checked="checked"'):('') }}/>
-            <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
-        </div>
+        @if($mapType == "map")
+            <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
+                <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
+                <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input resetable" defVal="false" {{ ($wantedMap->shouldUpdate)?('checked="checked"'):('') }}/>
+                <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
+            </div>
+        @endif
     </div>
     <div class="form-group float-right">
+        <button id="resetAll" context="{{ $key }}" class="btn btn-sm btn-warning mr-4">{{ __('tool.map.resetDefault') }}</button>
         <input type="submit" class="btn btn-sm btn-success">
     </div>
 </div>
@@ -90,7 +102,9 @@
             $('#checkbox-show-player').change(store);
             $('#checkbox-show-barbarian').change(store);
             $('#checkbox-continent-numbers').change(store);
-            $('#checkbox-auto-update').change(store);
+            @if($mapType == "map")
+                $('#checkbox-auto-update').change(store);
+            @endif
             $('#map-zoom-auto').change(store);
             $('#map-zoom-value').change(store);
             $('#center-pos-x').change(store);
@@ -102,6 +116,31 @@
                 $("#markerFactorText").text(parseInt(slideEvt.target.value*100) + "%");
             });
         @endif
+        
+        $('.colour-picker-map').on('colorpickerCreate', function(e) {
+            $('.map-reset', $(this).parent()).click(function(ein) {
+                e.colorpicker.setValue($(this).attr("newValue"));
+                
+                @if($wantedMap->cached_at === null)
+                    store();
+                @endif
+            });
+        });
+        
+        $('#resetAll').click(function(e) {
+            var context = $("#" + $(this).attr("context"));
+            $(".map-reset", context).trigger("click");
+            
+            $(".resetable").each(function() {
+                var def = $(this).attr("defVal");
+                if($(this).attr("type") == "checkbox") {
+                    this.checked = def;
+                } else {
+                    $(this).val(def);
+                    $(this).trigger("input");
+                }
+            })
+        });
     });
 </script>
 @endpush

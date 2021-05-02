@@ -256,6 +256,7 @@ Attackcount: %ELEMENT_COUNT%
 Please close and open the Drawing area
 If that problem persists please create a bug-report',
     'autoZoom' => 'automatic zoom',
+    'resetDefault' => 'reset',
   ),
   'pointCalc' => 
   array (

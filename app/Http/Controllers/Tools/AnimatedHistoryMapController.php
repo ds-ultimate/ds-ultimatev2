@@ -137,6 +137,7 @@ class AnimatedHistoryMapController extends BaseController
         ];
         $mode = 'edit';
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
+        $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
         $ownMaps = array();
         if(\Auth::check()) {
@@ -145,7 +146,7 @@ class AnimatedHistoryMapController extends BaseController
         
         $histIdxs = (new HistoryIndex())->setTable("$dbName.index")->get();
         
-        return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs'));
+        return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
     
     public function show(AnimHistMapMap $wantedMap) {
@@ -160,6 +161,7 @@ class AnimatedHistoryMapController extends BaseController
         ];
         $mode = 'show';
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
+        $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
         $ownMaps = array();
         if(\Auth::check()) {
@@ -168,7 +170,7 @@ class AnimatedHistoryMapController extends BaseController
         
         $histIdxs = (new HistoryIndex())->setTable("$dbName.index")->get();
         
-        return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs'));
+        return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
 
     public function save(AnimHistMapMap $wantedMap) {

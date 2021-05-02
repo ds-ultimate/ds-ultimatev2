@@ -46,6 +46,7 @@ class MapController extends BaseController
                 if(isset($profile->map_markerFactor)) $mapModel->markerFactor = $profile->map_markerFactor;
             }
         }
+        $mapModel->markerFactor = $mapModel->makerFactorDefault();
         $mapModel->edit_key = Str::random(40);
         $mapModel->show_key = Str::random(40);
         $mapModel->save();
@@ -132,13 +133,14 @@ class MapController extends BaseController
         $mode = 'edit';
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
+        $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
         $ownMaps = array();
         if(\Auth::check()) {
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
 
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps'));
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
     public function show(Map $wantedMap){
@@ -151,13 +153,14 @@ class MapController extends BaseController
         $mode = 'show';
         $server = $worldData->server->code;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
+        $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
         $ownMaps = array();
         if(\Auth::check()) {
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
 
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps'));
+        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
     public function save(Map $wantedMap) {

@@ -172,6 +172,10 @@ class Map extends Model
                 return $parts[1];
             }
         }
+        return $this->getDefResetPlayerColour();
+    }
+
+    public function getDefResetPlayerColour() {
         return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
 
@@ -182,6 +186,10 @@ class Map extends Model
                 return $parts[2];
             }
         }
+        return $this->getDefResetBarbarianColour();
+    }
+
+    public function getDefResetBarbarianColour() {
         return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
 
@@ -192,6 +200,10 @@ class Map extends Model
                 return $parts[0];
             }
         }
+        return $this->getDefResetBackgroundColour();
+    }
+
+    public function getDefResetBackgroundColour() {
         return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR);
     }
 
@@ -213,11 +225,15 @@ class Map extends Model
 
     public function barbarianEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return true;
+            return barbarianEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
         return $parts[2] != "null";
+    }
+
+    public function barbarianEnabledDefault() {
+        return true;
     }
 
     public function disablePlayer() {
@@ -231,11 +247,15 @@ class Map extends Model
 
     public function playerEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return true;
+            return playerEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
         return $parts[1] != "null";
+    }
+
+    public function playerEnabledDefault() {
+        return true;
     }
 
     public function continentNumbersEnabled() {
@@ -368,6 +388,10 @@ class Map extends Model
             $layers[] = AbstractMapGenerator::$LAYER_DRAWING;
         }
         return $layers;
+    }
+    
+    public function makerFactorDefault() {
+        return 0.2;
     }
 
     public static function checkHex($hex) {

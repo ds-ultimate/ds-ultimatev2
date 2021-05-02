@@ -480,9 +480,46 @@
     <script>
         /* Map settings */
         $(function() {
-            $('.colour-picker-map').colorpicker({
-                useHashPrefix: false
-            });
+            $('.colour-picker-map')
+                .colorpicker({
+                    useHashPrefix: false,
+                    template: '<div class="colorpicker">' +
+                        '<div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div>' +
+                        '<div class="colorpicker-hue"><i class="colorpicker-guide"></i></div>' +
+                        '<div class="colorpicker-bar"><input class="color-io" type="text"></div>' +
+                        '</div>',
+                    extensions: [{
+                        name: 'swatches',
+                        options: {
+                            colors: {
+                                'c11': '#ffffff', 'c12': '#eeece1', 'c13': '#d99694', 'c14': '#c0504d', 'c15': '#f79646', 'c16': '#ffff00', 'c17': '#9bbb59',
+                                'c21': '#4bacc6', 'c22': '#548dd4', 'c23': '#1f497d', 'c24': '#8064a2', 'c25': '#f926e5', 'c26': '#7f6000', 'c27': '#000000',
+                            },
+                            namesAsValues: false
+                        }
+                    }]
+                })
+                .on('colorpickerChange', function(e) {
+                    var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+                    var io = $(".color-io", $("#" + popID));
+
+                    if (e.value === io.val() || !e.color || !e.color.isValid()) {
+                        // do not replace the input value if the color is invalid or equals
+                        return;
+                    }
+
+                    io.val(e.color.string());
+                    // initialize the input on colorpicker creation
+                })
+                .on("colorpickerShow", function(e) {
+                    var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+                    var io = $(".color-io", $("#" + popID));
+                    io.val(e.color.string());
+
+                    io.on('change keyup', function () {
+                        e.colorpicker.setValue(io.val());
+                    });
+                });
 
             $('.colour-picker-map').on('colorpickerHide', storeMapSettings);
             $('.map-settings-input').change(storeMapSettings);

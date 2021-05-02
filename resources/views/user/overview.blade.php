@@ -76,18 +76,18 @@
                                 <div class="col-2">
                                     @if (count($maps) > 0)
                                     <div id="map-own-side-panel">
-                                        <a id="editButtonMap" href="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
+                                        <a id="editButtonMap" href="{{ route('tools.map.mode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}" class="btn btn-success mb-2 w-100">{{ __('global.edit') }}</a>
                                         <a id="deleteButtonMap" data-toggle="confirmation" data-content="{{ __('user.confirm.destroy.mapContent') }}" class="btn btn-danger mb-2 w-100">{{ __('global.delete') }}</a>
                                         <label class="mt-3">{{ __('tool.map.editLink') }}:</label>
                                         <div class="input-group mb-2">
-                                            <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}">
+                                            <input id="editLinkMap" type="text" class="form-control" value="{{ route('tools.map.mode', [$maps->get(0)->id, 'edit', $maps->get(0)->edit_key]) }}">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('editLinkMap')"><i class="far fa-copy"></i></span>
                                             </div>
                                         </div>
                                         <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                         <div class="input-group mb-2">
-                                            <input id="showLinkMap" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$maps->get(0)->id, 'show', $maps->get(0)->show_key]) }}">
+                                            <input id="showLinkMap" type="text" class="form-control" value="{{ route('tools.map.mode', [$maps->get(0)->id, 'show', $maps->get(0)->show_key]) }}">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMap')"><i class="far fa-copy"></i></span>
                                             </div>
@@ -293,10 +293,10 @@
                                 </div>
                                 <div class="col-2">
                                     @if (count($mapsFollow) > 0)
-                                    <a id="showButtonMapFollow" href="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.map.show') }}</a>
+                                    <a id="showButtonMapFollow" href="{{ route('tools.map.mode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}" class="btn btn-primary mb-2 w-100">{{ __('tool.map.show') }}</a>
                                     <label class="mt-3">{{ __('tool.map.showLink') }}:</label>
                                     <div class="input-group mb-2">
-                                        <input id="showLinkMapFollow" type="text" class="form-control" value="{{ route('tools.mapToolMode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}">
+                                        <input id="showLinkMapFollow" type="text" class="form-control" value="{{ route('tools.map.mode', [$mapsFollow->get(0)->id, 'show', $mapsFollow->get(0)->show_key]) }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('showLinkMapFollow')"><i class="far fa-copy"></i></span>
                                         </div>

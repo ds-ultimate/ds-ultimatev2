@@ -158,7 +158,8 @@
         var edit = $('#title-edit');
         var save = $('#title-save');
         var t = (input.val() === '')? '{{ __('ui.noTitle') }}': input.val();
-        axios.post('{{ route('index') }}/tools/map/{{ $wantedMap->id }}/title/{{ $wantedMap->edit_key }}/' + t, {
+        axios.post('{{ route("tools.$mapType.modePost", [$wantedMap->id, 'title', $wantedMap->edit_key]) }}', {
+            'title': t
         })
             .then((response) => {
                 input.hide();
@@ -167,7 +168,6 @@
                 edit.show();
             })
             .catch((error) => {
-                console.log(error);
             });
     }
     
@@ -192,11 +192,8 @@
         $('.change-all').change(function(e) {
             $('.'+this.attributes['aria-for'].nodeValue).prop('checked', this.checked);
         });
-        addCustomLibs(null);
         
-        @if($wantedMap->cached_at === null)
-            $('.data-input-map').change(store);
-        @endif
+        addCustomLibs(null);
     });
     
     var maxIndex = {
@@ -217,6 +214,7 @@
             var newElm = $('#'+parts[0]+'-mark-model-area')[0].value;
             $('#main-'+parts[0]).append(newElm.replace(/model/gi, maxIndex[parts[0]]));
             var par = $('#'+parts[0]+'-mark-'+maxIndex[parts[0]]+'-div');
+            
             addCustomLibs(par);
         }
     }
@@ -254,13 +252,22 @@
                 $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val('');
             });
     }
-
+    
+    @php
+    $topRoute = ($mapType == "animHistMap")?("Top"):("");
+    @endphp
+    
     function addCustomLibs(context) {
+        @if($wantedMap->cached_at === null)
+            if(context != null) addStoreNewElements(context);
+            $('.data-input-map', context).change(store);
+        @endif
+        
         context = (context)?($(context)):($(document));
 
         $('.select2-player', context).select2({
             ajax: {
-                url: '{{ route("api.select2Player", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Player$topRoute", [$worldData->server->code, $worldData->name]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,
@@ -278,7 +285,7 @@
         });
         $('.select2-ally', context).select2({
             ajax: {
-                url: '{{ route("api.select2Ally", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Ally$topRoute", [$worldData->server->code, $worldData->name]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,
@@ -295,60 +302,60 @@
             theme: "bootstrap4"
         });
 
-        $('.colour-picker-map', context).colorpicker({
-            useHashPrefix: false,
-            template: '<div class="colorpicker">' +
-                '<div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div>' +
-                '<div class="colorpicker-hue"><i class="colorpicker-guide"></i></div>' +
-                '<div class="colorpicker-bar"><input class="color-io" type="text"></div>' +
-                '</div>',
-            extensions: [{
-                name: 'swatches',
-                options: {
-                    colors: {
-                        'c11': '#ffffff', 'c12': '#eeece1', 'c13': '#d99694', 'c14': '#c0504d', 'c15': '#f79646', 'c16': '#ffff00', 'c17': '#9bbb59',
-                        'c21': '#4bacc6', 'c22': '#548dd4', 'c23': '#1f497d', 'c24': '#8064a2', 'c25': '#f926e5', 'c26': '#7f6000', 'c27': '#000000',
-                    },
-                    namesAsValues: false
+        $('.colour-picker-map', context)
+            .colorpicker({
+                useHashPrefix: false,
+                template: '<div class="colorpicker">' +
+                    '<div class="colorpicker-saturation"><i class="colorpicker-guide"></i></div>' +
+                    '<div class="colorpicker-hue"><i class="colorpicker-guide"></i></div>' +
+                    '<div class="colorpicker-bar"><input class="color-io" type="text"></div>' +
+                    '</div>',
+                extensions: [{
+                    name: 'swatches',
+                    options: {
+                        colors: {
+                            'c11': '#ffffff', 'c12': '#eeece1', 'c13': '#d99694', 'c14': '#c0504d', 'c15': '#f79646', 'c16': '#ffff00', 'c17': '#9bbb59',
+                            'c21': '#4bacc6', 'c22': '#548dd4', 'c23': '#1f497d', 'c24': '#8064a2', 'c25': '#f926e5', 'c26': '#7f6000', 'c27': '#000000',
+                        },
+                        namesAsValues: false
+                    }
+                }]
+            })
+            .on('colorpickerChange', function(e) {
+                var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+                var io = $(".color-io", $("#" + popID));
+
+                if (e.value === io.val() || !e.color || !e.color.isValid()) {
+                    // do not replace the input value if the color is invalid or equals
+                    return;
                 }
-            }]
-        });
-        
-        $('.colour-picker-map').on('colorpickerChange', function(e) {
-            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
-            var io = $(".color-io", $("#" + popID));
 
-            if (e.value === io.val() || !e.color || !e.color.isValid()) {
-                // do not replace the input value if the color is invalid or equals
-                return;
-            }
+                io.val(e.color.string());
+                // initialize the input on colorpicker creation
+            })
+            .on("colorpickerShow", function(e) {
+                var popID = $("span", e.colorpicker.element).attr("aria-describedby");
+                var io = $(".color-io", $("#" + popID));
+                io.val(e.color.string());
 
-            io.val(e.color.string());
-            // initialize the input on colorpicker creation
-        });
-        $('.colour-picker-map').on("colorpickerShow", function(e) {
-            var popID = $("span", e.colorpicker.element).attr("aria-describedby");
-            var io = $(".color-io", $("#" + popID));
-            io.val(e.color.string());
-
-            io.on('change keyup', function () {
-                e.colorpicker.setValue(io.val());
+                io.on('change keyup', function () {
+                    e.colorpicker.setValue(io.val());
+                });
             });
-        });
         
-        $('.data-input-map').change(function() {
+        $('.data-input-map', context).change(function() {
             if(this.value != null && this.value != "") {
                 addNewParts(this, null);
             }
         });
 
-        $('.checked-data-input-map').change(function() {
+        $('.checked-data-input-map', context).change(function() {
             if(this.value != null && this.value != "") {
                 checkPart(this, null);
             }
         });
         
-        $('.coord-data-input').bind('paste', function(e) {
+        $('.coord-data-input', context).bind('paste', function(e) {
             var target = this.id.substring(0, this.id.lastIndexOf("-"));
             var pastedData = e.originalEvent.clipboardData.getData('text');
             var coords = pastedData.split("|");
