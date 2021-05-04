@@ -84,7 +84,7 @@ class WorldHistory
         $file = gzopen($toFile, "w9");
         if($file === false ) {
             echo "Unable to open file for $dbName";
-            return;
+            return false;
         }
         $written = 0;
         foreach($res as $entry) {
@@ -106,7 +106,8 @@ class WorldHistory
         
         if($written == 0) {
             unlink($toFile);
+            return false;
         }
-        return false;
+        return true;
     }
 }
