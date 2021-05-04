@@ -20,14 +20,16 @@ class WorldHistory
         } else {
             $date = Carbon::now()->format("Y-m-d");
         }
-        static::runInternal($dbName, $date, "v", $isSpeed);
-        static::runInternal($dbName, $date, "p", $isSpeed);
-        static::runInternal($dbName, $date, "a", $isSpeed);
+        $retVal = static::runInternal($dbName, $date, "v", $isSpeed);
+        $retVal &= static::runInternal($dbName, $date, "p", $isSpeed);
+        $retVal &= static::runInternal($dbName, $date, "a", $isSpeed);
 
-        $histIdx = new HistoryIndex();
-        $histIdx->setTable($dbName . ".index");
-        $histIdx->date = $date;
-        $histIdx->save();
+        if($retVal) {
+            $histIdx = new HistoryIndex();
+            $histIdx->setTable($dbName . ".index");
+            $histIdx->date = $date;
+            $histIdx->save();
+        }
     }
     
     private static function runInternal($dbName, $date, $part, $isSpeed) {
@@ -84,6 +86,7 @@ class WorldHistory
             echo "Unable to open file for $dbName";
             return;
         }
+        $written = 0;
         foreach($res as $entry) {
             //Check date
             if($isSpeed) {
@@ -94,10 +97,16 @@ class WorldHistory
             }
             if($date == $entryDate) {
                 gzwrite($file, $entryCallback($entry) . "\n");
+                $written++;
             } else {
                 echo "Warning wrong date found $dbName $fromTable $part -> $date / $entryDate\n";
             }
         }
         gzclose($file);
+        
+        if($written == 0) {
+            unlink($toFile);
+        }
+        return false;
     }
 }
