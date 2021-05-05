@@ -61,7 +61,7 @@
                                     <tr>
                                         <th>{{ \App\Util\BasicFunctions::numberConv($playerData->rank) }}</th>
                                         <td>{{ \App\Util\BasicFunctions::decodeName($playerData->name) }}</td>
-                                        <td>{!! ($playerData->ally_id != 0)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
+                                        <td>{!! ($playerData->ally_id != 0 && $playerData->allyLatest !== null)?\App\Util\BasicFunctions::linkAlly($worldData, $playerData->ally_id, \App\Util\BasicFunctions::outputName($playerData->allyLatest->tag)) : '-' !!}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
                                         <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>

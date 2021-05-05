@@ -11,7 +11,6 @@ use App\Server;
 use App\Util\BasicFunctions;
 use App\World;
 use Illuminate\Support\Facades\App;
-use phpDocumentor\Reflection\Type;
 
 
 class ContentController extends Controller

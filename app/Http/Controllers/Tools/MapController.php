@@ -32,7 +32,7 @@ class MapController extends BaseController
             //only allow one map without title per user per world
             $uniqueMap = $mapModel->where('world_id', $worldData->id)->where('user_id', \Auth::user()->id)->whereNull('title')->first();
             if($uniqueMap != null) {
-                return redirect()->route('tools.mapToolMode', [$uniqueMap->id, 'edit', $uniqueMap->edit_key]);
+                return redirect()->route('tools.map.mode', [$uniqueMap->id, 'edit', $uniqueMap->edit_key]);
             }
         }
 
