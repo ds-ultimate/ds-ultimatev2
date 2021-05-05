@@ -13,64 +13,64 @@ class Navigation
             foreach(World::worldsCollection($serverArg) as $worlds) {
                 $worldNav = [];
                 foreach($worlds as $world) {
-                    $worldNav[] = self::navElement($world->displayName(), 'world', [$world->server->code, $world->name], false);
+                    $worldNav[] = self::navElement($world->displayName(), 'world', routeArgs: [$world->server->code, $world->name], translated: false);
                 }
                 if($worlds->get(0)->sortType() == "casual") {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.casualWorlds', $worldNav);
+                    $serverNav[] = self::navDropdown(title: 'ui.tabletitel.casualWorlds', subelements: $worldNav);
                 } else if($worlds->get(0)->sortType() == "speed") {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.speedWorlds', $worldNav);
+                    $serverNav[] = self::navDropdown(title: 'ui.tabletitel.speedWorlds', subelements: $worldNav);
                 } else if($worlds->get(0)->sortType() == "classic") {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.classicWorlds', $worldNav);
+                    $serverNav[] = self::navDropdown(title: 'ui.tabletitel.classicWorlds', subelements: $worldNav);
                 } else {
-                    $serverNav[] = self::navDropdown('ui.tabletitel.normalWorlds', $worldNav);
+                    $serverNav[] = self::navDropdown(title: 'ui.tabletitel.normalWorlds', subelements: $worldNav);
                 }
             }
-            $retArray[] = self::navElement('ui.titel.worldOverview', 'server', [$serverArg]);
-            $retArray[] = self::navDropdown('ui.server.worlds', $serverNav);
+            $retArray[] = self::navElement('ui.titel.worldOverview', 'server', routeArgs: [$serverArg]);
+            $retArray[] = self::navDropdown(title: 'ui.server.worlds', subelements: $serverNav);
         }
 
         if($worldArg !== null) {
             $serverCodeName = [$worldArg->server->code, $worldArg->name];
-            $retArray[] = self::navDropdown('ui.server.ranking', [
+            $retArray[] = self::navDropdown(title: 'ui.server.ranking', subelements: [
                 self::navElement('ui.tabletitel.top10', 'world', $serverCodeName),
-                self::navElement(ucfirst(__('ui.table.player')) . " (" . __('ui.nav.current') . ")", 'worldPlayer', $serverCodeName, false),
-                self::navElement(ucfirst(__('ui.table.player')) . " (" . __('ui.nav.history') . ")", 'rankPlayer', $serverCodeName, false),
-                self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.current') . ")", 'worldAlly', $serverCodeName, false),
-                self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.history') . ")", 'rankAlly', $serverCodeName, false),
+                self::navElement(ucfirst(__('ui.table.player')) . " (" . __('ui.nav.current') . ")", 'worldPlayer', routeArgs: $serverCodeName, translated: false),
+                self::navElement(ucfirst(__('ui.table.player')) . " (" . __('ui.nav.history') . ")", 'rankPlayer', routeArgs: $serverCodeName, translated: false),
+                self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.current') . ")", 'worldAlly', routeArgs: $serverCodeName, translated: false),
+                self::navElement(ucfirst(__('ui.table.ally')) . " (" . __('ui.nav.history') . ")", 'rankAlly', routeArgs: $serverCodeName, translated: false),
             ]);
-            $retArray[] = self::navDropdown('ui.conquer.all', [
-                self::navElement(ucfirst(__('ui.conquer.all')) . " " . __('ui.nav.history'), 'worldConquer', [$worldArg->server->code, $worldArg->name, 'all'], false),
-                self::navElement('ui.conquer.daily', 'conquerDaily', [$worldArg->server->code, $worldArg->name]),
+            $retArray[] = self::navDropdown(title: 'ui.conquer.all', subelements: [
+                self::navElement(ucfirst(__('ui.conquer.all')) . " " . __('ui.nav.history'), 'worldConquer', routeArgs: [$worldArg->server->code, $worldArg->name, 'all'], translated: false),
+                self::navElement('ui.conquer.daily', 'conquerDaily', routeArgs: $serverCodeName, nofollow: true),
             ]);
         }
 
         $tools = [];
         if($worldArg !== null) {
             if($worldArg->config != null && $worldArg->units != null) {
-                $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', $serverCodeName);
-                $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', $serverCodeName);
+                $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', routeArgs: $serverCodeName);
+                $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', routeArgs: $serverCodeName, nofollow: true);
             } else {
                 $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.missingConfig');
                 $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
-            $tools[] = self::navElement('tool.map.title', 'tools.mapNew', $serverCodeName);
+            $tools[] = self::navElement('tool.map.title', 'tools.mapNew', routeArgs: $serverCodeName, nofollow: true);
 
             if($worldArg->config != null && $worldArg->buildings != null) {
-                $tools[] = self::navElement('tool.pointCalc.title', 'tools.pointCalc', $serverCodeName);
+                $tools[] = self::navElement('tool.pointCalc.title', 'tools.pointCalc', routeArgs: $serverCodeName);
             } else {
-                $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
+                $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.missingConfig');
             }
-            $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', $serverCodeName);
+            $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', routeArgs: $serverCodeName);
 
             if($worldArg->config != null && $worldArg->units != null) {
-                $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', $serverCodeName);
+                $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index_world', routeArgs: $serverCodeName);
             } else {
                 $tools[] = self::navElementDisabled('tool.accMgrDB.title', 'ui.nav.disabled.missingConfig');
             }
             
             
             if(\Gate::allows('anim_hist_map_beta')) {
-                $tools[] = self::navElement('tool.animHistMap.title', 'tools.animHistMap.create', $serverCodeName);
+                $tools[] = self::navElement('tool.animHistMap.title', 'tools.animHistMap.create', routeArgs: $serverCodeName, nofollow: true);
             }
         } else {
             $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.noWorld');
@@ -84,30 +84,30 @@ class Navigation
                 $tools[] = self::navElementDisabled('tool.animHistMap.title', 'ui.nav.disabled.noWorld');
             }
         }
-        $retArray[] = self::navDropdown('ui.server.tools', $tools);
+        $retArray[] = self::navDropdown(title: 'ui.server.tools', subelements: $tools);
 
         return $retArray;
     }
 
     public static function generateMobileNavArray($serverArg, $worldArg) {
         $navArray = self::generateNavArray($serverArg, $worldArg);
-        $navArray[] = self::navDropdown('ui.language', [
-            self::navElement('Deutsch', 'locale', ['de'], false, 'flag-icon flag-icon-de'),
-            self::navElement('English', 'locale', ['en'], false, 'flag-icon flag-icon-gb'),
+        $navArray[] = self::navDropdown(title: 'ui.language', subelements: [
+            self::navElement('Deutsch', 'locale', routeArgs: ['de'], translated: false, icon: 'flag-icon flag-icon-de'),
+            self::navElement('English', 'locale', routeArgs: ['en'], translated: false, icon: 'flag-icon flag-icon-gb'),
         ]);
         if(\Auth::check()) {
             $userOpt = [];
-            $userOpt[] = self::navElement('ui.titel.overview', 'user.overview', ['myMap']);
+            $userOpt[] = self::navElement('ui.titel.overview', 'user.overview', routeArgs: ['myMap']);
             if(\Gate::allows('dashboard_access')) {
                 $userOpt[] = self::navElement('user.dashboard', 'admin.home');
             }
             if(\Gate::allows('translation_access')) {
             //    $userOpt[] = self::navElement('user.translations', 'translations');
             }
-            $userOpt[] = self::navElement('ui.personalSettings.title', 'user.settings', ['settings-profile']);
+            $userOpt[] = self::navElement('ui.personalSettings.title', 'user.settings', routeArgs: ['settings-profile']);
             $userOpt[] = self::navElement('user.logout', 'logout');
 
-            $navArray[] = self::navDropdown(\Auth::user()->name , $userOpt, false);
+            $navArray[] = self::navDropdown(title: \Auth::user()->name , subelements: $userOpt, translated: false);
         } else {
             $navArray[] = self::navElement('user.login', 'login');
             $navArray[] = self::navElement('user.register', 'register');
@@ -115,7 +115,7 @@ class Navigation
         return $navArray;
     }
 
-    public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null) {
+    public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null, $nofollow=false) {
         $id = str_replace(".", "", $title);
         if($translated) {
             $title = ucfirst(__($title));
@@ -128,6 +128,7 @@ class Navigation
             'icon' => $icon,
             'tooltip' => null,
             'enabled' => true,
+            'noFollow' => $nofollow,
         ];
     }
 
@@ -147,6 +148,7 @@ class Navigation
             'icon' => null,
             'tooltip' => $tooltip,
             'enabled' => false,
+            'noFollow' => false,
         ];
     }
 

@@ -15,7 +15,7 @@ Route::get('/{server}/{world}/tools/distanceCalc', [\App\Http\Controllers\Tools\
 
 
 //Attack planner
-Route::get('/{server}/{world}/tools/attackPlanner', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
+Route::get('/tools/create/attackPlanner/{server}/{world}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
 
 Route::resource('/tools/attackPlanner/attackListItem',\App\Http\Controllers\Tools\AttackPlannerItemController::class, [
     'only' => ['store', 'destroy', 'update'],
@@ -31,7 +31,7 @@ Route::delete('/tools/attackPlanner/{attackList}/{key}', [\App\Http\Controllers\
 
 
 //Map Tool
-Route::get('/{server}/{world}/tools/map/create', [\App\Http\Controllers\Tools\MapController::class, 'new'])->name('mapNew');
+Route::get('/tools/create/map/{server}/{world}', [\App\Http\Controllers\Tools\MapController::class, 'new'])->name('mapNew');
 Route::post('/tools/map/{wantedMap}/title/{key}/{title}', [\App\Http\Controllers\Tools\MapController::class, 'title'])->name('mapTitle');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'mode'])->name('map.mode');
 Route::post('/tools/map/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'modePost'])->name('map.modePost');
@@ -65,7 +65,7 @@ Route::post('/tools/accMgrDB/api/rating/{template}', [\App\Http\Controllers\Tool
 
 
 //Animated world history map
-Route::get('/{server}/{world}/tools/animHistMap/create', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'create'])->name('animHistMap.create');
+Route::get('/tools/create/animHistMap/{server}/{world}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'create'])->name('animHistMap.create');
 Route::get('/tools/animHistMap/renderStatus/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'renderStatus'])->name('animHistMap.renderStatus');
 Route::get('/tools/animHistMap/renderRerun/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'renderRerun'])->name('animHistMap.renderRerun');
 Route::get('/tools/animHistMap/api/renderStatus/{wantedJob}/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'apiRenderStatus'])->name('animHistMap.apiRenderStatus');

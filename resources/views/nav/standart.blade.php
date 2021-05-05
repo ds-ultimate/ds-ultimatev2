@@ -7,7 +7,7 @@ function generateMenuEntry($entry, $level=0) {
         @if($level==0)
             <li class="nav-item">
                 @if($entry['enabled'])
-                    <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
+                    <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}"@if($entry['noFollow']) rel="nofollow"@endif>{{ $entry['title']}}</a>
                 @else
                     <span class="nav-link d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
                         <a id="{{ $entry['id'] }}" class="nav-link btn-link disabled nav-tooltip" href="#">{{ $entry['title']}}</a>
@@ -17,7 +17,7 @@ function generateMenuEntry($entry, $level=0) {
         @else
             <li id="{{ $entry['id'] }}-cont" class="dropdown-item">
                 @if($entry['enabled'])
-                    <a id="{{ $entry['id'] }}" href="{{ $entry['link'] }}">{{ $entry['title']}}</a>
+                    <a id="{{ $entry['id'] }}" href="{{ $entry['link'] }}"@if($entry['noFollow']) rel="nofollow"@endif>{{ $entry['title']}}</a>
                 @else
                     <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
                         <a id="{{ $entry['id'] }}" class="btn-link disabled" href="#">{{ $entry['title']}}</a>
@@ -62,12 +62,12 @@ function generateMobileMenuEntry($entry, $level=0) {
         ?>
         <li class="nav-item">
             @if($entry['enabled'])
-                <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}" style="padding-left: {{ $level * 10 }}px">
+                <a id="{{ $entry['id'] }}" class="nav-link" href="{{ $entry['link'] }}" style="padding-left: {{ $level * 10 }}px"@if($entry['noFollow']) rel="nofollow"@endif>
                     @isset($entry['icon'])<span class="{{ $entry['icon'] }} mr-1"></span>@endisset{{ $entry['title']}}
                 </a>
             @else
                 <span class="d-inline-block nav-tooltip" title="{{ $entry['tooltip'] }}">
-                    <a id="{{ $entry['id'] }}" class="nav-link btn-link disabled" style="padding-left: {{ $level * 10 }}px">
+                    <a id="{{ $entry['id'] }}" class="nav-link btn-link disabled" style="padding-left: {{ $level * 10 }}px"@if($entry['noFollow']) rel="nofollow"@endif>
                         @isset($entry['icon'])<span class="{{ $entry['icon'] }} mr-1"></span>@endisset{{ $entry['title']}}
                     </a>
                 </span>
