@@ -170,8 +170,8 @@ class InsertMissingSpeedHistoryData extends Command
                 if(isset($villages[$date])) {
                     $villages[$date][$entry->villageID] = $entry;
                 } else {
-                    echo "Village date without player: $date";
-                    die();
+                    //echo "Village date without player: $date";
+                    //die();
                 }
             }
             $bar->advance();

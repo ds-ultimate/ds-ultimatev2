@@ -172,7 +172,7 @@ class GenerateTopsFromHist extends Command
                 foreach($values as $val) {
                     if($elm[$val[4]] == "") continue;
                     if( ($val[3] > 0 && $curModel->{$val[1]} < $elm[$val[4]]) ||
-                        ($val[3] < 0 && $curModel->{$val[1]} > $elm[$val[4]])) {
+                        ($val[3] < 0 && $curModel->{$val[1]} > $elm[$val[4]] && $elm[$val[4]] > 0)) {
                         $curModel->{$val[1]} = $elm[$val[4]];
                         $curModel->{$val[2]} = $date;
                     }
