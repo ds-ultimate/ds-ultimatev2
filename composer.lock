@@ -398,6 +398,7 @@
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
             },
+            "default-branch": true,
             "bin": [
                 "bin/doctrine-dbal"
             ],
@@ -1286,16 +1287,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v3.15.8",
+            "version": "v3.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "cae7735e67acf738881c02ca12604cc4a7ad2e5a"
+                "reference": "29d9722e5c3b4d21b49acd820ac486e2b92096df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/cae7735e67acf738881c02ca12604cc4a7ad2e5a",
-                "reference": "cae7735e67acf738881c02ca12604cc4a7ad2e5a",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/29d9722e5c3b4d21b49acd820ac486e2b92096df",
+                "reference": "29d9722e5c3b4d21b49acd820ac486e2b92096df",
                 "shasum": ""
             },
             "require": {
@@ -1325,9 +1326,9 @@
             ],
             "support": {
                 "issues": "https://github.com/protocolbuffers/protobuf-php/issues",
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.15.8"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.16.0"
             },
-            "time": "2021-04-08T17:17:35+00:00"
+            "time": "2021-05-07T01:06:10+00:00"
         },
         {
             "name": "google/recaptcha",
@@ -3720,16 +3721,16 @@
         },
         {
             "name": "spatie/laravel-cookie-consent",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-cookie-consent.git",
-                "reference": "a59d7f5da84235df2dce057a22bbc6b198ef8a0f"
+                "reference": "132239a1752d6ac03bb61dcaea85acfa483a84cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/a59d7f5da84235df2dce057a22bbc6b198ef8a0f",
-                "reference": "a59d7f5da84235df2dce057a22bbc6b198ef8a0f",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/132239a1752d6ac03bb61dcaea85acfa483a84cb",
+                "reference": "132239a1752d6ac03bb61dcaea85acfa483a84cb",
                 "shasum": ""
             },
             "require": {
@@ -3786,7 +3787,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-cookie-consent/issues",
-                "source": "https://github.com/spatie/laravel-cookie-consent/tree/3.0.0"
+                "source": "https://github.com/spatie/laravel-cookie-consent/tree/3.0.1"
             },
             "funding": [
                 {
@@ -3794,20 +3795,20 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-03-26T13:20:00+00:00"
+            "time": "2021-05-06T11:18:45+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
-            "version": "1.6.3",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-package-tools.git",
-                "reference": "97b53951e9623b3e38babf274c335913bf320a1a"
+                "reference": "a28108b61dac8a83de6c97f09a5a1e98f4d75522"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/97b53951e9623b3e38babf274c335913bf320a1a",
-                "reference": "97b53951e9623b3e38babf274c335913bf320a1a",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/a28108b61dac8a83de6c97f09a5a1e98f4d75522",
+                "reference": "a28108b61dac8a83de6c97f09a5a1e98f4d75522",
                 "shasum": ""
             },
             "require": {
@@ -3846,7 +3847,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-package-tools/issues",
-                "source": "https://github.com/spatie/laravel-package-tools/tree/1.6.3"
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.7.0"
             },
             "funding": [
                 {
@@ -3854,7 +3855,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-27T06:17:34+00:00"
+            "time": "2021-05-06T21:49:32+00:00"
         },
         {
             "name": "stichoza/google-translate-php",
