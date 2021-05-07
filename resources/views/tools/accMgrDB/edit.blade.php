@@ -115,7 +115,7 @@
 
     $(function() {
         $.each($('.droptrue-list').get(), function (k,v) {
-            sortable.create(v, {
+            sortable.Sortable.create(v, {
                 group: 'lists',
                 animation: 300,
                 handle: '.handle', // handle's class
@@ -171,7 +171,19 @@
         $('#removeIgno_church').change(saveFalse);
         $('#removeIgno_church_f').change(saveFalse);
         $('#removeIgno_watchtower').change(saveFalse);
+        
+        var timeTitle = -1;
+        $('#name').on('input', function(e) {
+            if(timeTitle != -1) {
+                clearTimeout(timeTitle);
+            }
+            timeTitle = setTimeout(function() {
+                saveFalse(e);
+                timeTitle = -1;
+            }, 500);
+        })
     })
+    
     
     function hotbarEvents() {
         $('.buildHotbar').click(function() {
