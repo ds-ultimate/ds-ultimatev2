@@ -130,10 +130,17 @@ class DoGenerateTops
                     }
                 }
                 foreach($values as $val) {
-                    if( ($val[3] > 0 && $curModel->{$val[1]} < $elm->{$val[0]}) ||
-                        ($val[3] < 0 && $curModel->{$val[1]} > $elm->{$val[0]})) {
-                        $curModel->{$val[1]} = $elm->{$val[0]};
-                        $curModel->{$val[2]} = $elm->created_at;
+                    if($val[3] > 0) {
+                        if($curModel->{$val[1]} < $elm->{$val[0]}) {
+                            $curModel->{$val[1]} = $elm->{$val[0]};
+                            $curModel->{$val[2]} = $elm->created_at;
+                        }
+                    } else if($val[3] < 0) {
+                        if(($curModel->{$val[1]} > $elm->{$val[0]} && $elm->{$val[0]} > 0) ||
+                                $curModel->{$val[1]} <= 0) {
+                            $curModel->{$val[1]} = $elm->{$val[0]};
+                            $curModel->{$val[2]} = $elm->created_at;
+                        }
                     }
                 }
                 $i++;
