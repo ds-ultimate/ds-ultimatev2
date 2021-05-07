@@ -106,6 +106,7 @@ abstract class AbstractMapGenerator extends PictureRender {
         $this -> setPlayerColour(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
         $this -> setBarbarianColour(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
         $this -> setBackgroundColour(AbstractMapGenerator::$DEFAULT_BACKGROUND_COLOUR);
+        $this -> setGridColour(AbstractMapGenerator::$DEFAULT_GRID_COLOUR);
         $this -> setAutoResize(false);
         $this -> setMarkerFactor(0.2);
     }
@@ -588,6 +589,17 @@ abstract class AbstractMapGenerator extends PictureRender {
             $this->backgroundColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
             if(count($col) > 3)
                 $this->backgroundColour[] = (int) $col[3];
+        }
+        return $this;
+    }
+    
+    public function setGridColour($col) {
+        if($col == null) {
+            return false;
+        } else {
+            $this->gridColour = array((int) $col[0], (int) $col[1], (int) $col[2]);
+            if(count($col) > 3)
+                $this->gridColour[] = (int) $col[3];
         }
         return $this;
     }
