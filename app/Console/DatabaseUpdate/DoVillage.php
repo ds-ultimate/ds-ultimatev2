@@ -81,7 +81,6 @@ class DoVillage
                 }
             }
         }
-
         $count = count($array);
 
         $world->village_count = $count;

@@ -11,15 +11,11 @@ class CustomModel extends Model
         parent::__construct($attributes);
     }
 
-    public function myhasMany($related, $foreignKey = null, $localKey = null, $table)
+    public function myhasMany($related, $foreignKey, $localKey, $table)
     {
         $instance = $this->newRelatedInstance($related);
 
         $instance->setTable($table);
-
-        $foreignKey = $foreignKey ?: $this->getForeignKey();
-
-        $localKey = $localKey ?: $this->getKeyName();
 
         return $this->newHasMany(
             $instance->newQuery(), $this, $instance->getTable().'.'.$foreignKey, $localKey
@@ -29,7 +25,7 @@ class CustomModel extends Model
     /*
      * Angepasste Funktion für die Ablageart der DB
      * */
-    public function mybelongsTo($related, $foreignKey = null, $ownerKey = null, $table, $relation = null)
+    public function mybelongsTo($related, $foreignKey, $ownerKey, $table, $relation = null)
     {
         if (is_null($relation)) {
             $relation = $this->guessBelongsToRelation();
@@ -40,9 +36,7 @@ class CustomModel extends Model
         if (is_null($foreignKey)) {
             $foreignKey = Str::snake($relation).'_'.$instance->getKeyName();
         }
-
-        $ownerKey = $ownerKey ?: $instance->getKeyName();
-
+        
         $instance->setTable($table);
 
         return $this->newBelongsTo(

@@ -106,6 +106,7 @@ class WorldHistory
         
         if($written == 0) {
             unlink($toFile);
+            echo "Nothing written returning error";
             return false;
         }
         return true;

@@ -21,7 +21,7 @@ class DoWorldData
     public static function run(World $world, $parts){
         $allGood = true;
         foreach(explode(",", $parts) as $part) {
-            if(static::updateWorldData($world, $part)) {
+            if(!static::updateWorldData($world, $part)) {
                 $allGood = false;
             }
         }
@@ -36,7 +36,7 @@ class DoWorldData
             $statistic->daily_updates = 1;
             $statistic->save();
         }
-
+        
         if($allGood && $world->isSpeed()) {
             //save history data every time
             WorldHistory::run($world->server->code, $world->name, true);
