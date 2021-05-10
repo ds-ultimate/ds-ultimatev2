@@ -158,9 +158,8 @@
         var edit = $('#title-edit');
         var save = $('#title-save');
         var t = (input.val() === '')? '{{ __('ui.noTitle') }}': input.val();
-        axios.post('{{ route("tools.$mapType.modePost", [$wantedMap->id, 'title', $wantedMap->edit_key]) }}', {
-            'title': t
-        })
+        var convData = "title=" + encodeURIComponent(t);
+        axios.post('{{ route("tools.$mapType.modePost", [$wantedMap->id, 'title', $wantedMap->edit_key]) }}', convData)
             .then((response) => {
                 input.hide();
                 save.hide();

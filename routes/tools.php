@@ -32,7 +32,6 @@ Route::delete('/tools/attackPlanner/{attackList}/{key}', [\App\Http\Controllers\
 
 //Map Tool
 Route::get('/tools/create/map/{server}/{world}', [\App\Http\Controllers\Tools\MapController::class, 'new'])->name('mapNew');
-Route::post('/tools/map/{wantedMap}/title/{key}/{title}', [\App\Http\Controllers\Tools\MapController::class, 'title'])->name('mapTitle');
 Route::get('/tools/map/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'mode'])->name('map.mode');
 Route::post('/tools/map/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'modePost'])->name('map.modePost');
 Route::delete('/tools/map/{wantedMap}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'destroy'])->name('mapDestroy');

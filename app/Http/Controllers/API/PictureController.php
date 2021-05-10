@@ -26,12 +26,12 @@ class PictureController extends Controller
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
-            return "Invalid type";
+            abort(400, "Invalid type");
         }
         
         $allyData = Ally::ally($server, $world, $allyID);
         if ($allyData == null) {
-            return "Ally not Found";
+            abort(400, "Ally not Found");
         }
         
         $rawStatData = Ally::allyDataChart($server, $world, $allyID);
@@ -54,12 +54,12 @@ class PictureController extends Controller
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
-            return "Invalid type";
+            abort(400, "Invalid type");
         }
         
         $playerData = Player::player($server, $world, $playerID);
         if ($playerData == null) {
-            return "Player not Found";
+            abort(400, "Ally not Found");
         }
         
         $rawStatData = Player::playerDataChart($server, $world, $playerID);
@@ -81,12 +81,12 @@ class PictureController extends Controller
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
         if (!Chart::validType($type)) {
-            return "Invalid type";
+            abort(400, "Invalid type");
         }
         
         $villageData = Village::village($server, $world, $villageID);
         if ($villageData == null) {
-            return "Village not Found";
+            abort(400, "Ally not Found");
         }
         
         $rawStatData = Village::villageDataChart($server, $world, $villageID);
@@ -123,18 +123,26 @@ class PictureController extends Controller
     private function decodeDimensions($width, $height)
     {
         if($width == 'w') {
-            return array(
+            $retArr = [
                 'width' => $height,
-            );
+            ];
         } else if($width == 'h') {
-            return array(
+            $retArr = [
                 'height' => $height,
-            );
+            ];
         } else {
-            return array(
+            $retArr = [
                 'width' => $width,
                 'height' => $height,
-            );
+            ];
+        }
+        
+        if(isset($retArr['width']) && $retArr['width'] <= 0) {
+            abort(400, "Width too small");
+        }
+        
+        if(isset($retArr['height']) && $retArr['height'] <= 0) {
+            abort(400, "Height too small");
         }
     }
     

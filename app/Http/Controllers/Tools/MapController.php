@@ -118,6 +118,9 @@ class MapController extends BaseController
             case 'saveCanvas':
                 abort_unless($key == $wantedMap->edit_key, 403);
                 return $this->saveCanvas($wantedMap);
+            case 'title':
+                abort_unless($key == $wantedMap->edit_key, 403);
+                return $this->saveTitle($wantedMap);
             default:
                 abort(404);
         }
@@ -249,6 +252,14 @@ class MapController extends BaseController
         }
 
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
+    }
+
+    public static function saveTitle(Map $wantedMap){
+        $getArray = $_POST;
+        abort_unless(isset($getArray['title']), 404);
+        
+        $wantedMap->title = $getArray['title'];
+        $wantedMap->save();
     }
 
     public static function getMapDimension($dimensions) {
@@ -406,12 +417,6 @@ class MapController extends BaseController
         }
 
         return view('content.mapTop10', compact('worldData', 'server', 'ps'));
-    }
-
-    public static function title(Map $wantedMap, $key, $title){
-        abort_unless($wantedMap->edit_key == $key, 403);
-        $wantedMap->title = $title;
-        $wantedMap->save();
     }
 
     public function destroy(Map $wantedMap, $key){
