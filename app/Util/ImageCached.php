@@ -24,7 +24,9 @@ class ImageCached extends PictureRender {
             $img_width = $std_aspect * $img_height;
         }
         
-        $image = imagecreate(round($img_width, 0), round($img_height, 0));
+        $image = imagecreatetruecolor(round($img_width, 0), round($img_height, 0));
+        imagealphablending($image, true); //needed to work with alpha values
+        imagesavealpha($image, true);
         if($image === false) die("Error");
 
         $this -> basePath = $basePath;
