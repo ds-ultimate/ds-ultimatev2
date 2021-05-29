@@ -94,7 +94,7 @@
                             <tr>
                                 <td><span class="flag-icon flag-icon-{{ $serverData->flag }}"></span></td>
                                 <td>{{ $serverData->code }}</td>
-                                <td style="word-break: break-all;"><a href="{{$serverData->url}}">{{ $serverData->url }}</a></td>
+                                <td style="word-break: break-all;"><a target="_blank" href="{{$serverData->url}}">{{ $serverData->url }}</a></td>
                                 <td>{{ $serverData->worlds->count() }}</td>
                                 <td><a href="{{ route('server', [$serverData->code]) }}" class="btn btn-primary btn-sm">{{ __('ui.server.show') }}</a></td>
                             </tr>
