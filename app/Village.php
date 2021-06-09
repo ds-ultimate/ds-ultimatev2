@@ -64,6 +64,14 @@ class Village extends CustomModel
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
+        return static::pureVillageDataChart($villageDataArray);
+    }
+
+    /**
+     * @param array $villageDataArray
+     * @return \Illuminate\Support\Collection
+     */
+    public static function pureVillageDataChart($villageDataArray){
         $villageDatas = collect();
 
         foreach ($villageDataArray as $village){
@@ -74,6 +82,16 @@ class Village extends CustomModel
         }
 
         return $villageDatas;
+    }
+    
+    public function getHistoryData() {
+        $villageID = (int) $this->villageID;
+        $tableNr = $villageID % config('dsUltimate.hash_village');
+        $villageModel = new Village();
+        $villageModel->setTable(str_replace("latest", $tableNr, $this->getTable()));
+        
+        $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
+        return $villageDataArray;
     }
 
     /**

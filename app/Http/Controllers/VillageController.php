@@ -19,12 +19,30 @@ class VillageController extends Controller
         $villageData = Village::village($server, $world, $village);
         abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
                 "auf der Welt '$server$world' vorhanden.");
-
-        $datas = Village::villageDataChart($server, $world, $village);
+        
+        $villageHistData = $villageData->getHistoryData();
+        $datas = Village::pureVillageDataChart($villageHistData);
         $chartJS = Chart::generateChart($datas, 'points');
         $conquer = Conquer::villageConquerCounts($server, $world, $village);
+        
+        $villageHistory = [];
+        $last = null;
+        $pointBuildingMap = \App\Util\BuildingUtils::getPointBuildingMap();
+        foreach($villageHistData as $vilHist) {
+            $pntChange = $vilHist->points - ($last->points ?? 0);
+            if($pntChange == 0) continue;
+            
+            $villageHistory[] = [
+                "date" => $vilHist->created_at,
+                "points" => $vilHist->points,
+                "pointChange" => $pntChange,
+                "time" => $last!==null ? $last->created_at->diff($vilHist->created_at)->format("%hh") : "-",
+                "possibleChanges" => $pointBuildingMap[$pntChange] ?? null,
+            ];
+            $last = $vilHist;
+        }
 
-        return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS', 'server'));
+        return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS', 'server', 'villageHistory'));
     }
     
     public function conquer($server, $world, $type, $villageID){

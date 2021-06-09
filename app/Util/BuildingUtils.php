@@ -150,4 +150,20 @@ class BuildingUtils {
         $props = static::$BUILDINGS[$buildingName];
         return round($props[$propName] * pow($props[$propName."_factor"], $level-1));
     }
+    
+    public static function getPointBuildingMap() {
+        $map = [];
+        foreach(static::$BUILDINGS as $name => $settings) {
+            for($i = max($settings['min_level'], 1); $i <= $settings['max_level']; $i++) {
+                $pnt = round($settings['point'] * pow($settings['point_factor'], $i-1));
+                $pnt_last = $i>1 ? round($settings['point'] * pow($settings['point_factor'], $i-2)) : 0;
+                $pnt_diff = $pnt - $pnt_last;
+                if(! isset($map[$pnt_diff])) {
+                    $map[$pnt_diff] = [];
+                }
+                $map[$pnt_diff][] = [$name, $i];
+            }
+        }
+        return $map;
+    }
 }

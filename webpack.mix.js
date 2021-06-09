@@ -20,6 +20,7 @@ let safelist =
     /.*page.*/,
     /.*popover.*/,
     /.*datepicker.*/,
+    /.*tooltip.*/,
     /.*cookie-consent.*/,
     "arrow",
     "fade",

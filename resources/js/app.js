@@ -17,6 +17,9 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
+    
+    var jqeBsTooltip = $.fn.tooltip.noConflict();
+    $.fn.tlp = jqeBsTooltip;
 } catch (e) {}
 
 /**

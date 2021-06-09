@@ -69,6 +69,7 @@ return array (
     'classicWorlds' => 'Classic Welten',
     'speedWorlds' => 'Speed Runden',
     'casualWorlds' => 'Casual Welten',
+    'history' => 'Ausbauverlauf',
   ),
   'table' => 
   array (
@@ -105,6 +106,8 @@ return array (
     'supDeff' => 'Unterstützung',
     'allyKillsPercent' => 'Kills/Stamm',
     'playerPointPercent' => 'Kills/Punkte',
+    'time' => 'Zeit',
+    'possibleChanges' => 'Ausbaumöglichkeiten',
   ),
   'server' => 
   array (
@@ -290,5 +293,10 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'tabeltitel' => 
   array (
     'allyBashRanking' => 'Interne Basherliste',
+  ),
+  'village' => 
+  array (
+    'histUnknown' => 'Unbekannt',
+    'histPossibilities' => 'Möglichkeiten',
   ),
 );

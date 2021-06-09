@@ -43,6 +43,8 @@ return array (
     'supDeff' => 'support',
     'allyKillsPercent' => 'Kills/Ally',
     'playerPointPercent' => 'Kills/Points',
+    'possibleChanges' => 'Possible buildings',
+    'time' => 'Time',
   ),
   'allyChanges' => 
   array (
@@ -104,6 +106,7 @@ return array (
     'casualWorlds' => 'Casual worlds',
     'classicWorlds' => 'Classic worlds',
     'speedWorlds' => 'Speed worlds',
+    'history' => 'Build history',
   ),
   'titel' => 
   array (
@@ -290,5 +293,10 @@ It is not specified which village you have to give the name to, but it must belo
   'tabeltitel' => 
   array (
     'allyBashRanking' => 'Internal list of Bashpoints',
+  ),
+  'village' => 
+  array (
+    'histPossibilities' => 'possibilities',
+    'histUnknown' => 'unknown',
   ),
 );

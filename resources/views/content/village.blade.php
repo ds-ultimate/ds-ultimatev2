@@ -81,6 +81,60 @@
             </div>
         </div>
         <!-- ENDE Besiegte Punkte Chart -->
+        <!-- Dorfausbau Tabelle -->
+        <div class="col-12 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ucfirst(__('ui.tabletitel.history'))}}</h4>
+                    <table id="datahist" class="table table-bordered no-wrap w-100">
+                        <thead>
+                        <tr>
+                            <th>{{ ucfirst(__('ui.table.date')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.time')) }}</th>
+                            <th>{{ ucfirst(__('ui.table.possibleChanges')) }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($villageHistory as $vilHist)
+                            <tr>
+                                <td>{{ $vilHist["date"] }}</td>
+                                <td>
+                                    {{ $vilHist["points"] }}
+                                    @if($vilHist["pointChange"] > 0)
+                                        (<span class="text-success"> +{{ $vilHist["pointChange"] }} </span>)
+                                    @else
+                                        (<span class="text-danger"> {{ $vilHist["pointChange"] }} </span>)
+                                    @endif
+                                </td>
+                                <td>{{ $vilHist["time"] }}</td>
+                                <td>
+                                    @if($vilHist["possibleChanges"] == null)
+                                        {{ __('ui.village.histUnknown') }}
+                                    @else
+                                        @if(count($vilHist["possibleChanges"]) <= 1)
+                                            <img src='{{ \app\Util\BuildingUtils::getImage($vilHist["possibleChanges"][0][0], \app\Util\BuildingUtils::BUILDING_SIZE_SMALL, $vilHist["possibleChanges"][0][1]) }}'>
+                                            {{ __('ui.buildings.' . $vilHist["possibleChanges"][0][0]) }} ({{ $vilHist["possibleChanges"][0][1] }})
+                                        @else
+                                            <span data-toggle="bs-tooltip" data-placement="right" data-html="true" title="
+                                                @foreach($vilHist["possibleChanges"] as $data)
+                                                    <img src='{{ \app\Util\BuildingUtils::getImage($data[0], \app\Util\BuildingUtils::BUILDING_SIZE_SMALL, $data[1]) }}'>
+                                                    {{ __('ui.buildings.' . $data[0]) }} ({{ $data[1] }})<br>
+                                                @endforeach
+                                                    ">
+                                                {{ count($vilHist["possibleChanges"]) }} {{ __('ui.village.histPossibilities') }}
+                                            </span>
+                                        @endif
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- ENDE Dorfausbau Tabelle -->
     </div>
 @endsection
 
@@ -110,6 +164,22 @@
 
                 keys: true, //enable KeyTable extension
             });
+            $('#datahist').DataTable({
+                columnDefs: [
+                    {"targets": 0, "className": 'text-right'},
+                    {"targets": 1, "className": 'text-center'},
+                    {"targets": 2, "className": 'text-center'},
+                    {"targets": 3, "className": 'text-center'},
+                ],
+                dom: 't',
+                ordering: true,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+            
+            $('[data-toggle="bs-tooltip"]').tlp();
         } );
     </script>
     {!! $chartJS !!}
