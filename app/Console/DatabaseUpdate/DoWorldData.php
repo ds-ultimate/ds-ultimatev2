@@ -5,6 +5,7 @@ namespace App\Console\DatabaseUpdate;
 use App\World;
 use App\WorldStatistic;
 use App\Notifications\DiscordNotificationQueueElement;
+use App\Util\BasicFunctions;
 use App\Util\HTTPRequests;
 use App\Console\DatabaseUpdate\DoAlly;
 use App\Console\DatabaseUpdate\DoConquer;
