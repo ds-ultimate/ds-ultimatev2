@@ -70,7 +70,7 @@ class DoAlly
             $allyDefs->put($id, $allyDef);
         }
 
-        $tots = DoWorldData::loadGzippedFile($world, "kill_def_tribe.txt.gz", $minTime);
+        $tots = DoWorldData::loadGzippedFile($world, "kill_all_tribe.txt.gz", $minTime);
         if($tots === false) return false;
         foreach ($tots as $tot){
             $tot = trim($tot);
