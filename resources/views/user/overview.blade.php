@@ -49,7 +49,7 @@
                         <div class="tab-pane fade {{ ($page == 'myMap')? 'show active' : '' }}" id="myMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
                                 <div class="col-4">
-                                    @if(count($animatedMaps) > 0)
+                                    @if(count($maps) > 0)
                                     <div class="list-group" id="ownMaps" role="tablist">
                                         @foreach($maps as $map)
                                             <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="map-{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home">
@@ -486,7 +486,7 @@
         
         function switchRenderedAnimatedMap(id) {
             $('#imgRenderedAnimatedMap').attr('src', renderedAnimatedMapRoutes[id][0]);
-            $('#editButtonAnimatedMap').attr('href', renderedAnimatedMapRoutes[id][1]);
+            $('#editButtonRenderedAnimatedMap').attr('href', renderedAnimatedMapRoutes[id][1]);
             renderedAnimatedMapDelete = renderedAnimatedMapRoutes[id][2];
             renderedAnimatedMapId = id;
         }
