@@ -242,6 +242,9 @@ function generateMobileMenuEntry($entry, $level=0) {
     });
     $(function () {
         $('.nav-tooltip').tooltip();
+        $(".navbar-nav .dropdown-item a").parent().click(function (e) {
+            window.location.href = $(">a", this)[0].href;
+        })
     })
 </script>
 @endpush

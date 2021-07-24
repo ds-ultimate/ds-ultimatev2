@@ -23,8 +23,8 @@ return array (
     'rank' => 'Rang',
     'village' => 'Dörfer',
     'gesBash' => 'Insgesamt',
-    'offBash' => 'Angreifer Punkte',
-    'defBash' => 'Verteidiger Punkte',
-    'supBash' => 'Unterstützer Punkte',
+    'offBash' => 'Angreiferpunkte',
+    'defBash' => 'Verteidigerpunkte',
+    'supBash' => 'Unterstützerpunkte',
   ),
 );

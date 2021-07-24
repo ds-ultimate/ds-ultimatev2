@@ -172,7 +172,7 @@ return array (
     'disabled' => 
     array (
       'missingConfig' => 'Dieses Feature ist bei der ausgewählten Welt nicht verfügbar.',
-      'noWorld' => 'Um dieses Feature nutzen zu können muss eine Welt ausgewählt werden',
+      'noWorld' => 'Um dieses Feature nutzen zu können, muss eine Welt ausgewählt werden',
     ),
   ),
   'ingame' => 
@@ -214,12 +214,12 @@ return array (
     'birthday' => 'Geburtstag',
     'skype' => 'Skype Name',
     'discord' => 'Discord Name',
-    'connectionVerified' => 'Die Verbindung ist bestätigt',
+    'connectionVerified' => 'Die Verbindung ist bestätigt.',
     'saveSettingsSuccess' => 'Die Änderungen sind erfolgreich übernommen worden',
     'connectionDestroy' => 'Die Verbindung ist aufgelöst',
     'connectionNiceTroll' => '<img src="https://www.kotzendes-einhorn.de/blog/wp-content/uploads/2014/02/Troll-face.png" height="200" width="200">',
-    'connectionTooEarly' => 'Warte auf die nächste Aktualisierung der Welt',
-    'connectionSuccess' => 'Die Verbindung ist erfolgreich bestätigt',
+    'connectionTooEarly' => 'Warte auf die nächste Aktualisierung der Welt.',
+    'connectionSuccess' => 'Die Verbindung ist erfolgreich bestätigt.',
     'connectionError' => 'Die Verbindung konnte nicht bestätigt werden, bitte überprüfe ob der Dorfname richtig gesetzt ist',
     'skypeShow' => 'Skype Name anzeigen',
     'discordShow' => 'Discord Name anzeigen',
@@ -230,20 +230,20 @@ return array (
 <br>
 Wenn du dich mit einem Konto verbunden hast, kannst du dich auch damit anmelden.
 <br>
-Falls du dich mit <b>Discord</b> verbindest, hast du die Möglichkeit unseren Discord Bot zu benutzen.
+Falls du dich mit <b>Discord</b> verbindest, hast du die Möglichkeit, unseren Discord Bot zu benutzen.
 <br>
-Es werden weitere Funktionen auf der Seite folgen, in denen wir den Bot mit ein beziehen werden.',
-    'connection_help' => 'Hier kannst du deine Stämme Konto verifizieren.
+Es werden weitere Funktionen auf der Seite folgen, in denen wir den Bot mit einbeziehen werden.',
+    'connection_help' => 'Hier kannst du dein Stämmekonto verifizieren.
 (Diese Verifizierung ist nur pro Welt möglich) 
 <br>
-Um das zu machen musst du die Welt mit dem Spieler Namen angeben und der Liste hinzufügen.
+Um das zu machen, musst du die Welt mit dem Spieler Namen angeben und der Liste hinzufügen.
 <br>
 Sobald die Verbindung in der Liste ist, generiert DS-Ultimate eine zufällige Zeichenkette.
 <br>
 Diese Zeichenkette muss dann als Dorfname gesetzt werden.
 <br>
-Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt kannst du die Verbindung bestätigen lassen.',
-    'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung trennen',
+Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt, kannst du die Verbindung bestätigen lassen.',
+    'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung trennen.',
     'map' => 'Welkartenvorlage',
   ),
   'follow' => 
@@ -288,7 +288,7 @@ Es wird nicht vorgegeben welchem Dorf man den namen geben muss aber es muss zum 
   'showPointDiff' => '120er-Bereich anzeigen',
   'index' => 
   array (
-    'help' => 'Um die meisten Funktionen der Seite nutzen zu können, musst du einen Server und eine Welt auswählen',
+    'help' => 'Um die meisten Funktionen der Seite nutzen zu können, musst du einen Server und eine Welt auswählen.',
   ),
   'tabeltitel' => 
   array (

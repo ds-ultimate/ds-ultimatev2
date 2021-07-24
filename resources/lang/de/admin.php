@@ -8,7 +8,7 @@ return array (
     'id' => 'ID',
     'code' => 'Kürzel',
     'flag' => 'Flagge',
-    'url' => 'Aktualisierungs url',
+    'url' => 'Aktualisierungsurl',
     'active' => 'Updates aktiv',
     'titleCreate' => 'Server erstellen',
     'update' => 'Server editieren',
@@ -33,13 +33,13 @@ return array (
     'id' => 'ID',
     'version' => 'Version',
     'form_title' => 'Title',
-    'url' => 'Github link',
+    'url' => 'Githublink',
     'icon' => 'Symbol',
     'color' => 'Farbe',
     'created' => 'Erstellt am',
     'update' => 'Änderungsprotokoll bearbeiten',
     'content' => 'Text',
-    'buffer' => 'Skript ausgabe',
+    'buffer' => 'Skriptausgabe',
     'show' => 'Änderungsprotokoll ansehen',
   ),
   'userManagement' => 
@@ -48,7 +48,7 @@ return array (
   ),
   'serverManagement' => 
   array (
-    'title' => 'Update einstellungen',
+    'title' => 'Update Einstellungen',
   ),
   'worlds' => 
   array (
@@ -57,7 +57,7 @@ return array (
     'id' => 'ID',
     'server' => 'Server',
     'name' => 'Name',
-    'url' => 'Update url',
+    'url' => 'Updateurl',
     'active' => 'Updates aktiv',
     'update' => 'Letzte Aktualisierung',
     'clean' => 'Letztes aufräumen',
@@ -88,7 +88,7 @@ return array (
     'statusSelect' => 
     array (
       'open' => 'Offen',
-      'inprogress' => 'in bearbeitung',
+      'inprogress' => 'in Bearbeitung',
       'resolved' => 'Erledigt',
       'close' => 'Geschlossen',
     ),
@@ -112,12 +112,12 @@ return array (
     'create' => 'Neuen Benutzer anlegen',
     'titleCreate' => 'Nutzer anlegen',
     'update' => 'Nutzer bearbeiten',
-    'show' => 'User anzeigen',
+    'show' => 'Benutzer anzeigen',
     'name' => 'Benutzername',
     'email' => 'E-Mail',
     'password' => 'Passwort',
     'roles' => 'Rollen',
-    'verified' => 'E-Mail Adresse ist verifiziert',
+    'verified' => 'E-Mailadresse ist verifiziert',
     'email_verified_at' => 'Verifiziert am',
   ),
   'bugreports' => 

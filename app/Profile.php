@@ -145,7 +145,37 @@ class Profile extends Model
     }
 
     public static $CONQUER_HIGHLIGHT_MAPPING = [
-        's' => 'self', 'i' => 'internal', 'b' => 'barbarian', 'd' => 'deleted',
-        'w' => 'win', 'l' => 'loose',
+        's' => 'self',
+        'i' => 'internal',
+        'b' => 'barbarian',
+//        'd' => 'deleted',
+        'w' => 'win',
+        'l' => 'loose',
+    ];
+    public static $CONQUER_HIGHLIGHT_MAPPING_COLORS = [
+        's' => [
+            'rgba(235, 247, 64)',
+            'rgba(235, 247, 64, 0.2)',
+        ],
+        'i' => [
+            'rgba(38, 79, 242)',
+            'rgba(38, 79, 242, 0.2)',
+        ],
+        'b' => [
+            'rgba(140, 140, 140)',
+            'rgba(140, 140, 140, 0.2)',
+        ],
+//        'd' => [
+//            '',
+//            '',
+//        ],
+        'w' => [
+            'rgba(42, 175, 71)',
+            'rgba(42, 175, 71, 0.2)',
+        ],
+        'l' => [
+            'rgba(226, 54, 71)',
+            'rgba(226, 54, 71, 0.2)',
+        ],
     ];
 }

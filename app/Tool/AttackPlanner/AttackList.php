@@ -71,7 +71,7 @@ class AttackList extends Model
     
     public function getTitle() {
         if($this->title == null || $this->title == "") {
-            return ucfirst(__('tool.attackPlanner.title'));
+            return __('tool.attackPlanner.title');
         }
         return $this->title;
     }

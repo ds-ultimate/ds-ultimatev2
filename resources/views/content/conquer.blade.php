@@ -36,6 +36,14 @@
         </div>
         <div class="card">
             <div class="card-body">
+                <div id="legend">
+                    @foreach(\App\Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value)
+                    <div style="width: 1em; height: 1em; background-color: {{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS[$key][0] }}; display: inline-block; border: 1px solid #ccc" ></div>
+                    <span class="mr-4">
+                        {{ $value }}
+                    </span>
+                    @endforeach
+                </div>
                 <table id="table_id" class="table table-hover table-sm w-100">
                     <thead>
                     <tr>
@@ -80,15 +88,15 @@
             ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian
-                    $('td', row).css('background-color', 'rgba(140,140,140,0.2)'); //gray
+                    $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['b'][1] }}'); //gray
                 } else if(data.type == 2 && $('#conquer-highlight-self').hasClass('active')) {//self
-                    $('td', row).css('background-color', 'rrgba(235,247,64,0.2)'); //Yellow
+                    $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['s'][1] }}'); //Yellow
                 } else if(data.type == 1 && $('#conquer-highlight-internal').hasClass('active')) {//internal
-                    $('td', row).css('background-color', 'rgba(38,79,242,0.2)'); //Blue
+                    $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['i'][1] }}'); //Blue
                 } else if(data.winLoose == 1 && $('#conquer-highlight-win').hasClass('active')) {//win
-                    $('td', row).css('background-color', 'rgba(42,175,71,0.2)'); //Green
+                    $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['w'][1] }}'); //Green
                 } else if(data.winLoose == -1 && $('#conquer-highlight-loose').hasClass('active')) {//loose
-                    $('td', row).css('background-color', 'rgba(226,54,71,0.2)'); //Red
+                    $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['l'][1] }}'); //Red
                 }
             },
             responsive: true,

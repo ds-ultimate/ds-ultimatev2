@@ -288,7 +288,7 @@ It is not specified which village you have to give the name to, but it must belo
   'showPointDiff' => 'Show 120% range',
   'index' => 
   array (
-    'help' => 'in order to use most of the functions of this site you need to choose a server and a world',
+    'help' => 'In order to use most of the functions of this site you need to choose a server and a world.',
   ),
   'tabeltitel' => 
   array (

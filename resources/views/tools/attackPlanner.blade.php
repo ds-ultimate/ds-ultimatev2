@@ -30,7 +30,7 @@ $tabList = [
             @auth
             <div class="col-2 position-absolute dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="ownedPlanners" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ ucfirst(__('tool.attackPlanner.fastSwitch')) }}
+                    {{ __('tool.attackPlanner.fastSwitch') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="ownedPlanners">
                     @foreach($ownPlanners as $planner)
