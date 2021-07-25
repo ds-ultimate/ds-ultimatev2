@@ -198,7 +198,7 @@ class TableGeneratorController extends BaseController
 
                 $output .= '[*]'.
                     (($request->get('number'))? $number++.'.[|]':'').
-                    '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
+                    '[player]'. BasicFunctions::decodeName($player->name) .'[/player][|]'.
                     '[coord]'. $village->coordinates() .'[/coord]'.
                     (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):'').
                     str_repeat('[|]', $request->get('columns')) . "\n";

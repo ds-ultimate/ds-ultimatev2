@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('titel', __('tool.distCalc.title'))
+@section('titel', __('tool.tableGenerator.title'))
 
 @push('style')
     <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
