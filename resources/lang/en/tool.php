@@ -270,6 +270,7 @@ If that problem persists please create a bug-report',
     'villageByPlayer' => 'All villages of a player',
     'title' => 'Tables generator',
     'maxSing' => 'The forum accepts max. 1000 the sign "[".<br>The output was therefore divided into several tables',
+    'villageAndPlayerByAlly' => 'All villages of a tribe including the players',
   ),
   'accMgrDB' => 
   array (

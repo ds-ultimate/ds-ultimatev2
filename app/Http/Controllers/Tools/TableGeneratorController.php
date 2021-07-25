@@ -29,8 +29,17 @@ class TableGeneratorController extends BaseController
         return view('tools.tableGenerator', compact('worldData', 'server'));
     }
 
+    private static $alowedFunctions = [
+        "playerByAlly",
+        "villageByPlayer",
+        "villageByAlly",
+        "villageAndPlayerByAlly",
+    ];
     public function data(Request $request){
         $function = $request->get('type');
+        if(!in_array($function, static::$alowedFunctions)) {
+            return \Response::json("Invalid type");
+        }
         $output = $this->$function($request);
         return \Response::json($output);
     }
@@ -156,4 +165,50 @@ class TableGeneratorController extends BaseController
         return $outputArray;
     }
 
+    public function villageAndPlayerByAlly(Request $request){
+        BasicFunctions::local();
+        $world = World::find($request->get('world'));
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
+        $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
+        $start = "[quote][table]\n[**]".
+            (($request->get('number'))? 'Nr.[||]':'').
+            __('ui.table.player').'[||]'.
+            __('ui.table.village').
+            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
+            str_repeat('[||]', $request->get('columns')).
+            "[/**]\n";
+        $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
+        $output = $start;
+        $number = 1;
+        $outputArray = array();
+
+        foreach ($players as $player){
+            $villageModel = new Village();
+            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+            $villages = $villageModel->where('owner', $player->playerID)->orderBy('points', 'desc')->get();
+
+            foreach ($villages as $village){
+                $count = substr_count($output, '[');
+                if ($count > 900){
+                    $output .= $end;
+                    $outputArray[] .= $output;
+                    $output = $start;
+                }
+
+                $output .= '[*]'.
+                    (($request->get('number'))? $number++.'.[|]':'').
+                    '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
+                    '[coord]'. $village->coordinates() .'[/coord]'.
+                    (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):'').
+                    str_repeat('[|]', $request->get('columns')) . "\n";
+            }
+        }
+
+        $output .= $end;
+
+        $outputArray[] .= $output;
+
+        return $outputArray;
+    }
 }

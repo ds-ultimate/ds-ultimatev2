@@ -270,6 +270,7 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
     'villageByAlly' => 'Alle Dörfer eines Stamms',
     'title' => 'Tabellen Generator',
     'maxSing' => 'Das Forum akzeptiert max. 1000 das Zeichen "[".<br>Darum wurde die Ausgabe in mehrere Tabellen unterteilt',
+    'villageAndPlayerByAlly' => 'Alle Dörfer eines Stammes mit ihren Spielern',
   ),
   'accMgrDB' => 
   array (

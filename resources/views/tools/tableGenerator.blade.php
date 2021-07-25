@@ -58,6 +58,12 @@
                                             {{ __('tool.tableGenerator.villageByAlly') }}
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="typRadio" id="typRadio4" value="villageAndPlayerByAlly" data-input="ally">
+                                        <label class="form-check-label" for="typRadio4">
+                                            {{ __('tool.tableGenerator.villageAndPlayerByAlly') }}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
