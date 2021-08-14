@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Tool\Map\Map;
-use App\Util\AbstractMapGenerator;
+use App\Util\Map\AbstractMapGenerator;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model

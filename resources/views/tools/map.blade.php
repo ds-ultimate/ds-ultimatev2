@@ -69,7 +69,7 @@
                     {{ __('tool.map.withoutTitle') }}
                 </div>
             @endif
-            @if($wantedMap->cached_at !== null && $mode == 'edit')
+            @if($wantedMap->isCached() && $mode == 'edit')
                 <div class="card mt-2 p-3">
                     {{ __('tool.map.cached') }}
                 </div>
@@ -133,7 +133,7 @@
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script>
     $(function () {
-        @if($wantedMap->cached_at === null)
+        @if(! $wantedMap->isCached())
             $('#mapEditForm').on('submit', function (e) {
                 e.preventDefault();
                 store();
@@ -143,7 +143,7 @@
         @endif
     });
 
-    @if($wantedMap->cached_at === null)
+    @if(! $wantedMap->isCached())
         function addStoreNewElements(context) {
             $('.colour-picker-map', context).on('colorpickerHide', store);
         }

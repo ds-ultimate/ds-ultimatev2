@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Util;
+namespace App\Util\Map;
 
-use App\Ally;
 use App\HistoryIndex;
-use App\Player;
-use App\Village;
 use App\World;
-use Illuminate\Support\Facades\DB;
+use App\Util\BasicFunctions;
 
 class HistoryMapGenerator extends AbstractMapGenerator {
     private $world;
     
-    public function __construct(World $world, HistoryIndex $histIdx, $dim=null, $show_errs=false) {
-        parent::__construct($dim, $show_errs);
+    public function __construct(World $world, HistoryIndex $histIdx, AbstractSkinRenderer $skin, $dim=null, $show_errs=false) {
+        parent::__construct($skin, $dim, $show_errs);
         $this->world = $world;
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         

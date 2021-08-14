@@ -8,7 +8,7 @@ use App\PlayerTop;
 use App\Village;
 use App\World;
 use App\Tool\Map\Map;
-use App\Util\AbstractMapGenerator;
+use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

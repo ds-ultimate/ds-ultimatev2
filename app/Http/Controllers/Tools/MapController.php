@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Tools;
 
 use App\Tool\Map\Map;
-use App\Util\AbstractMapGenerator;
+use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
 use App\Util\ImageCached;
-use App\Util\SQLMapGenerator;
+use App\Util\Map\SQLMapGenerator;
 use App\World;
 use App\Player;
 
+use Carbon\Carbon;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
 
@@ -274,12 +275,14 @@ class MapController extends BaseController
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
 
-        if($options == null && $wantedMap->cached_at !== null) {
+        if($options == null && $wantedMap->cached_at !== null && (! $wantedMap->isCached() || !$wantedMap->shouldUpdate)) {
             //use cached version
             $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
         } else {
-            $map = new SQLMapGenerator($wantedMap->world, $this->decodeDimensions($width, $height), $this->debug);
+            $skin = new \App\Util\Map\SkinSymbols();
+            $map = new SQLMapGenerator($wantedMap->world, $skin, $this->decodeDimensions($width, $height), $this->debug);
             $wantedMap->prepareRendering($map);
+            $map->setFont("fonts/arial.ttf");
 
             if($options != null) {
                 switch($options) {
@@ -301,9 +304,14 @@ class MapController extends BaseController
                         break;
                     default:
                 }
+            } else {
+                $map->renderAtNative();
+                $map->saveTo(storage_path(config('tools.map.cacheDir').$wantedMap->id), "png");
+                $wantedMap->cached_at = Carbon::now();
+                $wantedMap->save();
+                
+                $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
             }
-
-            $map->setFont("fonts/arial.ttf");
         }
 
         $map->render();

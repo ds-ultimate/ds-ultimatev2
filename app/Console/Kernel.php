@@ -118,19 +118,6 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo("storage/logs/cron-critical.log");
 
         /*
-         * Map Caching
-         */
-        $schedule->command("map:cache")
-            ->dailyAt('01:55')
-            ->onSuccess(function (){
-                Log::info('Caching -> Success');
-            })
-            ->onFailure(function (){
-                Log::critical('Caching -> Failture');
-            })
-            ->appendOutputTo("storage/logs/cron-critical.log");
-
-        /*
          * Insert Conquer Data
          */
         $schedule->command("update:insertMissingConquer")

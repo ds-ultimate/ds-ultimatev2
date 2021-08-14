@@ -6,8 +6,9 @@ use App\Ally;
 use App\Player;
 use App\Village;
 use App\World;
-use App\Util\AbstractMapGenerator;
+use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -429,5 +430,9 @@ class Map extends Model
         $hex .= $hexChars[intval(((int)$rgb[2]) / 16)];
         $hex .= $hexChars[((int)$rgb[2]) % 16];
         return $hex;
+    }
+    
+    public function isCached() {
+        return $this->cached_at->diffInSeconds(Carbon::now()) > 24 * 60 * 60;
     }
 }

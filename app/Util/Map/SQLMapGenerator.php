@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Util;
+namespace App\Util\Map;
 
 use App\Ally;
 use App\Player;
-use App\Village;
 use App\World;
+use App\Util\BasicFunctions;
 use Illuminate\Support\Facades\DB;
 
 class SQLMapGenerator extends AbstractMapGenerator {
     private $world;
     
-    public function __construct(World $world, $dim=null, $show_errs=false) {
-        parent::__construct($dim, $show_errs);
+    public function __construct(World $world, AbstractSkinRenderer $skin, $dim=null, $show_errs=false) {
+        parent::__construct($skin, $dim, $show_errs);
         $this->world = $world;
     }
     

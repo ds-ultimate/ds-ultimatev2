@@ -6,9 +6,9 @@ use App\HistoryIndex;
 use App\World;
 use App\Tool\AnimHistMap\AnimHistMapMap;
 use App\Tool\AnimHistMap\AnimHistMapJob;
-use App\Util\AbstractMapGenerator;
+use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
-use App\Util\HistoryMapGenerator;
+use App\Util\Map\HistoryMapGenerator;
 
 use ZipArchive;
 use Carbon\Carbon;
@@ -73,7 +73,8 @@ class AnimatedHistoryMapController extends BaseController
         
         $histModel = HistoryIndex::find($dbName, $histIdx);
         
-        $map = new HistoryMapGenerator($world, $histModel, $dim, $this->debug);
+        $skin = new \App\Util\Map\SkinSymbols();
+        $map = new HistoryMapGenerator($world, $histModel, $skin, $dim, $this->debug);
         
         $wantedMap->prepareRendering($map);
         
@@ -353,7 +354,8 @@ class AnimatedHistoryMapController extends BaseController
             // +3 because gif / mp4 / zip
             $animJob->setState($num, $maxProgress, "image");
             
-            $map = new HistoryMapGenerator($world, $histData[$num], $dim, false);
+            $skin = new \App\Util\Map\SkinSymbols();
+            $map = new HistoryMapGenerator($world, $histData[$num], $skin, $dim, false);
             $animJob->prepareRendering($map);
             $map->render();
             
@@ -445,8 +447,8 @@ class AnimatedHistoryMapController extends BaseController
         $histModel->setTable("$dbName.index");
         $hist = $histModel->orderBy('id', 'desc')->first();
         
-        //we need to pass ../ because we are coming from web with different working dir....
-        $map = new HistoryMapGenerator($world, $hist, $dim, false);
+        $skin = new \App\Util\Map\SkinSymbols();
+        $map = new HistoryMapGenerator($world, $hist, $skin, $dim, false);
         
         $wantedMap->prepareRendering($map);
         $map->setMapDimensions(AbstractMapGenerator::$DEFAULT_DIMENSIONS);

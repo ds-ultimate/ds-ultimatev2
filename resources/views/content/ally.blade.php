@@ -23,6 +23,8 @@
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Informationen -->
         <div class="col-12">
+            Erster name: {{ \App\Util\BasicFunctions::decodeName($allyTop->name) }}<br>
+            Tag: {{ \App\Util\BasicFunctions::decodeName($allyTop->tag) }}
             <div class="card">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
