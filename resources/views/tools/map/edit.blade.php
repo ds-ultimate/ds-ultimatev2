@@ -281,7 +281,7 @@
             allowClear: true,
             placeholder: '{{ ucfirst(__('tool.map.playerSelectPlaceholder')) }}',
             theme: "bootstrap4"
-        });
+        }).on("select2:open", selectAutoFocus);
         $('.select2-ally', context).select2({
             ajax: {
                 url: '{{ route("api.select2Ally$topRoute", [$worldData->server->code, $worldData->name]) }}',
@@ -299,7 +299,7 @@
             allowClear: true,
             placeholder: '{{ ucfirst(__('tool.map.allySelectPlaceholder')) }}',
             theme: "bootstrap4"
-        });
+        }).on("select2:open", selectAutoFocus);
 
         $('.colour-picker-map', context)
             .colorpicker({
@@ -365,6 +365,15 @@
                 $(this).change();
             }
         });
+    }
+    
+    //copied from https://stackoverflow.com/a/67691578
+    function selectAutoFocus(e) {
+        const selectId = e.target.id
+
+        $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (key, value) {
+            value.focus()
+        })
     }
 </script>
 @endpush
