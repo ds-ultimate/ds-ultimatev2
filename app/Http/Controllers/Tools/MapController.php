@@ -328,10 +328,11 @@ class MapController extends BaseController
 
     public function getSizedOverviewMap($server, $world, $type, $id, $width, $height, $ext){
         BasicFunctions::local();
-        $world = World::getWorld($server, $world);
+        World::existWorld($server, $world);
+        $worldData = World::getWorld($server, $world);
 
         $skin = new \App\Util\Map\SkinSymbols();
-        $map = new SQLMapGenerator($world, $skin, $this->decodeDimensions($width, $height), $this->debug);
+        $map = new SQLMapGenerator($worldData, $skin, $this->decodeDimensions($width, $height), $this->debug);
         switch($type) {
             case 'a':
                 $map->markAlly($id, [255, 255, 255], false, true);
@@ -382,13 +383,15 @@ class MapController extends BaseController
 
     public function mapTop10P($server, $world){
         BasicFunctions::local();
-        $world = World::getWorld($server, $world);
+        World::existWorld($server, $world);
+        $worldData = World::getWorld($server, $world);
+        
         $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
+        $playerModel->setTable(BasicFunctions::getDatabaseName($worldData->server->code, $worldData->name).'.player_latest');
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
         $skin = new \App\Util\Map\SkinSymbols();
-        $map = new SQLMapGenerator($world, $skin, $this->decodeDimensions($width, $height), $this->debug);
+        $map = new SQLMapGenerator($worldData, $skin, $this->decodeDimensions(800, 800), $this->debug);
 
         $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
         $i = 0;
@@ -412,14 +415,13 @@ class MapController extends BaseController
     public function mapTop10($server, $world){
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
-
-        $world = World::getWorld($server, $world);
+        
         $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server,$world->name).'.player_latest');
+        $playerModel->setTable(BasicFunctions::getDatabaseName($worldData->server->code, $worldData->name).'.player_latest');
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
         $skin = new \App\Util\Map\SkinSymbols();
-        $map = new SQLMapGenerator($world, $skin, $this->decodeDimensions($width, $height), $this->debug);
+        $map = new SQLMapGenerator($worldData, $skin, $this->decodeDimensions(800, 800), $this->debug);
 
         $color = [[138,43,226],[72,61,139],[69,139,116],[188,143,143],[139,105,105],[244,164,96],[139,35,35],[139,115,85],[139,69,19],[0,100,0]];
 
