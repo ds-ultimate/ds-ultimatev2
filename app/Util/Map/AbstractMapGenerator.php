@@ -127,6 +127,8 @@ abstract class AbstractMapGenerator extends PictureRender {
             gCol: $this->gridColour,
         );
         $skinImage = $this->skin->render();
+        
+        imagefill($this->image, 0, 0, imagecolorallocatealpha($this->image, 0, 0, 0, 127));
         imagecopyresampled($this->image, $skinImage, 0, 0, 0, 0, $this->width, $this->height, imagesx($skinImage), imagesy($skinImage));
         
         $renderTime = round(microtime(true) - $startTime, 3);

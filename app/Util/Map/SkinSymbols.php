@@ -24,9 +24,8 @@ class SkinSymbols extends AbstractSkinRenderer {
         $this->image = $image;
         
         $colour_bg = $this->colAllocate($this->backgroundColour);
-        
-        
         imagefill($this->image, 0, 0, $colour_bg);
+        
         foreach($this->layerOrder as $layer) {
             switch ($layer) {
                 case AbstractMapGenerator::$LAYER_MARK:
@@ -150,7 +149,8 @@ class SkinSymbols extends AbstractSkinRenderer {
     private function renderDrawing() {
         try {
             $drawing_img=imagecreatefromstring($this->drawing_img);
-            
+            imagealphablending($drawing_img, true);
+            imagesavealpha($drawing_img, true);
             imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->imgW, $this->imgH, imagesx($drawing_img), imagesy($drawing_img));
         } catch (\ErrorException $ex) {
             BasicFunctions::local();

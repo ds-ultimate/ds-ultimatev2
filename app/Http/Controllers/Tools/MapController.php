@@ -300,7 +300,7 @@ class MapController extends BaseController
                             $map->setLayerOrder([AbstractMapGenerator::$LAYER_DRAWING]);
                         else
                             $map->setLayerOrder([]);
-                        $map->setBackgroundColour([0,0,0,127]);
+                        $map->setBackgroundColour([0,0,0,0]);
                         break;
                     default:
                 }

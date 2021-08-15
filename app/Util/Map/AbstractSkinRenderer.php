@@ -54,7 +54,7 @@ abstract class AbstractSkinRenderer {
             }
         }
         
-        if($opacity == null) {
+        if($opacity === null) {
             return imagecolorallocate($this->image, $color[0], $color[1], $color[2]);
         }
         return imagecolorallocatealpha($this->image, $color[0], $color[1], $color[2], 127-($opacity)*127/100);
