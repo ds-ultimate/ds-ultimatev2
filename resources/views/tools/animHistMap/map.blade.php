@@ -118,45 +118,48 @@
 <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script>
     $(function () {
-        @if($wantedMap->cached_at === null)
-            $('#mapEditForm').on('submit', function (e) {
-                e.preventDefault();
-                store();
-            });
+        $('#mapEditForm').on('submit', function (e) {
+            e.preventDefault();
+            store();
+        });
 
-            $('.colour-picker-map').on('colorpickerHide', store);
-        @endif
+        $('.colour-picker-map').on('colorpickerHide', store);
     });
 
-    @if($wantedMap->cached_at === null)
-        function addStoreNewElements(context) {
-            $('.colour-picker-map', context).on('colorpickerHide', store);
-        }
+    function addStoreNewElements(context) {
+        $('.colour-picker-map', context).on('colorpickerHide', store);
+    }
 
-        var storing = false;
-        var storeNeeded = false;
-        function store() {
-            if(storing) {
-                storeNeeded = true;
-                return;
-            }
-            storing = true;
-            axios.post('{{ route('tools.animHistMap.modePost', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
-                .then((response) => {
-                    setTimeout(function() {
-                        if(storeNeeded) {
-                            storeNeeded = false
-                            store();
-                        }
-                    }, 400);
-                    storing = false;
-                    reloadMap();
-                })
-                .catch((error) => {
-                    storing = false;
-                });
+    var storing = false;
+    var storeNeeded = false;
+    function store() {
+        if(storing) {
+            storeNeeded = true;
+            return;
         }
-    @endif
+        storing = true;
+        axios.post('{{ route('tools.animHistMap.modePost', [$wantedMap->id, 'save', $wantedMap->edit_key]) }}', $('#mapEditForm').serialize())
+            .then((response) => {
+                mapDimensions = [
+                    response.data.xs,
+                    response.data.ys,
+                    response.data.w,
+                    response.data.h,
+                ];
+                
+                setTimeout(function() {
+                    if(storeNeeded) {
+                        storeNeeded = false
+                        store();
+                    }
+                }, 400);
+                storing = false;
+                reloadMap();
+            })
+            .catch((error) => {
+                storing = false;
+            });
+    }
 </script>
 @endif
 <script>
@@ -210,6 +213,10 @@
                 );
 
                 setTimeout(function() {
+                    $('#previewImage').click(function(e) {
+                        mapClicked(e, this);
+                    });
+
                     var elm = $('#previewContainer')[0];
                     elm.style.widht = "";
                     elm.style.height = "";
@@ -224,6 +231,62 @@
             },
         });
     }
+    
+    var mapDimensions = [
+        {{$mapDimensions['xs']}},
+        {{$mapDimensions['ys']}},
+        {{$mapDimensions['w']}},
+        {{$mapDimensions['h']}},
+    ];
+
+    function mapClicked(e, that) {
+        var xPerc = (e.pageX - $(that).offset().left) / 1000;
+        var yPerc = (e.pageY - $(that).offset().top) / 1000;
+
+        var mapX = Math.floor( mapDimensions[0] + mapDimensions[2]*xPerc );
+        var mapY = Math.floor( mapDimensions[1] + mapDimensions[3]*yPerc );
+
+
+        if($('#map-popup')[0]) {
+            $('#map-popup').remove();
+        }
+        
+        var histIdx = historyIds[parseInt($("#previewSelect").val())][0];
+        var url = '{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoordsPreview/'+ histIdx + '/'+ mapX + '/' + mapY;
+        axios.get(url, {
+        })
+            .then((response) => {
+                const data = response.data.data;
+                var xRel = e.pageX - $($('#previewContainer')[0].parentElement.parentElement).offset().left;
+                var yRel = e.pageY - $($('#previewContainer')[0].parentElement.parentElement).offset().top;
+
+                var popupHTML = '<div id="map-popup">'+
+                    '{{ ucfirst(__('ui.table.name')) }}: <a href="'+data.selfLink+'" target="_blank">'+data.name+'</a><br>'+
+                    '{{ ucfirst(__('ui.table.points')) }}: '+data.points+'<br>'+
+                    '{{ ucfirst(__('ui.table.coordinates')) }}: '+data.coordinates+'<br>';
+
+                if(data.owner != 0) {
+                    popupHTML += '{{ ucfirst(__('ui.table.owner')) }}: <a href="'+data.ownerLink+'" target="_blank">'+data.ownerName+'</a><br>';
+                } else {
+                    popupHTML += '{{ ucfirst(__('ui.table.owner')) }}: '+data.ownerName+'<br>';
+                }
+                console.log(data);
+                if(data.ownerAlly != 0) {
+                    popupHTML += '{{ ucfirst(__('ui.table.ally')) }}: <a href="'+data.ownerAllyLink+'" target="_blank">'+data.ownerAllyName+
+                        '['+data.ownerAllyTag+']</a><br>';
+                } else {
+                    popupHTML += '{{ ucfirst(__('ui.table.ally')) }}: '+data.ownerAllyName+'<br>';
+                }
+                popupHTML += "{{ ucfirst(__('ui.table.conquer')) }}: "+data.conquer+"<br></div>";
+                $('#previewContainer').append(popupHTML);
+
+                $('#map-popup')[0].style.left = xRel+"px";
+                $('#map-popup')[0].style.top = yRel+"px";
+            })
+            .catch((error) => {
+            });
+    }
+
     
     var intervalAnimation = -1;
     function startAnimation(e) {

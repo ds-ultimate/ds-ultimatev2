@@ -20,6 +20,7 @@ Route::group(['middleware' => 'throttle:10,1'], function() {
 Route::group(['middleware' => 'throttle:240,1'], function() {
     Route::get('/{server}/activeWorlds', [\App\Http\Controllers\API\FindModelController::class, 'getActiveWorldByServer'])->name('activeWorldByServer');
 
+    Route::get('/{server}/{world}/villageCoordsPreview/{histIdx}/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillagePreviewByCoord'])->name('villagePreviewByCoord');
     Route::get('/{server}/{world}/villageCoords/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillageByCoord'])->name('villageByCoord');
     Route::get('/{server}/{world}/playerName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getPlayerByName'])->name('playerByName');
     Route::get('/{server}/{world}/allyName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getAllyByName'])->name('allyByName');

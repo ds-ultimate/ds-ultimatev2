@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Ally;
+use App\HistoryIndex;
 use App\Player;
 use App\Server;
 use App\Village;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Ally as AllyResource;
 use App\Http\Resources\Player as PlayerResource;
 use App\Http\Resources\Village as VillageResource;
+use App\Http\Resources\VillageHistory as VillageHistoryResource;
 
 class FindModelController extends Controller
 {
@@ -20,6 +22,30 @@ class FindModelController extends Controller
         $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
 
         return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
+    }
+    
+    public function getVillagePreviewByCoord($server, $world, $hId, $x, $y){
+        World::existWorld($server, $world);
+        $dbName = BasicFunctions::getDatabaseName($server, $world);
+        $histIdx = HistoryIndex::find($dbName, $hId);
+        abort_if($histIdx === null, 404);
+        
+        $file = gzopen($histIdx->villageFile($dbName), "r");
+        while(! gzeof($file)) {
+            $lineOrig = gzgets($file, 4096);
+            if($lineOrig === false) continue;
+            $line = explode(";", str_replace("\n", "", $lineOrig));
+            if($line[2] == $x && $line[3] == $y) {
+                return new VillageHistoryResource([
+                    "line" => $line,
+                    "dbName" => $dbName,
+                    "histIdx" => $histIdx,
+                    "server" => $server,
+                    "world" => $world,
+                ]);
+            }
+        }
+        abort(404);
     }
 
     public function getPlayerByName($server, $world, $name){

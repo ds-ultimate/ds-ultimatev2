@@ -14,9 +14,9 @@ class HistoryMapGenerator extends AbstractMapGenerator {
         $this->world = $world;
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
-        $this->allyFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/ally_{$histIdx->date}.gz");
-        $this->playerFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/player_{$histIdx->date}.gz");
-        $this->villageFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/village_{$histIdx->date}.gz");
+        $this->allyFile = $histIdx->allyFile($dbName);
+        $this->playerFile = $histIdx->playerFile($dbName);
+        $this->villageFile = $histIdx->villageFile($dbName);
     }
     
     protected function grabAlly() {

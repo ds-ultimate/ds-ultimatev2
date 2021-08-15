@@ -17,7 +17,7 @@ class SearchController extends Controller
     {
         if ($request->search != null) {
             return redirect()->route('search', [$server, rawurlencode($request->submit), rawurlencode($request->search)]);
-        }else{
+        } else{
             return redirect()->back();
         }
     }

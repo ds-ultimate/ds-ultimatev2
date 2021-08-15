@@ -98,7 +98,14 @@ class Village extends CustomModel
      * @return string
      */
     public function bonusText() {
-        switch($this->bonus_id) {
+        return static::bonusTextStat($this->bonus_id);
+    }
+    
+    /**
+     * @return string
+     */
+    public static function bonusTextStat($bonus_id) {
+        switch($bonus_id) {
             case 0:
                 return "-";
             case 1:
@@ -133,8 +140,22 @@ class Village extends CustomModel
     /**
      * @return string
      */
+    public static function continentStringStat($x, $y) {
+        return "K" . intval($y / 100) . intval($x / 100);
+    }
+
+    /**
+     * @return string
+     */
     public function coordinates() {
         return $this->x."|".$this->y;
+    }
+
+    /**
+     * @return string
+     */
+    public static function coordinatesStat($x, $y) {
+        return $x . "|" . $y;
     }
 
     /**

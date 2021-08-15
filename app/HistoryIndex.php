@@ -25,4 +25,16 @@ class HistoryIndex extends Model
         $model->setTable("$dbName.index");
         return $model->where('id', $id)->first();
     }
+    
+    public function allyFile($dbName) {
+        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/ally_{$this->date}.gz");
+    }
+    
+    public function playerFile($dbName) {
+        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/player_{$this->date}.gz");
+    }
+    
+    public function villageFile($dbName) {
+        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/village_{$this->date}.gz");
+    }
 }
