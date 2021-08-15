@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllyTop;
-use App\Playerop;
+use App\PlayerTop;
 use App\Village;
 use App\Server;
 use App\Util\BasicFunctions;
