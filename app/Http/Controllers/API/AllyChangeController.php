@@ -62,17 +62,23 @@ class AllyChangeController extends Controller
             })
             ->addColumn('player_name', function ($allyChange){
                 if($allyChange->player_id == 0) return ucfirst(__('ui.player.barbarian'));
-                if($allyChange->player == null) return ucfirst(__('ui.player.deleted'));
-                return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->player->name) : '-';
+                if($allyChange->playerTop == null) return ucfirst(__('ui.player.deleted'));
+                return ($allyChange->player_id != 0)? BasicFunctions::decodeName($allyChange->playerTop->name) : '-';
             })
             ->addColumn('old_ally_name', function ($allyChange){
                 if($allyChange->old_ally_id == 0) return ucfirst(__('ui.ally.noAlly'));
-                if($allyChange->oldAlly == null) return ucfirst(__('ui.ally.deleted'));
+                if($allyChange->oldAlly == null) {
+                    if($allyChange->oldAllyTop == null) return ucfirst(__('ui.ally.deleted'));
+                    return BasicFunctions::decodeName($allyChange->oldAllyTop->name);
+                }
                 return BasicFunctions::decodeName($allyChange->oldAlly->name);
             })
             ->addColumn('new_ally_name', function ($allyChange){
                 if($allyChange->new_ally_id == 0) return ucfirst(__('ui.ally.noAlly'));
-                if($allyChange->newAlly == null) return ucfirst(__('ui.ally.deleted'));
+                if($allyChange->newAlly == null) {
+                    if($allyChange->newAllyTop == null) return ucfirst(__('ui.ally.deleted'));
+                    return BasicFunctions::decodeName($allyChange->newAllyTop->name);
+                }
                 return BasicFunctions::decodeName($allyChange->newAlly->name);
             })
             ->toJson();

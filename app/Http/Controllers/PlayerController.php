@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Conquer;
 use App\Player;
+use App\PlayerTop;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;
@@ -18,7 +19,8 @@ class PlayerController extends Controller
         $worldData = World::getWorld($server, $world);
 
         $playerData = Player::player($server, $world, $player);
-        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
+        $playerTopData = PlayerTop::player($server, $world, $player);
+        abort_if($playerData == null && $playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         $statsGeneral = ['points', 'rank', 'village'];
@@ -36,8 +38,11 @@ class PlayerController extends Controller
 
         $conquer = Conquer::playerConquerCounts($server, $world, $player);
         $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
-
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
+        
+        if($playerData == null) {
+            return view('content.playerDeleted', compact('statsGeneral', 'statsBash', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
+        }
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
 
     }
     
@@ -46,8 +51,8 @@ class PlayerController extends Controller
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        $playerData = Player::player($server, $world, $playerID);
-        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
+        $playerTopData = PlayerTop::player($server, $world, $playerID);
+        abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
@@ -57,7 +62,7 @@ class PlayerController extends Controller
             default:
                 abort(404, "Unknown type");
         }
-        return view('content.playerAllyChange', compact('worldData', 'server', 'playerData', 'typeName', 'type'));
+        return view('content.playerAllyChange', compact('worldData', 'server', 'playerTopData', 'typeName', 'type'));
     }
     
     public function conquer($server, $world, $type, $playerID){
@@ -65,8 +70,8 @@ class PlayerController extends Controller
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        $playerData = Player::player($server, $world, $playerID);
-        abort_if($playerData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
+        $playerTopData = PlayerTop::player($server, $world, $playerID);
+        abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
@@ -94,8 +99,8 @@ class PlayerController extends Controller
             $userHighlight = $allHighlight;
         }
         
-        $who = BasicFunctions::decodeName($playerData->name);
-        $routeDatatableAPI = route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerData->playerID]);
+        $who = BasicFunctions::decodeName($playerTopData->name);
+        $routeDatatableAPI = route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerTopData->playerID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['player']);
         
         return view('content.conquer', compact('server', 'worldData', 'typeName',

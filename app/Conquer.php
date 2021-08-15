@@ -149,7 +149,7 @@ class Conquer extends CustomModel
         $oldName = $this->old_owner_name;
         if($oldName == null || $oldName == "") {
             if($this->oldPlayer == null) {
-                return ucfirst(__('ui.player.deleted'));
+                $oldName = ucfirst(__('ui.player.deleted'));
             } else {
                 $oldName = $this->oldPlayer->name;
             }
@@ -163,7 +163,7 @@ class Conquer extends CustomModel
         $newName = $this->new_owner_name;
         if($newName == null || $newName == "") {
             if($this->newPlayer == null) {
-                return ucfirst(__('ui.player.deleted'));
+                $newName = ucfirst(__('ui.player.deleted'));
             } else {
                 $newName = $this->newPlayer->name;
             }
@@ -197,9 +197,6 @@ class Conquer extends CustomModel
             } else if($this->oldAlly == null) {
                 return ucfirst(__('ui.player.deleted'));
             }
-        } else if($this->oldAlly == null) {
-            //deleted ally
-            return BasicFunctions::outputName($oldAlly);
         }
         return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
     }
@@ -229,9 +226,6 @@ class Conquer extends CustomModel
             } else if($this->newAlly == null) {
                 return ucfirst(__('ui.player.deleted'));
             }
-        } else if($this->newAlly == null) {
-            //deleted ally
-            return BasicFunctions::outputName($newAlly);
         }
         return BasicFunctions::linkAlly($world, $newID, BasicFunctions::outputName($newAlly));
     }

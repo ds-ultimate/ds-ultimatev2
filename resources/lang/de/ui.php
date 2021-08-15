@@ -174,6 +174,7 @@ return array (
       'missingConfig' => 'Dieses Feature ist bei der ausgewählten Welt nicht verfügbar.',
       'noWorld' => 'Um dieses Feature nutzen zu können, muss eine Welt ausgewählt werden',
     ),
+    'tops' => 'Bestwerte',
   ),
   'ingame' => 
   array (
@@ -299,4 +300,5 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
     'histUnknown' => 'Unbekannt',
     'histPossibilities' => 'Möglichkeiten',
   ),
+  'topAt' => 'am',
 );

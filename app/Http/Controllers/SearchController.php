@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Ally;
-use App\Player;
+use App\AllyTop;
+use App\Playerop;
 use App\Village;
 use App\Server;
 use App\Util\BasicFunctions;
@@ -39,11 +39,11 @@ class SearchController extends Controller
 
     public static function searchPlayer($server, $search){
         $worlds = Server::getWorldsByCode($server);
-        $player = new Player();
+        $player = new PlayerTop();
         $playerCollect = collect();
 
         foreach ($worlds as $world){
-            $player->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
+            $player->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_top');
             foreach ($player->where('name', 'LIKE', '%'. BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
                 $players = collect();
                 $players->put('world', $world);
@@ -59,11 +59,11 @@ class SearchController extends Controller
 
     public static function searchAlly($server, $search){
         $worlds = Server::getWorldsByCode($server);
-        $ally = new Ally();
+        $ally = new AllyTop();
         $allyCollect = collect();
 
         foreach ($worlds as $world){
-            $ally->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.ally_latest');
+            $ally->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.ally_top');
             foreach ($ally->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
                 $allys = collect();
                 $allys->put('world', $world);

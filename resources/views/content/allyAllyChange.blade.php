@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('titel', ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::decodeName($allyData->name))
+@section('titel', ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::decodeName($allyTopData->name))
 
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ $typeName.': '.\App\Util\BasicFunctions::decodeName($allyData->name).' ['.\App\Util\BasicFunctions::decodeName($allyData->tag).']' }}</h1>
+            <h1 class="font-weight-normal">{{ $typeName.': '.\App\Util\BasicFunctions::decodeName($allyTopData->name).' ['.\App\Util\BasicFunctions::decodeName($allyTopData->tag).']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -15,9 +15,9 @@
                 {{ $typeName.': ' }}
             </h1>
             <h4>
-                {{ \App\Util\BasicFunctions::decodeName($allyData->name) }}
+                {{ \App\Util\BasicFunctions::decodeName($allyTopData->name) }}
                 <br>
-                [{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}]
+                [{{ \App\Util\BasicFunctions::decodeName($allyTopData->tag) }}]
             </h4>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
@@ -59,7 +59,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyAllyChanges', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyAllyChanges', [$worldData->server->code, $worldData->name, $type, $allyTopData->allyID]) }}",
                 "columns": [
                     { "data": "created_at" },
                     { "data": "player_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.player_id +"'>"+ value +'</a>'}, "orderable": false},

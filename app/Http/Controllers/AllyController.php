@@ -20,14 +20,16 @@ class AllyController extends Controller
         $worldData = World::getWorld($server, $world);
 
         $allyData = Ally::ally($server, $world, $ally);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
+        $allyTopData = AllyTop::ally($server, $world, $ally);
+        abort_if($allyData == null && $allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
                 " auf der Welt '$server$world' vorhanden.");
-
+        
+        
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash'];
 
         $datas = Ally::allyDataChart($server, $world, $ally);
-
+        
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
             $chartJS .= Chart::generateChart($datas, $statsGeneral[$i]);
@@ -38,9 +40,11 @@ class AllyController extends Controller
 
         $conquer = Conquer::allyConquerCounts($server, $world, $ally);
         $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
-        $allyTop = AllyTop::ally($server, $world, $ally);
-
-        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTop'));
+        
+        if($allyData == null) {
+            return view('content.allyDeleted', compact('statsGeneral', 'statsBash', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTopData'));
+        }
+        return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTopData'));
     }
 
     public function allyBashRanking($server, $world, $ally)
@@ -62,8 +66,8 @@ class AllyController extends Controller
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        $allyData = Ally::ally($server, $world, $allyID);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
+        $allyTopData = AllyTop::ally($server, $world, $allyID);
+        abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
@@ -80,7 +84,7 @@ class AllyController extends Controller
                 abort(404, "Unknown type");
         }
 
-        return view('content.allyAllyChange', compact('worldData', 'server', 'allyData', 'typeName', 'type'));
+        return view('content.allyAllyChange', compact('worldData', 'server', 'allyTopData', 'typeName', 'type'));
     }
 
     public function conquer($server, $world, $type, $allyID){
@@ -88,8 +92,8 @@ class AllyController extends Controller
         World::existWorld($server, $world);
 
         $worldData = World::getWorld($server, $world);
-        $allyData = Ally::ally($server, $world, $allyID);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
+        $allyTopData = AllyTop::ally($server, $world, $allyID);
+        abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
                 " auf der Welt '$server$world' vorhanden.");
 
         switch($type) {
@@ -117,9 +121,9 @@ class AllyController extends Controller
             $userHighlight = $allHighlight;
         }
 
-        $who = BasicFunctions::decodeName($allyData->name).
-                " [".BasicFunctions::decodeName($allyData->tag)."]";
-        $routeDatatableAPI = route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyData->allyID]);
+        $who = BasicFunctions::decodeName($allyTopData->name).
+                " [".BasicFunctions::decodeName($allyTopData->tag)."]";
+        $routeDatatableAPI = route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyTopData->allyID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['ally']);
 
         return view('content.conquer', compact('server', 'worldData', 'typeName',

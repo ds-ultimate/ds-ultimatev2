@@ -174,6 +174,7 @@ return array (
       'missingConfig' => 'This feature is not available for the selected world',
       'noWorld' => 'In order to use this feature you must select a world',
     ),
+    'tops' => 'Top values',
   ),
   'ingame' => 
   array (
@@ -299,4 +300,5 @@ It is not specified which village you have to give the name to, but it must belo
     'histPossibilities' => 'possibilities',
     'histUnknown' => 'unknown',
   ),
+  'topAt' => 'at',
 );

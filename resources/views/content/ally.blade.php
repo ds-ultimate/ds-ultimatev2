@@ -23,18 +23,20 @@
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Informationen -->
         <div class="col-12">
-            Erster name: {{ \App\Util\BasicFunctions::decodeName($allyTop->name) }}<br>
-            Tag: {{ \App\Util\BasicFunctions::decodeName($allyTop->tag) }}
             <div class="card">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">{{ __('ui.nav.stats') }}</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" id="tops-tab" data-toggle="tab" href="#tops" role="tab" aria-controls="tops" aria-selected="false">{{ __('ui.nav.tops') }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">{{ __('ui.nav.map') }}</a>
                     </li>
                 </ul>
                 <div class="card-body tab-content">
+                    <!-- BEGIN NORMAL Table -->
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
                         <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
                             <span class="float-right">
@@ -98,6 +100,99 @@
                                 <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
                                 <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
                                 <td>{{ \App\Util\BasicFunctions::numberConv($allyData->defBash) }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- BEGIN TOP Table -->
+                    <div class="tab-pane fade" id="tops" role="tabpanel" aria-labelledby="tops-tab">
+                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
+                            <span class="float-right">
+                                <a href="{{ $allyTopData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
+                                <a href="{{ $allyTopData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
+                            </span>
+                        </h4>
+                        <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
+                        <table id="data_top1" class="table table-bordered no-wrap w-100">
+                            <thead>
+                            <tr>
+                                <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.tag')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.members')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->rank_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("rank") }}</span>
+                                </th>
+                                <td>{{ \App\Util\BasicFunctions::decodeName($allyTopData->name) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::decodeName($allyTopData->tag) }}</td>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->points_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("points") }}</span>
+                                </td>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->village_count_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("village_count") }}</span>
+                                </td>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->member_count_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("member_count") }}</span>
+                                </td>
+                                <td>{{ ($allyTopData->points_top != 0 && $allyTopData->member_count_top != 0)?\App\Util\BasicFunctions::numberConv($allyTopData->points_top/$allyTopData->member_count_top): '-' }}</td>
+                                <td>{{ ($allyTopData->points_top != 0 && $allyTopData->village_count_top != 0)?\App\Util\BasicFunctions::numberConv($allyTopData->points_top/$allyTopData->village_count_top): '-' }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
+                        <table id="data_top2" class="table table-bordered no-wrap w-100">
+                            <thead>
+                            <tr>
+                                <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
+                                <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
+                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->gesBashRank_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("gesBashRank") }}</span>
+                                </th>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->gesBash_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("gesBash") }}</span>
+                                </td>
+                                <td>{{ ($allyTopData->points != 0)?(\App\Util\BasicFunctions::numberConv(($allyTopData->gesBash_top/$allyTopData->points_top)*100)):('-') }}%</td>
+                                <th>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->offBashRank_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("offBashRank") }}</span>
+                                </th>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->offBash_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("offBash") }}</span>
+                                </td>
+                                <th>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->defBashRank_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("defBashRank") }}</span>
+                                </th>
+                                <td>
+                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->defBash_top) }}
+                                    <br><span class="small float-right">{{ $allyTopData->getDate("defBash") }}</span>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -263,6 +358,24 @@
             });
 
             $('#data2').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+
+            $('#data_top1').DataTable({
+                dom: 't',
+                ordering: false,
+                paging: false,
+                responsive: true,
+
+                keys: true, //enable KeyTable extension
+            });
+
+            $('#data_top2').DataTable({
                 dom: 't',
                 ordering: false,
                 paging: false,

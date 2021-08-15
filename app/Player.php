@@ -62,6 +62,15 @@ class Player extends CustomModel
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function allyTop()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\AllyTop', 'ally_id', 'allyID', $table[0].'.ally_top');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function allyChanges()

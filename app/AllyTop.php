@@ -88,4 +88,21 @@ class AllyTop extends CustomModel
         return $allyModel->find($ally);
 
     }
+
+    public function linkIngame(World $world, $guest=false) {
+        $guestPart = "game";
+        if($guest) {
+            $guestPart = "guest";
+        }
+
+        return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->playerID}";
+    }
+    
+    public function getDate($variable) {
+        $variable .= "_date";
+        if(!in_array($variable, $this->fillable)) return "";
+        
+        $data = $this->$variable->format('d.m.Y');
+        return " (" . __("ui.topAt") . ' ' . $data . ")";
+    }
 }

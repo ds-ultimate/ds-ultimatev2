@@ -40,7 +40,7 @@
                     @foreach(\App\Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value)
                     <div style="width: 1em; height: 1em; background-color: {{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS[$key][0] }}; display: inline-block; border: 1px solid #ccc" ></div>
                     <span class="mr-4">
-                        {{ $value }}
+                        {{ __('ui.conquer.highlight.'.$value) }}
                     </span>
                     @endforeach
                 </div>

@@ -32,6 +32,33 @@ class AllyChanges extends CustomModel
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Player', 'player_id', 'playerID', $table[0].'.player_latest');
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function oldAllyTop()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\AllyTop', 'old_ally_id', 'allyID', $table[0].'.ally_top');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function newAllyTop()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\AllyTop', 'new_ally_id', 'allyID', $table[0].'.ally_top');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function playerTop()
+    {
+        $table = explode('.', $this->table);
+        return $this->mybelongsTo('App\PlayerTop', 'player_id', 'playerID', $table[0].'.player_top');
+    }
 
     /**
      * @param string $server

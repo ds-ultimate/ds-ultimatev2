@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Util\Chart;
 use App\Util\ImageChart;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Response;
 
 class SignatureController extends Controller
 {
