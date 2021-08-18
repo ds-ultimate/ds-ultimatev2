@@ -244,6 +244,7 @@ class AttackPlannerController extends BaseController
                     $unitArray = [];
                     foreach ($units as $unit) {
                         $unitSplit = explode('=', $unit, 2);
+                        if(count($unitSplit) < 2) continue;
                         $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
                     }
                 }

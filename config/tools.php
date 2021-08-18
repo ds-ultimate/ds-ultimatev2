@@ -11,4 +11,10 @@ return [
     'animHistMap' => [
         'renderDir' => 'app/animatedMaps/',
     ],
+    'chart' => [
+        'cacheDir' => 'app/chartCache/',
+    ],
+    'logs' => [
+        'cacheRates' => 'customLog/cache/',
+    ],
 ];

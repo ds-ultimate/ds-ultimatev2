@@ -66,14 +66,25 @@ class PictureRender {
     public function saveTo($path, $ext) {
         switch ($ext) {
             case "png":
-                return imagepng($this->image, "$path.$ext");
+                $ret = imagepng($this->image, "$path.$ext");
+                break;
             case "jpg":
             case "jpeg":
-                return imagejpeg($this->image, "$path.$ext");
+                $ret = imagejpeg($this->image, "$path.$ext");
+                break;
+            case "base64":
+                ob_start();
+                imagegif($this->image);
+                $imagedata = ob_get_clean();
+                file_put_contents("$path.$ext", PictureRender::pngToBase64($imagedata));
+                $ret = true;
+                break;
+                
             default:
                 echo "Unknown extension cannot save file";
-                return false;
+                $ret = false;
         }
+        return $ret;
     }
     
     public static function pngToBase64($png) {

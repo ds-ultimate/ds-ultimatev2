@@ -18,21 +18,22 @@ class ImageChart extends PictureRender {
     private $width;
     private $height;
     private $show_errs;
+    public static $STD_ASPECT = 35/14;
+    public static $STD_HEIGHT = 140;
 
     public function __construct($font, $dim=null, $show_errs=false) {
-        $std_aspect = 35/14;
         if(isset($dim["height"]) && isset($dim["width"])) {
             $img_height = $dim["height"];
             $img_width = $dim["width"];
         } else if(isset($dim["height"])) {
             $img_height = $dim["height"];
-            $img_width = $std_aspect * $img_height;
+            $img_width = static::$STD_ASPECT * $img_height;
         } else if(isset($dim["width"])) {
             $img_width = $dim["width"];
-            $img_height = $img_width / $std_aspect;
+            $img_height = $img_width / static::$STD_ASPECT;
         } else {
-            $img_height = 140;
-            $img_width = $std_aspect * $img_height;
+            $img_height = static::$STD_HEIGHT;
+            $img_width = static::$STD_ASPECT * $img_height;
         }
         
         $image = imagecreate(round($img_width, 0), round($img_height, 0));
@@ -249,5 +250,13 @@ class ImageChart extends PictureRender {
         imagefilledellipse ($this->image, $x1, $y1, $thickness, $thickness, $colour);
         imagefilledellipse ($this->image, $x2, $y2, $thickness, $thickness, $colour);
         imageline($this->image, $x1, $y1, $x2, $y2, $colour);
+    }
+    
+    public function getH() {
+        return $this->height;
+    }
+    
+    public function getW() {
+        return $this->width;
     }
 }

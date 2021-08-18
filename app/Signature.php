@@ -30,6 +30,11 @@ class Signature extends Model
         return Carbon::now()->subSeconds(config('tools.signature.cacheDuration'))->lt($this->cached);
     }
     
+    public function getCacheFileName() {
+        $constrained = explode("\\", $this->element_type);
+        return "{$this->id}-{$constrained[count($constrained) - 1]}-{$this->element_id}";
+    }
+    
     public function getCacheFile() {
         $constrained = explode("\\", $this->element_type);
         return storage_path(config('tools.signature.cacheDir')."{$this->id}-{$constrained[count($constrained) - 1]}-{$this->element_id}.png");

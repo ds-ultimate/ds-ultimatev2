@@ -8,6 +8,7 @@ use App\Server;
 use App\Village;
 use App\World;
 use App\Http\Controllers\Controller;
+use App\Util\CacheLogger;
 use App\Util\Chart;
 use App\Util\ImageChart;
 use App\Util\BasicFunctions;
@@ -25,9 +26,16 @@ class PictureController extends Controller
     {
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
+        World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
         }
+        
+        $dim = $this->decodeDimensions($width, $height);
+        $dir = storage_path(config('tools.chart.cacheDir') . "$server$world");
+        $fName = "ally-$allyID-$type-{$dim["width"]}-{$dim["height"]}";
+        $ret = $this->checkCache($dir, $fName, $ext);
+        if($ret !== null) return $ret;
         
         $allyData = Ally::ally($server, $world, $allyID);
         if ($allyData == null) {
@@ -44,18 +52,23 @@ class PictureController extends Controller
         $tag = \App\Util\BasicFunctions::decodeName($allyData->tag);
         $allyString = __('chart.who.ally') . ": $name [$tag]";
         
-        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
-        $chart -> render($statData, $allyString, Chart::chartTitel($type), Chart::displayInvers($type));
-        return $chart -> output($ext);
+        return $this->generateChart($dim, $statData, $allyString, $type, $ext, $dir, $fName, $ext);
     }
 
     public function getPlayerSizedPic($server, $world, $playerID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
+        World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
         }
+        
+        $dim = $this->decodeDimensions($width, $height);
+        $dir = storage_path(config('tools.chart.cacheDir') . "$server$world");
+        $fName = "player-$playerID-$type-{$dim["width"]}-{$dim["height"]}";
+        $ret = $this->checkCache($dir, $fName, $ext);
+        if($ret !== null) return $ret;
         
         $playerData = Player::player($server, $world, $playerID);
         if ($playerData == null) {
@@ -71,18 +84,23 @@ class PictureController extends Controller
         $name = \App\Util\BasicFunctions::decodeName($playerData->name);
         $playerString = __('chart.who.player') . ": $name";
         
-        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
-        $chart -> render($statData, $playerString, Chart::chartTitel($type), Chart::displayInvers($type));
-        return $chart -> output($ext);
+        return $this->generateChart($dim, $statData, $playerString, $type, $dir, $fName, $ext);
     }
 
     public function getVillageSizedPic($server, $world, $villageID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
         $world = $this->fixWorldNameSpeed($server, $world);
+        World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
         }
+        
+        $dim = $this->decodeDimensions($width, $height);
+        $dir = storage_path(config('tools.chart.cacheDir') . "$server$world");
+        $fName = "village-$villageID-$type-{$dim["width"]}-{$dim["height"]}";
+        $ret = $this->checkCache($dir, $fName, $ext);
+        if($ret !== null) return $ret;
         
         $villageData = Village::village($server, $world, $villageID);
         if ($villageData == null) {
@@ -100,9 +118,7 @@ class PictureController extends Controller
         $y = $villageData->y;
         $villageString = __('chart.who.village') . ": $name ($x|$y)";
         
-        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $this->decodeDimensions($width, $height), $this->debug);
-        $chart -> render($statData, $villageString, Chart::chartTitel($type), Chart::displayInvers($type));
-        return $chart -> output($ext);
+        return $this->generateChart($dim, $statData, $villageString, $type, $dir, $fName, $ext);
     }
     
     public function getAllyPic($server, $world, $allyID, $type, $ext)
@@ -120,20 +136,49 @@ class PictureController extends Controller
         return $this->getVillageSizedPic($server, $world, $villageID, $type, null, null, $ext);
     }
     
+    private function generateChart($dim, $statData, $nameString, $type, $dir, $fName, $ext) {
+        $chart = new ImageChart("fonts/NotoMono-Regular.ttf", $dim, $this->debug);
+        $chart->render($statData, $nameString, Chart::chartTitel($type), Chart::displayInvers($type));
+        
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $chart->saveTo("$dir/$fName", $ext);
+        return response()->file("$dir/$fName.$ext");
+    }
+    
+    private function checkCache($dir, $fName, $ext) {
+        $tmp = "$dir/$fName.$ext";
+        if(!file_exists($tmp)
+                || (time() - filemtime($tmp)) > 86400) {
+            CacheLogger::logMiss(CacheLogger::$PICTURE_TYPE, $fName.$ext);
+            return null;
+        }
+        CacheLogger::logHit(CacheLogger::$PICTURE_TYPE, $fName.$ext);
+        return response()->file($tmp);
+    }
+
     private function decodeDimensions($width, $height)
     {
         if($width == 'w') {
             $retArr = [
-                'width' => $height,
+                'width' => intval($height),
+                'height' => intval($height / ImageChart::$STD_ASPECT),
             ];
         } else if($width == 'h') {
             $retArr = [
-                'height' => $height,
+                'width' => intval($height * ImageChart::$STD_ASPECT),
+                'height' => intval($height),
+            ];
+        } else if($width !== null && $height !== null) {
+            $retArr = [
+                'width' => intval($width),
+                'height' => intval($height),
             ];
         } else {
             $retArr = [
-                'width' => $width,
-                'height' => $height,
+                'width' => intval(ImageChart::$STD_HEIGHT * ImageChart::$STD_ASPECT),
+                'height' => intval(ImageChart::$STD_HEIGHT),
             ];
         }
         
@@ -144,6 +189,7 @@ class PictureController extends Controller
         if(isset($retArr['height']) && $retArr['height'] <= 0) {
             abort(400, "Height too small");
         }
+        return $retArr;
     }
     
     private function fixWorldNameSpeed($server, $world) {

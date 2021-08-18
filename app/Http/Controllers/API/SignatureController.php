@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Player;
 use App\World;
 use App\Http\Controllers\Controller;
+use App\Util\CacheLogger;
 use App\Util\Chart;
 use App\Util\ImageChart;
 use Carbon\Carbon;
@@ -39,6 +40,9 @@ class SignatureController extends Controller
             } else {
                 return "Error";
             }
+            CacheLogger::logMiss(CacheLogger::$SIGNATURE_TYPE, $signature->getCacheFileName());
+        } else {
+            CacheLogger::logHit(CacheLogger::$SIGNATURE_TYPE, $signature->getCacheFileName());
         }
         
         return response()->file($signature->getCacheFile());
