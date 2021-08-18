@@ -52,7 +52,7 @@ class PictureController extends Controller
         $tag = \App\Util\BasicFunctions::decodeName($allyData->tag);
         $allyString = __('chart.who.ally') . ": $name [$tag]";
         
-        return $this->generateChart($dim, $statData, $allyString, $type, $ext, $dir, $fName, $ext);
+        return $this->generateChart($dim, $statData, $allyString, $type, $dir, $fName, $ext);
     }
 
     public function getPlayerSizedPic($server, $world, $playerID, $type, $width, $height, $ext)
