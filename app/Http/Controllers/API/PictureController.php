@@ -25,7 +25,7 @@ class PictureController extends Controller
     public function getAllySizedPic($server, $world, $allyID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
-        $world = $this->fixWorldNameSpeed($server, $world);
+        $this->fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
@@ -58,7 +58,7 @@ class PictureController extends Controller
     public function getPlayerSizedPic($server, $world, $playerID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
-        $world = $this->fixWorldNameSpeed($server, $world);
+        $this->fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
@@ -90,7 +90,7 @@ class PictureController extends Controller
     public function getVillageSizedPic($server, $world, $villageID, $type, $width, $height, $ext)
     {
         BasicFunctions::local();
-        $world = $this->fixWorldNameSpeed($server, $world);
+        $this->fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(400, "Invalid type");
@@ -192,7 +192,7 @@ class PictureController extends Controller
         return $retArr;
     }
     
-    private function fixWorldNameSpeed($server, $world) {
+    private function fixWorldName(&$server, &$world) {
         if(World::isSpeedName($world)) {
             //find first speed world with correct update url and use that?
             $serverData = Server::getServerByCode($server);
@@ -202,8 +202,13 @@ class PictureController extends Controller
                 ->where("url", "LIKE", "%" . BasicFunctions::likeSaveEscape($world) . "%")
                 ->where("active", 1)
                 ->first();
-            return $first->name;
+            $world = $first->name;
         }
-        return $world;
+        
+        if(strlen($server) == 3 && strlen($world) == 2) {
+            $serWorld = $server . $world;
+            $server = substr($serWorld, 0, 2);
+            $world = substr($serWorld, 2, 3);
+        }
     }
 }
