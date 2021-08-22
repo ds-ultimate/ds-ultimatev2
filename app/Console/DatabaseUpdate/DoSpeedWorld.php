@@ -29,13 +29,14 @@ class DoSpeedWorld
             }
             
             $regex = "[";
-            $regex.= "<h3>#(\\d*) Speed.*?</h3>.*";
+            $regex.= "<h3>#(\\d*) .*?</h3>.*";
             $regex.= "Start:</td> <td>(.*?)</td>.*";
             $regex.= "Ende:</td> <td>(.*?)</td>";
             $regex.= "]";
             foreach($speedRounds as $round) {
                 //extract data
                 preg_match($regex, $round, $matches);
+                
                 if(count($matches) < 1) {
                     throw new \Exception("unable to perform regex");
                 }
