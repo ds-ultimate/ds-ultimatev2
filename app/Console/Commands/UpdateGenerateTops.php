@@ -60,7 +60,7 @@ class UpdateGenerateTops extends Command
             $worldMod->worldTop_at = $now;
             $worldMod->save();
         } else {
-            $worlds = BasicFunctions::getWorldQuery()->get();
+            $worlds = (new World())->whereColumn("worldTop_at", "<", "worldUpdated_at")->orWhereNull('worldTop_at')->get();
             
             foreach ($worlds as $world){
                 $now = Carbon::now()->subMinutes(5);
