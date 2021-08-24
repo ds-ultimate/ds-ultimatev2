@@ -58,14 +58,7 @@ class HomeController
         $num = 0;
         $dir = storage_path($conf);
         
-        if(file_exists($dir)) {
-            $files = scandir($dir);
-            foreach($files as $file) {
-                if($file == "." || $file == "..") continue;
-                $space += filesize("$dir/$file");
-                $num++;
-            }
-        }
+        $this->recursiveSpaceNum($dir, $space, $num);
         
         if($space > 1024 * 1024 * 1024) {
             $space = round($space /(1024 * 1024 * 1024), 3) . "G";
@@ -132,5 +125,20 @@ class HomeController
         ]);
 
         return \Lava::render('LineChart', $name, $name);
+    }
+    
+    private function recursiveSpaceNum($dir, &$space, &$num) {
+        if(file_exists($dir)) {
+            $files = scandir($dir);
+            foreach($files as $file) {
+                if($file == "." || $file == "..") continue;
+                if(is_dir("$dir/$file")) {
+                    $this->recursiveSpaceNum("$dir/$file", $space, $num);
+                } else if(is_file("$dir/$file")) {
+                    $space += filesize("$dir/$file");
+                    $num++;
+                }
+            }
+        }
     }
 }
