@@ -135,4 +135,15 @@ return array (
     'users' => 'Users',
     'title' => 'Dashboard',
   ),
+  'cacheStats' => 
+  array (
+    'hitrate' => 'Hitrate',
+    'hits' => 'Hits',
+    'maps' => 'world maps',
+    'num' => 'amount',
+    'pictures' => 'diagrams',
+    'signatures' => 'signatures',
+    'size' => 'size',
+    'title' => 'cache statistics',
+  ),
 );

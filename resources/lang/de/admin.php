@@ -135,4 +135,15 @@ return array (
     'attacks' => 'Angriffe',
     'title' => 'Dashboard',
   ),
+  'cacheStats' => 
+  array (
+    'size' => 'Größe',
+    'num' => 'Anzahl',
+    'hitrate' => 'Hitrate',
+    'hits' => 'Aufrufe',
+    'signatures' => 'Signaturen',
+    'maps' => 'Weltkarten',
+    'pictures' => 'Diagramme',
+    'title' => 'Cache Statistiken',
+  ),
 );

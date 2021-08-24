@@ -27,7 +27,7 @@
             </x-admin.menue>
         </x-admin.menue>
 
-        {{--<x-admin.menue access="translation_access" route="" icon="fa-language" :name="__('user.translations')" /> --}}
+        {{-- <x-admin.menue access="translation_access" route="" icon="fa-language" :name="__('user.translations')" /> --}}
         @can('translation_access')
             <li class="admin-nav-item">
                 <a href="{{ route("index") }}/translations" class="admin-nav-link">
@@ -36,6 +36,7 @@
             </li>
         @endcan
 
+        <x-admin.menue access="cacheStat_access" route="admin.cacheStats" icon="fa-info-circle" :name="__('admin.cacheStats.title')" />
         <x-admin.menue access="applog_access" route="admin.appLog" icon="fa-info-circle" :name="__('admin.applog')" />
     </ul>
     <a id="admin-nav-minimizer" class="admin-nav-link" aria-controls="admin-nav-main" aria-expanded="true">

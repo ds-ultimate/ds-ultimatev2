@@ -69,6 +69,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
     Route::resource('bugreportsComments', \App\Http\Controllers\Admin\BugreportsCommentController::class);
 
     Route::get('/appLog', [\App\Http\Controllers\Admin\AppLogController::class, 'index'])->name('appLog');
+    
+    Route::get('/cacheStats', [\App\Http\Controllers\Admin\HomeController::class, 'cacheStats'])->name('cacheStats');
 
     Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::get('/news', [\App\Http\Controllers\Admin\APIController::class, 'news'])->name('news');

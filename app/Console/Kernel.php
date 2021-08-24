@@ -150,6 +150,20 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes()
             ->withoutOverlapping()
             ->appendOutputTo("storage/logs/cron-critical.log");
+        
+        /*
+         * Update the cache statistics
+         */
+        $schedule->command("update:cacheStats")
+            ->dailyAt('01:55')
+            ->onSuccess(function (){
+                Log::info('cacheStats -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('cacheStats -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
+
     }
 
     /**
