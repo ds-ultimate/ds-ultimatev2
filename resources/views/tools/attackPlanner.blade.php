@@ -81,6 +81,9 @@ $tabList = [
         @endif
         <!-- Unit Card -->
         <div class="col-12 mt-2">
+            <div class="card mb-2 p-3">
+                <b>{{ __('tool.attackPlanner.warnSending') }}</b>
+            </div>
             <div class="card">
                 <div class="card-body table-responsive">
                     <table id="data1" class="table table-bordered table-striped no-wrap w-100">
@@ -99,7 +102,7 @@ $tabList = [
                                 <th>{{ __('tool.attackPlanner.arrivalTime') }}</th>
                                 <th width="95px">{{ __('tool.attackPlanner.countdown') }}</th>
                                 <th style="min-width: 25px">&nbsp;</th>
-                                <!--<th style="min-width: 25px">&nbsp;</th>-->
+                                <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
                                     <th style="min-width: 50px">&nbsp;</th>
                                 @endif
@@ -154,7 +157,7 @@ $tabList = [
                     { data: 'arrival_time', name: 'arrival_time'},
                     { data: 'time', name: 'time'},
                     { data: 'info', name: 'info'},
-//                    { data: 'action', name: 'action'},
+                    { data: 'action', name: 'action'},
                     @if($mode == 'edit')
                     { data: 'delete', name: 'delete' },
                     @endif
@@ -163,8 +166,7 @@ $tabList = [
                     {
                         'orderable': false,
                         @if($mode == 'edit')
-                        'targets': [1,3,9,10,11]
-//                        'targets': [1,3,9,10,11,12]
+                        'targets': [1,3,9,10,11,12]
                         @else
                         'targets': [0,2,8,9,10,]
                         @endif

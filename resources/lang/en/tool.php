@@ -110,6 +110,7 @@ Attackcount: %ELEMENT_COUNT%
     'attackCountTitle' => 'Attack selection',
     'multiedit' => 'Multiedit',
     'tips' => 'Tips',
+    'warnSending' => 'Using the Send-Troops button is done on your own risk. If you encounter any problems please tell the DS-Ultimate team (via Discord or Report Problem)',
   ),
   'map' => 
   array (

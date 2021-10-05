@@ -110,6 +110,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'attackCount' => 'Es wurden keine Angriffe für die Bearbeitung ausgewählt',
     'multiedit' => 'Massenbearbeitung',
     'tips' => 'Tipps',
+    'warnSending' => 'Die Benutzung des abschicken Knopfes geschieht auf eine Gefahr. Sollten Probleme auftreten wende dich bitte an das DS-Ultimate Team (entweder im Discord oder via Fehler Melden)',
   ),
   'map' => 
   array (
