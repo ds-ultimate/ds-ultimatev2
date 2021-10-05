@@ -726,7 +726,7 @@ $tabList = [
             if(timeDiff == null) {
                 var localTime = new Date().getTime() / 1000;
                 var serverPage = parseInt({{ \Carbon\Carbon::now()->timestamp }}{{ \Carbon\Carbon::now()->milli }}) / 1000;
-                timeDiff = localTime - serverPage;
+                timeDiff = serverPage - localTime;
                 //console.log("Server delay", timeDiff);
             }
             
@@ -735,7 +735,7 @@ $tabList = [
                     var localTime = new Date().getTime() / 1000;
                     now = parseInt(response.data['time']);
                     now+= parseInt(response.data['millis']) / 1000;
-                    timeDiff = localTime - now;
+                    timeDiff = now - localTime;
                     //console.log("Ajax delay", timeDiff);
                 })
                 .catch((error) => {
