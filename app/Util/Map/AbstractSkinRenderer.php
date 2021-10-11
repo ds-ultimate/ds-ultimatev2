@@ -74,8 +74,10 @@ abstract class AbstractSkinRenderer {
     /*
      * This function uses Picture coordinates
      */
-    private function renderCenteredText($x, $y, $text, $color) {
-        $size = $this->imgW / 50 + $this->fieldWidth * 4;
+    protected function renderCenteredText($x, $y, $text, $color, $size=null) {
+        if($size == null) {
+            $size = $this->imgW / 50 + $this->fieldWidth * 4;
+        }
         $box = imagettfbbox($size, 0, $this->font, $text);
 
         $drawX = $x - ($box[6] + $box[2]) / 2;

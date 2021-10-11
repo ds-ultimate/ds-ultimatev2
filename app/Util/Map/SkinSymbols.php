@@ -2,6 +2,7 @@
 
 namespace App\Util\Map;
 
+use App\Util\BasicFunctions;
 use App\Util\ColorUtil;
 
 /**
@@ -155,7 +156,7 @@ class SkinSymbols extends AbstractSkinRenderer {
         } catch (\ErrorException $ex) {
             BasicFunctions::local();
             $fg = imagecolorallocate($this->image, 255, 255, 255);
-            $this->renderCenteredText($this->imgW / 2, $this->imgH / 2, __('tool.map.drawingErr'), $fg);
+            $this->renderCenteredText($this->imgW / 2, $this->imgH / 2, __('tool.map.drawingErr'), $fg, $this->imgW / 45);
         }
     }
     
