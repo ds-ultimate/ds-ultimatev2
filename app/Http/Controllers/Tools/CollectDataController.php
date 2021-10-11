@@ -188,7 +188,6 @@ class CollectDataController extends BaseController
         
         $results = array();
         foreach($allData as $data) {
-            $buildConf = simplexml_load_string($data->world->buildings);
             $worldConf = simplexml_load_string($data->world->config);
             if($buildConf == null) {
                 echo "Skipping entry {$data->id} because of missing b conf<br>\n";

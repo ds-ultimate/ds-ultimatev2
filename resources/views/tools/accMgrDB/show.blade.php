@@ -12,16 +12,24 @@
             <div class="float-left mt-4">
                 <a class="btn btn-primary" href="{{ route('tools.accMgrDB.index') }}">{{ __('global.back') }}</a>
             </div>
-            <h1 class="font-weight-normal">{{ __('tool.accMgrDB.title_show') }}</h1>
-
             <div class="float-right mt-4">
                 <input id="export_template_data" class="d-none mr-2" type="text" readonly="readonly" value="{{ $template->exportDS() }}">
                 <a id="export_template" class="btn btn-primary"><i class="far fa-copy"></i> {{ __("tool.accMgrDB.export") }}</a>
             </div>
+            <h1 class="font-weight-normal">{{ __('tool.accMgrDB.title_show') }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
+            <div style="display:flow-root">
+                <div class="float-left">
+                    <a class="btn btn-primary" href="{{ route('tools.accMgrDB.index') }}">{{ __('global.back') }}</a>
+                </div>
+                <div class="float-right">
+                    <input id="export_template_data_mobile" class="d-none mr-2" type="text" readonly="readonly" value="">
+                    <a id="export_template_mobile" class="btn btn-primary"><i class="far fa-copy"></i> {{ __("tool.accMgrDB.export") }}</a>
+                </div>
+            </div>
             <h1 class="font-weight-normal">
                 {{ __('tool.accMgrDB.title_show') }}
             </h1>
@@ -44,12 +52,16 @@
                     <tbody>
                     <tr>
                         @foreach(\App\Util\BuildingUtils::$BUILDINGS as $name=>$info)
-                            <th><img src="{{ \App\Util\BuildingUtils::getImage($name) }}" data-toggle="tooltip" title="{{ __("ui.buildings.$name") }}"></th>
+                            @if($info['max_level'] >= 0)
+                                <th><img src="{{ \App\Util\BuildingUtils::getImage($name) }}" data-toggle="tooltip" title="{{ __("ui.buildings.$name") }}"></th>
+                            @endif
                         @endforeach
                     </tr>
                     <tr>
                         @foreach(\App\Util\BuildingUtils::$BUILDINGS as $name=>$info)
-                            <td>{{ $result[$name] ?? 0 }}</td>
+                            @if($info['max_level'] >= 0)
+                                <td>{{ $result[$name] ?? 0 }}</td>
+                            @endif
                         @endforeach
                     </tr>
                     <tr>
@@ -99,9 +111,10 @@
 @push('js')
 <script>
     $(function() {
-        $('#export_template_data').removeClass("d-none").hide();
-        $('#export_template').click(function () {
+        $('#export_template,#export_template_mobile').click(function () {
+            $('#export_template_data_mobile').val($('#export_template_data').val())
             $('#export_template_data').removeClass("d-none");
+            $('#export_template_data_mobile').removeClass("d-none");
             copy('#export_template_data');
             createToast("{{ __("tool.accMgrDB.export_success") }}", "{{ __("tool.accMgrDB.export") }}", "now", "fas fa-check");
         });
@@ -139,12 +152,10 @@
     function copy(selector) {
         /* Get the text field */
         var copyText = $(selector);
-        copyText.show();
         /* Select the text field */
         copyText.select();
         /* Copy the text inside the text field */
         document.execCommand("copy");
-        copyText.hide();
     }
 </script>
 @endpush

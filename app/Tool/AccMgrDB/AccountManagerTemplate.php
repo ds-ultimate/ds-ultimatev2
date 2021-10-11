@@ -47,8 +47,8 @@ class AccountManagerTemplate extends Model
         1 => "barracks",
         2 => "stable",
         3 => "garage",
-        4 => "church", //???????
-        5 => "church_f", //???????
+        4 => "church",
+        5 => "church_f",
         6 => "watchtower",
         7 => "snob",
         8 => "smith",

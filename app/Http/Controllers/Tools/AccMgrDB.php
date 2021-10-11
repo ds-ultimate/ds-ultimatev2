@@ -261,6 +261,7 @@ class AccMgrDB extends BaseController
     public static function createAllBuildingsTable($result) {
         $retval = "";
         foreach(BuildingUtils::$BUILDINGS as $name=>$info) {
+            if($info['max_level'] < 1) continue;
             $retval.= "<td><a id='building_";
             $retval.= BasicFunctions::escape($name);
             $retval.= "' class='buildHotbar font-weight-bold' style='cursor: pointer'>";

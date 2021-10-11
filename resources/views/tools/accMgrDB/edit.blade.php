@@ -57,7 +57,9 @@
                     <table id="table_all" class="table table-borderless table-sm w-100"><tbody>
                         <tr>
                             @foreach(\App\Util\BuildingUtils::$BUILDINGS as $name=>$info)
-                                <th><img src="{{ \App\Util\BuildingUtils::getImage($name) }}" data-toggle="tooltip" title="{{ __("ui.buildings.$name") }}"></th>
+                                @if($info['max_level'] >= 0)
+                                    <th><img src="{{ \App\Util\BuildingUtils::getImage($name) }}" data-toggle="tooltip" title="{{ __("ui.buildings.$name") }}"></th>
+                                @endif
                             @endforeach
                         </tr>
                         <tr id="building_all_row">
@@ -83,7 +85,9 @@
                     <div>{{ __('tool.accMgrDB.building') }}</div>
                     <select name="name" class="form-control select2-sel">
                         @foreach(\App\Util\BuildingUtils::$BUILDINGS as $name=>$options)
-                            <option value="{{ $name }}">{{ __("ui.buildings.$name") }}</option>
+                            @if($options['max_level'] >= 0)
+                                <option value="{{ $name }}">{{ __("ui.buildings.$name") }}</option>
+                            @endif
                         @endforeach
                     </select>
                     <input name="amount" type="number" class="form-control form-control-sm" min="1" max="30" value="1">
@@ -109,7 +113,9 @@
 <script>
     var currentLevel = {
         @foreach(\App\Util\BuildingUtils::$BUILDINGS as $name=>$info)
-            '{{$name}}': {{ $result[$name] ?? 0 }},
+            @if($info['max_level'] >= 0)
+                '{{$name}}': {{ $result[$name] ?? 0 }},
+            @endif
         @endforeach
     };
 

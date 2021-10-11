@@ -106,7 +106,7 @@ $.fn.rating = function (params, callback) {
         },
         translate:{
             votes: 'Bewertungen',
-            yourVote: 'Deine Bewerung'
+            yourVote: 'Deine Bewertung'
         }
     }, params)
 
