@@ -3,27 +3,23 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Notifications\DiscordNotification;
 use App\Profile;
 use App\Util\BasicFunctions;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 use Carbon\Carbon;
-use mysql_xdevapi\Collection;
 use NotificationChannels\Discord\Discord;
-use WebSocket\Exception;
 
 class LoginController extends Controller
 {
 
     private static $drivers = [
-        'facebook' => ['name' => 'facebook', 'icon' => 'fab fa-facebook', 'color' => '#4267B2'],
+//        'facebook' => ['name' => 'facebook', 'icon' => 'fab fa-facebook', 'color' => '#4267B2'],
         'google' => ['name' => 'google', 'icon' => 'fab fa-google-plus', 'color' => '#ea4335'],
         'github' => ['name' => 'github', 'icon' => 'fab fa-github', 'color' => '#333333'],
-        'twitter' => ['name' => 'twitter', 'icon' => 'fab fa-twitter', 'color' => '#1da1f2'],
+//        'twitter' => ['name' => 'twitter', 'icon' => 'fab fa-twitter', 'color' => '#1da1f2'],
         'discord' => ['name' => 'discord', 'icon' => 'fab fa-discord', 'color' => '#7289da'],
     ];
 
