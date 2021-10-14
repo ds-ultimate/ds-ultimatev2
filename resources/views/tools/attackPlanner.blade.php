@@ -9,6 +9,11 @@
         table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a {color: #7d510f;}
         table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {color: #212529;}
         table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {background-color: rgba(237, 212, 146, 0.4);}
+        @media print {
+            #data1 a {
+                color: #000;
+            }
+        }
     </style>
 @endpush
 
@@ -56,7 +61,7 @@ $tabList = [
         <!-- ENDE Titel für Mobile Geräte -->
         @if($mode == 'edit')
         <!-- Village Card -->
-        <div class="col-12">
+        <div class="col-12 d-print-none">
             @if($attackList->title === null)
             <div class="card mt-2 p-3">
                 {{ __('tool.attackPlanner.withoutTitle') }}
@@ -81,7 +86,7 @@ $tabList = [
         @endif
         <!-- Unit Card -->
         <div class="col-12 mt-2">
-            <div class="card mb-2 p-3">
+            <div class="card mb-2 p-3 d-print-none">
                 <b>{{ __('tool.attackPlanner.warnSending') }}</b>
             </div>
             <div class="card">
@@ -187,7 +192,7 @@ $tabList = [
                     @endif
                     countdown();
                     popover();
-                    $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline">' +
+                    $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline d-print-none">' +
                         '<div class="col-9">' +
                             '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
                             '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
