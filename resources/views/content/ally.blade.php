@@ -28,9 +28,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="true">{{ __('ui.nav.stats') }}</a>
                     </li>
+                    @isset($allyTopData)
                     <li class="nav-item">
                         <a class="nav-link" id="tops-tab" data-toggle="tab" href="#tops" role="tab" aria-controls="tops" aria-selected="false">{{ __('ui.nav.tops') }}</a>
                     </li>
+                    @endisset
                     <li class="nav-item">
                         <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">{{ __('ui.nav.map') }}</a>
                     </li>
@@ -105,6 +107,7 @@
                         </table>
                     </div>
                     
+                    @isset($allyTopData)
                     <!-- BEGIN TOP Table -->
                     <div class="tab-pane fade" id="tops" role="tabpanel" aria-labelledby="tops-tab">
                         <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
@@ -197,6 +200,7 @@
                             </tbody>
                         </table>
                     </div>
+                    @endisset
                     <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
                     </div>
                 </div>
