@@ -48,7 +48,6 @@ class UpdateCleanCache extends Command
         $deleted = 0;
         $ftimeMin = time() - $time;
         $this->recursiveCleanCache($dir, $ftimeMin, $all, $deleted);
-        echo "$conf: Removed $deleted of $all\n";
     }
         
     public function recursiveCleanCache($dir, $ftimeMin, &$all, &$deleted) {
