@@ -184,7 +184,7 @@ class BugreportsController extends Controller
                 'multiple' => false,
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.description'), 'description', null, false, true),
-            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.url'), 'url', null, false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.url'), 'url', null, false, false),
         ];
     }
     
