@@ -75,7 +75,7 @@ class HomeController
             $hitrate[] = [
                 "date" => $raw->date,
                 "val" => [
-                    round(100 * $raw->hits / ($raw->hits + $raw->misses)),
+                    ($raw->hits + $raw->misses > 0)?(round(100 * $raw->hits / ($raw->hits + $raw->misses))):(0),
                 ],
             ];
             
