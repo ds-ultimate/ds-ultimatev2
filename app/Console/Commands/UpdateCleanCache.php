@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Util\CacheLogger;
 use Illuminate\Console\Command;
 
-class UpdateCacheStats extends Command
+class UpdateCleanCache extends Command
 {
     /**
      * The name and signature of the console command.
