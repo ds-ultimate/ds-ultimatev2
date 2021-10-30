@@ -17,8 +17,8 @@ class DoSpeedWorld
         ],
         'ch' => [
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*\u00C4ndi:</td> <td>(.*?)</td>]",
-            'date' => "d.m.y  H:i",
-            'dateTimeFix' => false,
+            'date' => "M d, H:i",
+            'dateTimeFix' => true,
         ],
         'en' => [
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
