@@ -184,13 +184,19 @@ class APIController extends Controller
                 $flag = BasicFunctions::escape($data->flag);
                 return "<span class='flag-icon flag-icon-{$flag}'></span> [{$flag}]";
             })
+            ->editColumn("speed_active", function ($data) {
+                if($data->speed_active == 1) {
+                    return '<span class="fas fa-check" style="color: green"></span>';
+                }
+                return '<span class="fas fa-times" style="color: red"></span>';
+            })
             ->editColumn("active", function ($data) {
                 if($data->active == 1) {
                     return '<span class="fas fa-check" style="color: green"></span>';
                 }
                 return '<span class="fas fa-times" style="color: red"></span>';
             })
-            ->rawColumns(['flag', 'active', 'actions'])
+            ->rawColumns(['flag', 'speed_active', 'active', 'actions'])
             ->toJson();
     }
     

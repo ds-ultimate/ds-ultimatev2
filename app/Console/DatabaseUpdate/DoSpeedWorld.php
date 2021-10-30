@@ -4,15 +4,37 @@ namespace App\Console\DatabaseUpdate;
 
 use App\SpeedWorld;
 use App\Server;
-use App\World;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class DoSpeedWorld
 {
+    private static $SPEED_LANGUAGE = [
+        'de' => [
+            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*Ende:</td> <td>(.*?)</td>]",
+            'date' => "d.m.y  H:i",
+            'dateTimeFix' => false,
+        ],
+        'ch' => [
+            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*\u00C4ndi:</td> <td>(.*?)</td>]",
+            'date' => "d.m.y  H:i",
+            'dateTimeFix' => false,
+        ],
+        'en' => [
+            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
+            'date' => "M d, H:i",
+            'dateTimeFix' => true,
+        ],
+        'uk' => [
+            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
+            'date' => "M d, H:i",
+            'dateTimeFix' => true,
+        ],
+    ];
+    
     public static function run(){
         $serverArray = Server::getServer();
+        $foundSomething = false;
 
         foreach ($serverArray as $serverModel){
             if(! $serverModel->speed_active) {
@@ -24,15 +46,13 @@ class DoSpeedWorld
             $speedFile = preg_replace("[<script.*?>.*?</script>]", "", $speedFile);
             
             $speedRounds = static::getAllSpeedRounds($speedFile);
-            if(count($speedRounds) < 1) {
-                throw new \Exception("nothing found check implementation");
+            if(count($speedRounds) > 0) {
+                $foundSomething = true;
             }
             
-            $regex = "[";
-            $regex.= "<h3>#(\\d*) .*?</h3>.*";
-            $regex.= "Start:</td> <td>(.*?)</td>.*";
-            $regex.= "Ende:</td> <td>(.*?)</td>";
-            $regex.= "]";
+            $regex = static::$SPEED_LANGUAGE[$serverModel->code]['regex'];
+            $dateFormat = static::$SPEED_LANGUAGE[$serverModel->code]['date'];
+            $dateTimeFix = static::$SPEED_LANGUAGE[$serverModel->code]['dateTimeFix'];
             foreach($speedRounds as $round) {
                 //extract data
                 preg_match($regex, $round, $matches);
@@ -43,8 +63,17 @@ class DoSpeedWorld
                 
                 $num = $matches[1];
                 $name = "s" . $num;
-                $start = Carbon::createFromFormat('d.m.y  H:i', $matches[2]);
-                $end = Carbon::createFromFormat('d.m.y  H:i', $matches[3]);
+                $start = Carbon::createFromFormat($dateFormat, $matches[2]);
+                $end = Carbon::createFromFormat($dateFormat, $matches[3]);
+                if($dateTimeFix) {
+                    // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
+                    if($start->isPast()) {
+                        $start = $start->addYear();
+                    }
+                    if($end->isPast()) {
+                        $end = $end->addYear();
+                    }
+                }
                 
                 //update existing rounds
                 //use number as unique identifier
@@ -77,6 +106,10 @@ class DoSpeedWorld
                     }
                 }
             }
+        }
+        
+        if(! $foundSomething) {
+            throw new \Exception("nothing found check implementation");
         }
     }
     
