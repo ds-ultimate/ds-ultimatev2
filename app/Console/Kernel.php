@@ -164,6 +164,19 @@ class Kernel extends ConsoleKernel
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
 
+        /*
+         * Clean the cache
+         */
+        $schedule->command("update:cleanCache")
+            ->dailyAt('02:10')
+            ->onSuccess(function (){
+                Log::info('cleanCache -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('cleanCache -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
+
     }
 
     /**

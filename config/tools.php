@@ -13,6 +13,7 @@ return [
     ],
     'chart' => [
         'cacheDir' => 'app/chartCache/',
+        'cacheDuration' => 24 * 60 * 60,
     ],
     'logs' => [
         'cacheRates' => 'customLog/cache/',

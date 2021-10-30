@@ -149,7 +149,7 @@ class PictureController extends Controller
     
     private function checkCache($dir, $fName, $ext) {
         $tmp = "$dir/$fName.$ext";
-        if(!file_exists($tmp) || (time() - filemtime($tmp)) > 86400) {
+        if(!file_exists($tmp) || (time() - filemtime($tmp)) > config("tools.chart.cacheDuration")) {
             CacheLogger::logMiss(CacheLogger::$PICTURE_TYPE, $fName.$ext);
             return null;
         }
