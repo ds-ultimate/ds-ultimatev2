@@ -14,21 +14,25 @@ class DoSpeedWorld
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*Ende:</td> <td>(.*?)</td>]",
             'date' => "d.m.y  H:i",
             'dateTimeFix' => false,
+            'locale' => 'Europe/Berlin',
         ],
         'ch' => [
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*\u00C4ndi:</td> <td>(.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
+            'locale' => 'Europe/Zurich',
         ],
         'en' => [
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
+            'locale' => 'Europe/London',
         ],
         'uk' => [
             'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
+            'locale' => 'Europe/London',
         ],
     ];
     
@@ -53,6 +57,7 @@ class DoSpeedWorld
             $regex = static::$SPEED_LANGUAGE[$serverModel->code]['regex'];
             $dateFormat = static::$SPEED_LANGUAGE[$serverModel->code]['date'];
             $dateTimeFix = static::$SPEED_LANGUAGE[$serverModel->code]['dateTimeFix'];
+            $dateLocale = static::$SPEED_LANGUAGE[$serverModel->code]['locale'];
             foreach($speedRounds as $round) {
                 //extract data
                 preg_match($regex, $round, $matches);
@@ -63,8 +68,8 @@ class DoSpeedWorld
                 
                 $num = $matches[1];
                 $name = "s" . $num;
-                $start = Carbon::createFromFormat($dateFormat, $matches[2]);
-                $end = Carbon::createFromFormat($dateFormat, $matches[3]);
+                $start = Carbon::createFromFormat($dateFormat, $matches[2], $dateLocale);
+                $end = Carbon::createFromFormat($dateFormat, $matches[3], $dateLocale);
                 if($dateTimeFix) {
                     // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
                     if($start->isPast()) {
