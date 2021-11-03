@@ -35,12 +35,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapPlayerRecordRoutes();
         $this->mapApiRoutes();
-
         $this->mapWebRoutes();
-
         $this->mapToolRoutes();
-        //
     }
 
     /**
@@ -87,5 +85,22 @@ class RouteServiceProvider extends ServiceProvider
              ->name('api.')
              ->namespace($this->namespace."\API")
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the routes for usage as player record ingame
+     *
+     * Mostly same configuration as web routes
+     * ! No ! Prefix so that it is possible to define routes with server/world
+     *
+     * @return void
+     */
+    protected function mapPlayerRecordRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->prefix("in")
+             ->name('playerRecord.')
+             ->group(base_path('routes/playerRecord.php'));
     }
 }
