@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Ally;
 use App\Player;
 use App\Server;
+use App\SpeedWorld;
 use App\Village;
 use App\World;
 use App\Http\Controllers\Controller;
@@ -198,16 +199,16 @@ class PictureController extends Controller
             $world = substr($serWorld, 2, 3);
         }
         
-        if(World::isSpeedName($world)) {
+        if(World::isSpecialServerName($world)) {
             //find first speed world with correct update url and use that?
             $serverData = Server::getServerByCode($server);
-            $model = new World();
+            $model = new SpeedWorld();
             $first = $model
                 ->where("server_id", $serverData->id)
-                ->where("url", "LIKE", "%" . BasicFunctions::likeSaveEscape($world) . "%")
-                ->where("active", 1)
+                ->where("instance", $world)
+                ->where("started", 1)
                 ->first();
-            $world = $first->name;
+            $world = $first->world->name;
         }
     }
 }

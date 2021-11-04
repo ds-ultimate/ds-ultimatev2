@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SpeedWorld extends Model
 {
-
     use SoftDeletes;
 
     protected $table = 'speed_worlds';

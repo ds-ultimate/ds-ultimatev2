@@ -89,11 +89,11 @@ class Kernel extends ConsoleKernel
         //speed servers
         //loads the upcoming speed worlds into the database
         $schedule->command('update:speedWorld')
-            ->dailyAt('23:50')
+            ->everySixHours()
             ->appendOutputTo("storage/logs/cron-critical.log");
         
         $schedule->command('update:speedWorldBackend')
-            ->everyFifteenMinutes()
+            ->hourly()
             ->skip(UpdateSpeedWorldBackend::canSkip())
             ->appendOutputTo("storage/logs/cron-critical.log");
         

@@ -27,7 +27,7 @@ class DoWorld
                     continue;
                 }
                 $worldName = substr($world, 2);
-                if(World::isSpeedName($worldName)) {
+                if(World::isSpecialServerName($worldName)) {
                     //ignore speed worlds here since we have a seperate update system for them
                     continue;
                 }

@@ -7,6 +7,7 @@ use App\Changelog;
 use App\News;
 use App\Role;
 use App\Server;
+use App\SpeedWorld;
 use App\User;
 use App\World;
 use App\Http\Controllers\Controller;
@@ -190,13 +191,19 @@ class APIController extends Controller
                 }
                 return '<span class="fas fa-times" style="color: red"></span>';
             })
+            ->editColumn("classic_active", function ($data) {
+                if($data->classic_active == 1) {
+                    return '<span class="fas fa-check" style="color: green"></span>';
+                }
+                return '<span class="fas fa-times" style="color: red"></span>';
+            })
             ->editColumn("active", function ($data) {
                 if($data->active == 1) {
                     return '<span class="fas fa-check" style="color: green"></span>';
                 }
                 return '<span class="fas fa-times" style="color: red"></span>';
             })
-            ->rawColumns(['flag', 'speed_active', 'active', 'actions'])
+            ->rawColumns(['flag', 'speed_active', 'classic_active', 'active', 'actions'])
             ->toJson();
     }
     
@@ -255,6 +262,55 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['server', 'url', 'worldUpdated_at', 'worldCleaned_at', 'active', 'actions'])
+            ->toJson();
+    }
+    
+    public function speedWorlds()
+    {
+        abort_unless(\Gate::allows('speed_world_access'), 403);
+        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        
+        $permissions = [
+            'show' => 'speed_world_show',
+            'edit' => 'speed_world_edit',
+            'delete' => 'speed_world_delete',
+        ];
+        $routes = [
+            'show' => 'admin.speedWorlds.show',
+            'edit' => 'admin.speedWorlds.edit',
+            'delete' => 'admin.speedWorlds.destroy',
+        ];
+        $now = Carbon::now();
+        
+        $model = new SpeedWorld();
+        return DataTables::eloquent($model->newQuery())
+            ->editColumn("server", function ($data) {
+                return "<span class='flag-icon flag-icon-".BasicFunctions::escape($data->server->flag)."'></span>"
+                        . " [".BasicFunctions::escape($data->server->code)."]";
+            })
+            ->addColumn("url", function ($data) {
+                if($data->world == null) {
+                    return " - ";
+                }
+                $url = BasicFunctions::escape($data->world->url);
+                return "<a href='{$url}' target='_blank'>{$url}</a>";
+            })
+            ->editColumn("planned_start", function ($data) {
+                return Carbon::createFromTimestamp($data->planned_start);
+            })
+            ->editColumn("planned_end", function ($data) {
+                if($data->planned_end == -1) {
+                    return " - ";
+                }
+                return Carbon::createFromTimestamp($data->planned_end);
+            })
+            ->editColumn("started", function ($data) {
+                return BasicFunctions::worldStatus($data->started);
+            })
+            ->addColumn('actions', function ($data) use($permissions, $routes) {
+                return $this->generateActions($permissions, $routes, $data->id);
+            })
+            ->rawColumns(['server', 'url', 'started', 'actions'])
             ->toJson();
     }
     

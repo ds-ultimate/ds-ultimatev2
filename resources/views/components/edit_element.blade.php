@@ -83,10 +83,27 @@
             <label for="{{ $formEntry['id'] }}">{{ $formEntry['name'] }}{{ $formEntry['required']?' *':'' }}</label>
         </div>
         @break
+
+    @case('time')
+        <div class="{{ $errors->has($formEntry['id']) ? ' is-invalid' : '' }}">
+            <input type="date" id="{{ $formEntry['id'] }}_date" name="{{ $formEntry['id'] }}_date" value="{{ $formEntry['value']['d'] }}">
+            <input type="time" id="{{ $formEntry['id'] }}_time" name="{{ $formEntry['id'] }}_time" value="{{ $formEntry['value']['t'] }}">
+        </div>
+        @if($errors->has($formEntry['id'] . "_date"))
+            <em class="invalid-feedback d-block">
+                {{ $errors->first($formEntry['id'] . "_date") }}
+            </em>
+        @endif
+        @if($errors->has($formEntry['id'] . "_time"))
+            <em class="invalid-feedback d-block">
+                {{ $errors->first($formEntry['id'] . "_time") }}
+            </em>
+        @endif
+        @break
     @endswitch
 
     @if($errors->has($formEntry['id']))
-        <em class="invalid-feedback">
+        <em class="invalid-feedback d-block">
             {{ $errors->first($formEntry['id']) }}
         </em>
     @endif

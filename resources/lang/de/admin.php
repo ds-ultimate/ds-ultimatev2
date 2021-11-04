@@ -14,6 +14,7 @@ return array (
     'update' => 'Server editieren',
     'show' => 'Server anzeigen',
     'speed_active' => 'Speed-Welten aktiv',
+    'classic_active' => 'Classic-Welten aktiv',
   ),
   'news' => 
   array (
@@ -145,5 +146,23 @@ return array (
     'maps' => 'Weltkarten',
     'pictures' => 'Diagramme',
     'title' => 'Cache Statistiken',
+  ),
+  'speedWorlds' => 
+  array (
+    'title' => 'Speed Welten',
+    'create' => 'Neue Spezialwelt anlegen',
+    'id' => 'ID',
+    'server' => 'Server',
+    'name' => 'Name',
+    'plannedStart' => 'Geplanter Start',
+    'plannedEnd' => 'Geplantes Ende',
+    'url' => 'Url',
+    'started' => 'aktiv',
+    'instance' => 'Instanz',
+    'titleCreate' => 'Spezialwelt anlegen',
+    'update' => 'Spezialwelt editieren',
+    'show' => 'Spezialwelt anzeigen',
+    'flag' => 'Sprachversion',
+    'active' => 'Aktiv',
   ),
 );

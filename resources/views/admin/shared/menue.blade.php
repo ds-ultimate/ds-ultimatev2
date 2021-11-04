@@ -16,6 +16,7 @@
         <x-admin.menue access="server_management_access" route="" icon="fa-cloud" dropdownId="drop_server" :name="__('admin.serverManagement.title')">
             <x-admin.menue access="server_access" route="admin.server.index" icon="fa-unlock-alt" :name="__('admin.server.title')" />
             <x-admin.menue access="world_access" route="admin.worlds.index" icon="fa-globe" :name="__('admin.worlds.title')" />
+            <x-admin.menue access="speed_world_access" route="admin.speedWorlds.index" icon="fa-globe" :name="__('admin.speedWorlds.title')" />
         </x-admin.menue>
 
         <x-admin.menue access="bugreport_management_access" route="" icon="fa-bug" dropdownId="drop_bug" :name="__('admin.bugreport.title')">

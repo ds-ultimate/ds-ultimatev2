@@ -82,7 +82,8 @@ return array (
     'titleCreate' => 'create server',
     'update' => 'edit server',
     'url' => 'Update url',
-    'speed_active' => 'Spped-Worlds active',
+    'speed_active' => 'speed-worlds active',
+    'classic_active' => 'classic-worlds active',
   ),
   'serverManagement' => 
   array (
@@ -145,5 +146,23 @@ return array (
     'signatures' => 'signatures',
     'size' => 'size',
     'title' => 'cache statistics',
+  ),
+  'speedWorlds' => 
+  array (
+    'title' => 'speed worlds',
+    'url' => 'url',
+    'create' => 'create a new special world',
+    'id' => 'id',
+    'instance' => 'instance',
+    'name' => 'name',
+    'plannedEnd' => 'planned end',
+    'plannedStart' => 'planned start',
+    'server' => 'server',
+    'started' => 'active',
+    'flag' => 'Country',
+    'active' => 'active',
+    'show' => 'show special world',
+    'titleCreate' => 'create a new special world',
+    'update' => 'edit special world',
   ),
 );

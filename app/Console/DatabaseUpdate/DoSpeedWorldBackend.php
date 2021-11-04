@@ -24,48 +24,75 @@ class DoSpeedWorldBackend
         $serverArray = Server::getServer();
 
         foreach ($serverArray as $serverModel){
-            if(! $serverModel->speed_active) {
+            if(! $serverModel->speed_active && ! $serverModel->classic_active) {
                 continue;
             }
             
+            $curActive = (new SpeedWorld())
+                    ->where('server_id', $serverModel->id)
+                    ->where('planned_start', '<=', time())
+                    ->where(function($query) {
+                        $query->orWhere('planned_end', '>=', time())
+                            ->orWhere('planned_end', -1);
+                    })
+                    ->get();
+            
             $worldFile = file_get_contents($serverModel->url.'/backend/get_servers.php');
             $worldArray = unserialize($worldFile);
+            
             foreach ($worldArray as $world => $link){
                 if($serverModel->code != substr($world, 0, 2)) {
                     echo "Ignoring {$serverModel->code} / {$world}\n";
                     continue;
                 }
                 $worldName = substr($world, 2);
-                if(! World::isSpeedName($worldName)) {
-                    //ignore everything other than speed
+                if(World::isSpeedName($worldName) && $serverModel->speed_active) {
+                    //ok
+                } else if(World::isClassicServerName($worldName) && $serverModel->classic_active) {
+                    //ok
+                } else {
+                    //ignore everything other than speed / classic
                     continue;
                 }
-
-                $curActive = (new SpeedWorld())
-                        ->where('server_id', $serverModel->id)
-                        ->where('planned_start', '<=', time())
-                        ->where('planned_end', '>=', time())
-                        ->get();
                 
-                if(count($curActive) < 1) {
-                    $input = new \Exception("World in backend but not in planned " . $link . " at " . $serverModel->code);
-                    DiscordNotificationQueueElement::exception($input);
-                    continue;
+                //find coresponding speedWorld
+                $match = null;
+                foreach($curActive as $sWorld) {
+                    if($sWorld->instance == null) {
+                        //this world had not been assigned to an instance -> possible
+                        if($match == null) {
+                            $match = $sWorld;
+                        } else {
+                            $exception = new \Exception("Please add support for more than one speed world at the same time" . $serverModel->code);
+                            DiscordNotificationQueueElement::exception($exception);
+                            $match = null;
+                            break;
+                        }
+                    } else if($sWorld->instance == $worldName) {
+                        $match = $sWorld;
+                        break;
+                    }
                 }
-                if(count($curActive) > 1) {
-                    $input = new \Exception("Please add support for more than one speed world " . $serverModel->code);
-                    DiscordNotificationQueueElement::exception($input);
-                    continue;
-                }
-                $worldName = $curActive[0]->name;
-                $curActive[0]->started = true;
-                $curActive[0]->worldCheck_at = Carbon::now();
-                $curActive[0]->update();
                 
-                if($curActive[0]->world_id !== null) {
+                if(isset($exception)) {
+                    unset($exception);
+                    continue;
+                } else if($match == null) {
+                    $exception = new \Exception("World in backend but not in planned " . $link . " at " . $serverModel->code);
+                    DiscordNotificationQueueElement::exception($exception);
+                    continue;
+                }
+                
+                $instanceName = $worldName;
+                $worldName = $match->name;
+                $match->started = true;
+                $match->worldCheck_at = Carbon::now();
+                $match->update();
+                
+                if($match->world_id !== null) {
                     //world exists already -> update
                     $create = false;
-                    $worldNew = $curActive[0]->world;
+                    $worldNew = $match->world;
                     if($worldNew->active == null) {
                         $worldNew->active = 1;
                     }
@@ -94,8 +121,9 @@ class DoSpeedWorldBackend
                         continue;
                     }
                     
-                    $curActive[0]->world_id = $worldNew->id;
-                    $curActive[0]->update();
+                    $match->instance = $instanceName;
+                    $match->world_id = $worldNew->id;
+                    $match->update();
 
                     BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
                     $name = BasicFunctions::getDatabaseName('', '').$world;
@@ -118,7 +146,7 @@ class DoSpeedWorldBackend
         $worldModel = new World();
         
         foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
-            if(! $world->isSpeed()) {
+            if(! $world->isSpecialServer()) {
                 continue;
             }
             if($world->active != null) {

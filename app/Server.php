@@ -26,6 +26,7 @@ class Server extends Model
         'flag',
         'url',
         'speed_active',
+        'classic_active',
         'active',
     ];
 

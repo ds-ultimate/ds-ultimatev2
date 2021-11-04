@@ -209,12 +209,28 @@ class World extends Model
         }
     }
     
+    public function isSpecialServer() {
+        return static::isSpecialServerName($this->name);
+    }
+    
+    public static function isSpecialServerName($name) {
+        return static::isSpeedName($name) || static::isClassicServerName($name);
+    }
+    
     public function isSpeed() {
         return static::isSpeedName($this->name);
     }
     
     public static function isSpeedName($name) {
         return strpos($name, 's') !== false;
+    }
+    
+    public function isClassicServer() {
+        return static::isSpecialServerName($this->name);
+    }
+    
+    public static function isClassicServerName($name) {
+        return strpos($name, 'c') !== false;
     }
 
     public function unitConfig(){

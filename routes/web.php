@@ -54,6 +54,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
     Route::delete('worlds/destroy', [\App\Http\Controllers\Admin\WorldsController::class, 'massDestroy'])->name('worlds.massDestroy');
     Route::resource('worlds', \App\Http\Controllers\Admin\WorldsController::class);
 
+    Route::delete('speedWorlds/destroy', [\App\Http\Controllers\Admin\SpeedWorldsController::class, 'massDestroy'])->name('speedWorlds.massDestroy');
+    Route::resource('speedWorlds', \App\Http\Controllers\Admin\SpeedWorldsController::class);
+
     Route::delete('news/destroy', [\App\Http\Controllers\Admin\NewsController::class, 'massDestroy'])->name('news.massDestroy');
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
 
@@ -80,6 +83,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
         Route::get('/users', [\App\Http\Controllers\Admin\APIController::class, 'users'])->name('users');
         Route::get('/servers', [\App\Http\Controllers\Admin\APIController::class, 'servers'])->name('servers');
         Route::get('/worlds', [\App\Http\Controllers\Admin\APIController::class, 'worlds'])->name('worlds');
+        Route::get('/speedWorlds', [\App\Http\Controllers\Admin\APIController::class, 'speedWorlds'])->name('speedWorlds');
         Route::get('/bugreports', [\App\Http\Controllers\Admin\APIController::class, 'bugreports'])->name('bugreports');
     });
 });

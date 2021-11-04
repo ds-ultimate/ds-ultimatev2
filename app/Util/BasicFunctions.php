@@ -390,11 +390,19 @@ class BasicFunctions
 
     public static function formEntryEdit($generateFrom, $type, $name, $id, $value, $readonly, $required, $optional = array()) {
         $index = str_replace("[]", "", $id);
+        $val = $generateFrom->$index ?? $value;
+        if($type == "time") {
+            $val = [
+                'd' => Carbon::createFromTimestamp($val)->format("Y-m-d"),
+                't' => Carbon::createFromTimestamp($val)->format("H:i"),
+            ];
+        }
+        
         return array_merge([
             'type' => $type,
             'name' => $name,
             'id' => $id,
-            'value' => $generateFrom->$index ?? $value,
+            'value' => $val,
             'readonly' => $readonly,
             'required' => $required,
         ], $optional);
