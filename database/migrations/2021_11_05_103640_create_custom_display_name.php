@@ -23,7 +23,7 @@ class CreateCustomDisplayName extends Migration
         });
         
         foreach((new World())->get() as $model) {
-            $model->display_name = $model->displayName();
+            $model->display_name = $model->generateDisplayName();
             $model->save();
         }
     }
