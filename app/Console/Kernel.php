@@ -94,7 +94,6 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('update:speedWorldBackend')
             ->hourly()
-            ->skip(UpdateSpeedWorldBackend::canSkip())
             ->appendOutputTo("storage/logs/cron-critical.log");
         
         

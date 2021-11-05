@@ -42,24 +42,4 @@ class UpdateSpeedWorldBackend extends Command
         DoSpeedWorldBackend::run();
         return 0;
     }
-    
-    /**
-     * nothin to do -> skipable
-     */
-    public static function canSkip() {
-        $curActive = (new SpeedWorld())
-            ->orWhere(function ($query) {
-                return $query
-                    ->where('planned_start', '<=', time())
-                    ->where('planned_end', '>=', time())
-                    ->where('started', false);
-            })
-            ->orWhere(function ($query) {
-                return $query
-                    ->where('planned_end', '<=', time())
-                    ->where('started', true);
-            })
-            ->count();
-        return $curActive == 0;
-    }
 }
