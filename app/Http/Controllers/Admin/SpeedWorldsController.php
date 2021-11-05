@@ -150,8 +150,8 @@ class SpeedWorldsController extends Controller
                 'multiple' => false,
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.speedWorlds.name'), 'name', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedStart'), 'planned_start', ['d' => '', 't' => ''], false, true),
-            BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedEnd'), 'planned_end', ['d' => '', 't' => ''], false, false),
+            BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedStart'), 'planned_start', time(), false, true),
+            BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedEnd'), 'planned_end', time(), false, false),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.speedWorlds.instance'), 'instance', '', false, false),
         ];
     }
