@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
-@section('titel', $worldData->displayName().': '.__('ui.conquer.daily'))
+@section('titel', $worldData->display_name.': '.__('ui.conquer.daily'))
 
 @section('content')
 <div class="row justify-content-center">
     <div class="col-12">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ $worldData->displayName().': '.__('ui.conquer.daily') }}</h1>
+            <h1 class="font-weight-normal">{{ $worldData->display_name.': '.__('ui.conquer.daily') }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
         <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
-                {{ $worldData->displayName().': ' }}
+                {{ $worldData->display_name.': ' }}
             </h1>
             <h4>
                 {{ __('ui.conquer.daily') }}

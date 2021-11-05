@@ -53,7 +53,7 @@
                                     <div class="list-group" id="ownMaps" role="tablist">
                                         @foreach($maps as $map)
                                             <a class="list-group-item list-group-item-action {{ ($maps->get(0)->id === $map->id)? 'active ': '' }}" id="map-{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', '{{ $map->edit_key }}', '{{ $map->show_key }}')" href="#previewMap" role="tab" aria-controls="home">
-                                                <b>{{ $map->world->displayName() }}</b>
+                                                <b>{{ $map->world->display_name }}</b>
                                                 <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                                             </a>
                                         @endforeach
@@ -126,7 +126,7 @@
                                             <a class="list-group-item list-group-item-action {{ ($attackLists->get(0)->id === $attackList->id)? 'active ': '' }}" id="attackList-{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', '{{ $attackList->edit_key }}', '{{ $attackList->show_key }}')" data-toggle="list" role="tab" aria-controls="home">
                                                 <div class="row">
                                                     <div class="col-2">
-                                                        <b>{{ $attackList->world->displayName() }}</b>
+                                                        <b>{{ $attackList->world->display_name }}</b>
                                                     </div>
                                                     <div class="col-6">
                                                         <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>
@@ -182,7 +182,7 @@
                                     <div class="list-group" id="ownAnimatedMap" role="tablist">
                                         @foreach($animatedMaps as $map)
                                             <a class="list-group-item list-group-item-action {{ ($animatedMaps->get(0)->id === $map->id)? 'active ': '' }}" id="animatedMap-{{ $map->id }}" data-toggle="list" onclick="switchAnimatedMap('{{ $map->id }}')" href="#previewAnimatedMap" role="tab" aria-controls="home">
-                                                <b>{{ $map->world->displayName() }}</b>
+                                                <b>{{ $map->world->display_name }}</b>
                                                 <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                                             </a>
                                         @endforeach
@@ -234,7 +234,7 @@
                                     <div class="list-group" id="ownRenderedAnimatedMap" role="tablist">
                                         @foreach($renderedAnimatedMaps as $map)
                                             <a class="list-group-item list-group-item-action {{ ($renderedAnimatedMaps->get(0)->id === $map->id)? 'active ': '' }}" id="renderedAnimatedMap-{{ $map->id }}" data-toggle="list" onclick="switchRenderedAnimatedMap('{{ $map->id }}')" href="#previewRenderedAnimatedMap" role="tab" aria-controls="home">
-                                                <b>{{ $map->world->displayName() }}</b>
+                                                <b>{{ $map->world->display_name }}</b>
                                                 <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                                             </a>
                                         @endforeach
@@ -273,7 +273,7 @@
                                         @if (count($mapsFollow) > 0)
                                             @foreach($mapsFollow as $map)
                                                 <a class="list-group-item list-group-item-action {{ ($mapsFollow->get(0)->id === $map->id)? 'active ': '' }}" id="map-{{ $map->id }}" data-toggle="list" onclick="switchMap('{{ $map->id }}', null, '{{ $map->show_key }}', true)" href="#previewMap" role="tab" aria-controls="home">
-                                                    <b>{{ $map->world->displayName() }}</b>
+                                                    <b>{{ $map->world->display_name }}</b>
                                                     <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                                                 </a>
                                             @endforeach
@@ -335,7 +335,7 @@
                                                 <a class="list-group-item list-group-item-action {{ ($attackListsFollow->get(0)->id === $attackList->id)? 'active ': '' }}" id="attackList-{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', null, '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
                                                     <div class="row">
                                                         <div class="col-2">
-                                                            <b>{{ $attackList->world->displayName() }}</b>
+                                                            <b>{{ $attackList->world->display_name }}</b>
                                                         </div>
                                                         <div class="col-6">
                                                             <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>

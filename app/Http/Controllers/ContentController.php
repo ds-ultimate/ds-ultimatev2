@@ -96,7 +96,7 @@ class ContentController extends Controller
             $userHighlight = $allHighlight;
         }
 
-        $who = $worldData->displayName();
+        $who = $worldData->display_name;
         $routeDatatableAPI = route('api.worldConquer', [$worldData->server->code, $worldData->name, $type]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['world']);
 

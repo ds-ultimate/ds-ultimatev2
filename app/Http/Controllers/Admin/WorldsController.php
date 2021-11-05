@@ -55,6 +55,7 @@ class WorldsController extends Controller
         $request->validate([
             'server_id' => 'required',
             'name' => 'required',
+            'display_name' => 'required',
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
@@ -84,6 +85,7 @@ class WorldsController extends Controller
         $request->validate([
             'server_id' => 'required',
             'name' => 'required',
+            'display_name' => 'required',
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
@@ -101,7 +103,7 @@ class WorldsController extends Controller
         
         $formEntries = $this->generateShowFormConfig($world);
         $header = __('admin.worlds.show');
-        $title = $world->displayName();
+        $title = $world->display_name;
         return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
     }
 
@@ -133,6 +135,7 @@ class WorldsController extends Controller
                 'multiple' => false,
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.name'), 'name', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.display_name'), 'display_name', '', false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.ally_count'), 'ally_count', 0, false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.player_count'), 'player_count', 0, false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.village_count'), 'village_count', 0, false, true),
@@ -149,6 +152,7 @@ class WorldsController extends Controller
             BasicFunctions::formEntryShow(__('admin.server.flag'), '<span class="flag-icon flag-icon-'. htmlentities($values->server->flag).
                     '"></span> ['. htmlentities($values->server->code). ']', false),
             BasicFunctions::formEntryShow(__('admin.worlds.name'), $values->name),
+            BasicFunctions::formEntryShow(__('admin.worlds.display_name'), $values->display_name),
             BasicFunctions::formEntryShow(__('admin.worlds.ally_count'), $values->ally_count),
             BasicFunctions::formEntryShow(__('admin.worlds.player_count'), $values->player_count),
             BasicFunctions::formEntryShow(__('admin.worlds.village_count'), $values->village_count),

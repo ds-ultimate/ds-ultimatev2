@@ -11,25 +11,25 @@ class DoSpeedWorld
 {
     private static $SPEED_LANGUAGE = [
         'de' => [
-            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*Ende:</td> <td>(.*?)</td>]",
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*Ende:</td> <td>(?<end>.*?)</td>]",
             'date' => "d.m.y  H:i",
             'dateTimeFix' => false,
             'locale' => 'Europe/Berlin',
         ],
         'ch' => [
-            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*\u00C4ndi:</td> <td>(.*?)</td>]",
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*\u00C4ndi:</td> <td>(?<end>.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
             'locale' => 'Europe/Zurich',
         ],
         'en' => [
-            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*End:</td> <td>(?<end>.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
             'locale' => 'Europe/London',
         ],
         'uk' => [
-            'regex' => "[<h3>#(\\d*) .*?</h3>.*Start:</td> <td>(.*?)</td>.*End:</td> <td>(.*?)</td>]",
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*End:</td> <td>(?<end>.*?)</td>]",
             'date' => "M d, H:i",
             'dateTimeFix' => true,
             'locale' => 'Europe/London',
@@ -66,10 +66,11 @@ class DoSpeedWorld
                     throw new \Exception("unable to perform regex");
                 }
                 
-                $num = $matches[1];
+                $num = $matches['id'];
                 $name = "s" . $num;
-                $start = Carbon::createFromFormat($dateFormat, $matches[2], $dateLocale);
-                $end = Carbon::createFromFormat($dateFormat, $matches[3], $dateLocale);
+                $displayName = '#' . $num . " " . $matches['name'];
+                $start = Carbon::createFromFormat($dateFormat, $matches['start'], $dateLocale);
+                $end = Carbon::createFromFormat($dateFormat, $matches['end'], $dateLocale);
                 if($dateTimeFix) {
                     // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
                     if($start->isPast()) {
@@ -87,6 +88,7 @@ class DoSpeedWorld
                 foreach($dups as $duplicate) {
                     if($model == null) {
                         $model = $duplicate;
+                        $duplicate->display_name = $displayName;
                         $duplicate->worldCheck_at = Carbon::now();
                         $duplicate->planned_start = $start->timestamp;
                         $duplicate->planned_end = $end->timestamp;
@@ -101,6 +103,7 @@ class DoSpeedWorld
                     $worldNew = new SpeedWorld();
                     $worldNew->server_id = $serverModel->id;
                     $worldNew->name = $name;
+                    $worldNew->display_name = $displayName;
                     $worldNew->worldCheck_at = Carbon::now();
                     $worldNew->planned_start = $start->timestamp;
                     $worldNew->planned_end = $end->timestamp;

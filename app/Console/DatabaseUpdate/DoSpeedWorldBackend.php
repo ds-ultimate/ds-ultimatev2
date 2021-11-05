@@ -114,6 +114,11 @@ class DoSpeedWorldBackend
                     $txtBuildings = file_get_contents("$link/interface.php?func=get_building_info");
                     $worldNew->buildings = $txtBuildings;
                     $worldNew->worldCheck_at = Carbon::now();
+                    if($match->display_name !== null) {
+                        $worldNew->display_name = $match->display_name;
+                    } else {
+                        $worldNew->display_name = $worldNew->generateDisplayName();
+                    }
                     
                     $world = $serverModel->code . $worldNew->name;
                     if ($worldNew->save() !== true){

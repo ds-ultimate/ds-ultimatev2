@@ -69,6 +69,7 @@ return array (
     'village_count' => 'Dörfer',
     'config' => 'Welteneinstellungen',
     'units' => 'Einheitenkonfiguration',
+    'display_name' => 'Angezeigter name',
   ),
   'bugreport' => 
   array (
@@ -164,5 +165,6 @@ return array (
     'show' => 'Spezialwelt anzeigen',
     'flag' => 'Sprachversion',
     'active' => 'Aktiv',
+    'display_name' => 'Angezeigter name',
   ),
 );

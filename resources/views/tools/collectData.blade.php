@@ -17,7 +17,7 @@
                     <select id="select-world">
                     @foreach ($worlds as $world)
                         <option value="{{ $world->server->code . $world->name }}">
-                            {{ $world->displayName() }} ({{ $world->server->code . $world->name }})
+                            {{ $world->display_name }} ({{ $world->server->code . $world->name }})
                         </option>
                     @endforeach
                     </select>
@@ -59,7 +59,7 @@
                     <tbody>
                     @foreach ($latestData as $data)
                         <tr>
-                            <th>{{ $data->world->displayName() }} ({{ $data->world->server->code . $data->world->name }})</th>
+                            <th>{{ $data->world->display_name }} ({{ $data->world->server->code . $data->world->name }})</th>
                             <td>{{ ucfirst(__("ui.buildings." . $data->building)) }}</td>
                             <td>{{ $data->level }}</td>
                             <td>{{ $data->buildtime }}</td>

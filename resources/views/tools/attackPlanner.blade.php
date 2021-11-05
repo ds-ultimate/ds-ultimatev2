@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('titel', $worldData->displayName(),': '.__('tool.attackPlanner.title'))
+@section('titel', $worldData->display_name,': '.__('tool.attackPlanner.title'))
 
 @push('style')
     <style>
@@ -41,12 +41,12 @@ $tabList = [
                     @foreach($ownPlanners as $planner)
                         <a class="dropdown-item" href="{{
                             route('tools.attackPlannerMode', [$planner->id, 'edit', $planner->edit_key])
-                            }}">{{ $planner->getTitle().' ['.$planner->world->displayName().']' }}</a>
+                            }}">{{ $planner->getTitle().' ['.$planner->world->display_name.']' }}</a>
                     @endforeach
                 </div>
             </div>
             @endauth
-            <h1 class="font-weight-normal">{{ $attackList->getTitle().' ['.$worldData->displayName().']' }}</h1>
+            <h1 class="font-weight-normal">{{ $attackList->getTitle().' ['.$worldData->display_name.']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -55,7 +55,7 @@ $tabList = [
                 {{ $attackList->getTitle().' ' }}
             </h1>
             <h4>
-                {{ '['.$worldData->displayName().']' }}
+                {{ '['.$worldData->display_name.']' }}
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->

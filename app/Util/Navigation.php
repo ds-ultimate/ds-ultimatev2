@@ -13,7 +13,7 @@ class Navigation
             foreach(World::worldsCollection($serverArg) as $worlds) {
                 $worldNav = [];
                 foreach($worlds as $world) {
-                    $worldNav[] = self::navElement($world->displayName(), 'world', routeArgs: [$world->server->code, $world->name], translated: false);
+                    $worldNav[] = self::navElement($world->display_name, 'world', routeArgs: [$world->server->code, $world->name], translated: false);
                 }
                 if($worlds->get(0)->sortType() == "casual") {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.casualWorlds', subelements: $worldNav);

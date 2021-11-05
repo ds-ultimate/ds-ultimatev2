@@ -125,6 +125,7 @@ return array (
     'update' => 'last update',
     'url' => 'update url',
     'village_count' => 'Villages',
+    'display_name' => 'display name',
   ),
   'dashboard' => 
   array (
@@ -164,5 +165,6 @@ return array (
     'show' => 'show special world',
     'titleCreate' => 'create a new special world',
     'update' => 'edit special world',
+    'display_name' => 'display name',
   ),
 );

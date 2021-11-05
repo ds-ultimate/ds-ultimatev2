@@ -24,6 +24,7 @@ class SpeedWorldsController extends Controller
             BasicFunctions::indexEntry(__('admin.speedWorlds.id'), "id"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.server'), "server", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
             BasicFunctions::indexEntry(__('admin.speedWorlds.name'), "name"),
+            BasicFunctions::indexEntry(__('admin.speedWorlds.display_name'), "display_name"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.plannedStart'), "planned_start"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.plannedEnd'), "planned_end"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.instance'), "instance"),
@@ -61,6 +62,7 @@ class SpeedWorldsController extends Controller
         $speedWorld = new SpeedWorld();
         $speedWorld->server_id = $request->server_id;
         $speedWorld->name = $request->name;
+        $speedWorld->display_name = $request->display_name;
         $speedWorld->planned_start = Carbon::parse($request->planned_start_date.' '.$request->planned_start_time)->timestamp;
         if($request->has("planned_end_date") && $request->has("planned_end_time") &&
                 $request->planned_end_date !== null && $request->planned_end_time !== null) {
@@ -100,6 +102,7 @@ class SpeedWorldsController extends Controller
 
         $speedWorld->server_id = $request->server_id;
         $speedWorld->name = $request->name;
+        $speedWorld->display_name = $request->display_name;
         $speedWorld->planned_start = Carbon::parse($request->planned_start_date.' '.$request->planned_start_time)->timestamp;
         if($request->has("planned_end_date") && $request->has("planned_end_time") &&
                 $request->planned_end_date !== null && $request->planned_end_time !== null) {
@@ -150,6 +153,7 @@ class SpeedWorldsController extends Controller
                 'multiple' => false,
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.speedWorlds.name'), 'name', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.speedWorlds.display_name'), 'display_name', '', false, false),
             BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedStart'), 'planned_start', time(), false, true),
             BasicFunctions::formEntryEdit($values, 'time', __('admin.speedWorlds.plannedEnd'), 'planned_end', time(), false, false),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.speedWorlds.instance'), 'instance', '', false, false),
@@ -164,6 +168,7 @@ class SpeedWorldsController extends Controller
             BasicFunctions::formEntryShow(__('admin.speedWorlds.plannedStart'), Carbon::createFromTimestamp($values->planned_start)),
             BasicFunctions::formEntryShow(__('admin.speedWorlds.plannedEnd'), Carbon::createFromTimestamp($values->planned_end)),
             BasicFunctions::formEntryShow(__('admin.speedWorlds.name'), $values->name),
+            BasicFunctions::formEntryShow(__('admin.speedWorlds.display_name'), $values->display_name),
             BasicFunctions::formEntryShow(__('admin.speedWorlds.url'), $values->url),
             BasicFunctions::formEntryShow(__('admin.speedWorlds.instance'), $values->instance),
             BasicFunctions::formEntryShow(__('admin.speedWorlds.active'),

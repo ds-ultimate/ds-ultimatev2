@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('titel', $worldData->displayName(),': '.__('tool.map.title'))
+@section('titel', $worldData->display_name,': '.__('tool.map.title'))
 
 @push('style')
     <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
@@ -45,12 +45,12 @@
                     @foreach($ownMaps as $map)
                         <a class="dropdown-item" href="{{
                             route('tools.map.mode', [$map->id, 'edit', $map->edit_key])
-                            }}">{{ $map->getTitle().' ['.$map->world->displayName().']' }}</a>
+                            }}">{{ $map->getTitle().' ['.$map->world->display_name.']' }}</a>
                     @endforeach
                 </div>
             </div>
             @endauth
-            <h1 class="font-weight-normal">{{ $wantedMap->getTitle().' ['.$worldData->displayName().']' }}</h1>
+            <h1 class="font-weight-normal">{{ $wantedMap->getTitle().' ['.$worldData->display_name.']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -59,7 +59,7 @@
                 {{ $wantedMap->getTitle() }}
             </h1>
             <h4>
-                {{ '['.$worldData->displayName().']' }}
+                {{ '['.$worldData->display_name.']' }}
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->

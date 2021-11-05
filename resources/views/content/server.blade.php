@@ -27,7 +27,7 @@
                         <tbody>
                         @foreach($worldsActive->get('world') as $world)
                             <tr>
-                                <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                     <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                     @auth
                                         @can('world_access')
@@ -62,7 +62,7 @@
                                 <tbody>
                                 @foreach($worldsInactive->get('world') as $world)
                                     <tr>
-                                        <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                        <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                             <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                             @auth
                                                 @can('world_access')
@@ -102,7 +102,7 @@
                         @if($worldsActive->get('speed') != null && count($worldsActive->get('speed')) > 0)
                             @foreach($worldsActive->get('speed') as $world)
                                 <tr>
-                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @can('world_access')
@@ -119,7 +119,7 @@
                         @if($worldsActive->get('casual') != null && count($worldsActive->get('casual')) > 0)
                             @foreach($worldsActive->get('casual') as $world)
                                 <tr>
-                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @can('world_access')
@@ -136,7 +136,7 @@
                         @if($worldsActive->get('classic') != null && count($worldsActive->get('classic')) > 0)
                             @foreach($worldsActive->get('classic') as $world)
                                 <tr>
-                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                    <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                         @auth
                                             @can('world_access')
@@ -173,7 +173,7 @@
                                 @if($worldsInactive->get('speed') != null && count($worldsInactive->get('speed')) > 0)
                                     @foreach($worldsInactive->get('speed') as $world)
                                         <tr>
-                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                                 @auth
                                                     @can('world_access')
@@ -190,7 +190,7 @@
                                 @if($worldsInactive->get('casual') != null && count($worldsInactive->get('casual')) > 0)
                                     @foreach($worldsInactive->get('casual') as $world)
                                         <tr>
-                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                                 @auth
                                                     @can('world_access')
@@ -207,7 +207,7 @@
                                 @if($worldsInactive->get('classic') != null && count($worldsInactive->get('classic')) > 0)
                                     @foreach($worldsInactive->get('classic') as $world)
                                         <tr>
-                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->displayName()) !!}
+                                            <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                                                 @auth
                                                     @can('world_access')

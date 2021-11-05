@@ -143,7 +143,7 @@ class World extends Model
     }
 
     /**
-     * Giebt den Welten-Typ zurück.
+     * Gibt den Welten-Typ zurück.
      *
      * @return string
      */
@@ -173,7 +173,7 @@ class World extends Model
      *
      * @return string
      */
-    public function displayName()
+    public function generateDisplayName() 
     {
         return $this->type() . " " . $this->num();
     }

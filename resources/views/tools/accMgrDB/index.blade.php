@@ -9,7 +9,7 @@
             <h1 class="font-weight-normal">
                 {{ __('tool.accMgrDB.title') }}
                 @isset($worldData)
-                    [{{ $worldData->displayName() }}]
+                    [{{ $worldData->display_name }}]
                 @endisset
             </h1>
         </div>
@@ -21,7 +21,7 @@
             </h1>
             <h4>
                 @isset($worldData)
-                    {{ $worldData->displayName() }}
+                    {{ $worldData->display_name }}
                 @endisset
             </h4>
         </div>

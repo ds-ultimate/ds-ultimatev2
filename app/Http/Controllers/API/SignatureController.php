@@ -56,9 +56,9 @@ class SignatureController extends Controller
             $image = imagecreatefrompng(public_path('images/default/signature/bg.png'));
             if ($image === false) return false;
             if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
-                imagettftext($image, 9, 90, 15, 70 - 8 - 4, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
+                imagettftext($image, 9, 90, 15, 70 - 8 - 4, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->display_name);
             } else {
-                imagettftext($image, 10, 90, 18, 70 - 8 - 5, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->displayName());
+                imagettftext($image, 10, 90, 18, 70 - 8 - 5, imagecolorallocate($image, 000, 000, 000), 'fonts/arial_b.ttf', $worldData->display_name);
             }
             $flag = imagecreatetruecolor(16, 12);
             imagecopyresampled($flag, imagecreatefrompng(public_path('images/default/signature/' . $worldData->server->flag . '.png')), 0, 0, 0, 0, 16, 12, 640, 480);

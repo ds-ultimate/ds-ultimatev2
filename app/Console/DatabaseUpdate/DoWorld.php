@@ -69,6 +69,7 @@ class DoWorld
                 $txtBuildings = file_get_contents("$link/interface.php?func=get_building_info");
                 $worldNew->buildings = $txtBuildings;
                 $worldNew->worldCheck_at = Carbon::now();
+                $worldNew->display_name = $worldNew->generateDisplayName();
 
                 if ($worldNew->save() !== true){
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");

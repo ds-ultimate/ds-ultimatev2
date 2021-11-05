@@ -76,7 +76,7 @@
                     <tbody>
                     @foreach ($latestData as $data)
                         <tr>
-                            <th>{{ $data->world->displayName() }} ({{ $data->world->server->code . $data->world->name }})</th>
+                            <th>{{ $data->world->display_name }} ({{ $data->world->server->code . $data->world->name }})</th>
                             <td>{{ ucfirst(__("ui.buildings." . $data->building)) }}</td>
                             <td>{{ $data->level }}</td>
                             <td>{{ $data->buildtime }}</td>

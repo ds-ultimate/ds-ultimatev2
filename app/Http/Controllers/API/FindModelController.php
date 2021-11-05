@@ -139,7 +139,7 @@ class FindModelController extends Controller
         $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
         $array = [];
         foreach ($worlds as $world){
-            $array[] = ['id' => $world->name, 'text' => $world->displayName()];
+            $array[] = ['id' => $world->name, 'text' => $world->display_name];
         }
         return $array;
     }

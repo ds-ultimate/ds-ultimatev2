@@ -66,7 +66,7 @@ class DiscordNotificationQueueElement extends Model
     }
     
     public static function worldUpdate(World $world, $file, $url) {
-        $worldName = $world->displayName();
+        $worldName = $world->display_name;
         $message = [
             'content' => '**'.$worldName."**: Update Error $file ($url)",
             'embed' => [
@@ -126,7 +126,7 @@ class DiscordNotificationQueueElement extends Model
 //            'content' => 'Das Dorf ``['.$village->coordinates().']'.BasicFunctions::decodeName($village->name).'`` wurde geadelt um '.$input['date'].'. Alter Besitzer:``'.BasicFunctions::decodeName($old->name).'`` || Neuer Besitzer:``'.BasicFunctions::decodeName($new->name).'``',
             'content' => '',
             'embed' => [
-                'title' => $world->displayName(),
+                'title' => $world->display_name,
                 'color' => $color,
                 'description' => 'Zeitpunkt: ``'.$time->format('d.m.Y H:i:s').'``',
                 'fields' => [

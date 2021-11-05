@@ -28,7 +28,7 @@
                             <tbody>
                             @foreach($result as $player)
                                 <tr>
-                                    <th>{{$player->get('world')->displayName()}}</th>
+                                    <th>{{$player->get('world')->display_name}}</th>
                                     <td>{!! \App\Util\BasicFunctions::linkPlayer($player->get('world'),$player->get('player')->playerID,\App\Util\BasicFunctions::outputName($player->get('player')->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player->get('player')->points_top)}}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player->get('player')->village_count_top)}}</td>
@@ -49,7 +49,7 @@
                             <tbody>
                             @foreach($result as $ally)
                                 <tr>
-                                    <th>{{$ally->get('world')->displayName()}}</th>
+                                    <th>{{$ally->get('world')->display_name}}</th>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally->get('world'),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->name)) !!}</td>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally->get('world'),$ally->get('ally')->allyID,\App\Util\BasicFunctions::outputName($ally->get('ally')->tag)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($ally->get('ally')->points_top)}}</td>
@@ -72,7 +72,7 @@
                             <tbody>
                             @foreach($result as $village)
                                 <tr>
-                                    <th>{{$village->get('world')->displayName()}}</th>
+                                    <th>{{$village->get('world')->display_name}}</th>
                                     <td>{!! \App\Util\BasicFunctions::linkVillage($village->get('world'),$village->get('village')->villageID,\App\Util\BasicFunctions::outputName($village->get('village')->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($village->get('village')->points)}}</td>
                                     <td>{{$village->get('village')->continentString()}}</td>
