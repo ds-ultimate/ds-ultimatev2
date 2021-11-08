@@ -208,6 +208,10 @@ class PictureController extends Controller
                 ->where("instance", $world)
                 ->where("started", 1)
                 ->first();
+            
+            if($first == null) {
+                abort(404, "Aktuell läuft auf der Welt '$server$world' keine Runde.");
+            }
             $world = $first->world->name;
         }
     }
