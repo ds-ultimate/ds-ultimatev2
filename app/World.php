@@ -156,14 +156,14 @@ class World extends Model
          * dec => Classic
          * de => Welt
          */
-        if(strpos($this->name, 'p') !== false){
-            return "casual";
-        }elseif(strpos($this->name, 's') !== false){
+        if($this->isSpeed()){
             return "speed";
-        }elseif(strpos($this->name, 'c') !== false){
-            return "classic";
-        }else{
+        } elseif($this->isCasual()){
+            return "casual";
+        } elseif($this->isNormalServer()){
             return "world";
+        } else{
+            return "classic";
         }
     }
 
@@ -198,14 +198,14 @@ class World extends Model
          * dec => Classic
          * de => Welt
          */
-        if(strpos($this->name, 'p') !== false){
-            return ucfirst(__('ui.world.casual'));
-        }elseif(strpos($this->name, 's') !== false){
+        if($this->isSpeed()){
             return ucfirst(__('ui.world.speed'));
-        }elseif(strpos($this->name, 'c') !== false){
-            return ucfirst(__('ui.world.classic'));
-        }else{
+        } elseif($this->isCasual()){
+            return ucfirst(__('ui.world.casual'));
+        } elseif($this->isNormalServer()){
             return ucfirst(__('ui.world.normal'));
+        } else{
+            return ucfirst(__('ui.world.classic'));
         }
     }
     
@@ -222,15 +222,31 @@ class World extends Model
     }
     
     public static function isSpeedName($name) {
-        return strpos($name, 's') !== false;
+        return BasicFunctions::startsWith($name, 's');
     }
     
     public function isClassicServer() {
-        return static::isSpecialServerName($this->name);
+        return static::isClassicServerName($this->name);
     }
     
     public static function isClassicServerName($name) {
-        return strpos($name, 'c') !== false;
+        return !static::isNormalServerName($name) && !static::isCasualName($name) && !static::isSpeedName($name);
+    }
+    
+    public function isCasual() {
+        return static::isCasualName($this->name);
+    }
+    
+    public static function isCasualName($name) {
+        return BasicFunctions::startsWith($name, 'p');
+    }
+    
+    public function isNormalServer() {
+        return static::isNormalServerName($this->name);
+    }
+    
+    public static function isNormalServerName($name) {
+        return preg_match("/^\d+$/", $name);
     }
 
     public function unitConfig(){
