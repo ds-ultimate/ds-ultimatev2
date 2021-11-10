@@ -166,7 +166,7 @@ class DoSpeedWorldBackend
             }
             $world->started = false;
             if($world->planned_end == -1) {
-                $worldNew->planned_end = Carbon::now()->timestamp;
+                $world->planned_end = Carbon::now()->timestamp;
             }
             $world->update();
         }
