@@ -165,6 +165,9 @@ class DoSpeedWorldBackend
                 BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
             }
             $world->started = false;
+            if($world->planned_end == -1) {
+                $worldNew->planned_end = Carbon::now()->timestamp;
+            }
             $world->update();
         }
 
