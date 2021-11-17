@@ -138,7 +138,7 @@
                                 <div class="col-12 mt-3 mb-3">
                                     <h4 class="card-title">{{ __('ui.otherWorldsPlayer')}}</h4>
                                     @foreach($playerOtherServers->getWorlds() as $worldModel)
-                                        {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm mt-1', true) !!}
+                                        {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm mt-1' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
                                     @endforeach
                                 </div>
                             @endisset
