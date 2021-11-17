@@ -301,4 +301,5 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
     'histPossibilities' => 'Möglichkeiten',
   ),
   'topAt' => 'am',
+  'otherWorldsPlayer' => 'Andere Welten dieses Spielers',
 );

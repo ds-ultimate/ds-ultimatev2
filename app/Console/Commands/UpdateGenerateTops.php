@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\World;
 use App\Console\DatabaseUpdate\DoGenerateTops;
+use App\Console\DatabaseUpdate\DoGenerateOtherWorlds;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -59,6 +60,8 @@ class UpdateGenerateTops extends Command
             DoGenerateTops::run($worldMod, 'a', $progress);
             $worldMod->worldTop_at = $now;
             $worldMod->save();
+            
+            DoGenerateOtherWorlds::run([$worldMod]);
         } else {
             $worlds = (new World())->whereColumn("worldTop_at", "<", "worldUpdated_at")->orWhereNull('worldTop_at')->get();
             
@@ -69,6 +72,8 @@ class UpdateGenerateTops extends Command
                 $world->worldTop_at = $now;
                 $world->save();
             }
+            
+            DoGenerateOtherWorlds::run($worlds);
         }
     }
 }

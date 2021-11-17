@@ -134,6 +134,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @isset($playerOtherServers)
+                                <div class="col-12 mt-3 mb-3">
+                                    <h4 class="card-title">{{ __('ui.otherWorldsPlayer')}}</h4>
+                                    @foreach($playerOtherServers->getWorlds() as $worldModel)
+                                        {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm mt-1', true) !!}
+                                    @endforeach
+                                </div>
+                            @endisset
                             <div class="col">
                                 <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
                             </div>

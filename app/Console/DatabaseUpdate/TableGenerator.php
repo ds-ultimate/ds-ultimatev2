@@ -234,4 +234,13 @@ class TableGenerator
             $table->primary('allyID', 'primary_allyID');
         });
     }
+    
+    public static function otherServersTable($serverCode) {
+        Schema::create("other_servers_" . $serverCode, function (Blueprint $table) {
+            $table->integer('playerID');
+            $table->string('name', 288);
+            $table->text('worlds');
+            $table->timestamps();
+        });
+    }
 }

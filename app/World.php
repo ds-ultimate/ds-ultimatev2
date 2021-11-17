@@ -35,6 +35,7 @@ class World extends Model
         'units',
         'buildings',
         'active',
+        'display_name',
     ];
 
     /**
@@ -176,6 +177,13 @@ class World extends Model
     public function generateDisplayName() 
     {
         return $this->type() . " " . $this->num();
+    }
+    
+    public function shortName() {
+        if($this->isSpeed()) {
+            return $this->generateDisplayName();
+        }
+        return $this->display_name;
     }
 
     /**

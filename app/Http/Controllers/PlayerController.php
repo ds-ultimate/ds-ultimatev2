@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Conquer;
 use App\Player;
 use App\PlayerTop;
+use App\PlayerOtherServers;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;
@@ -22,7 +23,9 @@ class PlayerController extends Controller
         $playerTopData = PlayerTop::player($server, $world, $player);
         abort_if($playerData == null && $playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
                 " auf der Welt '$server$world' vorhanden.");
-
+        
+        $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
+        
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash', 'supBash'];
 
@@ -40,10 +43,9 @@ class PlayerController extends Controller
         $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
         
         if($playerData == null) {
-            return view('content.playerDeleted', compact('statsGeneral', 'statsBash', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
+            return view('content.playerDeleted', compact('statsGeneral', 'statsBash', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers'));
         }
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges'));
-
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers'));
     }
     
     public function allyChanges($server, $world, $type, $playerID){

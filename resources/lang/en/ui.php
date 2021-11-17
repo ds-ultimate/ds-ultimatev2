@@ -301,4 +301,5 @@ It is not specified which village you have to give the name to, but it must belo
     'histUnknown' => 'unknown',
   ),
   'topAt' => 'at',
+  'otherWorldsPlayer' => 'other worlds of that player',
 );

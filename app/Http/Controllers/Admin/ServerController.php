@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Server;
+use App\Console\DatabaseUpdate\TableGenerator;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Illuminate\Http\Request;
@@ -58,6 +59,7 @@ class ServerController extends Controller
         ($request->speed_active === 'on')? $request->merge(['speed_active' => 1]) : $request->merge(['speed_active' => 0]);
         ($request->classic_active === 'on')? $request->merge(['classic_active' => 1]) : $request->merge(['classic_active' => 0]);
         $server = Server::create($request->all());
+        TableGenerator::otherServersTable($server->code);
 
         return redirect()->route('admin.server.index');
     }
