@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Ally;
 use App\HistoryIndex;
 use App\Player;
+use App\PlayerTop;
 use App\Server;
 use App\Village;
 use App\World;
@@ -142,5 +143,15 @@ class FindModelController extends Controller
             $array[] = ['id' => $world->name, 'text' => $world->display_name];
         }
         return $array;
+    }
+    
+    public function getWorldPopup(World $world, $playerId){
+        $playerData = PlayerTop::player($world->server->code, $world->name, $playerId);
+        abort_if($playerData == null, 404);
+        return "{$world->display_name}<br>" .
+                __('ui.otherWorldsPlayerPopup.rank') . ": {$playerData->rank_top}<br>" .
+                __('ui.otherWorldsPlayerPopup.villages') . ": {$playerData->village_count_top}<br>" .
+                __('ui.otherWorldsPlayerPopup.points') . ": {$playerData->points_top}<br>" .
+                __('ui.otherWorldsPlayerPopup.bashGes') . ": {$playerData->gesBash_top}";
     }
 }

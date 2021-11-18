@@ -147,7 +147,15 @@
                             <div class="col-12 mt-3 mb-3">
                                 <h4 class="card-title">{{ __('ui.otherWorldsPlayer')}}</h4>
                                 @foreach($playerOtherServers->getWorlds() as $worldModel)
-                                    {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerTopData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm mt-1' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
+                                    <div class="otherworld d-inline-block mt-1 position-relative" data-worldid="{{ $worldModel->id }}">
+                                        {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerTopData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
+                                        <div class="otherworld-popup popover fade bs-popover-bottom d-none" style="top: 100%">
+                                            <div class="arrow m-0" style="left: calc(50% - 0.5rem)"></div>
+                                            <div class="popover-body text-nowrap">
+                                                <h1><i class="fas fa-spinner fa-spin"></i></h1>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         @endisset
@@ -291,7 +299,6 @@
                 $("#{{ $statsBash[3] }}").css('visibility', 'visible');
             }
         });
-
     </script>
     <script>
         $(document).ready( function () {
@@ -321,6 +328,31 @@
 
                 keys: true, //enable KeyTable extension
             });
+            
+            @isset($playerOtherServers)
+                $(".otherworld").hover(function(e) {
+                    if(e.type == "mouseenter") {
+                        $('.otherworld-popup', this).removeClass("d-none").addClass("show");
+                        //popover-body
+                        if(! $('.otherworld-popup', this).hasClass("data-loaded")) {
+                            $('.otherworld-popup', this).addClass("data-loaded");
+                            var url = "{{ route('api.worldPopup', ['worldId', $playerTopData->playerID]) }}";
+                            axios.get(url.replace("worldId", $(this).data("worldid")), {
+                            })
+                            .then((response) => {
+                                $('.popover-body', this).html(response.data);
+                                var lOffset = ($(this).width() - $('.otherworld-popup', this).width()) / 2;
+                                $('.otherworld-popup', this)[0].style.left = lOffset + "px";
+                            })
+                            .catch((error) => {
+                                $('.popover-body', this).html("-");
+                            });
+                        }
+                    } else {
+                        $('.otherworld-popup', this).addClass("d-none").removeClass("show");
+                    }
+                })
+            @endisset
         });
     </script>
     {!! $chartJS !!}

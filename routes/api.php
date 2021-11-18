@@ -17,6 +17,7 @@ Route::group(['middleware' => 'throttle:10,1'], function() {
     Route::post('/git/webhook', [\App\Http\Controllers\API\GitController::class, 'index'])->name('git');
 });
 
+Route::get('/worldPopup/{world}/{playerId}', [\App\Http\Controllers\API\FindModelController::class, 'getWorldPopup'])->name('worldPopup');
 Route::group(['middleware' => 'throttle:240,1'], function() {
     Route::get('/{server}/activeWorlds', [\App\Http\Controllers\API\FindModelController::class, 'getActiveWorldByServer'])->name('activeWorldByServer');
 

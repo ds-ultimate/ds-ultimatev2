@@ -302,4 +302,11 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
   ),
   'topAt' => 'am',
   'otherWorldsPlayer' => 'Andere Welten dieses Spielers',
+  'otherWorldsPlayerPopup' => 
+  array (
+    'rank' => 'Max Rang',
+    'villages' => 'Max Dörfer',
+    'points' => 'Max Punkte',
+    'bashGes' => 'Max Bash',
+  ),
 );
