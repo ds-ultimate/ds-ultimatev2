@@ -150,7 +150,7 @@ class DoSpeedWorldBackend
 
         $worldModel = new World();
         
-        foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
+        foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subHours(2)->subMinutes(20))->get() as $world ){
             if(! $world->isSpecialServer()) {
                 continue;
             }
@@ -160,7 +160,7 @@ class DoSpeedWorldBackend
             $world->active = null;
             $world->update();
         }
-        foreach ((new SpeedWorld())->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
+        foreach ((new SpeedWorld())->where('worldCheck_at', '<', Carbon::now()->subHours(2)->subMinutes(20))->get() as $world ){
             if($world->started) {
                 BasicFunctions::createLog("Status[$world->name]", "$world->name ist nicht mehr aktiv");
             }
