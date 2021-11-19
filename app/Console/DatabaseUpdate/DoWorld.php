@@ -102,8 +102,8 @@ class DoWorld
 
         $worldModel = new World();
 
-        foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subMinutes(20))->get() as $world ){
-            if($world->isSpeed()) {
+        foreach ($worldModel->where('worldCheck_at', '<', Carbon::now()->subHours(2)->subMinutes(20))->get() as $world ){
+            if($world->isSpecialServer()) {
                 continue;
             }
             if($world->active != null) {
