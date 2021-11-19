@@ -139,7 +139,7 @@
                                     <h4 class="card-title">{{ __('ui.otherWorldsPlayer')}}</h4>
                                     @foreach($playerOtherServers->getWorlds() as $worldModel)
                                         <div class="otherworld d-inline-block mt-1 position-relative" data-worldid="{{ $worldModel->id }}">
-                                            {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerTopData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
+                                            {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
                                             <div class="otherworld-popup popover fade bs-popover-bottom d-none" style="top: 100%">
                                                 <div class="arrow m-0" style="left: calc(50% - 0.5rem)"></div>
                                                 <div class="popover-body text-nowrap">
@@ -298,6 +298,22 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @isset($playerOtherServers)
+                                <div class="col-12 mt-3 mb-3">
+                                    <h4 class="card-title">{{ __('ui.otherWorldsPlayer')}}</h4>
+                                    @foreach($playerOtherServers->getWorlds() as $worldModel)
+                                        <div class="otherworld d-inline-block mt-1 position-relative" data-worldid="{{ $worldModel->id }}">
+                                            {!! \App\Util\BasicFunctions::linkPlayer($worldModel, $playerData->playerID, \App\Util\BasicFunctions::escape($worldModel->shortName()), 'btn btn-primary btn-sm' . (($worldModel->name == $worldData->name)?(' active'):('')), true) !!}
+                                            <div class="otherworld-popup popover fade bs-popover-bottom d-none" style="top: 100%">
+                                                <div class="arrow m-0" style="left: calc(50% - 0.5rem)"></div>
+                                                <div class="popover-body text-nowrap">
+                                                    <h1><i class="fas fa-spinner fa-spin"></i></h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endisset
                             <div class="col">
                                 <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
                             </div>
