@@ -17,8 +17,8 @@ class DoSpeedWorld
             'locale' => 'Europe/Berlin',
         ],
         'ch' => [
-            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*\u00C4ndi:</td> <td>(?<end>.*?)</td>]",
-            'date' => "M d, H:i",
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*\u{00C4}ndi:</td> <td>(?<end>.*?)</td>]",
+            'date' => "d.M, H:i",
             'dateTimeFix' => true,
             'locale' => 'Europe/Zurich',
         ],

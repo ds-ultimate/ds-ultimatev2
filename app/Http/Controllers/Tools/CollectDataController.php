@@ -70,6 +70,31 @@ class CollectDataController extends BaseController
                 'wall'=> "Wall",
             ]
         ],
+        "yy" => [
+            "title" => "Gebäude.*Bedarf.*Bauen",
+            "level" => "Stufe",
+            "level0" => "nicht vorhanden",
+            "buildings" => [
+                "main" => "Hauptgebäude",
+                'barracks'=> "Kaserne",
+                'stable'=> "Stall",
+                'garage'=> "Werkstatt",
+                'church'=> "Kirche",
+                'watchtower'=> "Wachturm",
+                'snob'=> "Adelshof",
+                'smith'=> "Schmiede",
+                'place'=> "Versammlungsplatz",
+                'statue'=> "Statue",
+                'market'=> "Marktplatz",
+                'wood'=> "Holzfällerlager",
+                'stone'=> "Lehmgrube",
+                'iron'=> "Eisenmine",
+                'farm'=> "Bauernhof",
+                'storage'=> "Speicher",
+                'hide'=> "Versteck",
+                'wall'=> "Wall",
+            ]
+        ],
     ];
     
     public function index() {
@@ -129,7 +154,6 @@ class CollectDataController extends BaseController
                 continue;
             }
             $parts = explode("\t", $line);
-            if(count($parts) < 6) continue;
             
             if(strpos($parts[0], $loLang['level']) !== false) {
                 $level = trim(str_replace($loLang['level'], "", $parts[0]));
@@ -139,6 +163,18 @@ class CollectDataController extends BaseController
                 continue;
             }
             if($debug) echo "Found $curBuilding with level $level<br><br>\n\n";
+            if(count($parts) == 2) {
+                //fully built building
+                $result[$curBuilding] = [
+                    "wood" => -1,
+                    "clay" => -1,
+                    "iron" => -1,
+                    "time" => -1,
+                    "pop" => -1,
+                    "level" => $level,
+                ];
+            }
+            if(count($parts) < 6) continue;
             $wood = trim($parts[1]);
             $clay = trim($parts[2]);
             $iron = trim($parts[3]);
@@ -164,6 +200,8 @@ class CollectDataController extends BaseController
         $rawModel->save();
         
         foreach($result as $name => $toInsert) {
+            //Skip if building is fully built
+            if($toInsert["wood"] == -1) continue;
             $dbInst = new BuildTime();
             $dbInst->world_id = $worldData->id;
             $dbInst->user_id = \Auth::user()->id;
