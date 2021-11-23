@@ -36,6 +36,12 @@ class DoSpeedWorld
         ],
     ];
     
+    //Various replacements for other language support than provided by native Carbon
+    private static $REPLACEMENTS = [
+        //support for CH / (de)
+        "Dez" => "Dec",
+    ];
+    
     public static function run(){
         $serverArray = Server::getServer();
         $foundSomething = false;
@@ -58,6 +64,13 @@ class DoSpeedWorld
             $dateFormat = static::$SPEED_LANGUAGE[$serverModel->code]['date'];
             $dateTimeFix = static::$SPEED_LANGUAGE[$serverModel->code]['dateTimeFix'];
             $dateLocale = static::$SPEED_LANGUAGE[$serverModel->code]['locale'];
+            $repS = [];
+            $repR = [];
+            foreach(static::$REPLACEMENTS as $s => $r) {
+                $repR[] = $r;
+                $repS[] = $s;
+            }
+            
             foreach($speedRounds as $round) {
                 //extract data
                 preg_match($regex, $round, $matches);
@@ -69,8 +82,8 @@ class DoSpeedWorld
                 $num = $matches['id'];
                 $name = "s" . $num;
                 $displayName = '#' . $num . " " . $matches['name'];
-                $start = Carbon::createFromFormat($dateFormat, $matches['start'], $dateLocale);
-                $end = Carbon::createFromFormat($dateFormat, $matches['end'], $dateLocale);
+                $start = Carbon::createFromFormat($dateFormat, str_replace($repS, $repR, $matches['start']), $dateLocale);
+                $end = Carbon::createFromFormat($dateFormat, str_replace($repS, $repR, $matches['end']), $dateLocale);
                 if($dateTimeFix) {
                     // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
                     if($start->isPast()) {
