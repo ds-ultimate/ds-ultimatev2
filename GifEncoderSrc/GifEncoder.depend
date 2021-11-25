@@ -44,3 +44,72 @@
 	"lodepng.h"
 	"gifencoder.h"
 
+1620659951 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/lodepng.c
+	"lodepng.h"
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+
+1620659950 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/lodepng.h
+	<string.h>
+	<vector>
+	<string>
+	"lodepng.h"
+	<iostream>
+	"lodepng.h"
+
+1620659949 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/lzwCompressor.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"lzwCompressor.h"
+	"globals.h"
+
+1620659949 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/lzwCompressor.h
+
+1637874834 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/globals.h
+
+1637865994 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"globals.h"
+	"lodepng.h"
+	"gifencoder.h"
+	"sorting.h"
+
+1637866908 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/gifencoder.h
+	"lodepng.h"
+	"hashmap.h"
+
+1637875057 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/gifencoder.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<time.h>
+	"globals.h"
+	"gifencoder.h"
+	"lzwCompressor.h"
+	"sorting.h"
+
+1637874621 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/hashmap.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdint.h>
+	<stddef.h>
+	"hashmap.h"
+
+1637843526 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/hashmap.h
+	<stdbool.h>
+	<stddef.h>
+	<stdint.h>
+
+1637858331 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/sorting.h
+
+1637865722 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/sorting.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"sorting.h"
+

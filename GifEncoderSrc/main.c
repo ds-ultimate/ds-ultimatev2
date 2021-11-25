@@ -7,6 +7,8 @@
 #include "lodepng.h"
 #include "gifencoder.h"
 
+#include "sorting.h"
+
 int main(int argc, char **argv)
 {
     if(argc != 5) {
@@ -43,6 +45,8 @@ int main(int argc, char **argv)
         #ifdef TIMING_DEBUG
         clock_t start = clock();
         #endif // TIMING_DEBUG
+        printf("Add %d\n", i);
+        fflush(stdout);
 
         int written = snprintf(temp, tempSize - 10, src, i);
         if(written > tempSize - 10) {
@@ -91,7 +95,7 @@ int main(int argc, char **argv)
         gifencoder_addImage(gif, image);
         #ifdef TIMING_DEBUG
         clock_t end = clock();
-        printf("Timing: %ld u sec / %ld u sec\n", (load - start), (end - load));
+        printf("Timing: Load %ld u sec / Append %ld u sec\n", (load - start), (end - load));
         #endif // TIMING_DEBUG
 
         lodepng_state_cleanup(&state);

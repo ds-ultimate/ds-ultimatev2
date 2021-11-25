@@ -335,11 +335,12 @@ If that problem persists please create a bug-report',
     'render' => 
     array (
       'finished' => 'finished',
-      'gif' => 'creating gif',
       'image' => 'rendering image {numImage} of {totalImage}',
       'mp4' => 'creating mp4',
       'queue' => 'in queue',
       'zip' => 'creating zip',
+      'gifAdd' => 'creating gif (reading: {numImage} von {totalImage})',
+      'gifWrite' => 'creating gif (writing: {numImage} von {totalImage})',
     ),
     'renderNow' => 'create now!',
     'rerun' => 'create again',

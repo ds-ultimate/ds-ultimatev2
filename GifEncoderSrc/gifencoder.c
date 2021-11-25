@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "gifencoder.h"
 #include "lzwCompressor.h"
+#include "sorting.h"
 
 #define GIF_HEADER "GIF89a"
 
@@ -27,7 +28,6 @@
 void littleEndianDump(char* writeInto, int* writeSize, int32_t data, int8_t bytes);
 void bigEndianDump(char* writeInto, int* writeSize, int32_t data, int8_t bytes);
 void gifencoder_createColorTable(GIF_STRUCTURE* gif);
-void bubble_sort(int32_t* sortBy, int32_t* other, int array_size);
 int find_closest_matching(GIF_STRUCTURE* gif, int32_t color);
 void to_HSV(int32_t asRGB, float* h, float* s, float* v);
 void gifencoder_writeColorTable(FILE* targetFile, GIF_STRUCTURE* gif);
@@ -36,7 +36,7 @@ void gifencoder_writeImage(char** target, int* targetSize, int* maxTargetSize, i
 void gifencoder_writeDelayHeader(char** target, int* targetSize, int* maxTargetSize, GIF_STRUCTURE* gif, int transparentIdx, int isFirst);
 void getChangedReagion(int32_t* imageData, int32_t* prevImageData, int width, int height, int* xs, int* xe, int* ys, int* ye);
 void gifencoder_lzwCompressImage(char** target, int* targetSize, int* maxTargetSize, GIF_STRUCTURE* gif, int32_t* imageData,
-    int32_t* prevImageData, int transparentIdx, int globColorTableSizeBit, int xs, int xe, int ys, int ye);
+int32_t* prevImageData, int transparentIdx, int globColorTableSizeBit, int xs, int xe, int ys, int ye);
 
 
 //public functions
@@ -54,12 +54,7 @@ GIF_STRUCTURE* gifencoder_create(unsigned width, unsigned height, unsigned delay
     retval->maxImages = 0;
     retval->delay = delay;
     retval->colType = colType;
-
-    retval->colors = calloc(allocateAtOnce, sizeof(int32_t));
-    retval->colorAmount = calloc(allocateAtOnce, sizeof(int32_t));
-    retval->maxColorsSize = allocateAtOnce;
-    retval->colorsSize = 0;
-
+    retval->colorHash = hashmap_new(allocateAtOnce);
     return retval;
 }
 
@@ -80,10 +75,7 @@ void gifencoder_addImage(GIF_STRUCTURE* gif, unsigned char* imageData) {
         }
     }
 
-    int found;
     int32_t color;
-
-
     int32_t* newImageData = calloc(gif->width * gif->height, sizeof(int32_t));
     int r, g, b;
     for(int i = 0; i < gif->width * gif->height; i++) {
@@ -99,28 +91,11 @@ void gifencoder_addImage(GIF_STRUCTURE* gif, unsigned char* imageData) {
         color = (r << 16) + (g << 8) + b;
         newImageData[i] = color;
 
-        found = 0;
-        for(int j = 0; j < gif->colorsSize; j++) {
-            if(gif->colors[j] == color) {
-                found = 1;
-                gif->colorAmount[j]++;
-                break;
-            }
-        }
-        if(! found) {
-            if(gif->colorsSize == gif->maxColorsSize) {
-                gif->maxColorsSize += allocateAtOnce;
-                gif->colors = realloc(gif->colors, sizeof(int32_t) * gif->maxColorsSize);
-                gif->colorAmount = realloc(gif->colorAmount, sizeof(int32_t) * gif->maxColorsSize);
-                for(int inner = gif->maxColorsSize - allocateAtOnce; inner < gif->maxColorsSize; inner++) {
-                    gif->colors[inner] = 0;
-                    gif->colorAmount[inner] = 0;
-                }
-            }
-
-            gif->colors[gif->colorsSize] = color;
-            gif->colorAmount[gif->colorsSize] = 1;
-            gif->colorsSize++;
+        struct bucket* inMap = hashmap_get(gif->colorHash, color);
+        if(inMap == NULL) {
+            hashmap_set(gif->colorHash, color, 1);
+        } else {
+            inMap->value++;
         }
     }
 
@@ -135,6 +110,7 @@ void gifencoder_addImage(GIF_STRUCTURE* gif, unsigned char* imageData) {
  */
 void gifencoder_encode(GIF_STRUCTURE* gif, char* targetFilePath) {
     #ifdef TIMING_DEBUG
+    printf("MapSize %ld\n", hashmap_count(gif->colorHash));
     clock_t start = clock();
     #endif // TIMING_DEBUG
     FILE* targetFile = fopen(targetFilePath, "w");
@@ -179,6 +155,8 @@ void gifencoder_encode(GIF_STRUCTURE* gif, char* targetFilePath) {
     int encodedImageSize = 0;
     int maxEncodedImageSize = 1000;
     for(int i = 0; i < gif->numImages; i++) {
+        printf("Write %d\n", i);
+        fflush(stdout);
         #ifdef TIMING_DEBUG
         clock_t imageStart = clock();
         #endif // TIMING_DEBUG
@@ -208,32 +186,33 @@ void gifencoder_free(GIF_STRUCTURE* gif) {
     for(int i = 0; i < gif->numImages; i++) {
         if(gif->images[i]) {
             free(gif->images[i]);
-//            gif->images[i] = 0;
         }
     }
     free(gif->images);
-//    gif->images = 0;
+    hashmap_free(gif->colorHash);
 
-//    gif->numImages = 0;
-//    gif->maxImages = 0;
-
-    free(gif->pictureColorMapKeys);
-    free(gif->pictureColorMapValues);
-//    gif->pictureColorMapKeys = 0;
-//    gif->pictureColorMapValues = 0;
-//    gif->pictureColorMapSize = 0;
+    hashmap_free(gif->pictureColorMap);
 
     free(gif->globalColorTable);
     free(gif->globalHSVColorTableH);
     free(gif->globalHSVColorTableS);
     free(gif->globalHSVColorTableV);
-//    gif->globalColorTable = 0;
-//    gif->globalHSVColorTableH = 0;
-//    gif->globalHSVColorTableS = 0;
-//    gif->globalHSVColorTableV = 0;
     free(gif);
 }
 
+struct colorContainer {
+    int32_t* colors;
+    int32_t* colorAmount;
+    int32_t cur;
+};
+
+bool mapToArray(struct bucket* item, void *udata) {
+    struct colorContainer *container = udata;
+    container->colors[container->cur] = item->hash;
+    container->colorAmount[container->cur] = item->value;
+    container->cur++;
+    return true;
+}
 
 //private function code
 void gifencoder_createColorTable(GIF_STRUCTURE* gif) {
@@ -241,24 +220,23 @@ void gifencoder_createColorTable(GIF_STRUCTURE* gif) {
     clock_t start = clock();
     #endif // TIMING_DEBUG
 
-    int32_t* colors = gif->colors;
-    int32_t* colorAmount = gif->colorAmount;
-    int colorsSize = gif->colorsSize;
+    int colorsSize = hashmap_count(gif->colorHash);
+    struct colorContainer container;
+    container.colors = calloc(colorsSize, sizeof(int32_t));
+    container.colorAmount = calloc(colorsSize, sizeof(int32_t));
+    container.cur = 0;
+    hashmap_scan(gif->colorHash, mapToArray, &container);
+    int32_t* colors = container.colors;
+    int32_t* colorAmount = container.colorAmount;
 
-    //Twice because bubble sort can fail if it needs to swap the first element
-    //did not bother to test this for that implementation of bubble sort
-    bubble_sort(colorAmount, colors, colorsSize);
-    bubble_sort(colorAmount, colors, colorsSize);
-
+    sort_data(colorAmount, colors, colorsSize);
 
     #ifdef TIMING_DEBUG
     clock_t sort = clock();
     #endif // TIMING_DEBUG
 
     //write into gif element
-    gif->pictureColorMapKeys = calloc(colorsSize + 1, sizeof(int32_t));
-    gif->pictureColorMapValues = calloc(colorsSize + 1, sizeof(int));
-    gif->pictureColorMapSize = 0;
+    gif->pictureColorMap = hashmap_new(colorsSize + 1);
 
     int globalColorTableSize = 255;
     if(colorsSize < globalColorTableSize) {
@@ -282,27 +260,23 @@ void gifencoder_createColorTable(GIF_STRUCTURE* gif) {
         gif->globalHSVColorTableS[i] = s;
         gif->globalHSVColorTableV[i] = v;
 
-        gif->pictureColorMapKeys[i] = colors[i];
-        gif->pictureColorMapValues[i] = i;
-        gif->pictureColorMapSize++;
+        hashmap_set(gif->pictureColorMap, colors[i], i);
     }
 
     for(; i < colorsSize; i++) {
-        gif->pictureColorMapKeys[i] = colors[i];
-        gif->pictureColorMapValues[i] = find_closest_matching(gif, colors[i]);
-        gif->pictureColorMapSize++;
+        hashmap_set(gif->pictureColorMap, colors[i], find_closest_matching(gif, colors[i]));
     }
 
 //    for(int i = 0; i < colorsSize; i++) {
 //        printf("Color: %d / Num: %d / NumTbl: %d\n", colors[i], colorAmount[i], gif->pictureColorMapValues[i]);
 //    }
-    free(colors);
     free(colorAmount);
+    free(colors);
 
     #ifdef TIMING_DEBUG
     clock_t end = clock();
 
-    printf("Timing color: sort: %ld u sec / other: %ld u sec\n", (sort - start), (end - images));
+    printf("Timing color: sort: %ld u sec / other: %ld u sec\n", (sort - start), (end - sort));
     #endif // TIMING_DEBUG
 }
 
@@ -461,18 +435,12 @@ void gifencoder_lzwCompressImage(char** target, int* targetSize, int* maxTargetS
             for(int j = ys; j <= ye; j++) {
                 if(imageData[i * gif->width + j] != prevImageData[i * gif->width + j]) {
                     int32_t color = imageData[i * gif->width + j];
-                    int colorID = -1;
-                    for(int z = 0; z < gif->pictureColorMapSize; z++) {
-                        if(gif->pictureColorMapKeys[z] == color) {
-                            colorID = z;
-                            break;
-                        }
-                    }
-                    if(colorID == -1) {
+                    struct bucket* colorID = hashmap_get(gif->pictureColorMap, color);
+                    if(colorID == NULL) {
                         printf("Unable to find color!!! %u", color);
                         exit(0);
                     }
-                    lzwCompressor_append(compressor, gif->pictureColorMapValues[colorID]);
+                    lzwCompressor_append(compressor, colorID->value);
                 } else {
                     lzwCompressor_append(compressor, transparentIdx);
                 }
@@ -483,18 +451,12 @@ void gifencoder_lzwCompressImage(char** target, int* targetSize, int* maxTargetS
         for(int i = xs; i <= xe; i++) {
             for(int j = ys; j <= ye; j++) {
                 int32_t color = imageData[i * gif->width + j];
-                int colorID = -1;
-                for(int z = 0; z < gif->pictureColorMapSize; z++) {
-                    if(gif->pictureColorMapKeys[z] == color) {
-                        colorID = z;
-                        break;
-                    }
-                }
-                if(colorID == -1) {
+                struct bucket* colorID = hashmap_get(gif->pictureColorMap, color);
+                if(colorID == NULL) {
                     printf("Unable to find color!!! %u", color);
                     exit(0);
                 }
-                lzwCompressor_append(compressor, gif->pictureColorMapValues[colorID]);
+                lzwCompressor_append(compressor, colorID->value);
             }
         }
     }
@@ -528,28 +490,6 @@ void gifencoder_lzwCompressImage(char** target, int* targetSize, int* maxTargetS
     (*target)[(*targetSize)++] = 0x00;
 
     lzwCompressor_free(compressor);
-}
-
-void bubble_sort(int32_t* sortBy, int32_t* other, int array_size) {
-    int i, j;
-    int32_t temp;
-
-    for (i = 0; i < (array_size - 1); ++i)
-    {
-        for (j = 0; j < array_size - 1 - i; ++j )
-        {
-            if (sortBy[j] < sortBy[j+1])
-            {
-                temp = sortBy[j+1];
-                sortBy[j+1] = sortBy[j];
-                sortBy[j] = temp;
-
-                temp = other[j+1];
-                other[j+1] = other[j];
-                other[j] = temp;
-            }
-        }
-    }
 }
 
 int find_closest_matching(GIF_STRUCTURE* gif, int32_t color) {

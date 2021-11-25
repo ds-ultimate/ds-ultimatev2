@@ -348,11 +348,11 @@ class AnimatedHistoryMapController extends BaseController
         }
         
         mkdir("$conf{$animJob->id}/png/", 0777, true);
-        $maxProgress = $cntHistData + 3;
+        $maxProgress = $cntHistData * 3 + 2;
         
         for($num = 0; $num < $cntHistData; $num++) {
             // +3 because gif / mp4 / zip
-            $animJob->setState($num, $maxProgress, "image");
+            $animJob->setState($num, $maxProgress, "image", $num, $cntHistData);
             
             $skin = new \App\Util\Map\SkinSymbols();
             $map = new HistoryMapGenerator($world, $histData[$num], $skin, $dim, false);
@@ -365,19 +365,29 @@ class AnimatedHistoryMapController extends BaseController
         }
         
         //mp4
-        $animJob->setState($cntHistData, $maxProgress, "mp4");
+        $animJob->setState($cntHistData, $maxProgress, "mp4", 0, 0);
         $imgPath = escapeshellarg("$conf{$animJob->id}/png/image-%04d.png");
         $outPath = escapeshellarg("$conf{$animJob->id}/render.mp4");
         shell_exec("ffmpeg -r 5 -f image2 -i $imgPath -vcodec libx264 -crf 25 -pix_fmt yuv420p $outPath 2>&1");
         
         //gif
-        $animJob->setState($cntHistData + 1, $maxProgress, "gif");
         $imgPath = escapeshellarg("$conf{$animJob->id}/png/image-%04d.png");
         $outPath = escapeshellarg("$conf{$animJob->id}/animated.gif");
-        shell_exec("./GifEncoder $imgPath $outPath $cntHistData 200");
+        $fPointer = popen("./GifEncoder $imgPath $outPath $cntHistData 200", "r");
+        
+        while(!feof($fPointer)) {
+            $line = trim(fgets($fPointer));
+            if(BasicFunctions::startsWith($line, "Add")) {
+                $at = intval(substr($line, 4));
+                $animJob->setState($cntHistData + 1 + $at, $maxProgress, "gifAdd", $at, $cntHistData);
+            } else if(BasicFunctions::startsWith($line, "Write")) {
+                $at = intval(substr($line, 6));
+                $animJob->setState($cntHistData + 1 + $cntHistData + $at, $maxProgress, "gifWrite", $at, $cntHistData);
+            }
+        }
         
         //zip
-        $animJob->setState($cntHistData + 2, $maxProgress, "zip");
+        $animJob->setState($cntHistData * 3 + 2, $maxProgress, "zip", 0, 0);
         $zip = new ZipArchive();
         $zip->open("$conf{$animJob->id}/src.zip", ZipArchive::CREATE);
         for($num = 0; $num < count($histData); $num++) {

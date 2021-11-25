@@ -3,6 +3,7 @@
 #define GIFENCODER_H
 
 #include "lodepng.h"
+#include "hashmap.h"
 
 typedef struct {
     int width;
@@ -13,9 +14,7 @@ typedef struct {
     int numImages;
     int maxImages;
 
-    int32_t* pictureColorMapKeys;
-    int* pictureColorMapValues;
-    int pictureColorMapSize;
+    struct hashmap* pictureColorMap;
 
     int32_t* globalColorTable;
     float* globalHSVColorTableH;
@@ -24,12 +23,8 @@ typedef struct {
     int globalColorTableSize;
     int GIFglobalColorTableSize;
 
-    int32_t* colors;
-    int32_t* colorAmount;
-    int maxColorsSize;
-    int colorsSize;
+    struct hashmap* colorHash;
 } GIF_STRUCTURE;
-
 
 /**
  * Initializes a gif structure that can be filled afterwards

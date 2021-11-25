@@ -66,8 +66,8 @@ class AnimHistMapJob extends AnimHistMapMap
         }
         
         $translated = __("tool.animHistMap.render." . $state[2]);
-        $translated = str_replace("{numImage}", $state[0], $translated);
-        $translated = str_replace("{totalImage}", $state[1] - 2, $translated);
+        $translated = str_replace("{numImage}", $state[3], $translated);
+        $translated = str_replace("{totalImage}", $state[4], $translated);
         
         return [
             "cur" => $state[0],
@@ -77,8 +77,8 @@ class AnimHistMapJob extends AnimHistMapMap
         ];
     }
     
-    public function setState($curProgress, $maxProgress, $transID) {
-        $this->state = "$curProgress;$maxProgress;$transID";
+    public function setState($curProgress, $maxProgress, $transID, $transAt, $transOf) {
+        $this->state = "$curProgress;$maxProgress;$transID;$transAt;$transOf";
         $this->save();
     }
     
