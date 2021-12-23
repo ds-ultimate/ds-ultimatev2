@@ -29,14 +29,12 @@
                         <li class="nav-item">
                             <a class="nav-link {{ ($page == 'myAttackplanner')? 'active' : '' }}" id="myAttackplanner-tab" data-toggle="tab" href="#myAttackplanner" role="tab" aria-controls="myAttackplanner" aria-selected="false">{{ __('ui.own.attackplanner') }}</a>
                         </li>
-                        @can('anim_hist_map_beta')
                         <li class="nav-item">
                             <a class="nav-link {{ ($page == 'myAnimatedMap')? 'active' : '' }}" id="myAnimatedMap-tab" data-toggle="tab" href="#myAnimatedMap" role="tab" aria-controls="myAnimatedMap" aria-selected="false">{{ __('ui.own.animatedMap') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ ($page == 'myRenderedAnimatedMap')? 'active' : '' }}" id="myRenderedAnimatedMap-tab" data-toggle="tab" href="#myRenderedAnimatedMap" role="tab" aria-controls="myRenderedAnimatedMap" aria-selected="false">{{ __('ui.own.renderedAnimatedMap') }}</a>
                         </li>
-                        @endcan
                         <li class="nav-item">
                             <a class="nav-link {{ ($page == 'followMap')? 'active' : '' }}" id="followMap-tab" data-toggle="tab" href="#followMap" role="tab" aria-controls="followMap" aria-selected="false">{{ __('ui.follow.map') }}</a>
                         </li>
@@ -173,7 +171,6 @@
                             </div>
                         </div>
                         {{--end own AttackList--}}
-                        @can('anim_hist_map_beta')
                         {{--start own AnimatedMaps--}}
                         <div class="tab-pane fade {{ ($page == 'myAnimatedMap')? 'show active' : '' }}" id="myAnimatedMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
@@ -264,7 +261,6 @@
                             </div>
                         </div>
                         {{--end own RenderedAnimatedMaps--}}
-                        @endcan
                         {{--start follow Map--}}
                         <div class="tab-pane fade {{ ($page == 'followMap')? 'show active' : '' }}" id="followMap" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row mt-2">
@@ -400,10 +396,8 @@
             });
             $('#deleteButtonMap').on('confirmed.bs.confirmation', destroyMap);
             $('#deleteButtonAttackPlanner').on('confirmed.bs.confirmation', destroyAttackPlanner);
-            @can('anim_hist_map_beta')
             $('#deleteButtonAnimatedMap').on('confirmed.bs.confirmation', destroyAnimatedMap);
             $('#deleteButtonRenderedAnimatedMap').on('confirmed.bs.confirmation', destroyRenderedAnimatedMap);
-            @endcan
         })
 
         @if (count($maps) > 0)
@@ -443,7 +437,6 @@
             }
         }
 
-        @can('anim_hist_map_beta')
         var animatedMapRoutes = {
             @foreach($animatedMaps as $map)
                 {{ $map->id }}: [
@@ -490,7 +483,6 @@
             renderedAnimatedMapDelete = renderedAnimatedMapRoutes[id][2];
             renderedAnimatedMapId = id;
         }
-        @endcan
 
         function destroyMap() {
             axios.delete('{{ route('index') }}/tools/map/' + mapId + '/' + mapKey)
@@ -527,7 +519,6 @@
                 });
         }
         
-        @can('anim_hist_map_beta')
         function destroyAnimatedMap() {
             axios.delete(animatedMapDelete)
                 .then((response) => {
@@ -563,7 +554,6 @@
                 .catch((error) => {
                 });
         }
-        @endcan
 
         function copy(type) {
             /* Get the text field */

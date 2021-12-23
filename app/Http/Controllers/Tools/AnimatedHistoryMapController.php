@@ -26,8 +26,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function create($server, $world) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
-        
         BasicFunctions::local();
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
@@ -58,8 +56,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function preview(AnimHistMapMap $wantedMap, $key, $histIdx, $ext) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
-        
         abort_unless($key == $wantedMap->show_key, 403);
         BasicFunctions::local();
         
@@ -84,8 +80,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
-        
         BasicFunctions::local();
 
         switch ($action) {
@@ -101,8 +95,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
-        
         BasicFunctions::local();
 
         switch ($action) {
@@ -257,7 +249,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function renderStatus(AnimHistMapJob $wantedJob, $key) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
         abort_unless($key == $wantedJob->edit_key, 403);
         BasicFunctions::local();
         
@@ -267,7 +258,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function renderRerun(AnimHistMapJob $wantedJob, $key) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
         abort_unless($key == $wantedJob->edit_key, 403);
         
         $wantedJob->finished_at = null;
@@ -278,7 +268,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function apiRenderStatus(AnimHistMapJob $wantedJob, $key) {
-        abort_unless(\Gate::allows('anim_hist_map_beta'), 403);
         abort_unless($key == $wantedJob->edit_key, 403);
         BasicFunctions::local();
         
