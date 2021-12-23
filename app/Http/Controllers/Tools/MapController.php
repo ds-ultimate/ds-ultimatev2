@@ -61,12 +61,15 @@ class MapController extends BaseController
         switch ($action) {
             case 'edit':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 return $this->edit($wantedMap);
             case 'show':
                 abort_unless($key == $wantedMap->show_key, 403);
+                $wantedMap->touch();
                 return $this->show($wantedMap);
             case 'getCanvas':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 if($wantedMap->drawing_obj == null)
                     return "";
 
@@ -112,16 +115,20 @@ class MapController extends BaseController
         switch ($action) {
             case 'save':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 return $this->save($wantedMap);
             case 'saveEdit':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 $this->save($wantedMap);
                 return $this->edit($wantedMap);
             case 'saveCanvas':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 return $this->saveCanvas($wantedMap);
             case 'title':
                 abort_unless($key == $wantedMap->edit_key, 403);
+                $wantedMap->touch();
                 return $this->saveTitle($wantedMap);
             default:
                 abort(404);
@@ -275,6 +282,7 @@ class MapController extends BaseController
     public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
+        $wantedMap->touch();
 
         if($options == null && $wantedMap->cached_at !== null && (! $wantedMap->isCached() || !$wantedMap->shouldUpdate)) {
             //use cached version

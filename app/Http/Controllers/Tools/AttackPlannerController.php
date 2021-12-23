@@ -62,22 +62,44 @@ class AttackPlannerController extends BaseController
         switch ($mode){
             case 'edit':
                 abort_unless($attackList->edit_key == $key, 403);
+                $attackList->touch();
                 return $this->edit($attackList);
             case 'show':
                 abort_unless($attackList->show_key == $key, 403);
+                $attackList->touch();
                 return $this->show($attackList);
             case 'exportWB':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
                 return $this->exportWB($attackList);
             case 'exportBB':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
                 return $this->exportBB($attackList);
             case 'exportIGM':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
                 return $this->exportIGM($attackList);
+            default:
+                abort(404);
+        }
+    }
+
+    public function modePost(AttackList $attackList, $mode, $key){
+        $worldData = $attackList->world;
+        if($worldData->config == null || $worldData->units == null) {
+            abort(404, __('tool.attackPlanner.notAvailable'));
+        }
+
+        switch ($mode){
             case 'destroyOutdated':
                 abort_unless($attackList->edit_key == $key, 403);
+                $attackList->touch();
                 return $this->destroyOutdated($attackList);
+            case 'clear':
+                abort_unless($attackList->edit_key == $key, 403);
+                $attackList->touch();
+                return $this->clear($attackList);
             default:
                 abort(404);
         }
@@ -260,6 +282,13 @@ class AttackPlannerController extends BaseController
             ['attack_list_id', $attackList->id]
         ])->delete();
         return ['success' => true, 'message' => 'destroy !!'];
+    }
+
+    public function clear(AttackList $attackList){
+        AttackListItem::where([
+            ['attack_list_id', $attackList->id]
+        ])->delete();
+        return ['success' => true, 'message' => 'cleared !!'];
     }
 
     public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){

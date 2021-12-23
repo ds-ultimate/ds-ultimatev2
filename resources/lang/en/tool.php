@@ -67,7 +67,6 @@ Attackcount: %ELEMENT_COUNT%
     'importExport' => 'Import/Export',
     'import_helper' => 'Import attacks from your Workbench',
     'links' => 'Links for sharing',
-    'outdated' => 'expired attacks',
     'sendTime' => 'Send time',
     'showLink' => 'View Link',
     'showLink_helper' => 'This Links gives only show access to the attack planner',
@@ -111,6 +110,12 @@ Attackcount: %ELEMENT_COUNT%
     'multiedit' => 'Multiedit',
     'tips' => 'Tips',
     'warnSending' => 'Using the Send-Troops button is done on your own risk. If you encounter any problems please tell the DS-Ultimate team (via Discord or Report Problem)',
+    'deleteOutdated' => 'delete expired attacks',
+    'deleteAll' => 'delete all attacks',
+    'confirm' => 
+    array (
+      'clear' => 'all attacks will be deleted',
+    ),
   ),
   'map' => 
   array (

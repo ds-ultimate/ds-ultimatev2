@@ -33,7 +33,6 @@ return array (
     'time' => 'Zeit',
     'time_helper' => 'Ankunftszeit des Angriffes',
     'unit_helper' => 'langsamste Einheit',
-    'outdated' => 'abgelaufene Angriffe',
     'attacker' => 'Angreifer',
     'defender' => 'Verteidiger',
     'sendTime' => 'Abschickzeit',
@@ -111,6 +110,12 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'multiedit' => 'Massenbearbeitung',
     'tips' => 'Tipps',
     'warnSending' => 'Die Benutzung des Abschickknopfes geschieht auf eigene Gefahr. Sollten Probleme auftreten, wende dich bitte an das DS-Ultimate Team (entweder im Discord oder via Fehler melden)',
+    'deleteOutdated' => 'abgelaufene Angriffe löschen',
+    'confirm' => 
+    array (
+      'clear' => 'Es werden ALLE Angriffe gelöscht',
+    ),
+    'deleteAll' => 'Angriffsplan leeren',
   ),
   'map' => 
   array (

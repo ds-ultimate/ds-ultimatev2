@@ -127,6 +127,7 @@ $tabList = [
 @endsection
 
 @push('js')
+    <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <audio id="audio-elm" controls class="d-none">
         <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.mp3') }}" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -285,35 +286,64 @@ $tabList = [
         }
 
         function destroy(id,key) {
-            $.ajax(
+            $.ajax({
+                url: "{{ route('tools.attackListItem.store') }}/"+id,
+                type: 'DELETE',
+                dataType: "JSON",
+                data: {
+                    "id": id,
+                    "_method": 'DELETE',
+                    "key": key,
+                    "_token": '{{ csrf_token() }}',
+                },
+                success: function ()
                 {
-                    url: "{{ route('tools.attackListItem.store') }}/"+id,
-                    type: 'DELETE',
-                    dataType: "JSON",
-                    data: {
-                        "id": id,
-                        "_method": 'DELETE',
-                        "key": key,
-                        "_token": '{{ csrf_token() }}',
-                    },
-                    success: function ()
-                    {
-                        table.ajax.reload();
-                    }
-                });
+                    table.ajax.reload();
+                }
+            });
         }
+        
+        function destroyAll() {
+            $.ajax({
+                url: "{{ route('tools.attackPlannerModePost', [$attackList->id, "clear", $attackList->edit_key]) }}",
+                type: 'POST',
+                dataType: "JSON",
+                data: {
+                    "_token": '{{ csrf_token() }}',
+                },
+                success: function ()
+                {
+                    table.ajax.reload();
+                }
+            });
+        }
+        
+        $(function() {
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]',
+                popout: true,
+                title: "{{ __('user.confirm.destroy.title') }}",
+                btnOkLabel: "{{ __('user.confirm.destroy.ok') }}",
+                btnOkClass: 'btn btn-danger',
+                btnCancelLabel: "{{ __('user.confirm.destroy.cancel') }}",
+                btnCancelClass: 'btn btn-info',
+            });
+            $('.confirm-deleteAll').on('confirmed.bs.confirmation', destroyAll);
+        });
 
         function destroyOutdated() {
-            $.ajax(
+            $.ajax({
+                url: '{{ route('tools.attackPlannerModePost', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}',
+                type: 'POST',
+                dataType: "JSON",
+                data: {
+                    "_token": '{{ csrf_token() }}',
+                },
+                success: function ()
                 {
-                    url: '{{ route('tools.attackPlannerMode', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}',
-                    type: 'GET',
-                    dataType: "JSON",
-                    success: function ()
-                    {
-                        table.ajax.reload();
-                    }
-                });
+                    table.ajax.reload();
+                }
+            });
         }
 
         function store() {
