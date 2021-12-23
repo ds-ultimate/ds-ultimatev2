@@ -20,6 +20,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class AttackPlannerController extends BaseController
 {
@@ -33,7 +34,7 @@ class AttackPlannerController extends BaseController
         }
 
         if(\Auth::check()) {
-            //only allow one map without title per user per world
+            //only allow one attackPlanner without title per user per world
             $listModel = new AttackList();
             $uniqueList = $listModel->where('world_id', $worldData->id)->where('user_id', \Auth::user()->id)->whereNull('title')->first();
             if($uniqueList != null) {
@@ -338,5 +339,56 @@ class AttackPlannerController extends BaseController
                 'msg' => __('tool.attackPlanner.destroyError'),
             ));
         }
+    }
+    
+    public function apiCreate(Request $request) {
+        $req = $request->validate([
+            'title' => '',
+            'server' => 'required',
+            'world' => 'required',
+            'API_KEY' => 'required',
+            'items' => 'array',
+            'items.*' => 'array',
+            'items.*.source' => 'required|integer',
+            'items.*.destination' => 'required|integer',
+            'items.*.slowest_unit' => 'required|integer',
+            'items.*.arrival_time' => 'required|integer',
+            'items.*.type' => 'required|integer',
+        ]);
+        
+        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
+            abort(403);
+        }
+
+        World::existWorld($req['server'], $req['world']);
+        $worldData = World::getWorld($req['server'], $req['world']);
+        if($worldData->config == null || $worldData->units == null) {
+            abort(404, __('tool.attackPlanner.notAvailable'));
+        }
+        
+        $list = new AttackList();
+        $list->world_id = $worldData->id;
+        $list->title = $req['title'] ?? "";
+        $list->edit_key = Str::random(40);
+        $list->show_key = Str::random(40);
+        $list->save();
+        
+        foreach($req['items'] as $it) {
+            $item = new AttackListItem();
+            $item->attack_list_id = $list->id;
+            $item->start_village_id = $it['source'];
+            $item->target_village_id = $it['destination'];
+            $item->slowest_unit = $it['slowest_unit'];
+            $item->arrival_time = $it['arrival_time'];
+            $item->send_time = $item->calcSend();
+            $item->type = $it['type'];
+            $item->save();
+        }
+        
+        return \Response::json(array(
+            'id' => $item->attack_list_id,
+            'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
+            'show' => route('tools.attackPlannerMode', [$list->id, "show", $list->show_key]),
+        ));
     }
 }

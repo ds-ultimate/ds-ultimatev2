@@ -19,6 +19,10 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        /*
+         * everything in there can only be called with a valid API token and is intended for other devs
+         * no CsrfToken needed
+         */
+        "/toolAPI/*",
     ];
 }

@@ -29,7 +29,7 @@ Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', [\App\Http\
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'mode'])->name('attackPlannerMode');
 Route::post('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'modePost'])->name('attackPlannerModePost');
 Route::delete('/tools/attackPlanner/{attackList}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'destroy'])->name('attackPlannerDestroy');
-
+Route::post('/toolAPI/attackPlanner/create', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'apiCreate'])->name('attackPlannerAPICreate');
 
 //Map Tool
 Route::get('/tools/create/map/{server}/{world}', [\App\Http\Controllers\Tools\MapController::class, 'new'])->name('mapNew');
