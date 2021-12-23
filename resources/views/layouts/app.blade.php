@@ -48,7 +48,7 @@
     </div>
     @include('footer.standart')
 </div>
-
+@include('cookie-consent::index')
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>

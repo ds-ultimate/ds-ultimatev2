@@ -394,9 +394,9 @@
                 popout: true,
                 title: "{{ __('user.confirm.destroy.title') }}",
                 btnOkLabel: "{{ __('user.confirm.destroy.ok') }}",
-                btnOkClass: 'btn-danger',
+                btnOkClass: 'btn btn-danger',
                 btnCancelLabel: "{{ __('user.confirm.destroy.cancel') }}",
-                btnCancelClass: 'btn-info',
+                btnCancelClass: 'btn btn-info',
             });
             $('#deleteButtonMap').on('confirmed.bs.confirmation', destroyMap);
             $('#deleteButtonAttackPlanner').on('confirmed.bs.confirmation', destroyAttackPlanner);
