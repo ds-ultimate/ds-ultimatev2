@@ -308,5 +308,5 @@ return [
      * - the API has no rate limit
      * - the API is very resource intensive (multiple DB Queryies / execution time > 500ms)
      */
-    'API_KEYS' => env('API_KEYS', []),
+    'API_KEYS' => env('API_KEYS', ""),
 ];

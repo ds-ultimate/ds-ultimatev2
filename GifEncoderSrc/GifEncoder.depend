@@ -69,7 +69,7 @@
 
 1637874834 /media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/globals.h
 
-1637865994 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/main.c
+1640338079 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -82,7 +82,7 @@
 	"lodepng.h"
 	"hashmap.h"
 
-1637875057 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/gifencoder.c
+1640339225 source:/media/hdd/home/michi/ownCloud/Projekte/DS-Ultimate/GifEncoderSrc/gifencoder.c
 	<stdio.h>
 	<stdlib.h>
 	<math.h>

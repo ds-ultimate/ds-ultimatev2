@@ -28,7 +28,7 @@
 void littleEndianDump(char* writeInto, int* writeSize, int32_t data, int8_t bytes);
 void bigEndianDump(char* writeInto, int* writeSize, int32_t data, int8_t bytes);
 void gifencoder_createColorTable(GIF_STRUCTURE* gif);
-int find_closest_matching(GIF_STRUCTURE* gif, int32_t color);
+int find_closest_matching(GIF_STRUCTURE* gif, int32_t color, float* minDiff);
 void to_HSV(int32_t asRGB, float* h, float* s, float* v);
 void gifencoder_writeColorTable(FILE* targetFile, GIF_STRUCTURE* gif);
 void gifencoder_writeLoopExtension(FILE* targetFile, GIF_STRUCTURE* gif);
@@ -80,9 +80,10 @@ void gifencoder_addImage(GIF_STRUCTURE* gif, unsigned char* imageData) {
     int r, g, b;
     for(int i = 0; i < gif->width * gif->height; i++) {
         if(gif->colType == LCT_RGBA) {
-            r = imageData[i * 4];
-            g = imageData[i * 4 + 1];
-            b = imageData[i * 4 + 2];
+            //downsample to 16 Bit color space
+            r = imageData[i * 4] & 0xF8;
+            g = imageData[i * 4 + 1] & 0xFC;
+            b = imageData[i * 4 + 2] & 0xF8;
         } else {
             printf("Unknown color type %u\n", gif->colType);
             exit(1);
@@ -238,38 +239,75 @@ void gifencoder_createColorTable(GIF_STRUCTURE* gif) {
     //write into gif element
     gif->pictureColorMap = hashmap_new(colorsSize + 1);
 
-    int globalColorTableSize = 255;
-    if(colorsSize < globalColorTableSize) {
-        globalColorTableSize = colorsSize;
-    }
-    //+1 for transparent
-    globalColorTableSize++;
+    gif->globalColorTable = calloc(256, sizeof(int32_t));
+    gif->globalHSVColorTableH = calloc(256, sizeof(float));
+    gif->globalHSVColorTableS = calloc(256, sizeof(float));
+    gif->globalHSVColorTableV = calloc(256, sizeof(float));
+    gif->globalColorTableSize = 0;
 
-    gif->globalColorTable = calloc(globalColorTableSize, sizeof(int32_t));
-    gif->globalHSVColorTableH = calloc(globalColorTableSize, sizeof(float));
-    gif->globalHSVColorTableS = calloc(globalColorTableSize, sizeof(float));
-    gif->globalHSVColorTableV = calloc(globalColorTableSize, sizeof(float));
-    gif->globalColorTableSize = globalColorTableSize;
+    int i = 0, ignCnt = 0;
+    float h, s, v, minDiff;
+    int32_t* ignColorCache = calloc(colorsSize, sizeof(int32_t));
 
-    int i = 0;
-    float h, s, v;
-    for(; i < globalColorTableSize; i++) {
-        gif->globalColorTable[i] = colors[i];
+    for(; i < colorsSize && gif->globalColorTableSize < 255; i++) {
+        find_closest_matching(gif, colors[i], &minDiff);
+        if(minDiff < 0.02) {
+            //similar color is already in the table. Ignore for now
+            ignColorCache[ignCnt] = colors[i];
+            ignCnt++;
+            continue;
+        }
+
         to_HSV(colors[i], &h, &s, &v);
-        gif->globalHSVColorTableH[i] = h;
-        gif->globalHSVColorTableS[i] = s;
-        gif->globalHSVColorTableV[i] = v;
+        gif->globalColorTable[gif->globalColorTableSize] = colors[i];
+        gif->globalHSVColorTableH[gif->globalColorTableSize] = h;
+        gif->globalHSVColorTableS[gif->globalColorTableSize] = s;
+        gif->globalHSVColorTableV[gif->globalColorTableSize] = v;
 
-        hashmap_set(gif->pictureColorMap, colors[i], i);
+        hashmap_set(gif->pictureColorMap, colors[i], gif->globalColorTableSize);
+        gif->globalColorTableSize++;
     }
+    gif->globalColorTableSize++; //transparency
 
     for(; i < colorsSize; i++) {
-        hashmap_set(gif->pictureColorMap, colors[i], find_closest_matching(gif, colors[i]));
+        hashmap_set(gif->pictureColorMap, colors[i], find_closest_matching(gif, colors[i], &minDiff));
+    }
+
+    while(ignCnt > 0 && gif->globalColorTableSize < 255) {
+        minDiff = 10;
+        int minAt = -1, curMin;
+        float curMinDiff = 10;
+        for(i = 0; i < ignCnt; i++) {
+            curMin = find_closest_matching(gif, ignColorCache[i], &minDiff);
+            if(minDiff < curMinDiff) {
+                curMinDiff = minDiff;
+                minAt = curMin;
+            }
+        }
+
+        to_HSV(ignColorCache[minAt], &h, &s, &v);
+        gif->globalColorTable[gif->globalColorTableSize] = ignColorCache[minAt];
+        gif->globalHSVColorTableH[gif->globalColorTableSize] = h;
+        gif->globalHSVColorTableS[gif->globalColorTableSize] = s;
+        gif->globalHSVColorTableV[gif->globalColorTableSize] = v;
+
+        hashmap_set(gif->pictureColorMap, ignColorCache[minAt], gif->globalColorTableSize);
+        gif->globalColorTableSize++;
+
+        ignCnt--;
+        for(i = minAt; i < ignCnt; i++) {
+            ignColorCache[i] = ignColorCache[i + 1];
+        }
+    }
+
+    for(i = 0; i < ignCnt; i++) {
+        hashmap_set(gif->pictureColorMap, ignColorCache[i], find_closest_matching(gif, ignColorCache[i], &minDiff));
     }
 
 //    for(int i = 0; i < colorsSize; i++) {
 //        printf("Color: %d / Num: %d / NumTbl: %d\n", colors[i], colorAmount[i], gif->pictureColorMapValues[i]);
 //    }
+    free(ignColorCache);
     free(colorAmount);
     free(colors);
 
@@ -492,11 +530,12 @@ void gifencoder_lzwCompressImage(char** target, int* targetSize, int* maxTargetS
     lzwCompressor_free(compressor);
 }
 
-int find_closest_matching(GIF_STRUCTURE* gif, int32_t color) {
+int find_closest_matching(GIF_STRUCTURE* gif, int32_t color, float* minDiff) {
     float h, s,v;
     to_HSV(color, &h, &s, &v);
 
-    float minDiff = 10, diff;
+    float diff;
+    *minDiff = 10;
     int closest = 0;
 
     for(int i = 0; i < gif->globalColorTableSize; i++) {
@@ -504,8 +543,8 @@ int find_closest_matching(GIF_STRUCTURE* gif, int32_t color) {
         diff += fabsf( gif->globalHSVColorTableS[i] - s ) * WEIGHT_S;
         diff += fabsf( gif->globalHSVColorTableV[i] - v ) * WEIGHT_V;
 
-        if(diff < minDiff) {
-            minDiff = diff;
+        if(diff < *minDiff) {
+            *minDiff = diff;
             closest = i;
         }
     }
@@ -543,8 +582,8 @@ void to_HSV(int32_t asRGB, float* h, float* s, float* v) {
         float diffB = (((maxFloat - bFloat) / 6) + (maxDiff / 2)) / maxDiff;
 
         if      (rFloat == maxFloat) *h = diffB - diffG;
-        else if (gFloat == maxFloat) *h = (1/3) + diffR - diffB;
-        else if (bFloat == maxFloat) *h = (2/3) + diffG - diffR;
+        else if (gFloat == maxFloat) *h = (1.0/3.0) + diffR - diffB;
+        else if (bFloat == maxFloat) *h = (2.0/3.0) + diffG - diffR;
 
         if(*h < 0) *h = *h + 1;
         if(*h > 1) *h = *h - 1;
