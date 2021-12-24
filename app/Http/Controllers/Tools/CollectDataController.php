@@ -224,10 +224,17 @@ class CollectDataController extends BaseController
     public function getBuildingTimesResultArray() {
         $allData = (new BuildTime())->get();
         
-        $results = array();
+        $worldCache = [];
+        $results = [];
         foreach($allData as $data) {
-            $worldConf = simplexml_load_string($data->world->config);
-            $buildConf = simplexml_load_string($data->world->buildings);
+            if(!isset($worldCache[$data->world_id])) {
+                $worldCache[$data->world_id] = [
+                    "b" => simplexml_load_string($data->world->buildings),
+                    "c" => simplexml_load_string($data->world->config),
+                ];
+            }
+            $worldConf = $worldCache[$data->world_id]["c"];
+            $buildConf = $worldCache[$data->world_id]["b"];
             if($buildConf == null) {
                 echo "Skipping entry {$data->id} because of missing b conf<br>\n";
                 continue;

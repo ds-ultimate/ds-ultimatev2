@@ -63,7 +63,7 @@ abstract class AbstractSkinRenderer {
     /*
      * This function uses Map Coordinates not Picture!!
      */
-    protected function renderShadowedCenteredText($x, $y, $text, $col, $shadowCol, $indent=1) {
+    protected function renderShadowedCenteredText($x, $y, $text, $col, $shadowCol, $indent=2) {
         $this->renderCenteredText($x - $indent, $y - $indent, $text, $shadowCol);
         $this->renderCenteredText($x - $indent, $y + $indent, $text, $shadowCol);
         $this->renderCenteredText($x + $indent, $y - $indent, $text, $shadowCol);
