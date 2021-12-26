@@ -344,6 +344,7 @@ class CollectDataController extends BaseController
             
             $finalRes['all_min'][$lv] = "$min";
             $finalRes['all_max'][$lv] = "$max";
+            $finalRes['all_delta'][$lv] = $max - $min;
         }
         
         return $finalRes;
