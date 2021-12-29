@@ -287,8 +287,8 @@ class CollectDataController extends BaseController
                 continue;
             }
             $time = ($parts[0]*60 + $parts[1])*60 + $parts[2];
-            $timeMinWithoutConf = ($time - 1) * $worldConf->speed * pow(1.05, $data->mainLevel);
-            $timeMaxWithoutConf = ($time + 1) * $worldConf->speed * pow(1.05, $data->mainLevel);
+            $timeMinWithoutConf = ($time - 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
+            $timeMaxWithoutConf = ($time + 0.5) * $worldConf->speed * pow(1.05, $data->mainLevel);
             
             if(!isset($results[$data->building])) {
                 $results[$data->building] = array();
@@ -342,9 +342,9 @@ class CollectDataController extends BaseController
                 echo "Warn $min bigger than $max !! @all, $lv <br>\n";
             }
             
-            $finalRes['all_min'][$lv] = "$min";
-            $finalRes['all_max'][$lv] = "$max";
-            $finalRes['all_delta'][$lv] = $max - $min;
+            $finalRes['all_min'][$lv] = number_format($min, 7);
+            $finalRes['all_max'][$lv] = number_format($max, 7);
+            $finalRes['all_delta'][$lv] = number_format($max - $min, 7);
         }
         
         return $finalRes;

@@ -80,6 +80,7 @@ class DoSpeedWorldBackend
                 } else if($match == null) {
                     $exception = new \Exception("World in backend but not in planned " . $link . " at " . $serverModel->code);
                     DiscordNotificationQueueElement::exception($exception);
+                    unset($exception);
                     continue;
                 }
                 
