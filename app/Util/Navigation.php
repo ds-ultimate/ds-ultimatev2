@@ -2,11 +2,15 @@
 namespace App\Util;
 
 use App\World;
+use App\Http\Controllers\Tools\AnimatedHistoryMapController;
 
 class Navigation
 {
     public static function generateNavArray($serverArg, $worldArg) {
         $retArray = [];
+        if($worldArg !== null) {
+            $serverCodeName = [$worldArg->server->code, $worldArg->name];
+        }
 
         if($serverArg !== null) {
             $serverNav = [];
@@ -68,7 +72,11 @@ class Navigation
                 $tools[] = self::navElementDisabled('tool.accMgrDB.title', 'ui.nav.disabled.missingConfig');
             }
             
-            $tools[] = self::navElement('tool.animHistMap.title', 'tools.animHistMap.create', routeArgs: $serverCodeName, nofollow: true);
+            if(AnimatedHistoryMapController::isAvailable($worldArg)) {
+                $tools[] = self::navElement('tool.animHistMap.title', 'tools.animHistMap.create', routeArgs: $serverCodeName, nofollow: true);
+            } else {
+                $tools[] = self::navElementDisabled('tool.animHistMap.title', 'ui.nav.disabled.missingConfig');
+            }
         } else {
             $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.noWorld');
@@ -90,6 +98,13 @@ class Navigation
             self::navElement('Deutsch', 'locale', routeArgs: ['de'], translated: false, icon: 'flag-icon flag-icon-de'),
             self::navElement('English', 'locale', routeArgs: ['en'], translated: false, icon: 'flag-icon flag-icon-gb'),
         ]);
+        
+        if(session('darkmode', false)) {
+            $navArray[] = self::navElement('ui.lightmode', 'darkmode', routeArgs: ["false"], translated: true);
+        } else {
+            $navArray[] = self::navElement('ui.darkmode', 'darkmode', routeArgs: ["true"], translated: true);
+        }
+        
         if(\Auth::check()) {
             $userOpt = [];
             $userOpt[] = self::navElement('ui.titel.overview', 'user.overview', routeArgs: ['myMap']);
