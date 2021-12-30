@@ -25,7 +25,7 @@ class AnimatedHistoryMapController extends BaseController
         $this->debug = config('app.debug');
     }
     
-    public function isAvailable($world) {
+    public static function isAvailable($world) {
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         return BasicFunctions::existTable($dbName, "index");
     }
@@ -34,7 +34,7 @@ class AnimatedHistoryMapController extends BaseController
         BasicFunctions::local();
         World::existWorld($server, $world);
         $worldData = World::getWorld($server, $world);
-        abort_unless($this->isAvailable($worldData), 404);
+        abort_unless(static::isAvailable($worldData), 404);
 
         $mapModel = new AnimHistMapMap();
         if(\Auth::check()) {
@@ -66,7 +66,7 @@ class AnimatedHistoryMapController extends BaseController
         BasicFunctions::local();
         
         $world = $wantedMap->world;
-        abort_unless($this->isAvailable($world), 404);
+        abort_unless(static::isAvailable($world), 404);
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
         $dim = array(
@@ -88,7 +88,7 @@ class AnimatedHistoryMapController extends BaseController
     
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
-        abort_unless($this->isAvailable($wantedMap->world), 404);
+        abort_unless(static::isAvailable($wantedMap->world), 404);
 
         switch ($action) {
             case 'edit':
@@ -104,7 +104,7 @@ class AnimatedHistoryMapController extends BaseController
     
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
-        abort_unless($this->isAvailable($wantedMap->world), 404);
+        abort_unless(static::isAvailable($wantedMap->world), 404);
 
         switch ($action) {
             case 'save':
@@ -444,7 +444,7 @@ class AnimatedHistoryMapController extends BaseController
         if(! $wantedMap->autoDimensions) return;
         
         $world = $wantedMap->world;
-        abort_unless($this->isAvailable($world), 404);
+        abort_unless(static::isAvailable($world), 404);
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
         $dim = array(
