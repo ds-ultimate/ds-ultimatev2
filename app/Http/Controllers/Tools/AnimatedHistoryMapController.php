@@ -27,7 +27,11 @@ class AnimatedHistoryMapController extends BaseController
     
     public static function isAvailable($world) {
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
-        return BasicFunctions::existTable($dbName, "index");
+        if(!BasicFunctions::existTable($dbName, "index")) return false;
+        
+        $histModel = new HistoryIndex();
+        $histModel->setTable("$dbName.index");
+        return $histModel->first() != null;
     }
     
     public function create($server, $world) {
