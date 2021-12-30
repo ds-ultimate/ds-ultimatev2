@@ -6,6 +6,7 @@ use App\SpeedWorld;
 use App\Server;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 
 class DoSpeedWorld
 {
@@ -30,7 +31,7 @@ class DoSpeedWorld
         ],
         'uk' => [
             'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*End:</td> <td>(?<end>.*?)</td>]",
-            'date' => "M d, H:i",
+            'date' => ["M d, H:i", "M d,Y H:i"],
             'dateTimeFix' => true,
             'locale' => 'Europe/London',
         ],
@@ -82,8 +83,8 @@ class DoSpeedWorld
                 $num = $matches['id'];
                 $name = "s" . $num;
                 $displayName = '#' . $num . " " . $matches['name'];
-                $start = Carbon::createFromFormat($dateFormat, str_replace($repS, $repR, $matches['start']), $dateLocale);
-                $end = Carbon::createFromFormat($dateFormat, str_replace($repS, $repR, $matches['end']), $dateLocale);
+                $start = self::customDateParse(str_replace($repS, $repR, $matches['start']), $dateFormat, $dateLocale);
+                $end = self::customDateParse(str_replace($repS, $repR, $matches['end']), $dateFormat, $dateLocale);
                 if($dateTimeFix) {
                     // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
                     if($start->isPast()) {
@@ -202,5 +203,20 @@ class DoSpeedWorld
         }
         
         return $cursor;
+    }
+    
+    private static function customDateParse($dateStr, $formats, $locale) {
+        if(!is_array($formats)) {
+            return Carbon::createFromFormat($formats, $dateStr, $locale);
+        } else {
+            foreach($formats as $format) {
+                try {
+                    return Carbon::createFromFormat($format, $dateStr, $locale);
+                } catch (InvalidFormatException $ex) {
+                    //ignore and use nex format
+                }
+            }
+            throw new InvalidFormatException("Unable to decode " . $dateStr);
+        }
     }
 }
