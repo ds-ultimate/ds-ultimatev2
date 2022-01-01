@@ -136,7 +136,9 @@ class FindModelController extends Controller
     }
     
     public function getActiveWorldByServer($server){
+        World::existServer($server);
         $server = Server::getServerByCode($server);
+        
         $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
         $array = [];
         foreach ($worlds as $world){
