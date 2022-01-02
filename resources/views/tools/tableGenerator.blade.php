@@ -2,11 +2,6 @@
 
 @section('titel', __('tool.tableGenerator.title'))
 
-@push('style')
-    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
-@endpush
-
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->

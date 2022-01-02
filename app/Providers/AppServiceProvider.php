@@ -83,5 +83,22 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('forceSet', function($name) {
             return "<?php if(!isset($name)) {"."$name=null;} ?>";
         });
+        
+        Blade::directive('ifdarkmode', function() {
+            return "<?php if(session('darkmode', false)): ?>";
+        });
+        
+        Blade::directive('darkmode', function($class) {
+            $rep = [
+                "btn-outline-dark" => "btn-outline-light",
+                "btn-outline-light" => "btn-outline-dark",
+            ];
+            if(isset($rep[$class])) {
+                $asDark = $rep[$class];
+            } else {
+                $asDark = $class;
+            }
+            return "<?php if(session('darkmode', false)) {echo e(\"$asDark\");} else {echo e(\"$class\");} ?>";
+        });
     }
 }

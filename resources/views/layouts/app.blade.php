@@ -10,7 +10,11 @@
 
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @ifdarkmode
+        <link href="{{ asset('css/dark.css') }}" rel="stylesheet">
+    @else
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @endif
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />

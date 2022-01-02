@@ -58,8 +58,10 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
 [table]
 [**]ID[||]Art[||]Einheit[||]Herkunft[||]Ziel[||]Abschickzeit[||]Versammlungsplatz[/**]
 %ROW%
-[/table]',
-          'row' => '[*]%ELEMENT_ID%[|]%TYPE%[|]%UNIT%[|]%SOURCE%[|]%TARGET%[|]%SEND%[|]%PLACE%[/*]',
+[/table]
+
+[size=8]Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url][/size]',
+          'row' => '[*]%ELEMENT_ID%[|]%TYPE_IMG%[|]%UNIT%[|]%SOURCE%[|]%TARGET%[|]%SEND%[|]%PLACE%[/*]',
         ),
       ),
       'IGM' => 
@@ -67,6 +69,11 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
         'default' => 
         array (
           'row' => '%TYPE% von [b]%ATTACKER%[/b] aus %SOURCE% mit %UNIT% auf [b]%DEFENDER%[/b]  in %TARGET% startet am [color=#ff0e0e]%SEND%[/color] und kommt am [color=#2eb92e]%ARRIVE%[/color] an (%PLACE%)',
+          'body' => '[b]%TITLE%[/b]
+
+%ROW%
+
+Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
         ),
       ),
     ),
@@ -91,7 +98,6 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'notAvailable' => 'Der Angriffsplaner ist auf dieser Welt nicht verfügbar.',
     'withoutTitle' => 'Dieser Angriffsplaner hat keinen Titel und wird daher immer standardmäßig beim Klick auf "Angriffsplaner" benutzt. Um damit einen neuen Angriffsplaner zu erstellen, muss ein Titel vergeben werden.',
     'errorKoordTitle' => 'Dorf Koordinaten',
-    'errorUnitTitle' => 'Einheitengrösse',
     'errorUnitCount' => 'Anzahl ist zu gross',
     'villageNotExistTitle' => 'Dorf Fehler',
     'villageNotExist' => 'Das Dorf existiert nicht',
@@ -109,6 +115,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
     'attackCount' => 'Es wurden keine Angriffe für die Bearbeitung ausgewählt',
     'multiedit' => 'Massenbearbeitung',
     'tips' => 'Tipps',
+    'errorUnitCountTitle' => 'Einheitengrösse',
     'warnSending' => 'Die Benutzung des Abschickknopfes geschieht auf eigene Gefahr. Sollten Probleme auftreten, wende dich bitte an das DS-Ultimate Team (entweder im Discord oder via Fehler melden)',
     'deleteOutdated' => 'abgelaufene Angriffe löschen',
     'confirm' => 
@@ -116,6 +123,7 @@ Anzahl der Angriffe: %ELEMENT_COUNT%
       'clear' => 'Es werden ALLE Angriffe gelöscht',
     ),
     'deleteAll' => 'Angriffsplan leeren',
+    'errorKoordEmpty' => 'Start- und Zieldorf dürfen nicht leer sein',
   ),
   'map' => 
   array (

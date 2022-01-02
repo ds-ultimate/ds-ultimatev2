@@ -94,7 +94,7 @@ function generateMobileMenuEntry($entry, $level=0) {
     }
 }
 ?>
-<nav class="navbar navbar-light bg-nav">
+<nav class="navbar bg-nav">
     <a class="navbar-brand" href="{{ route('index') }}">
         DS-Ultimate
     </a>
@@ -106,6 +106,15 @@ function generateMobileMenuEntry($entry, $level=0) {
         @endforeach
     </ul>
     <ul class="d-none d-lg-flex navbar-nav">
+        <li class="nav-item">
+            <a class="btn @darkmode(btn-outline-dark) mr-sm-2" href="{{ route('darkmode', (session('darkmode', false))?("false"):("true")) }}">
+                @ifdarkmode
+                    {{ __('ui.lightmode') }}
+                @else
+                    {{ __('ui.darkmode') }}
+                @endif
+            </a>
+        </li>
         @if (isset($server))
             <form class="form-inline" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
                 <li class="nav-item">
@@ -116,7 +125,7 @@ function generateMobileMenuEntry($entry, $level=0) {
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
-                        <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn @darkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ __('ui.titel.search') }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
@@ -130,7 +139,7 @@ function generateMobileMenuEntry($entry, $level=0) {
         @endif
             <li class="nav-item">
                 <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn @darkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('ui.language') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
@@ -142,7 +151,7 @@ function generateMobileMenuEntry($entry, $level=0) {
         @guest
             <li class="nav-item">
                 <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn @darkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('user.login') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
@@ -156,7 +165,7 @@ function generateMobileMenuEntry($entry, $level=0) {
         @else
             <li class="nav-item">
                 <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn @darkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{{ Auth::user()->avatarPath() }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
                         {{ Auth::user()->name }} <span class="caret"></span>
                     </button>

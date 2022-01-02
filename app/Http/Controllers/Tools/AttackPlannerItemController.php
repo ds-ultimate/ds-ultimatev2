@@ -30,22 +30,24 @@ class AttackPlannerItemController extends BaseController
     {
         $attackplaner = AttackList::findOrFail($request->attack_list_id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
+        $unitC = [];
         foreach (self::$units as $unit){
             if ($request->get($unit) == null){
-                $$unit = 0;
+                $unitC[$unit] = 0;
             }else{
                 $value = $request->get($unit);
                 if ($value <= 2147483648){
-                    $$unit = $value;
+                    $unitC[$unit] = intval($value);
                 }else{
                     return \Response::json(array(
                         'data' => 'error',
-                        'title' => __('tool.attackPlanner.errorUnitTitle'),
+                        'title' => __('tool.attackPlanner.errorUnitCountTitle'),
                         'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
                     ));
                 }
             }
         }
+        
         $item = new AttackListItem();
         $item->attack_list_id = $request->attack_list_id;
         if (!$item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
@@ -71,18 +73,19 @@ class AttackPlannerItemController extends BaseController
         }else{
             $item->ms = 0;
         }
-        $item->spear = $spear;
-        $item->sword = $sword;
-        $item->axe = $axe;
-        $item->archer = $archer;
-        $item->spy = $spy;
-        $item->light = $light;
-        $item->marcher = $marcher;
-        $item->heavy = $heavy;
-        $item->ram = $ram;
-        $item->catapult = $catapult;
-        $item->knight = $knight;
-        $item->snob = $snob;
+        $item->spear = $unitC["spear"];
+        $item->sword = $unitC["sword"];
+        $item->axe = $unitC["axe"];
+        $item->archer = $unitC["archer"];
+        $item->spy = $unitC["spy"];
+        $item->light = $unitC["light"];
+        $item->marcher = $unitC["marcher"];
+        $item->heavy = $unitC["heavy"];
+        $item->ram = $unitC["ram"];
+        $item->catapult = $unitC["catapult"];
+        $item->knight = $unitC["knight"];
+        $item->snob = $unitC["snob"];
+        $item->send_time = $item->calcSend();
         if($item->save()){
             return \Response::json(array(
                 'data' => 'success',
@@ -215,9 +218,9 @@ class AttackPlannerItemController extends BaseController
             ->make(true);
     }
 
-    public function destroy(AttackListItem $attackListItem)
+    public function destroy(Request $request, AttackListItem $attackListItem)
     {
-        if ($attackListItem->list->edit_key === request('key')){
+        if ($attackListItem->list->edit_key === $request->key){
             $attackListItem->delete();
             return ['success' => true, 'message' => 'destroy !!'];
         }
@@ -226,13 +229,14 @@ class AttackPlannerItemController extends BaseController
     public function update(Request $request, AttackListItem $attackListItem){
         $attackplaner = $attackListItem->list;
         abort_unless($request->key == $attackplaner->edit_key, 403);
+        $unitC = [];
         foreach (self::$units as $unit){
             if ($request->get($unit) == null){
-                $$unit = 0;
+                $unitC[$unit] = 0;
             }else{
                 $value = $request->get($unit);
                 if ($value <= 2147483648){
-                    $$unit = $value;
+                    $unitC[$unit] = intval($value);
                 }else{
                     return \Response::json(array(
                         'data' => 'error',
@@ -266,18 +270,19 @@ class AttackPlannerItemController extends BaseController
         }else{
             $attackListItem->ms = 0;
         }
-        $attackListItem->spear = $spear;
-        $attackListItem->sword = $sword;
-        $attackListItem->axe = $axe;
-        $attackListItem->archer = $archer;
-        $attackListItem->spy = $spy;
-        $attackListItem->light = $light;
-        $attackListItem->marcher = $marcher;
-        $attackListItem->heavy = $heavy;
-        $attackListItem->ram = $ram;
-        $attackListItem->catapult = $catapult;
-        $attackListItem->knight = $knight;
-        $attackListItem->snob = $snob;
+        $attackListItem->spear = $unitC["spear"];
+        $attackListItem->sword = $unitC["sword"];
+        $attackListItem->axe = $unitC["axe"];
+        $attackListItem->archer = $unitC["archer"];
+        $attackListItem->spy = $unitC["spy"];
+        $attackListItem->light = $unitC["light"];
+        $attackListItem->marcher = $unitC["marcher"];
+        $attackListItem->heavy = $unitC["heavy"];
+        $attackListItem->ram = $unitC["ram"];
+        $attackListItem->catapult = $unitC["catapult"];
+        $attackListItem->knight = $unitC["knight"];
+        $attackListItem->snob = $unitC["snob"];
+        $attackListItem->send_time = $attackListItem->calcSend();
         if($attackListItem->update()){
             return \Response::json(array(
                 'data' => 'success',
@@ -293,101 +298,94 @@ class AttackPlannerItemController extends BaseController
         }
     }
 
-    public function multiedit(Request $request){
-        $attackplaner = AttackList::find($request->attack_list_id);
+    public function multiedit(Request $request) {
+        $attackplaner = AttackList::find($request->id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
 
         $server = $attackplaner->world->server->code;
         $world = $attackplaner->world->name;
 
-        if (count($request->items) > 0){
-            foreach ($request->items as $item){
-                $attackListItem = AttackListItem::find($item);
-                if($item == null) {
-                    continue;
-                }
-
-                if (in_array('multiedit_type_checkbox', $request->checkboxes)){
-                    $attackListItem->type = $request->type;
-                }
-
-                if (in_array('multiedit_note_checkbox', $request->checkboxes)){
-                    $attackListItem->note = $request->note;
-                }
-
-                if (in_array('multiedit_start_checkbox', $request->checkboxes) || in_array('multiedit_target_checkbox', $request->checkboxes)){
-                    if (in_array('multiedit_start_checkbox', $request->checkboxes)){
-                        $xStart = $request->xStart;
-                        $yStart = $request->yStart;
-                    }else{
-                        $villageStart = Village::village($server, $world, $attackListItem->start_village_id);
-                        $xStart = $villageStart->x;
-                        $yStart = $villageStart->y;
-                    }
-                    if (in_array('multiedit_target_checkbox', $request->checkboxes)){
-                        $xTarget = $request->xTarget;
-                        $yTarget = $request->yTarget;
-                    }else{
-                        $villageTarget = Village::village($server, $world, $attackListItem->target_village_id);
-                        $xTarget = $villageTarget->x;
-                        $yTarget = $villageTarget->y;
-                    }
-                    if (!$attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget)){
-                        return \Response::json(array(
-                            'data' => 'error',
-                            'title' => __('tool.attackPlanner.villageNotExistTitle'),
-                            'msg' => __('tool.attackPlanner.villageNotExist'),
-                        ));
-                    }
-                }
-
-                if (in_array('multiedit_date_checkbox', $request->checkboxes)) {
-                    if ($request->time_type == 0) {
-                        $attackListItem->arrival_time = Carbon::parse($request->day. ' ' .$request->time);
-                    } else {
-                        $attackListItem->send_time = Carbon::parse($request->day . ' ' . $request->time);
-                    }
-                }
-
-                if (in_array('multiedit_slowest_unit_checkbox', $request->checkboxes)){
-                    $attackListItem->slowest_unit = $request->slowest_unit;
-                }
-
-                if (array_intersect($request->checkboxes, ['multiedit_start_checkbox','multiedit_target_checkbox','multiedit_date_checkbox','multiedit_slowest_unit_checkbox',])) {
-                    if ($request->time_type == 0) {
-                        $attackListItem->send_time = $attackListItem->calcSend();
-                    } else {
-                        $attackListItem->arrival_time = $attackListItem->calcArrival();
-                    }
-                }
-
-                foreach (self::$units as $unit){
-                    if (in_array('multiedit_' . $unit . '_checkbox', $request->checkboxes)) {
-                        $value = $request->$unit;
-                        if ($value == null) {
-                            $$unit = 0;
-                        } else {
-                            if ($value <= 2147483648) {
-                                $attackListItem->$unit = $value;
-                            } else {
-                                return \Response::json(array(
-                                    'data' => 'error',
-                                    'title' => __('tool.attackPlanner.errorUnitCountTitle'),
-                                    'msg' => __('ui.unit.' . $unit) . ' ' . __('tool.attackPlanner.errorUnitCount'),
-                                ));
-                            }
-                        }
-                    }
-                }
-
-                $attackListItem->update();
-            }
-        }else{
+        if (count($request->items) <= 0) {
             return \Response::json(array(
                 'data' => 'error',
                 'title' => __('tool.attackPlanner.attackCountTitle'),
                 'msg' => __('tool.attackPlanner.attackCount'),
             ));
+        }
+        
+        foreach ($request->items as $item) {
+            $attackListItem = AttackListItem::find($item);
+            if($item == null) {
+                continue;
+            }
+
+            if (isset($request->checkboxes['type'])) {
+                $attackListItem->type = $request->type;
+            }
+
+            if (isset($request->checkboxes['note'])) {
+                $attackListItem->note = $request->note;
+            }
+
+            if (isset($request->checkboxes['start']) || isset($request->checkboxes['target'])){
+                if (isset($request->checkboxes['start'])) {
+                    $xStart = $request->xStart;
+                    $yStart = $request->yStart;
+                } else {
+                    $villageStart = Village::village($server, $world, $attackListItem->start_village_id);
+                    $xStart = $villageStart->x;
+                    $yStart = $villageStart->y;
+                }
+                if (isset($request->checkboxes['target'])) {
+                    $xTarget = $request->xTarget;
+                    $yTarget = $request->yTarget;
+                } else {
+                    $villageTarget = Village::village($server, $world, $attackListItem->target_village_id);
+                    $xTarget = $villageTarget->x;
+                    $yTarget = $villageTarget->y;
+                }
+                if (!$attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget)) {
+                    return \Response::json(array(
+                        'data' => 'error',
+                        'title' => __('tool.attackPlanner.villageNotExistTitle'),
+                        'msg' => __('tool.attackPlanner.villageNotExist'),
+                    ));
+                }
+            }
+
+            $timeType = 0; //default keep arrival_time
+            if (isset($request->checkboxes['date'])) {
+                if ($request->time_type == 0) {
+                    $attackListItem->arrival_time = Carbon::parse($request->day. ' ' .$request->time);
+                } else {
+                    $attackListItem->send_time = Carbon::parse($request->day . ' ' . $request->time);
+                    $attackListItem->arrival_time = $attackListItem->calcArrival();
+                }
+            }
+
+            if (isset($request->checkboxes['slowest_unit'])) {
+                $attackListItem->slowest_unit = $request->slowest_unit;
+            }
+
+            foreach (self::$units as $unit){
+                if (isset($request->checkboxes[$unit])) {
+                    $value = $request->$unit;
+                    if ($value != null) {
+                        if ($value <= 2147483648) {
+                            $attackListItem->$unit = intval($value);
+                        } else {
+                            return \Response::json(array(
+                                'data' => 'error',
+                                'title' => __('tool.attackPlanner.errorUnitCountTitle'),
+                                'msg' => __('ui.unit.' . $unit) . ' ' . __('tool.attackPlanner.errorUnitCount'),
+                            ));
+                        }
+                    }
+                }
+            }
+
+            $attackListItem->send_time = $attackListItem->calcSend();
+            $attackListItem->update();
         }
 
         return \Response::json(array(

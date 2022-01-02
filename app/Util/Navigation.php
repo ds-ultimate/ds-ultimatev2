@@ -99,6 +99,12 @@ class Navigation
             self::navElement('English', 'locale', routeArgs: ['en'], translated: false, icon: 'flag-icon flag-icon-gb'),
         ]);
         
+        if(session('darkmode', false)) {
+            $navArray[] = self::navElement('ui.lightmode', 'darkmode', routeArgs: ["false"], translated: true);
+        } else {
+            $navArray[] = self::navElement('ui.darkmode', 'darkmode', routeArgs: ["true"], translated: true);
+        }
+        
         if(\Auth::check()) {
             $userOpt = [];
             $userOpt[] = self::navElement('ui.titel.overview', 'user.overview', routeArgs: ['myMap']);

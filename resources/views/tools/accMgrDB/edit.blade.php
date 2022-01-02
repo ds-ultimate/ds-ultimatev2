@@ -99,8 +99,6 @@
 @endsection
 
 @push('style')
-    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
     <style>
         #add-building-form > * {
             margin-right : 1rem;

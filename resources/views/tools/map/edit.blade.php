@@ -53,8 +53,8 @@
                     <input name="{{ "mark[$type][$id][colour]" }}" type="hidden" value="{{ $defCol }}"/>
                 </div>
                 <input id="{{ "$type-mark-$id-id" }}" name="{{ "mark[$type][$id][id]" }}" type="hidden"/>
-                <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" min="0" max="1000" value="{{ $defX }}"/>|
-                <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="number" min="0" max="1000" value="{{ $defY }}"/>
+                <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="text" inputmode="numeric" min="0" max="1000" value="{{ $defX }}"/>|
+                <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="text" inputmode="numeric" min="0" max="1000" value="{{ $defY }}"/>
                 <div class="form-check ml-2 mt-2">
                     <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
                     <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
@@ -115,8 +115,6 @@
 </div>
 
 @push('style')
-    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
     <style>
         .select2-container{
             width: 1%!important;

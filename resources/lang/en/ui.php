@@ -309,4 +309,6 @@ It is not specified which village you have to give the name to, but it must belo
     'rank' => 'max rank',
     'villages' => 'max villages',
   ),
+  'darkmode' => 'darkmode',
+  'lightmode' => 'lightmode',
 );

@@ -50,8 +50,10 @@ Attackcount: %ELEMENT_COUNT%
 [table]
 [**]ID[||]Typ[||]Unit[||]Start[||]Target[||]Send time[||]Place[/**]
 %ROW%
-[/table]',
-          'row' => '[*]%ELEMENT_ID%[|]%TYPE%[|]%UNIT%[|]%SOURCE%[|]%TARGET%[|]%SEND%[|]%PLACE%[/*]',
+[/table]
+
+[size=8]Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url][/size]',
+          'row' => '[*]%ELEMENT_ID%[|]%TYPE_IMG%[|]%UNIT%[|]%SOURCE%[|]%TARGET%[|]%SEND%[|]%PLACE%[/*]',
         ),
       ),
       'IGM' => 
@@ -59,6 +61,11 @@ Attackcount: %ELEMENT_COUNT%
         'default' => 
         array (
           'row' => '%TYPE% by [b]%ATTACKER%[/b] from %SOURCE% with %UNIT% at [b]%DEFENDER%[/b]  on %TARGET% starts on [color=#ff0e0e]%SEND%[/color] and arrives on [color=#2eb92e]%ARRIVE%[/color] (%PLACE%)',
+          'body' => '[b]%TITLE%[/b]
+
+%ROW%
+
+Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
         ),
       ),
     ),
@@ -76,7 +83,7 @@ Attackcount: %ELEMENT_COUNT%
     'time' => 'TIme',
     'time_helper' => 'Arrival time of the attack',
     'unit_helper' => 'Slowest unit',
-    'errorKoord' => 'Start- and Targetvillage may not be the same',
+    'errorKoord' => 'Start- and Targetvillage must not be the same',
     'exportBB' => 'Export Forum',
     'exportBBDesc' => 'Export for the Forum',
     'exportIGM' => 'Export IGM',
@@ -92,7 +99,6 @@ Attackcount: %ELEMENT_COUNT%
     'withoutTitle' => 'This attack planner has no title and is therefor used when pressing "attack planner". In order to create a new attack planner you need to give this one a title',
     'errorKoordTitle' => 'Village coordinates',
     'errorUnitCount' => 'number is too large',
-    'errorUnitTitle' => 'Unit size',
     'multieditSuccess' => 'All attacks were processed successfully',
     'multieditSuccessTitle' => 'Multiedit',
     'storeError' => 'Creation of the attack did not work',
@@ -116,6 +122,8 @@ Attackcount: %ELEMENT_COUNT%
     array (
       'clear' => 'all attacks will be deleted',
     ),
+    'errorUnitCountTitle' => 'Unit size',
+    'errorKoordEmpty' => 'Start- and Targetvillage must not be empty',
   ),
   'map' => 
   array (

@@ -22,6 +22,7 @@ let safelist =
     /.*datepicker.*/,
     /.*tooltip.*/,
     /.*cookie-consent.*/,
+    /.*select2.*/,
     "arrow",
     "fade",
     "row",
@@ -33,6 +34,14 @@ let safelist =
 ];
 mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')
+    .options({
+        processCssUrls: false
+    })
+    .purgeCss({
+        safelist: safelist,
+    });
+    
+mix.sass('resources/sass/dark.scss', 'public/css')
     .options({
         processCssUrls: false
     })
@@ -93,10 +102,9 @@ mix.copy('node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js', 'p
 
 /*
  * Select2 + theme
+ * Theme / css is integrated into the main css now
  */
-mix.copy('node_modules/select2/dist/css/select2.min.css', 'public/plugin/select2/select2.min.css');
 mix.copy('node_modules/select2/dist/js/select2.full.min.js', 'public/plugin/select2/select2.full.min.js');
-mix.copy('node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css', 'public/plugin/select2/select2-bootstrap4.min.css');
 
 
 /*

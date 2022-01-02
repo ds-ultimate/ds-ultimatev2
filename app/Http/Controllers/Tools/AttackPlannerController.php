@@ -69,18 +69,10 @@ class AttackPlannerController extends BaseController
                 abort_unless($attackList->show_key == $key, 403);
                 $attackList->touch();
                 return $this->show($attackList);
-            case 'exportWB':
+            case 'exportAll':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
                 $attackList->touch();
-                return $this->exportWB($attackList);
-            case 'exportBB':
-                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
-                $attackList->touch();
-                return $this->exportBB($attackList);
-            case 'exportIGM':
-                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
-                $attackList->touch();
-                return $this->exportIGM($attackList);
+                return $this->exportAll($attackList);
             default:
                 abort(404);
         }
@@ -161,61 +153,34 @@ class AttackPlannerController extends BaseController
         }
         return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
-
-    public function exportWB(AttackList $attackList){
-        /** @var  AttackListItem */
-        $items = $attackList->items()->take(400)->get();
-        $export = "";
-        foreach ($items as $item){
-            $export .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
-        }
-        return $export;
-    }
-
-    public function exportBB(AttackList $attackList){
+    
+    public function exportAll(AttackList $attackList){
         BasicFunctions::local();
-        /** @var  AttackListItem */
         $items = $attackList->items()->take(400)->get();
+        
+        // Workbench
+        $exportWB = "";
+        foreach ($items as $item){
+            $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
+        }
+        
+        //BB-Code
+        $exportBB = $this->exportTemplated($attackList, $items,
+                __('tool.attackPlanner.export.BB.default.row'), __('tool.attackPlanner.export.BB.default.body'));
+        
+        //IGM-BB-Code
+        $exportIGM = $this->exportTemplated($attackList, $items,
+                __('tool.attackPlanner.export.IGM.default.row'), __('tool.attackPlanner.export.IGM.default.body'));
+        
+        return response()->json([
+            "wb" => $exportWB,
+            "bb" => $exportBB,
+            "igm" => $exportIGM,
+        ]);
+    }
+    
+    private function exportTemplated($attackList, $items, $rowTemplate, $bodyTemplate) {
         $count = count($items);
-        $rowTemplate = __('tool.attackPlanner.export.BB.default.row');
-        $i = 1;
-        $now = Carbon::now()->locale(App::getLocale());
-        $row = "";
-        foreach ($items as $item){
-            $date = Carbon::parse($item->send_time)->locale(App::getLocale());
-            $searchReplaceArrayRow = array(
-                '%ELEMENT_ID%' => $i,
-                '%TYPE%' => "[img]".Icon::icons($item->type)."[/img]",
-                '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
-                '%SOURCE%' => '[coord]'.($item->start_village!=null?$item->start_village->coordinates():'???').'[/coord]',
-                '%TARGET%' => '[coord]'.($item->target_village!=null?$item->target_village->coordinates():'???').'[/coord]',
-                '%SEND%' => $date->format('Y-m-d H:i:s') . ":" . $item->ms,
-                '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&target=".$item->target_village_id."\"]Versammlungsplatz[/url]"
-            );
-            $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
-
-            $i++;
-        }
-
-        $searchReplaceArrayBody = array(
-            '%TITLE%' => 'Geplante Befehle',
-            '%ELEMENT_COUNT%' => $count,
-            '%ROW%' => $row,
-        );
-
-        $bodyTemplate = __('tool.attackPlanner.export.BB.default.body');
-        $body = str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
-
-        $body .="\n[size=8]Erstellt am ".$now->isoFormat('L LT')." mit [url=".route('index')."]DS-Ultimate[/url][/size]";
-
-        return $body;
-    }
-
-    public function exportIGM(AttackList $attackList){
-        BasicFunctions::local();
-        /** @var  AttackListItem */
-        $items = $attackList->items()->take(400)->get();
-        $rowTemplate = __('tool.attackPlanner.export.IGM.default.row');
         $i = 1;
         $now = Carbon::now()->locale(App::getLocale());
         $row = "";
@@ -223,12 +188,14 @@ class AttackPlannerController extends BaseController
             $dateSend = Carbon::parse($item->send_time)->locale(App::getLocale());
             $dateArrival = Carbon::parse($item->arrival_time)->locale(App::getLocale());
             $searchReplaceArrayRow = array(
+                '%ELEMENT_ID%' => $i,
                 '%TYPE%' => $item->typeIDToName(),
-                '%ATTACKER%' => $item->attackerName(),
-                '%SOURCE%' => ($item->start_village != null ? $item->start_village->coordinates() : '???|???'),
+                '%TYPE_IMG%' => "[img]".Icon::icons($item->type)."[/img]",
                 '%UNIT%' => "[unit]".$item->unitIDToName()."[/unit]",
+                '%SOURCE%' => '[coord]'.($item->start_village!=null?$item->start_village->coordinates():'???').'[/coord]',
+                '%TARGET%' => '[coord]'.($item->target_village!=null?$item->target_village->coordinates():'???').'[/coord]',
+                '%ATTACKER%' => $item->attackerName(),
                 '%DEFENDER%' => $item->defenderName(),
-                '%TARGET%' => ($item->target_village != null ? $item->target_village->coordinates() : '???|???'),
                 '%SEND%' => $dateSend->format('Y-m-d H:i:s') . ":" . $item->ms,
                 '%ARRIVE%' => $dateArrival->format('Y-m-d H:i:s') . ":" . $item->ms,
                 '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&target=".$item->target_village_id."\"]Versammlungsplatz[/url]"
@@ -238,10 +205,16 @@ class AttackPlannerController extends BaseController
             $i++;
         }
 
-
-        $row .="\nErstellt am ".$now->isoFormat('L LT')." mit [url=".route('index')."]DS-Ultimate[/url]";
-
-        return $row;
+        $searchReplaceArrayBody = array(
+            '%TITLE%' => $attackList->getTitle(),
+            '%ELEMENT_COUNT%' => $count,
+            '%ROW%' => $row,
+            '%CREATE_AT%' => $now->isoFormat('L LT'),
+            '%CREATE_WITHL%' => route('index'),
+            '%REATE_WITH%' => "DS-Ultimate",
+        );
+        
+        return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
     }
 
     public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){

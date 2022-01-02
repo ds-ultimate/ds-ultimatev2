@@ -5,12 +5,12 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_type_checkbox" name="multiedit_type_checkbox" type="checkbox">
+                            <input name="checkboxes[type]" type="checkbox">
                         </div>
                         <span class="input-group-text">Type</span>
-                        <span class="input-group-text"><img id="multiedit_type_img" src="{{ \App\Util\Icon::icons(8) }}"></span>
+                        <span class="input-group-text"><img class="type-img" src="{{ \App\Util\Icon::icons(8) }}"></span>
                     </div>
-                    <select id="multiedit_type" class="custom-select type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}" data-target="multiedit_">
+                    <select name="type" class="custom-select attack-type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">
                         <option value="-1">{{ __('ui.old.nodata') }}</option>
                         <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
                             <option value="8" selected>{{ __('tool.attackPlanner.attack') }}</option>
@@ -32,15 +32,15 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_start_checkbox" name="multiedit_start_checkbox" type="checkbox" >
+                            <input name="checkboxes[start]" type="checkbox" >
                         </div>
                         <span class="input-group-text">{{ __('tool.attackPlanner.startVillage') }}</span>
                     </div>
-                    <input id="multiedit_xStart" data-target="multiedit_" class="form-control mx-auto col-5 koord xStart" type="text" placeholder="500" maxlength="3" />
+                    <input name="xStart" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                     <div class="input-group-append input-group-prepend">
                         <span class="input-group-text">|</span>
                     </div>
-                    <input id="multiedit_yStart" data-target="multiedit_" class="form-control mx-auto col-5 koord yStart" type="text" placeholder="500" maxlength="3" />
+                    <input name="yStart" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                 </div>
             </div>
             <!--/span-->
@@ -48,15 +48,15 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_target_checkbox" name="multiedit_target_checkbox" type="checkbox">
+                            <input name="checkboxes[target]" type="checkbox">
                         </div>
                         <span class="input-group-text">{{ __('tool.attackPlanner.targetVillage') }}</span>
                     </div>
-                    <input id="multiedit_xTarget" data-target="multiedit_" class="form-control mx-auto col-5 koord xTarget" type="text" placeholder="500" maxlength="3" />
+                    <input name="xTarget" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                     <div class="input-group-append input-group-prepend">
                         <span class="input-group-text">|</span>
                     </div>
-                    <input id="multiedit_yTarget" data-target="multiedit_" class="form-control mx-auto col-5 koord yTarget" type="text" placeholder="500" maxlength="3" />
+                    <input name="yTarget" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                 </div>
             </div>
             <!--/span-->
@@ -64,11 +64,11 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_day_checkbox" name="multiedit_date_checkbox" type="checkbox" data-group="groupDate">
+                            <input class="multiedit-date-check" type="checkbox" data-group="groupDate">
                         </div>
                         <span class="input-group-text">{{ __('tool.attackPlanner.date') }}</span>
                     </div>
-                    <input id="multiedit_day" data-target="multiedit_" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
+                    <input name="day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
                 </div>
             </div>
             <!--/span-->
@@ -76,18 +76,18 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_time_checkbox" name="multiedit_date_checkbox" type="checkbox" data-group="groupDate">
+                            <input class="multiedit-date-check" name="checkboxes[date]" type="checkbox" data-group="groupDate">
                         </div>
-                        <button id="multiedit_time_title" type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split time-title" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ __('tool.attackPlanner.arrivalTime') }} <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" onclick="changeTime(0,'multiedit_')">{{ __('tool.attackPlanner.arrivalTime') }}</a>
-                            <a class="dropdown-item" onclick="changeTime(1,'multiedit_')">{{ __('tool.attackPlanner.sendTime') }}</a>
+                            <a class="dropdown-item time-switcher" value="0">{{ __('tool.attackPlanner.arrivalTime') }}</a>
+                            <a class="dropdown-item time-switcher" value="1">{{ __('tool.attackPlanner.sendTime') }}</a>
                         </div>
+                        <input name="time_type" type="hidden" class="time-type" value="0">
                     </div>
-                    <input id="multiedit_time" data-target="multiedit_" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
-                    <input id="multiedit_time_type" data-target="multiedit_" type="hidden" value="0">
+                    <input name="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
                 </div>
             </div>
             <!--/span-->
@@ -95,12 +95,12 @@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
-                            <input id="multiedit_slowest_unit_checkbox" name="multiedit_slowest_unit_checkbox" type="checkbox">
+                            <input name="checkboxes[slowest_unit]" type="checkbox">
                         </div>
                         <span class="input-group-text">{{ __('global.unit') }}</span>
-                        <span class="input-group-text"><img id="multiedit_unit_img" src="{{ \App\Util\Icon::icons(0) }}"></span>
+                        <span class="input-group-text"><img class="unit-img" src="{{ \App\Util\Icon::icons(0) }}"></span>
                     </div>
-                    <select id="multiedit_slowest_unit" data-target="multiedit_" class="form-control form-control-sm slowest_unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
+                    <select name="slowest_unit" class="form-control form-control-sm slowest-unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
                         <option value="0">{{ __('ui.unit.spear') }}</option>
                         <option value="1">{{ __('ui.unit.sword') }}</option>
                         <option value="2">{{ __('ui.unit.axe') }}</option>
@@ -128,116 +128,116 @@
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_spear_checkbox" name="multiedit_spear_checkbox" type="checkbox">
+                                <input name="checkboxes[spear]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
                         </div>
-                        <input id="multiedit_spear" name="spear" class="form-control form-control-sm col-9" type="number">
+                        <input name="spear" class="form-control form-control-sm col-9" type="number">
                     </div>
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_sword_checkbox" name="multiedit_sword_checkbox" type="checkbox">
+                                <input name="checkboxes[sword]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
                         </div>
-                        <input id="multiedit_sword" name="sword" class="form-control form-control-sm col-9" type="number">
+                        <input name="sword" class="form-control form-control-sm col-9" type="number">
                     </div>
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_axe_checkbox" name="multiedit_axe_checkbox" type="checkbox">
+                                <input name="checkboxes[axe]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
                         </div>
-                        <input id="multiedit_axe" name="axe" class="form-control form-control-sm col-9" type="number">
-                    </div>
-                    @if ($config->game->archer == 1)
-                        <div class="input-group col-2 input-group-sm mb-3">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <input id="multiedit_archer_checkbox" name="multiedit_archer_checkbox" type="checkbox">
-                                </div>
-                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
-                            </div>
-                            <input id="multiedit_archer" name="archer" class="form-control form-control-sm col-9" type="number">
-                        </div>
-                    @endif
-                    <div class="input-group col-2 input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input id="multiedit_spy_checkbox" name="multiedit_spy_checkbox" type="checkbox">
-                            </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
-                        </div>
-                        <input id="multiedit_spy" name="spy" class="form-control form-control-sm col-9" type="number">
-                    </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <input id="multiedit_light_checkbox" name="multiedit_light_checkbox" type="checkbox">
-                            </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
-                        </div>
-                        <input id="multiedit_light" name="light" class="form-control form-control-sm col-9" type="number">
+                        <input name="axe" class="form-control form-control-sm col-9" type="number">
                     </div>
                     @if ($config->game->archer == 1)
                         <div class="input-group col-2 input-group-sm mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input id="multiedit_marcher_checkbox" name="multiedit_marcher_checkbox" type="checkbox">
+                                    <input name="checkboxes[archer]" type="checkbox">
                                 </div>
-                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
+                                <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
                             </div>
-                            <input id="multiedit_marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
+                            <input name="archer" class="form-control form-control-sm col-9" type="number">
                         </div>
                     @endif
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_heavy_checkbox" name="multiedit_heavy_checkbox" type="checkbox">
+                                <input name="checkboxes[spy]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
                         </div>
-                        <input id="multiedit_heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
+                        <input name="spy" class="form-control form-control-sm col-9" type="number">
                     </div>
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_ram_checkbox" name="multiedit_ram_checkbox" type="checkbox">
+                                <input name="checkboxes[light]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
                         </div>
-                        <input id="multiedit_ram" name="ram" class="form-control form-control-sm col-9" type="number">
+                        <input name="light" class="form-control form-control-sm col-9" type="number">
+                    </div>
+                    @if ($config->game->archer == 1)
+                        <div class="input-group col-2 input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input name="checkboxes[marcher]" type="checkbox">
+                                </div>
+                                <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
+                            </div>
+                            <input name="marcher" class="form-control form-control-sm col-9" type="number">
+                        </div>
+                    @endif
+                    <div class="input-group col-2 input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input name="checkboxes[heavy]" type="checkbox">
+                            </div>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
+                        </div>
+                        <input name="heavy" class="form-control form-control-sm col-9" type="number">
                     </div>
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_catapult_checkbox" name="multiedit_catapult_checkbox" type="checkbox">
+                                <input name="checkboxes[ram]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
                         </div>
-                        <input id="multiedit_catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
+                        <input name="ram" class="form-control form-control-sm col-9" type="number">
+                    </div>
+                    <div class="input-group col-2 input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input name="checkboxes[catapult]" type="checkbox">
+                            </div>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
+                        </div>
+                        <input name="catapult" class="form-control form-control-sm col-9" type="number">
                     </div>
                     @if ($config->game->knight > 0)
                         <div class="input-group col-2 input-group-sm mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
-                                    <input id="multiedit_knight_checkbox" name="multiedit_knight_checkbox" type="checkbox">
+                                    <input name="checkboxes[knight]" type="checkbox">
                                 </div>
-                                <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
+                                <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
                             </div>
-                            <input id="multiedit_knight" name="knight" class="form-control form-control-sm col-9" type="number">
+                            <input name="knight" class="form-control form-control-sm col-9" type="number">
                         </div>
                     @endif
                     <div class="input-group col-2 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
-                                <input id="multiedit_snob_checkbox" name="multiedit_snob_checkbox" type="checkbox">
+                                <input name="checkboxes[snob]" type="checkbox">
                             </div>
-                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
+                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
                         </div>
-                        <input id="multiedit_snob" name="snob" class="form-control form-control-sm col-9" type="number">
+                        <input name="snob" class="form-control form-control-sm col-9" type="number">
                     </div>
                 </div>
             </div>
@@ -246,14 +246,15 @@
                 <div class="form-group row">
                     <label class="control-label col-3">
                         Notizen
-                        <input id="multiedit_note_checkbox" name="multiedit_note_checkbox" class="mr-3" type="checkbox">
+                        <input name="checkboxes[note]" class="mr-3" type="checkbox">
                     </label>
                     <div class="col-12">
-                        <textarea id="multiedit_note" class="form-control form-control-sm"  rows="2"></textarea>
+                        <textarea name="note" class="form-control form-control-sm" rows="2"></textarea>
                     </div>
                 </div>
             </div>
-            @csrf
+            <input name="id" type="hidden" value="{{ $attackList->id }}">
+            <input name="key" type="hidden" value="{{ $attackList->edit_key }}">
             <div class="col-12">
                 <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('tool.attackPlanner.outdated') }}">
                 <input type="button" class="confirm-deleteAll btn bg-danger btn-sm float-left text-white link ml-4" data-toggle="confirmation" data-content="{{ __('tool.attackPlanner.confirm.clear') }}" value="{{ __('tool.attackPlanner.deleteAll') }}">
@@ -262,3 +263,64 @@
         </div>
     </form>
 </div>
+
+@push('js')
+<script>
+    $(function() {
+        $('.multiedit-date-check').change(function() {
+            var check = this.checked;
+            $('.multiedit-date-check').each(function(elm) {
+                elm.checked = check;
+            })
+        });
+        
+        $('#multieditItemForm').on('submit', function (e) {
+            e.preventDefault();
+            if (multieditValidatePreSend(this)) {
+                var select = table.rows('.selected').data();
+                var postData = $('#multieditItemForm').serialize();
+                var i = 0;
+                select.each(function(e){
+                    postData += "&" + encodeURIComponent("items[" + i + "]") + "=" + encodeURIComponent(e.id);
+                    i++;
+                })
+
+                var id = $('#attack_list_item').val();
+                axios.post('{{ route('tools.attackListItemMultiedit') }}', postData)
+                    .then((response) => {
+                        var data = response.data;
+                        table.ajax.reload();
+                        createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
+                    })
+                    .catch((error) => {
+
+                    });
+            }
+        });
+    })
+        
+    function multieditValidatePreSend(par) {
+        var sX = $('input[name="xStart"]', par).val();
+        var sY = $('input[name="yStart"]', par).val();
+        var tX = $('input[name="xTarget"]', par).val();
+        var tY = $('input[name="yTarget"]', par).val();
+        var sA = $('input[name="checkboxes[start]"]', par).is(':checked');
+        var tA = $('input[name="checkboxes[target]"]', par).is(':checked');
+
+        var error = 0;
+        if (sA && (sX == '' || sY == '') || tA && (tX == '' || tY == '')){
+            var data = []
+            data['msg'] = '{{ __('tool.attackPlanner.errorKoordEmpty') }}';
+            createToast(data['msg'], '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
+            error += 1;
+        }
+        if (sA && tA && sX == tX && sY == tY){
+            var data = []
+            data['msg'] = '{{ __('tool.attackPlanner.errorKoord') }}';
+            createToast(data['msg'], '{{ __('tool.attackPlanner.errorKoordTitle') }}', '{{ __('global.now') }}', 'fas fa-exclamation-circle text-danger')
+            error += 1;
+        }
+        return error == 0;
+    }
+</script>
+@endpush

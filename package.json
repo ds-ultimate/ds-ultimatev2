@@ -12,6 +12,7 @@
     "dependencies": {
         "@ds-ultimate/drawerjs": "github:ds-ultimate/drawerjs",
         "@fonticonpicker/fonticonpicker": "^3.1.1",
+        "@forevolve/bootstrap-dark": "^2.1.0",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "@popperjs/core": "^2.9.3",
         "@ttskch/select2-bootstrap4-theme": "github:tagliala/select2-bootstrap4-theme#feature/refactor-as-custom-select",

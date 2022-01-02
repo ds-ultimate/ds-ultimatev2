@@ -309,4 +309,6 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
     'points' => 'Max Punkte',
     'bashGes' => 'Max Bash',
   ),
+  'lightmode' => 'Lightmode',
+  'darkmode' => 'Darkmode',
 );

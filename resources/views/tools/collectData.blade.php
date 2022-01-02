@@ -11,17 +11,18 @@
         <div class="card col-lg-10 mb-4">
             <form id="collect-form" class="m-3" action="" method="POST">
                 <div class="form-group">
-                    <textarea class="w-100" name="data" style="height: 300px"></textarea>
+                    <textarea class="form-control" name="data" style="height: 300px"></textarea>
                 </div>
-                <div class="form-group">
-                    <select id="select-world">
+                <div class="form-row">
+                    <select class="col-md-6 form-control" id="select-world">
                     @foreach ($worlds as $world)
                         <option value="{{ $world->server->code . $world->name }}">
                             {{ $world->display_name }} ({{ $world->server->code . $world->name }})
                         </option>
                     @endforeach
                     </select>
-                    <input type="submit">
+                    <div class="col"></div>
+                    <input class="btn btn-sm btn-success" type="submit">
                 </div>
                 @csrf
             </form>

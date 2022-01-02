@@ -134,13 +134,25 @@ class Chart
 
         \Lava::LineChart($chartType, $population, [
             'title' => Chart::chartTitel($chartType),
+            'backgroundColor' => [
+                'fill' => (session('darkmode', false))?('#212529'):('#FFFFFF'),
+            ],
+            'titleTextStyle' => [
+                'color' => (session('darkmode', false))?('#d3d3d3'):('#000000'),
+            ],
             'legend' => 'none',
             'hAxis' => [
-                'format' => 'dd/MM'
+                'format' => 'dd/MM',
+                'textStyle' => [
+                    'color' => (session('darkmode', false))?('#d3d3d3'):('#000000'),
+                ],
             ],
             'vAxis' => [
                 'direction' => (Chart::displayInvers($chartType)?(-1):(1)),
                 'format' => (Chart::vAxisFormat($chartType)),
+                'textStyle' => [
+                    'color' => (session('darkmode', false))?('#d3d3d3'):('#000000'),
+                ],
             ]
         ]);
 

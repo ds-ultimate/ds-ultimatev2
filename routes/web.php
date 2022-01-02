@@ -30,13 +30,19 @@ Route::post('/api/time', function (){
 })->name('api.time');
 
 
-Route::get('/setlocale/{locale}',function($lang){
+Route::get('/setlocale/{lang}',function($lang){
     $validLocale = in_array($lang, ['de', 'en']);
     if ($validLocale) {
         \Session::put('locale',$lang);
     }
     return redirect()->back();
 })->name('locale');
+
+
+Route::get('/setDarkmode/{val}',function($val){
+    session(["darkmode" => filter_var($val, FILTER_VALIDATE_BOOL)]);
+    return redirect()->back();
+})->name('darkmode');
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['dashboard']], function () {

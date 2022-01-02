@@ -1,0 +1,29 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+//none since that is handled via bootstrap dark theme
+$primaryBg: #000000;
+$secondaryBg: #2D1C08;
+
+$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$table-cell-padding:          .1rem !default;
+$popover-bg: #212529;
+$popover-border-color: #d3d3d3;
+$popover-body-color: #d3d3d3;
+$popover-header-bg: #212529;
+$popover-header-color: #d3d3d3;
+
+// Bootstrap
+@import '~@forevolve/bootstrap-dark/scss/bootstrap-dark';
+@import '~bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
+@import 'plugins/bootstrap-timeline/css/style';
+@import 'select2/src/scss/core';
+@import '@ttskch/select2-bootstrap4-theme/src/select2-bootstrap4';
+
+// Plugins
+@import "plugins/flag-icon-css/flag-icon.min.css";
+
+@import "customStyles"

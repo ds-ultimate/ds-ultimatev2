@@ -14,9 +14,9 @@
                             <div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Type</span>
-                                    <span class="input-group-text"><img id="edit_type_img" src="{{ \App\Util\Icon::icons(8) }}"></span>
+                                    <span class="input-group-text"><img class="type-img" src="{{ \App\Util\Icon::icons(8) }}"></span>
                                 </div>
-                                <select id="edit_type" class="custom-select type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}" data-target="edit_">
+                                <select name="type" class="custom-select attack-type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">
                                     <option value="-1">{{ __('ui.old.nodata') }}</option>
                                     <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
                                         <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
@@ -39,11 +39,11 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ __('tool.attackPlanner.startVillage') }}</span>
                                 </div>
-                                <input id="edit_xStart" data-target="edit_" class="form-control mx-auto col-5 koord xStart" type="text" placeholder="500" maxlength="3" />
+                                <input name="xStart" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                                 <div class="input-group-append input-group-prepend">
                                     <span class="input-group-text">|</span>
                                 </div>
-                                <input id="edit_yStart" data-target="edit_" class="form-control mx-auto col-5 koord yStart" type="text" placeholder="500" maxlength="3" />
+                                <input name="yStart" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                             </div>
                         </div>
                         <!--/span-->
@@ -52,11 +52,11 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ __('tool.attackPlanner.targetVillage') }}</span>
                                 </div>
-                                <input id="edit_xTarget" data-target="edit_" class="form-control mx-auto col-5 koord xTarget" type="text" placeholder="500" maxlength="3" />
+                                <input name="xTarget" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                                 <div class="input-group-append input-group-prepend">
                                     <span class="input-group-text">|</span>
                                 </div>
-                                <input id="edit_yTarget" data-target="edit_" class="form-control mx-auto col-5 koord yTarget" type="text" placeholder="500" maxlength="3" />
+                                <input name="yTarget" class="form-control mx-auto col-5 coord-input" type="text" inputmode="numeric" placeholder="500" maxlength="3" />
                             </div>
                         </div>
                         <!--/span-->
@@ -65,23 +65,23 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ __('tool.attackPlanner.date') }}</span>
                                 </div>
-                                <input id="edit_day" data-target="edit_" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
+                                <input name="day" type="date" class="form-control form-control-sm day" value="{{ date('Y-m-d', time()) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
                             </div>
                         </div>
                         <!--/span-->
                         <div class="col-md-4">
                             <div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
-                                    <button id="edit_time_title" type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn input-group-text dropdown-toggle dropdown-toggle-split time-title" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         {{ __('tool.attackPlanner.arrivalTime') }} <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" onclick="changeTime(0,'edit_')">{{ __('tool.attackPlanner.arrivalTime') }}</a>
-                                        <a class="dropdown-item" onclick="changeTime(1,'edit_')">{{ __('tool.attackPlanner.sendTime') }}</a>
+                                        <a class="dropdown-item time-switcher" value="0">{{ __('tool.attackPlanner.arrivalTime') }}</a>
+                                        <a class="dropdown-item time-switcher" value="1">{{ __('tool.attackPlanner.sendTime') }}</a>
                                     </div>
+                                    <input name="time_type" type="hidden" class="time-type" value="0">
                                 </div>
-                                <input id="edit_time" data-target="edit_" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
-                                <input id="edit_time_type" data-target="edit_" type="hidden" value="0">
+                                <input name="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
                             </div>
                         </div>
                         <!--/span-->
@@ -89,9 +89,9 @@
                             <div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ __('global.unit') }}</span>
-                                    <span class="input-group-text"><img id="edit_unit_img" src="{{ \App\Util\Icon::icons(0) }}"></span>
+                                    <span class="input-group-text"><img class="unit-img" src="{{ \App\Util\Icon::icons(0) }}"></span>
                                 </div>
-                                <select id="edit_slowest_unit" data-target="edit_" class="form-control form-control-sm slowest_unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
+                                <select name="slowest_unit" class="form-control form-control-sm slowest-unit" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.unit_helper') }}">
                                     <option value="0">{{ __('ui.unit.spear') }}</option>
                                     <option value="1">{{ __('ui.unit.sword') }}</option>
                                     <option value="2">{{ __('ui.unit.axe') }}</option>
@@ -118,81 +118,81 @@
                             <div class="form-inline row">
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spear" class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
                                     </div>
-                                    <input id="edit_spear" name="spear" class="form-control form-control-sm col-9" type="number">
+                                    <input name="spear" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_sword" class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
                                     </div>
-                                    <input id="edit_sword" name="sword" class="form-control form-control-sm col-9" type="number">
+                                    <input name="sword" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_axe" class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
                                     </div>
-                                    <input id="edit_axe" name="axe" class="form-control form-control-sm col-9" type="number">
-                                </div>
-                                @if ($config->game->archer == 1)
-                                    <div class="input-group col-2 input-group-sm mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_archer" class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
-                                        </div>
-                                        <input id="edit_archer" name="archer" class="form-control form-control-sm col-9" type="number">
-                                    </div>
-                                @endif
-                                <div class="input-group col-2 input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_spy" class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
-                                    </div>
-                                    <input id="edit_spy" name="spy" class="form-control form-control-sm col-9" type="number">
-                                </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_light" class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
-                                    </div>
-                                    <input id="edit_light" name="light" class="form-control form-control-sm col-9" type="number">
+                                    <input name="axe" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 @if ($config->game->archer == 1)
                                     <div class="input-group col-2 input-group-sm mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_marcher" class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
+                                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
                                         </div>
-                                        <input id="edit_marcher" name="marcher" class="form-control form-control-sm col-9" type="number">
+                                        <input name="archer" class="form-control form-control-sm col-9" type="number">
                                     </div>
                                 @endif
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_heavy" class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
                                     </div>
-                                    <input id="edit_heavy" name="heavy" class="form-control form-control-sm col-9" type="number">
+                                    <input name="spy" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_ram" class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
                                     </div>
-                                    <input id="edit_ram" name="ram" class="form-control form-control-sm col-9" type="number">
+                                    <input name="light" class="form-control form-control-sm col-9" type="number">
+                                </div>
+                                @if ($config->game->archer == 1)
+                                    <div class="input-group col-2 input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
+                                        </div>
+                                        <input name="marcher" class="form-control form-control-sm col-9" type="number">
+                                    </div>
+                                @endif
+                                <div class="input-group col-2 input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
+                                    </div>
+                                    <input name="heavy" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_catapult" class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
                                     </div>
-                                    <input id="edit_catapult" name="catapult" class="form-control form-control-sm col-9" type="number">
+                                    <input name="ram" class="form-control form-control-sm col-9" type="number">
+                                </div>
+                                <div class="input-group col-2 input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
+                                    </div>
+                                    <input name="catapult" class="form-control form-control-sm col-9" type="number">
                                 </div>
                                 @if ($config->game->knight > 0)
                                     <div class="input-group col-2 input-group-sm mb-3">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_knight" class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
+                                            <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
                                         </div>
-                                        <input id="edit_knight" name="knight" class="form-control form-control-sm col-9" type="number">
+                                        <input name="knight" class="form-control form-control-sm col-9" type="number">
                                     </div>
                                 @endif
                                 <div class="input-group col-2 input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroup-sizing-sm"><img id="unit_snob" class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
+                                        <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
                                     </div>
-                                    <input id="edit_snob" name="snob" class="form-control form-control-sm col-9" type="number">
+                                    <input name="snob" class="form-control form-control-sm col-9" type="number">
                                 </div>
                             </div>
                         </div>
@@ -201,11 +201,12 @@
                             <div class="form-group row">
                                 <label class="control-label col-3">Notizen</label>
                                 <div class="col-12">
-                                    <textarea id="edit_note" class="form-control form-control-sm"  rows="2"></textarea>
+                                    <textarea name="note" class="form-control form-control-sm"  rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <input id="attack_list_item" type="hidden">
+                        <input name="attack_list_item" type="hidden">
+                        <input name="key" type="hidden" value="{{ $attackList->edit_key }}">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -216,3 +217,23 @@
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    $(document).on('submit', '#editItemForm', function (e) {
+        e.preventDefault();
+        if (validatePreSend(this)) {
+            var id = $('input[name="attack_list_item"', this).val();
+            axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), $('#editItemForm').serialize())
+                .then((response) => {
+                    var data = response.data;
+                    table.ajax.reload();
+                    createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
+                })
+                .catch((error) => {
+
+                });
+        }
+    });
+</script>
+@endpush

@@ -30,3 +30,37 @@
         </div>
     </div>
 </div>
+
+@push('js')
+<script>
+    $(document).on('submit', '#importItemsForm', function (e) {
+        e.preventDefault();
+        
+        var importWB = $('#importWB');
+        axios.post('{{ route('tools.attackPlannerMode', [$attackList->id, 'importWB', $attackList->edit_key]) }}', {
+            'import': importWB.val(),
+            'key': '{{$attackList->edit_key}}',
+        })
+            .then((response) => {
+                importWB.val('');
+                table.ajax.reload();
+            })
+            .catch((error) => {
+
+            });
+    });
+
+    function updateExports() {
+        axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportAll', $attackList->edit_key]) }}', {
+        })
+            .then((response) => {
+                $('#exportWB').val(response.data.wb);
+                $('#exportBB').val(response.data.bb);
+                $('#exportBB').val(response.data.igm);
+            })
+            .catch((error) => {
+
+            });
+    }
+</script>
+@endpush

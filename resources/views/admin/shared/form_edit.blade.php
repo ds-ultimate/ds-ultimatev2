@@ -85,18 +85,12 @@
 @push('style')
 @setFalse($needTinymce)
 @setFalse($needFasPicker)
-@setFalse($needSelect2)
 @foreach($formEntries as $formEntry)
     @if($formEntry['type'] == 'tinymce') @setTrue($needTinymce) @endif
     @if($formEntry['type'] == 'fas') @setTrue($needFasPicker) @endif
-    @if($formEntry['type'] == 'select') @setTrue($needSelect2) @endif
 @endforeach
 @if($needFasPicker)
     <link href="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css') }}" rel="stylesheet">
-@endif
-@if($needSelect2)
-    <link href="{{ asset('plugin/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugin/select2/select2-bootstrap4.min.css') }}" rel="stylesheet" />
 @endif
 @endpush
