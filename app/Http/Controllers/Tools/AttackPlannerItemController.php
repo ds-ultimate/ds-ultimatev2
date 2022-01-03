@@ -13,13 +13,10 @@ use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\Util\BasicFunctions;
 use App\Util\Icon;
-use App\Http\Requests\StoreAttackPlannerItemRequest;
 use App\Village;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
 {
@@ -305,7 +302,7 @@ class AttackPlannerItemController extends BaseController
         $server = $attackplaner->world->server->code;
         $world = $attackplaner->world->name;
 
-        if (count($request->items) <= 0) {
+        if ($request->items == null || count($request->items) <= 0) {
             return \Response::json(array(
                 'data' => 'error',
                 'title' => __('tool.attackPlanner.attackCountTitle'),
