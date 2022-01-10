@@ -34,7 +34,9 @@
                         <div class="nav flex-column nav-pills" id="settings-tab" role="tablist" aria-orientation="vertical">
                             <a class="nav-link {{ ($page == 'settings-profile')? 'active' : '' }}" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">{{ __('ui.personalSettings.profile') }}</a>
                             <a class="nav-link {{ ($page == 'settings-account')? 'active' : '' }}" id="settings-account-tab" data-toggle="pill" href="#settings-account" role="tab" aria-controls="settings-account" aria-selected="false">{{ __('ui.personalSettings.account') }}</a>
+                            @can('anim_hist_map_beta')
                             <a class="nav-link {{ ($page == 'settings-connection')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
+                            @endcan
                             <a class="nav-link {{ ($page == 'settings-map')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-map" role="tab" aria-controls="settings-map" aria-selected="false">{{ __('ui.personalSettings.map') }}</a>
                         </div>
                     </div>
@@ -125,6 +127,7 @@
                                 </table>
                             </div>
                             <!-- ENDE settings-account -->
+                            @can('anim_hist_map_beta')
                             <!-- START settings-connection -->
                             <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
                                 <p class="col-12 text-center">
@@ -176,6 +179,7 @@
                                 </div>
                             </div>
                             <!-- ENDE settings-connection -->
+                            @endcan
                             <!-- START settings-map -->
                             <div class="tab-pane fade {{ ($page == 'settings-map')? 'show active' : '' }}" id="settings-map" role="tabpanel" aria-labelledby="settings-map-tab" data-title="{{ __('ui.personalSettings.map') }}">
                             <form id="mapSettingsForm">
