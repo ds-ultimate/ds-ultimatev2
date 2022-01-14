@@ -29,7 +29,7 @@ class PictureController extends Controller
         static::fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
-            abort(400, "Invalid type");
+            abort(404, "Invalid type");
         }
         
         $dim = $this->decodeDimensions($width, $height);
@@ -40,7 +40,7 @@ class PictureController extends Controller
         
         $allyData = Ally::ally($server, $world, $allyID);
         if ($allyData == null) {
-            abort(400, "Ally not Found");
+            abort(404, "Ally not Found");
         }
         
         $rawStatData = Ally::allyDataChart($server, $world, $allyID);
@@ -62,7 +62,7 @@ class PictureController extends Controller
         static::fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
-            abort(400, "Invalid type");
+            abort(404, "Invalid type");
         }
         
         $dim = $this->decodeDimensions($width, $height);
@@ -73,7 +73,7 @@ class PictureController extends Controller
         
         $playerData = Player::player($server, $world, $playerID);
         if ($playerData == null) {
-            abort(400, "Ally not Found");
+            abort(404, "Player not Found");
         }
         
         $rawStatData = Player::playerDataChart($server, $world, $playerID);
@@ -94,7 +94,7 @@ class PictureController extends Controller
         static::fixWorldName($server, $world);
         World::existWorld($server, $world);
         if (!Chart::validType($type)) {
-            abort(400, "Invalid type");
+            abort(404, "Invalid type");
         }
         
         $dim = $this->decodeDimensions($width, $height);
@@ -105,7 +105,7 @@ class PictureController extends Controller
         
         $villageData = Village::village($server, $world, $villageID);
         if ($villageData == null) {
-            abort(400, "Ally not Found");
+            abort(404, "Village not Found");
         }
         
         $rawStatData = Village::villageDataChart($server, $world, $villageID);
@@ -183,11 +183,11 @@ class PictureController extends Controller
         }
         
         if(isset($retArr['width']) && $retArr['width'] <= 0) {
-            abort(400, "Width too small");
+            abort(404, "Width too small");
         }
         
         if(isset($retArr['height']) && $retArr['height'] <= 0) {
-            abort(400, "Height too small");
+            abort(404, "Height too small");
         }
         return $retArr;
     }
