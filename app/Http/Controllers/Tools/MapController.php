@@ -152,7 +152,7 @@ class MapController extends BaseController
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
 
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
+        return view('tools.mapMain', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
     public function show(Map $wantedMap){
@@ -172,7 +172,7 @@ class MapController extends BaseController
             $ownMaps = Map::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
 
-        return view('tools.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
+        return view('tools.mapMain', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
     public function save(Map $wantedMap) {

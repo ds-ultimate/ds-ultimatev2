@@ -134,7 +134,7 @@ class AttackPlannerController extends BaseController
         if(\Auth::check()) {
             $ownPlanners = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats', 'ownPlanners'));
+        return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats', 'ownPlanners'));
     }
 
     public function show(AttackList $attackList){
@@ -151,7 +151,7 @@ class AttackPlannerController extends BaseController
         if(\Auth::check()) {
             $ownPlanners = AttackList::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        return view('tools.attackPlanner', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
+        return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
     
     public function exportAll(AttackList $attackList){
