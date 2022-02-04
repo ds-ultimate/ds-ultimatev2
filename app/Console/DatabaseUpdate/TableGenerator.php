@@ -241,6 +241,7 @@ class TableGenerator
             $table->string('name', 288);
             $table->text('worlds');
             $table->timestamps();
+            $table->primary('playerID');
         });
     }
 }
