@@ -56,7 +56,7 @@
             .then((response) => {
                 $('#exportWB').val(response.data.wb);
                 $('#exportBB').val(response.data.bb);
-                $('#exportBB').val(response.data.igm);
+                $('#exportIGM').val(response.data.igm);
             })
             .catch((error) => {
 
