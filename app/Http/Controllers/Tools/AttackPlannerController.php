@@ -211,7 +211,7 @@ class AttackPlannerController extends BaseController
             '%ROW%' => $row,
             '%CREATE_AT%' => $now->isoFormat('L LT'),
             '%CREATE_WITHL%' => route('index'),
-            '%REATE_WITH%' => "DS-Ultimate",
+            '%CREATE_WITH%' => "DS-Ultimate",
         );
         
         return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);

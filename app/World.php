@@ -72,7 +72,8 @@ class World extends Model
      */
     public static function existWorld($server, $world){
         World::existServer($server);
-        if(World::where('name', $world)->get()->count() > 0){
+        $serverData = Server::getServerByCode($server);
+        if(World::where('name', $world)->where('server_id', $serverData->id)->get()->count() > 0){
             return true;
         }
 
