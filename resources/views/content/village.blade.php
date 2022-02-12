@@ -173,6 +173,7 @@
                 ],
                 dom: 't',
                 ordering: true,
+                order: [[ 0, "desc" ]],
                 paging: false,
                 responsive: true,
 

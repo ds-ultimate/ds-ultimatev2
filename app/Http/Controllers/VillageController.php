@@ -41,6 +41,16 @@ class VillageController extends Controller
             ];
             $last = $vilHist;
         }
+        
+        usort($villageHistory, function($a, $b) {
+            if($a['date']->gt($b['date'])) {
+                return -1;
+            }
+            if($a['date']->lt($b['date'])) {
+                return 1;
+            }
+            return 0;
+        });
 
         return view('content.village', compact('villageData', 'conquer', 'worldData', 'chartJS', 'server', 'villageHistory'));
     }
