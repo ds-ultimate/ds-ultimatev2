@@ -102,6 +102,7 @@ body {
 
   .navbar-nav .dropdown-menu {
     position: absolute;
+    z-index: 1050;
   }
 
   .nav-link {

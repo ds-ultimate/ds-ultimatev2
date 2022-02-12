@@ -17,7 +17,23 @@ class Navigation
             foreach(World::worldsCollection($serverArg) as $worlds) {
                 $worldNav = [];
                 foreach($worlds as $world) {
-                    $worldNav[] = self::navElement($world->display_name, 'world', routeArgs: [$world->server->code, $world->name], translated: false);
+                    switch(\Request::route()->getName()) {
+                        case 'tools.distanceCalc':
+                            $worldNav[] = self::navElement($world->display_name, 'tools.distanceCalc', routeArgs: [$world->server->code, $world->name], translated: false);
+                            break;
+                        case 'tools.pointCalc':
+                            $worldNav[] = self::navElement($world->display_name, 'tools.pointCalc', routeArgs: [$world->server->code, $world->name], translated: false);
+                            break;
+                        case 'tools.tableGenerator':
+                            $worldNav[] = self::navElement($world->display_name, 'tools.tableGenerator', routeArgs: [$world->server->code, $world->name], translated: false);
+                            break;
+                        case 'tools.accMgrDB.index_world':
+                            $worldNav[] = self::navElement($world->display_name, 'tools.accMgrDB.index_world', routeArgs: [$world->server->code, $world->name], translated: false);
+                            break;
+                        default:
+                            $worldNav[] = self::navElement($world->display_name, 'world', routeArgs: [$world->server->code, $world->name], translated: false);
+                            break;
+                    }
                 }
                 if($worlds->get(0)->sortType() == "casual") {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.casualWorlds', subelements: $worldNav);

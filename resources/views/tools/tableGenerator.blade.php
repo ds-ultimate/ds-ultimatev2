@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('tool.tableGenerator.title')) }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('tool.tableGenerator.title')).' ['.$worldData->display_name.']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -14,6 +14,9 @@
             <h1 class="font-weight-normal">
                 {{ ucfirst(__('tool.tableGenerator.title')).' ' }}
             </h1>
+            <h4>
+                {{ '['.$worldData->display_name.']' }}
+            </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
         <!-- Village Card -->

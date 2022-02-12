@@ -204,7 +204,18 @@ class AttackPlannerItemController extends BaseController
                         $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>".BasicFunctions::numberConv($attackListItem->$unit)."</b>".(($unit != 'snob')? '<br>':'');
                     }
                 }
-                return '<h4 class="mb-0"><i class="fas fa-info-circle text-info" data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"></i></h4>';
+                $popoverData = "";
+                if($unitCount != '' || ($attackListItem->note != null && strlen($attackListItem->note) > 0)) {
+                    $popoverData = ' data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"';
+                }
+                if($attackListItem->note != null && strlen($attackListItem->note) > 0) {
+                    $color = "text-danger";
+                } else if($unitCount != '') {
+                    $color = "text-info";
+                } else {
+                    $color = "text-muted";
+                }
+                return '<h4 class="mb-0"><i class="fas fa-info-circle '.$color.'"'.$popoverData.'></i></h4>';
             })
             ->addColumn('action', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&target='.$attackListItem->target_village_id.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
