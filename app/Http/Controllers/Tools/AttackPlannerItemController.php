@@ -218,7 +218,12 @@ class AttackPlannerItemController extends BaseController
                 return '<h4 class="mb-0"><i class="fas fa-info-circle '.$color.'"'.$popoverData.'></i></h4>';
             })
             ->addColumn('action', function (AttackListItem $attackListItem){
-                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$attackListItem->list->world->url.'/game.php?village='.$attackListItem->start_village_id.'&screen=place&target='.$attackListItem->target_village_id.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
+                $uv = "";
+                if($attackListItem->list->uvMode) {
+                    $uv = "t={$attackListItem->start_village->owner}&";
+                }
+                $href = "{$attackListItem->list->world->url}/game.php?{$uv}village={$attackListItem->start_village_id}&screen=place&target={$attackListItem->target_village_id}";
+                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$href.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-edit"></i></a><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';

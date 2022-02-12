@@ -78,7 +78,7 @@ class AttackPlannerController extends BaseController
         }
     }
 
-    public function modePost(AttackList $attackList, $mode, $key){
+    public function modePost(Request $request, AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.attackPlanner.notAvailable'));
@@ -93,6 +93,15 @@ class AttackPlannerController extends BaseController
                 abort_unless($attackList->edit_key == $key, 403);
                 $attackList->touch();
                 return $this->clear($attackList);
+            case 'saveAsUV':
+                abort_unless($attackList->show_key == $key, 403);
+                $attackList->uvMode = $request->value == true;
+                if($attackList->isDirty()) {
+                    $attackList->save();
+                } else {
+                    $attackList->touch();
+                }
+                return ['success' => true, 'message' => 'saved'];
             default:
                 abort(404);
         }
@@ -187,6 +196,12 @@ class AttackPlannerController extends BaseController
         foreach ($items as $item){
             $dateSend = Carbon::parse($item->send_time)->locale(App::getLocale());
             $dateArrival = Carbon::parse($item->arrival_time)->locale(App::getLocale());
+            
+            $uv = "";
+            if($item->list->uvMode) {
+                $uv = "t={$item->start_village->owner}&";
+            }
+            $placeURL = "{$item->list->world->url}/game.php?{$uv}village={$item->start_village_id}&screen=place&target={$item->target_village_id}";
             $searchReplaceArrayRow = array(
                 '%ELEMENT_ID%' => $i,
                 '%TYPE%' => $item->typeIDToName(),
@@ -198,7 +213,7 @@ class AttackPlannerController extends BaseController
                 '%DEFENDER%' => $item->defenderName(),
                 '%SEND%' => $dateSend->format('Y-m-d H:i:s') . ":" . $item->ms,
                 '%ARRIVE%' => $dateArrival->format('Y-m-d H:i:s') . ":" . $item->ms,
-                '%PLACE%' => "[url=\"".$item->list->world->url."/game.php?village=".$item->start_village_id."&screen=place&target=".$item->target_village_id."\"]Versammlungsplatz[/url]"
+                '%PLACE%' => "[url=\"$placeURL\"]Versammlungsplatz[/url]"
             );
             $row .= str_replace(array_keys($searchReplaceArrayRow),array_values($searchReplaceArrayRow), $rowTemplate)."\n";
 

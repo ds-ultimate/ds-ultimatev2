@@ -130,6 +130,7 @@ $tabList = [
         Your browser does not support the audio element.
     </audio>
     <script>
+        var firstDraw = true;
         var muteaudio = false;
         var audioTiming = 60;
         var maxAudioTiming = 300;
@@ -188,37 +189,55 @@ $tabList = [
                     @endif
                     countdown();
                     popover();
-                    $('#data1_wrapper div:first-child div:eq(2)').html('<div class="form-inline d-print-none">' +
-                        '<div class="col-9">' +
-                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                            '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
-                        '</div>' +
-                        '<div class="col-2">' +
-                            '<h5>' +
-                                '<a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button">' +
-                                    '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
-                                '</a>' +
-                            '</h5>' +
-                        '</div>' +
-                        @auth
-                            @if($attackList->user_id != Auth::user()->id)
-                                @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
-                                    '<div class="col-1">' +
-                                        '<h5>' +
-                                            '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
-                                        '</h5>' +
-                                    '</div>' +
-                                @else
-                                    '<div class="col-1">' +
-                                        '<h5>' +
-                                            '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
-                                        '</h5>' +
-                                    '</div>' +
+                    if(firstDraw) {
+                        $('#data1_wrapper div.row:first-child').addClass("justify-content-between")
+                        $('#data1_wrapper div.row:first-child > div').removeClass("col-md-6 col-sm-12")
+                        $('#data1_wrapper div.row:first-child > div:eq(1)').html('<div class="form-inline d-print-none">' +
+                            '<div>' +
+                                '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1 text-right" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
+                                '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
+                            '</div>' +
+                            '<div class="pl-3">' +
+                                '<h5>' +
+                                    '<a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button">' +
+                                        '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
+                                    '</a>' +
+                                '</h5>' +
+                            '</div>' +
+                            @auth
+                                @if($attackList->user_id != Auth::user()->id)
+                                    @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                                        '<div class="col-1">' +
+                                            '<h5>' +
+                                                '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
+                                            '</h5>' +
+                                        '</div>' +
+                                    @else
+                                        '<div class="col-1">' +
+                                            '<h5>' +
+                                                '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
+                                            '</h5>' +
+                                        '</div>' +
+                                    @endif
                                 @endif
-                            @endif
-                        @endauth
-                        '</div>')
-                    $('#audioTimingInput').val(audioTiming);
+                            @endauth
+                            '</div>')
+                        $('#data1_wrapper div.row:first-child').append(
+                            '<div data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">'+
+                                '<input type="checkbox" id="checkAsUV" class="mr-1"{{ ($attackList->uvMode)?(' checked="checked"'):("")}}>'+
+                                '<label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>'+
+                            '</div>')
+                        $('#audioTimingInput').val(audioTiming)
+                        $('#checkAsUV').on('change', function() {
+                            axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'saveAsUV', $attackList->show_key]) }}", {
+                                'value': $('#checkAsUV').is(':checked'),
+                            })
+                                .then((response) => {
+                                    table.ajax.reload();
+                                });
+                        });
+                        firstDraw = false
+                    }
                 },
                 {!! \App\Util\Datatable::language() !!}
             });

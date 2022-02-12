@@ -124,6 +124,8 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     ),
     'errorUnitCountTitle' => 'Unit size',
     'errorKoordEmpty' => 'Start- and Targetvillage must not be empty',
+    'uvMode' => 'Sitter-Mode',
+    'uvModeDesc' => 'The Send-Troops URL will be genereated in the way it is needed for a sitter account',
   ),
   'map' => 
   array (

@@ -124,6 +124,8 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     ),
     'deleteAll' => 'Angriffsplan leeren',
     'errorKoordEmpty' => 'Start- und Zieldorf dürfen nicht leer sein',
+    'uvModeDesc' => 'Die URLs werden passend für Urlaubsvertretungen generiert',
+    'uvMode' => 'UV-Modus',
   ),
   'map' => 
   array (
