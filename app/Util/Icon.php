@@ -11,6 +11,52 @@ namespace App\Util;
 
 class Icon
 {
+    public static $UNIT_SPEAR = 'images/ds_images/unit/spear.png';
+    public static $UNIT_SWORD = 'images/ds_images/unit/sword.png';
+    public static $UNIT_AXE = 'images/ds_images/unit/axe.png';
+    public static $UNIT_ARCHER = 'images/ds_images/unit/archer.png';
+    public static $UNIT_SPY = 'images/ds_images/unit/spy.png';
+    public static $UNIT_LIGHT = 'images/ds_images/unit/light.png';
+    public static $UNIT_MARCHER = 'images/ds_images/unit/marcher.png';
+    public static $UNIT_HEAVY = 'images/ds_images/unit/heavy.png';
+    public static $UNIT_RAM = 'images/ds_images/unit/ram.png';
+    public static $UNIT_CATAPULT = 'images/ds_images/unit/catapult.png';
+    public static $UNIT_KNIGHT = 'images/ds_images/unit/knight.png';
+    public static $UNIT_SNOB = 'images/ds_images/unit/snob.png';
+    
+    public static $BUILDING_MAIN = 'images/ds_images/buildings/small/main.png';
+    public static $BUILDING_BARRACKS = 'images/ds_images/buildings/small/barracks.png';
+    public static $BUILDING_STABLE = 'images/ds_images/buildings/small/stable.png';
+    public static $BUILDING_GARAGE = 'images/ds_images/buildings/small/garage.png';
+    public static $BUILDING_CHURCH = 'images/ds_images/buildings/small/church.png';
+    public static $BUILDING_SNOB = 'images/ds_images/buildings/small/snob.png';
+    public static $BUILDING_SMITH = 'images/ds_images/buildings/small/smith.png';
+    public static $BUILDING_PLACE = 'images/ds_images/buildings/small/place.png';
+    public static $BUILDING_STATUE = 'images/ds_images/buildings/small/statue.png';
+    public static $BUILDING_MARKET = 'images/ds_images/buildings/small/market.png';
+    public static $BUILDING_WOOD = 'images/ds_images/buildings/small/wood.png';
+    public static $BUILDING_STONE = 'images/ds_images/buildings/small/stone.png';
+    public static $BUILDING_IRON = 'images/ds_images/buildings/small/iron.png';
+    public static $BUILDING_FARM = 'images/ds_images/buildings/small/farm.png';
+    public static $BUILDING_STORAGE = 'images/ds_images/buildings/small/storage.png';
+    public static $BUILDING_WALL = 'images/ds_images/buildings/small/wall.png';
+    
+    public static $DEF_ARCHER = 'images/ds_images/wb/def_archer.png';
+    public static $DEF_SWORD = 'images/ds_images/wb/ally.png';
+    public static $DEF_CAV = 'images/ds_images/wb/def_cav.png';
+    public static $DEF_FAKE = 'images/ds_images/wb/def_fake.png';
+    public static $FAKE = 'images/ds_images/wb/fake.png';
+    
+    public static $BALL_BLUE = 'images/ds_images/wb/bullet_ball_blue.png';
+    public static $BALL_GREEN = 'images/ds_images/wb/bullet_ball_green.png';
+    public static $BALL_YELLOW = 'images/ds_images/wb/bullet_ball_yellow.png';
+    public static $BALL_RED = 'images/ds_images/wb/bullet_ball_red.png';
+    public static $BALL_GREY = 'images/ds_images/wb/bullet_ball_grey.png';
+    
+    public static $TROOPS = 'images/ds_images/wb/troops.png';
+    public static $VILLAGE = 'images/ds_images/wb/village.png';
+    public static $ALLY = 'images/ds_images/wb/ally_forum.png';
+    
     public static function fontawesome(){
         return array(
             'fas fa-address-book' => 'f2b9', 'fas fa-address-card' => 'f2bb', 'fas fa-adjust' => 'f042', 'fas fa-align-center' => 'f037', 'fas fa-align-justify' => 'f039', 'fas fa-align-left' => 'f036', 'fas fa-align-right' => 'f038', 'fas fa-allergies' => 'f461', 'fas fa-ambulance' => 'f0f9', 'fas fa-american-sign-language-interpreting' => 'f2a3', 'fas fa-anchor' => 'f13d', 'fas fa-angle-double-down' => 'f103', 'fas fa-angle-double-left' => 'f100', 'fas fa-angle-double-right' => 'f101', 'fas fa-angle-double-up' => 'f102', 'fas fa-angle-down' => 'f107', 'fas fa-angle-left' => 'f104', 'fas fa-angle-right' => 'f105', 'fas fa-angle-up' => 'f106', 'fas fa-archive' => 'f187', 'fas fa-arrow-alt-circle-down' => 'f358', 'fas fa-arrow-alt-circle-left' => 'f359', 'fas fa-arrow-alt-circle-right' => 'f35a', 'fas fa-arrow-alt-circle-up' => 'f35b', 'fas fa-arrow-circle-down' => 'f0ab', 'fas fa-arrow-circle-left' => 'f0a8', 'fas fa-arrow-circle-right' => 'f0a9', 'fas fa-arrow-circle-up' => 'f0aa', 'fas fa-arrow-down' => 'f063', 'fas fa-arrow-left' => 'f060', 'fas fa-arrow-right' => 'f061', 'fas fa-arrow-up' => 'f062', 'fas fa-arrows-alt' => 'f0b2', 'fas fa-arrows-alt-h' => 'f337', 'fas fa-arrows-alt-v' => 'f338', 'fas fa-assistive-listening-systems' => 'f2a2', 'fas fa-asterisk' => 'f069', 'fas fa-at' => 'f1fa', 'fas fa-audio-description' => 'f29e', 'fas fa-backward' => 'f04a', 'fas fa-balance-scale' => 'f24e', 'fas fa-ban' => 'f05e', 'fas fa-band-aid' => 'f462', 'fas fa-barcode' => 'f02a', 'fas fa-bars' => 'f0c9', 'fas fa-baseball-ball' => 'f433', 'fas fa-basketball-ball' => 'f434', 'fas fa-bath' => 'f2cd', 'fas fa-battery-empty' => 'f244', 'fas fa-battery-full' => 'f240', 'fas fa-battery-half' => 'f242', 'fas fa-battery-quarter' => 'f243', 'fas fa-battery-three-quarters' => 'f241', 'fas fa-bed' => 'f236', 'fas fa-beer' => 'f0fc', 'fas fa-bell' => 'f0f3', 'fas fa-bell-slash' => 'f1f6', 'fas fa-bicycle' => 'f206', 'fas fa-binoculars' => 'f1e5', 'fas fa-birthday-cake' => 'f1fd', 'fas fa-blender' => 'f517', 'fas fa-blind' => 'f29d', 'fas fa-bold' => 'f032', 'fas fa-bolt' => 'f0e7', 'fas fa-bomb' => 'f1e2', 'fas fa-book' => 'f02d', 'fas fa-book-open' => 'f518', 'fas fa-bookmark' => 'f02e', 'fas fa-bowling-ball' => 'f436', 'fas fa-box' => 'f466', 'fas fa-box-open' => 'f49e', 'fas fa-boxes' => 'f468', 'fas fa-braille' => 'f2a1', 'fas fa-briefcase' => 'f0b1', 'fas fa-briefcase-medical' => 'f469', 'fas fa-broadcast-tower' => 'f519', 'fas fa-broom' => 'f51a', 'fas fa-bug' => 'f188', 'fas fa-building' => 'f1ad', 'fas fa-bullhorn' => 'f0a1', 'fas fa-bullseye' => 'f140', 'fas fa-burn' => 'f46a', 'fas fa-bus' => 'f207', 'fas fa-calculator' => 'f1ec', 'fas fa-calendar' => 'f133', 'fas fa-calendar-alt' => 'f073', 'fas fa-calendar-check' => 'f274', 'fas fa-calendar-minus' => 'f272', 'fas fa-calendar-plus' => 'f271', 'fas fa-calendar-times' => 'f273', 'fas fa-camera' => 'f030', 'fas fa-camera-retro' => 'f083', 'fas fa-capsules' => 'f46b', 'fas fa-car' => 'f1b9', 'fas fa-caret-down' => 'f0d7', 'fas fa-caret-left' => 'f0d9', 'fas fa-caret-right' => 'f0da', 'fas fa-caret-square-down' => 'f150', 'fas fa-caret-square-left' => 'f191', 'fas fa-caret-square-right' => 'f152', 'fas fa-caret-square-up' => 'f151', 'fas fa-caret-up' => 'f0d8', 'fas fa-cart-arrow-down' => 'f218', 'fas fa-cart-plus' => 'f217', 'fas fa-certificate' => 'f0a3',

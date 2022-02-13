@@ -166,7 +166,10 @@
                             </div>
                         </div>
                         <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
-                            <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-prepend">
+                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
+                            </div>
+                            <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('signature')"><i class="far fa-copy"></i></span>
                             </div>
@@ -315,7 +318,7 @@
                                 </div>
                             @endisset
                             <div class="col">
-                                <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
+                                <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContentTop').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
                             </div>
                             <div class="col">
                             @auth
@@ -329,10 +332,13 @@
                             @endauth
                             </div>
                         </div>
-                        <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
-                            <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div id="signatureContentTop" class="input-group mt-2 float-right" style="display: none;">
+                            <div class="input-group-prepend">
+                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
+                            </div>
+                            <input id="signatureTop" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]">
                             <div class="input-group-append">
-                                <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('signature')"><i class="far fa-copy"></i></span>
+                                <span class="input-group-text" style="cursor:pointer" onclick="copy('signatureTop')"><i class="far fa-copy"></i></span>
                             </div>
                         </div>
                     </div>

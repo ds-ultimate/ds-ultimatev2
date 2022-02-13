@@ -159,16 +159,19 @@
                                 @endforeach
                             </div>
                         @endisset
-                        <!--<div class="col">
+                        <div class="col">
                             <a href="javascript:void(0)" class="text-secondary font-weight-bold" onclick="$('#signatureContent').toggle()">{{ ucfirst(__('ui.signature')) }}</a>
-                        </div>-->
+                        </div>
                     </div>
-                    <!--<div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
+                    <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
+                        <div class="input-group-prepend">
+                            <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
+                        </div>
                         <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerTopData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}[/img][/url]" aria-label="Recipient's username" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <span class="input-group-text" style="cursor:pointer" id="basic-addon2" onclick="copy('signature')"><i class="far fa-copy"></i></span>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
             </div>
         </div>

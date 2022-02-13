@@ -97,4 +97,20 @@ class PlayerTop extends CustomModel
         $data = $this->$variable->format('d.m.Y');
         return " (" . __("ui.topAt") . ' ' . $data . ")";
     }
+
+    public function signature() {
+        return $this->morphMany('App\Signature', 'element');
+    }
+
+    public function getSignature(World $worldData) {
+        $sig = $this->morphOne('App\Signature', 'element')->where('worlds_id', $worldData->id)->first();
+        if($sig != null) {
+            return $sig;
+        }
+
+        $sig = new Signature();
+        $sig->worlds_id = $worldData->id;
+        $this->signature()->save($sig);
+        return $sig;
+    }
 }
