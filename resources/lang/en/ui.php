@@ -311,4 +311,5 @@ It is not specified which village you have to give the name to, but it must belo
   ),
   'darkmode' => 'darkmode',
   'lightmode' => 'lightmode',
+  'sigPreview' => 'Preview',
 );

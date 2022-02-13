@@ -311,4 +311,5 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
   ),
   'lightmode' => 'Lightmode',
   'darkmode' => 'Darkmode',
+  'sigPreview' => 'Vorschau',
 );
