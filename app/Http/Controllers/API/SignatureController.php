@@ -173,7 +173,7 @@ class SignatureController extends Controller
         if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
             $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $worldData->display_name, static::$cBlack, 90);
         } else {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 11, $worldData->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $worldData->display_name, static::$cBlack, 90);
         }
         $img->insertPubImage("images/default/signature/{$worldData->server->flag}.png", 27, 3, 16, 12);
         
