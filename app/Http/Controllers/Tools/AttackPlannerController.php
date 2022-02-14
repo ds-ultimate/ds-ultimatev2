@@ -357,6 +357,9 @@ class AttackPlannerController extends BaseController
         $list = new AttackList();
         $list->world_id = $worldData->id;
         $list->title = $req['title'] ?? "";
+        if(isset($list->sitterMode)) {
+            $list->uvMode = $list->sitterMode == true;
+        }
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
         $list->save();

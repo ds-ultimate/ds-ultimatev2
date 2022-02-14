@@ -356,8 +356,8 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <span class="float-right">
-                                    <a href="{{ $playerTopData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
-                                    <a href="{{ $playerTopData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
+                                    <a href="{{ $playerData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
+                                    <a href="{{ $playerData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
                                 </span>
                             </div>
                             <div class="col-12 mt-3">
