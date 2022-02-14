@@ -243,7 +243,7 @@ class Conquer extends CustomModel
         if($this->new_owner == 0) return 4;
         if($this->old_owner == 0) return 3;
         if($this->old_owner == $this->new_owner) return 2;
-        if($this->getOldAllyID() == $this->getNewAllyID()) return 1;
+        if($this->getOldAllyID() == $this->getNewAllyID() && $this->getOldAllyID() != 0) return 1;
         return 0;
     }
 
