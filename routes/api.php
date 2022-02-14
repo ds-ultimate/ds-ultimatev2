@@ -39,7 +39,8 @@ Route::group(['middleware' => 'throttle:120,1'], function() {
     Route::get('/{server}/{world}/allys/{days}', [\App\Http\Controllers\API\DatatablesController::class, 'getAllysHistory'])->name('worldAllyHistory');
     Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\API\DatatablesController::class, 'getAllyPlayer'])->name('allyPlayer');
     Route::get('/{server}/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\API\DatatablesController::class, 'getAllyPlayerBashRanking'])->name('allyPlayerBashRanking');
-    Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerVillage'])->name('playerVillage');
+    Route::get('/{server}/{world}/player/{player}/villages', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerVillage'])->name('playerVillage');
+    Route::get('/{server}/{world}/player/{player}/history', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerHistory'])->name('playerHistory');
 
     Route::get('/{server}/{world}/allyAllyChanges/{type}/{ally}', [\App\Http\Controllers\API\AllyChangeController::class, 'getAllyAllyChanges'])->name('allyAllyChanges');
     Route::get('/{server}/{world}/playerAllyChanges/{type}/{player}', [\App\Http\Controllers\API\AllyChangeController::class, 'getPlayerAllyChanges'])->name('playerAllyChanges');

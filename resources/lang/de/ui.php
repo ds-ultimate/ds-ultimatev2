@@ -64,12 +64,14 @@ return array (
     'normalWorlds' => 'Normale Welten',
     'specialWorlds' => 'Spezial Welten',
     'top10' => 'Top 10',
-    'ally' => 'Stämme',
     'overview' => 'Übersicht',
     'classicWorlds' => 'Classic Welten',
     'speedWorlds' => 'Speed Runden',
     'casualWorlds' => 'Casual Welten',
     'history' => 'Ausbauverlauf',
+    'allys' => 'Stämme',
+    'allyRanking' => 'Stammes-Rangliste',
+    'playerHist' => 'Spieler Verlauf',
   ),
   'table' => 
   array (
@@ -108,6 +110,9 @@ return array (
     'playerPointPercent' => 'Kills/Punkte',
     'time' => 'Zeit',
     'possibleChanges' => 'Ausbaumöglichkeiten',
+    'bashAllS' => 'BG',
+    'bashAttS' => 'BGA',
+    'bashDefS' => 'BGD',
   ),
   'server' => 
   array (

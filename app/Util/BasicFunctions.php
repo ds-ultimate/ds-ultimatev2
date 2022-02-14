@@ -363,6 +363,24 @@ class BasicFunctions
         return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
     }
 
+    public static function modelHistoryCalcPopupless($newModel, $oldModel, $type, $invert = false){
+        if($oldModel == null) {
+            return self::thousandsCurrencyFormat($newModel->$type);
+        }
+        
+        if ($newModel->$type != $oldModel->$type){
+            if ($newModel->$type > $oldModel->$type){
+                $result = ($invert == false)?'up':'down';
+            }else{
+                $result = ($invert == true)?'up':'down';
+            }
+        }else{
+            $result = 'equals';
+        }
+        $icon = Icon::historyIconsTextColor($result);
+        return "<span class=\"text-".$icon['color']."\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($newModel->$type)."</span>";
+    }
+
     /**
      * Formats a given value with according suffix
      * rounds to 3 import digits

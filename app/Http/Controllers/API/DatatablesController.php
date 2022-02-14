@@ -7,6 +7,7 @@ use App\Player;
 use App\Village;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
+use App\Util\Icon;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -139,7 +140,6 @@ class DatatablesController extends Controller
             ->toJson();
     }
 
-
     public function getPlayerVillage($server, $world, $player)
     {
         static::limitResults(200);
@@ -166,6 +166,60 @@ class DatatablesController extends Controller
             ->addColumn('bonus', function ($village){
                 return $village->bonusText();
             })
+            ->toJson();
+    }
+
+    public function getPlayerHistory($server, $world, $player)
+    {
+        $tableNr = $player % config('dsUltimate.hash_player');
+        
+        $playerModel = new Player();
+        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tableNr);
+        $data = $playerModel->where('playerID', $player)->get();
+        
+        $newData = [];
+        $dates = [];
+        $lData = null;
+        foreach($data as $d) {
+            $date = $d->created_at->format("Y-m-d");
+            if(! isset($dates[$date])) {
+                $dates[$date] = 1;
+                $d->last = $lData;
+                $newData[] = $d;
+                $lData = $d;
+            }
+        }
+
+        return DataTables::of($newData)
+            ->editColumn('name', function ($player){
+                return BasicFunctions::decodeName($player->name);
+            })
+            ->editColumn('created_at', function ($player){
+                return $player->created_at->format("Y-m-d");
+            })
+            ->addColumn('allyTag', function ($player){
+                return ($player->ally_id != 0 && $player->allyLatest != null) ? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
+            })
+            ->addColumn('rank', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "rank");
+            })
+            ->addColumn('points', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "points");
+            })
+            ->addColumn('village_count', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "village_count");
+            })
+            ->addColumn('offBash', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "offBash");
+            })
+            ->addColumn('defBash', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "defBash");
+            })
+            ->addColumn('gesBash', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "gesBash");
+            })
+            ->removeColumn("last", "offBashRank", "defBashRank", "supBash", "supBashRank", "gesBashRank", "updated_at")
+            ->rawColumns(["rank", "points", "village_count", "offBash", "defBash", "gesBash"])
             ->toJson();
     }
 

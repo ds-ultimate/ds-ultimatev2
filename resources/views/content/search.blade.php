@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-                <h1 class="font-weight-normal">{{ __('ui.titel.search') }}: {!! ucfirst(($type == 'player')? __('ui.tabletitel.player'): (($type == 'ally')? __('ui.tabletitel.ally'): __('ui.tabletitel.villages'))) !!}</h1>
+                <h1 class="font-weight-normal">{{ __('ui.titel.search') }}: {!! ucfirst(($type == 'player')? __('ui.tabletitel.player'): (($type == 'ally')? __('ui.tabletitel.allys'): __('ui.tabletitel.villages'))) !!}</h1>
             </div>
         </div>
         <div class="col-12">

@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="col-md-5 p-lg-5 mx-auto my-1 text-center">
-                <h1 class="font-weight-normal">{{ $worldData->display_name }}<br>{{ __('ui.server.ranking').' '.__('ui.tabletitel.ally') }}</h1>
+                <h1 class="font-weight-normal">{{ $worldData->display_name }}<br>{{ __('ui.tabletitel.allyRanking') }}</h1>
             </div>
         </div>
         <div class="col-12">

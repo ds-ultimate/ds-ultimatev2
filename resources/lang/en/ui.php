@@ -45,6 +45,9 @@ return array (
     'playerPointPercent' => 'Kills/Points',
     'possibleChanges' => 'Possible buildings',
     'time' => 'Time',
+    'bashAllS' => 'OD',
+    'bashAttS' => 'ODA',
+    'bashDefS' => 'ODD',
   ),
   'allyChanges' => 
   array (
@@ -93,7 +96,6 @@ return array (
   ),
   'tabletitel' => 
   array (
-    'ally' => 'tribe',
     'bashStats' => 'Opponents defeated',
     'general' => 'General',
     'info' => 'Information',
@@ -107,6 +109,9 @@ return array (
     'classicWorlds' => 'Classic worlds',
     'speedWorlds' => 'Speed worlds',
     'history' => 'Build history',
+    'allys' => 'tribe',
+    'allyRanking' => 'tribe ranking',
+    'playerHist' => 'player history',
   ),
   'titel' => 
   array (

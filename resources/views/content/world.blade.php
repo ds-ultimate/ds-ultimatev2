@@ -39,7 +39,7 @@
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">{{ __('ui.tabletitel.top10').' '.__('ui.tabletitel.ally') }}</h2>
+                    <h2 class="card-title">{{ __('ui.tabletitel.top10').' '.__('ui.tabletitel.allys') }}</h2>
                     <table class="table table-striped w-100" id="t10Ally">
                         <thead>
                         <tr>

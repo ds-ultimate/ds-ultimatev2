@@ -60,7 +60,7 @@
     <div class="col-12 col-md-6 mt-2">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title">{{ __('ui.tabletitel.ally') }}</h2>
+                <h2 class="card-title">{{ __('ui.tabletitel.allys') }}</h2>
                 <table id="table_ally" class="table table-hover table-sm w-100">
                     <thead>
                     <tr>
