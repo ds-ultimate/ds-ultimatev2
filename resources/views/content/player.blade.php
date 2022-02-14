@@ -167,7 +167,7 @@
                         </div>
                         <div id="signatureContent" class="input-group mt-2 float-right" style="display: none;">
                             <div class="input-group-prepend">
-                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
+                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
                             </div>
                             <input id="signature" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]" aria-describedby="basic-addon2">
                             <div class="input-group-append">
@@ -334,7 +334,7 @@
                         </div>
                         <div id="signatureContentTop" class="input-group mt-2 float-right" style="display: none;">
                             <div class="input-group-prepend">
-                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerTopData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
+                                <a class="btn btn-primary" target="_blank" href="{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}">{{ __('ui.sigPreview') }}</a>
                             </div>
                             <input id="signatureTop" type="text" class="form-control" value="[url={{ route('player', [$server, $worldData->name, $playerData->playerID]) }}][img]{{ route('api.signature', [$server, $worldData->name, 'player', $playerData->playerID]) }}[/img][/url]">
                             <div class="input-group-append">
