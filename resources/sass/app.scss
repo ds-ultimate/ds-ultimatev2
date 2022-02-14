@@ -14,4 +14,11 @@
 // Plugins
 @import "plugins/flag-icon-css/flag-icon.min.css";
 
-@import "customStyles"
+@import "customStyles";
+
+// Tooltips should be white inside for light-mode
+.tooltip-inner {
+    background-color: #FFF;
+    color: #000;
+    border: 1px solid $primary;
+}
