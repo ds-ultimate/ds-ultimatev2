@@ -133,6 +133,11 @@ class BuildingUtils {
         return $gesFarm;
     }
     
+    public static function getStorageSpace($level) {
+        $space = 1000 * pow(400, ($level - 1) / 29);
+        return floor($space);
+    }
+    
     public static function calculatePoints($levels) {
         $gesPoints = 0;
         foreach($levels as $name=>$lv) {
@@ -141,7 +146,15 @@ class BuildingUtils {
         return $gesPoints;
     }
     
-    private static function calculateExpoential($buildingName, $propName, $level) {
+    public static function getMaxLevel($buildingName) {
+        if(!static::validBuilding($buildingName)) {
+            return -1;
+        }
+        $props = static::$BUILDINGS[$buildingName];
+        return $props['max_level'];
+    }
+    
+    public static function calculateExpoential($buildingName, $propName, $level) {
         if(!static::validBuilding($buildingName)) {
             return -1;
         }

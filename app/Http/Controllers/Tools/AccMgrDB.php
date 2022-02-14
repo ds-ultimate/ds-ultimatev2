@@ -223,37 +223,68 @@ class AccMgrDB extends BaseController
                 $result[$name] = 0;
             }
             $result[$name] += $expansion[1];
-            $retval[] = [
-                "name" => $name,
-                "diff" => $expansion[1],
-                "result" => $result[$name],
-                "farm" => BuildingUtils::calculateRemainingFarm($result),
-                "points" => BuildingUtils::calculatePoints($result),
-            ];
+            
+            $tmp = [];
+            $tmp['name'] = $name;
+            $tmp['diff'] = $expansion[1];
+            $tmp['result'] = $result[$name];
+            $tmp['farm'] = BuildingUtils::calculateRemainingFarm($result);
+            $tmp['points'] = BuildingUtils::calculatePoints($result);
+            $tmp['wood'] = BuildingUtils::calculateExpoential($name, "wood", $result[$name]);
+            $tmp['stone'] = BuildingUtils::calculateExpoential($name, "stone", $result[$name]);
+            $tmp['iron'] = BuildingUtils::calculateExpoential($name, "iron", $result[$name]);
+            $storageAll = BuildingUtils::getStorageSpace($result["storage"] ?? 1);
+            $tmp['storage'] = max($tmp['wood'], $tmp['stone'], $tmp['iron']) / $storageAll;
+            
+            $tmp['check'] = [];
+            if($tmp['farm'] < 0) {
+                $tmp['check'][] = __("tool.accMgrDB.errors.farmLow");
+            }
+            if($tmp['storage'] > 0.99) {
+                $tmp['check'][] = __("tool.accMgrDB.errors.storageLow");
+            }
+            if($tmp['result'] > BuildingUtils::getMaxLevel($name)) {
+                $tmp['check'][] = __("tool.accMgrDB.errors.aboveMaxLevel");
+            }
+            
+            $retval[] = $tmp;
         }
         return ['ges'=> $result, 'detailed' => $retval];
     }
     
-    public static function createBuildingRow($name, $diff, $new, $farm, $points, $editable=true) {
-        $retval = '<tr build_name="' . BasicFunctions::escape($name) . '" amount="' . BasicFunctions::escape($diff) . '">';
+    public static function createBuildingRow($build, $editable=true) {
+        $retval = '<tr build_name="' . BasicFunctions::escape($build['name']) . '" amount="' . BasicFunctions::escape($build['diff']) . '">';
         if($editable) {
             $retval.= '<td class="handle" style="cursor:all-scroll">';
             $retval.= '<i class="fas fa-arrows-alt handle"></i>';
             $retval.= '</td>';
         }
         $retval.= '<td>';
-        $retval.= '<img src="' . BasicFunctions::escape(BuildingUtils::getImage($name)) . '"> ';
-        $retval.= __("ui.buildings." . BasicFunctions::escape($name));
-        $retval.= " +" . BasicFunctions::escape($diff);
-        $retval.= " (". __("tool.accMgrDB.level") . " " . BasicFunctions::escape($new);
+        $retval.= '<img src="' . BasicFunctions::escape(BuildingUtils::getImage($build['name'])) . '"> ';
+        $retval.= __("ui.buildings." . BasicFunctions::escape($build['name']));
+        $retval.= " +" . BasicFunctions::escape($build['diff']);
+        $retval.= " (". __("tool.accMgrDB.level") . " " . BasicFunctions::escape($build['result']);
         $retval.= ')</td>';
-        $retval.= '<td class="text-right"><img src="' . BuildingUtils::getImage('farm') . '"> ' . $farm. '</td>';
-        $retval.= '<td class="text-right">' . $points . ' ' . __("tool.accMgrDB.points") . '</td>';
+        $retval.= '<td class="text-right"><img src="' . BuildingUtils::getImage('farm') . '"> ' . $build['farm']. '</td>';
+        $retval.= '<td class="text-right">' . $build['points'] . ' ' . __("tool.accMgrDB.points") . '</td>';
+        $retval.= '<td class="text-right">' . round($build['storage'] * 100). '% <img src="' . BuildingUtils::getImage('storage') . '"></td>';
         if($editable) {
-            $retval.= '<td><a class="btn btn-danger build-remove">';
+            $retval.= '<td class="text-right"><a class="btn btn-danger build-remove">';
             $retval.= '<i class="far fa-trash-alt"></i>';
             $retval.= '</a></td>';
         }
+        
+        if(count($build['check']) > 0) {
+            $title = '';
+            foreach($build['check'] as $err) {
+                $title .= $err . "\n";
+            }
+            $title = trim($title);
+            $retval .= "<td data-toggle='bs-tooltip' data-placement='right' data-html='true' title='$title'><i class='fas fa-times text-danger'></i></td>";
+        } else {
+            $retval .= "<td><i class='fas fa-check text-success'></i></td>";
+        }
+        
         $retval.= '</tr>';
         return $retval;
     }
@@ -336,7 +367,7 @@ class AccMgrDB extends BaseController
         $convertedBuildings = $tmp['detailed'];
         $retval = "";
         foreach($convertedBuildings as $build) {
-            $retval.= static::createBuildingRow($build['name'], $build['diff'], $build['result'], $build['farm'], $build['points']);
+            $retval.= static::createBuildingRow($build);
         }
         
         return response()->json([

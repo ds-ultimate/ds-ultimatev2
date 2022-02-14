@@ -332,6 +332,12 @@ If that problem persists please create a bug-report',
       'statue' => 'may contain a statue',
       'watchtower' => 'may contain a watchtower',
     ),
+    'errors' => 
+    array (
+      'aboveMaxLevel' => 'building level too high!',
+      'farmLow' => 'farm full!',
+      'storageLow' => 'storage too small!',
+    ),
   ),
   'animHistMap' => 
   array (

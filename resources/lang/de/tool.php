@@ -332,6 +332,12 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
       'church' => 'Darf eine Kirche enthalten',
       'statue' => 'Darf eine Statue enthalten',
     ),
+    'errors' => 
+    array (
+      'farmLow' => 'Bauernhof voll!',
+      'storageLow' => 'Der Speicher fasst nicht genug Rohstoffe!',
+      'aboveMaxLevel' => 'Gebäudelevel zu hoch!',
+    ),
   ),
   'animHistMap' => 
   array (

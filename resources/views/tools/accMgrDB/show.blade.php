@@ -71,8 +71,7 @@
                 <table id="table_detailed" class="table table-hover table-sm w-100">
                     <tbody>
                         @foreach($buildings as $build)
-                            {!! \App\Http\Controllers\Tools\AccMgrDB::createBuildingRow($build['name'], $build['diff'],
-                                    $build['result'], $build['farm'], $build['points'], false) !!}
+                            {!! \App\Http\Controllers\Tools\AccMgrDB::createBuildingRow($build, false) !!}
                         @endforeach
                     </tbody>
                 </table>
