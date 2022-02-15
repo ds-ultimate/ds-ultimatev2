@@ -471,14 +471,6 @@
         
         $('#hist-tab').on('click', function() {
             $('#history_table').DataTable({
-                "columnDefs": [
-                    {"targets": 3, "className": 'text-right'},
-                    {"targets": 4, "className": 'text-right'},
-                    {"targets": 5, "className": 'text-right'},
-                    {"targets": 6, "className": 'text-right'},
-                    {"targets": 7, "className": 'text-right'},
-                    {"targets": 8, "className": 'text-right'},
-                ],
                 "order": [[ 0, "desc" ]],
                 "ajax": "{{ route('api.playerHistory', [$worldData->server->code, $worldData->name, $playerData->playerID]) }}",
                 "columns": [

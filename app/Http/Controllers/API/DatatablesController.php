@@ -201,7 +201,7 @@ class DatatablesController extends Controller
                 return ($player->ally_id != 0 && $player->allyLatest != null) ? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
             ->addColumn('rank', function ($player){
-                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "rank");
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "rank", true);
             })
             ->addColumn('points', function ($player){
                 return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "points");
@@ -220,6 +220,60 @@ class DatatablesController extends Controller
             })
             ->removeColumn("last", "offBashRank", "defBashRank", "supBash", "supBashRank", "gesBashRank", "updated_at")
             ->rawColumns(["rank", "points", "village_count", "offBash", "defBash", "gesBash"])
+            ->toJson();
+    }
+
+    public function getAllyHistory($server, $world, $ally)
+    {
+        $tableNr = $ally % config('dsUltimate.hash_ally');
+        
+        $allyModel = new Ally();
+        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_'.$tableNr);
+        $data = $allyModel->where('allyID', $ally)->get();
+        
+        $newData = [];
+        $dates = [];
+        $lData = null;
+        foreach($data as $d) {
+            $date = $d->created_at->format("Y-m-d");
+            if(! isset($dates[$date])) {
+                $dates[$date] = 1;
+                $d->last = $lData;
+                $newData[] = $d;
+                $lData = $d;
+            }
+        }
+
+        return DataTables::of($newData)
+            ->editColumn('tag', function ($ally){
+                return BasicFunctions::decodeName($ally->tag);
+            })
+            ->editColumn('created_at', function ($ally){
+                return $ally->created_at->format("Y-m-d");
+            })
+            ->addColumn('rank', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "rank", true);
+            })
+            ->addColumn('member_count', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "member_count");
+            })
+            ->addColumn('points', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "points");
+            })
+            ->addColumn('village_count', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "village_count");
+            })
+            ->addColumn('offBash', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "offBash");
+            })
+            ->addColumn('defBash', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "defBash");
+            })
+            ->addColumn('gesBash', function ($ally){
+                return BasicFunctions::modelHistoryCalcPopupless($ally, $ally->last, "gesBash");
+            })
+            ->removeColumn("last", "offBashRank", "defBashRank", "gesBashRank", "updated_at")
+            ->rawColumns(["rank", "points", "member_count", "village_count", "offBash", "defBash", "gesBash"])
             ->toJson();
     }
 

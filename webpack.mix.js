@@ -31,6 +31,8 @@ let safelist =
     "pr-3",
     "fa-volume-mute",
     "mx-1",
+    /fa-.*/,
+    "fas",
 ];
 mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')

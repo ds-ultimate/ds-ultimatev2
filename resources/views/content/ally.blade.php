@@ -34,6 +34,9 @@
                     </li>
                     @endisset
                     <li class="nav-item">
+                        <a class="nav-link" id="hist-tab" data-toggle="tab" href="#hist" role="tab" aria-controls="hist" aria-selected="false">{{ __('ui.nav.history') }}</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="false">{{ __('ui.nav.map') }}</a>
                     </li>
                 </ul>
@@ -200,7 +203,43 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- END TOP Table -->
                     @endisset
+                    
+                    <!-- BEGIN HIST Table -->
+                    <div class="tab-pane fade" id="hist" role="tabpanel" aria-labelledby="hist-tab">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <h4 class="card-title">{{ucfirst(__('ui.tabletitel.playerHist'))}}</h4>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <span class="float-right">
+                                    <a href="{{ $allyData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
+                                    <a href="{{ $allyData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
+                                </span>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <table id="history_table" class="table table-hover table-sm w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ ucfirst(__('ui.table.date')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.ally')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.rank')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.members')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.points')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.villages')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.bashAllS')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.bashAttS')) }}</th>
+                                        <th>{{ ucfirst(__('ui.table.bashDefS')) }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END HIST Table -->
                     <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
                     </div>
                 </div>
@@ -285,7 +324,7 @@
 
 @push('js')
     <script>
-        $('#map-tab').click(function (e) {
+        $('#map-tab').on('click', function (e) {
             if($('#map-img').length > 0) return;
             $.ajax({
                 type: "GET",
@@ -293,6 +332,30 @@
                 contentType: "image/png",
                 success: function(data){
                 $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
+            });
+        });
+        
+        $('#hist-tab').on('click', function() {
+            $('#history_table').DataTable({
+                "order": [[ 0, "desc" ]],
+                "ajax": "{{ route('api.allyHistory', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
+                "columns": [
+                    { "data": "created_at"},
+                    { "data": "tag", "render": function (value, type, row) {
+                        var ref = "{{ route('ally', [$worldData->server->code, $worldData->name, '%allyID%']) }}";
+                        ref = ref.replace('%allyID%', row.allyID);
+                        return "<a href='"+ ref +"'>"+ value +'</a>'
+                    }},
+                    { "data": "rank", "orderable": false},
+                    { "data": "member_count", "orderable": false},
+                    { "data": "points"},
+                    { "data": "village_count"},
+                    { "data": "gesBash"},
+                    { "data": "offBash"},
+                    { "data": "defBash"},
+                ],
+                responsive: true,
+                {!! \App\Util\Datatable::language() !!}
             });
         });
     </script>
