@@ -2,7 +2,7 @@
 @forceSet($worldData)
 <?php
 function generateMenuEntry($entry, $level=0) {
-    if($entry['subElements'] == null) {//normal entry
+    if($entry['subElements'] === null) {//normal entry
         ?>
         @if($level==0)
             <li class="nav-item">
@@ -58,7 +58,7 @@ function generateMenuEntry($entry, $level=0) {
 $navNum = 1;
 function generateMobileMenuEntry($entry, $level=0) {
     global $navNum;
-    if($entry['subElements'] == null) {//normal entry
+    if($entry['subElements'] === null) {//normal entry
         ?>
         <li class="nav-item">
             @if($entry['enabled'])
@@ -143,8 +143,9 @@ function generateMobileMenuEntry($entry, $level=0) {
                         {{ __('ui.language') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                        <a class="dropdown-item" href="{{ route('locale', 'de') }}"><span class="flag-icon flag-icon-de"></span> Deutsch</a>
-                        <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
+                        @foreach(\App\Util\Navigation::getAvailableTranslations() as $trans)
+                        <a class="dropdown-item" href="{{ route('locale', $trans['s']) }}"><span class="flag-icon {{ $trans['f'] }}"></span> {{ $trans['n'] }}</a>
+                        @endforeach
                     </div>
                 </div>
             </li>

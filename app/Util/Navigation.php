@@ -110,10 +110,11 @@ class Navigation
 
     public static function generateMobileNavArray($serverArg, $worldArg) {
         $navArray = self::generateNavArray($serverArg, $worldArg);
-        $navArray[] = self::navDropdown(title: 'ui.language', subelements: [
-            self::navElement('Deutsch', 'locale', routeArgs: ['de'], translated: false, icon: 'flag-icon flag-icon-de'),
-            self::navElement('English', 'locale', routeArgs: ['en'], translated: false, icon: 'flag-icon flag-icon-gb'),
-        ]);
+        $transSub = [];
+        foreach(static::getAvailableTranslations() as $trans) {
+            $transSub[] = self::navElement($trans['n'], 'locale', routeArgs: [$trans['s']], translated: false, icon: 'flag-icon '.$trans['f']);
+        }
+        $navArray[] = self::navDropdown(title: 'ui.language', subelements: $transSub);
         
         if(session('darkmode', false)) {
             $navArray[] = self::navElement('ui.lightmode', 'darkmode', routeArgs: ["false"], translated: true);
@@ -139,6 +140,14 @@ class Navigation
             $navArray[] = self::navElement('user.register', 'register');
         }
         return $navArray;
+    }
+    
+    public static function getAvailableTranslations() {
+        return [
+            ['n' => 'Deutsch', 's' => 'de', 'f' => 'flag-icon-de'],
+            ['n' => 'English', 's' => 'en', 'f' => 'flag-icon-gb'],
+            ['n' => 'Czech', 's' => 'cz', 'f' => 'flag-icon-cz'],
+        ];
     }
 
     public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null, $nofollow=false) {
