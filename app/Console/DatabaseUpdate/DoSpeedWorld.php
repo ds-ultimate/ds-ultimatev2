@@ -10,6 +10,7 @@ use Carbon\Exceptions\InvalidFormatException;
 
 class DoSpeedWorld
 {
+    // locale see: https://www.php.net/manual/en/timezones.php
     private static $SPEED_LANGUAGE = [
         'de' => [
             'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*Ende:</td> <td>(?<end>.*?)</td>]",
@@ -34,6 +35,12 @@ class DoSpeedWorld
             'date' => ["M d, H:i", "M d,Y H:i"],
             'dateTimeFix' => true,
             'locale' => 'Europe/London',
+        ],
+        'pl' => [
+            'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*Koniec:</td> <td>(?<end>.*?)</td>]",
+            'date' => "d.M, H:i",
+            'dateTimeFix' => true,
+            'locale' => 'Europe/Warsaw',
         ],
     ];
     
