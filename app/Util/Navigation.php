@@ -143,11 +143,24 @@ class Navigation
     }
     
     public static function getAvailableTranslations() {
-        return [
+        $trans = [
             ['n' => 'Deutsch', 's' => 'de', 'f' => 'flag-icon-de'],
             ['n' => 'English', 's' => 'en', 'f' => 'flag-icon-gb'],
             ['n' => 'Czech', 's' => 'cz', 'f' => 'flag-icon-cz'],
         ];
+        if(config('app.debug')) {
+            $trans[] = ['n' => 'Empty', 's'=> 'empty', 'f' => ''];
+        }
+        
+        return $trans;
+    }
+    
+    public static function getAvailableLocales() {
+        $loc = ['de', 'en', 'cz'];
+        if(config('app.debug')) {
+            $loc[] = 'empty';
+        }
+        return $loc;
     }
 
     public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null, $nofollow=false) {

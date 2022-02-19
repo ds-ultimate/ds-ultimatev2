@@ -31,7 +31,7 @@ Route::post('/api/time', function (){
 
 
 Route::get('/setlocale/{lang}',function($lang){
-    $validLocale = in_array($lang, ['de', 'en']);
+    $validLocale = in_array($lang, \App\Util\Navigation::getAvailableLocales());
     if ($validLocale) {
         \Session::put('locale',$lang);
     }

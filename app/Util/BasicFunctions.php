@@ -192,7 +192,19 @@ class BasicFunctions
     }
 
     public static function local(){
-        App::setLocale(\Session::get('locale', 'de'));
+        $locale = \Session::get('locale');
+        if($locale === null) {
+            $replacements = ["cs" => "cz"];
+            
+            $locale = substr(\Request::server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
+            if(isset($replacements[$locale])) {
+                $locale = $replacements[$locale];
+            }
+            if (! in_array($locale, Navigation::getAvailableLocales())) {
+                $locale = "de";
+            }
+        }
+        App::setLocale($locale);
     }
 
     public static function changelogUpdate(){

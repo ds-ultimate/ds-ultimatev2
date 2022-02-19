@@ -40,12 +40,6 @@
         }
         ?>
         <div class="col-12 col-md-6 mt-2">
-            <div class="card mb-4 p-3"><p>
-                Derzeit gibt es noch keine Werte für die Bauzeiten, weil die Formel nicht bekannt ist.
-                Solltest du mithelfen wollen / die Formel kennen so kontaktire uns bitte über <a href="https://discord.gg/JcDAmPm">Discord</a><br>
-                <a href="{{ route("tools.collectData") }}">Es gibt die öffentliche Datensammlung, wo wir Bauzeiten in kombination mit Gebäudestufen sammeln.</a>
-                Um spam zu vermeiden musst du eingeloggt sein.
-            </p></div>
             <div class="card">
                 <div class="card-body">
                     <table class="table w-100">

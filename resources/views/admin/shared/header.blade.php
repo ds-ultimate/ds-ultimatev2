@@ -6,8 +6,9 @@
                     {{ __('ui.language') }}
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
-                    <a class="dropdown-item" href="{{ route('locale', 'de') }}"><span class="flag-icon flag-icon-de"></span> Deutsch</a>
-                    <a class="dropdown-item" href="{{ route('locale', 'en') }}"><span class="flag-icon flag-icon-gb"></span> English</a>
+                    @foreach(\App\Util\Navigation::getAvailableTranslations() as $trans)
+                    <a class="dropdown-item" href="{{ route('locale', $trans['s']) }}"><span class="flag-icon {{ $trans['f'] }}"></span> {{ $trans['n'] }}</a>
+                    @endforeach
                 </div>
             </div>
         </li>
