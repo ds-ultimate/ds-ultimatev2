@@ -256,7 +256,7 @@
             <input name="id" type="hidden" value="{{ $attackList->id }}">
             <input name="key" type="hidden" value="{{ $attackList->edit_key }}">
             <div class="col-12">
-                <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('global.delete').' '.__('tool.attackPlanner.outdated') }}">
+                <input type="button" class="btn bg-danger btn-sm float-left text-white link" onclick="destroyOutdated()" value="{{ __('tool.attackPlanner.deleteOutdated') }}">
                 <input type="button" class="confirm-deleteAll btn bg-danger btn-sm float-left text-white link ml-4" data-toggle="confirmation" data-content="{{ __('tool.attackPlanner.confirm.clear') }}" value="{{ __('tool.attackPlanner.deleteAll') }}">
                 <input type="submit" class="btn btn-sm btn-success float-right" value="{{ __('global.save') }}">
             </div>

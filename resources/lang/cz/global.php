@@ -18,4 +18,11 @@ return array (
   'app_import_data' => 'Import dat',
   'app_parse_csv' => 'Parsovat CSV',
   'areYouSure' => 'Jste si jistý?',
+  'units' => 'Jednotky',
+  'unit' => 'Jednotka',
+  'calculate' => 'Vypočítat',
+  'calendar' => 'Kalendář',
+  'time' => 'Celkový čas',
+  'timeFrom' => 'Čas',
+  'timeTo' => 'Čas',
 );

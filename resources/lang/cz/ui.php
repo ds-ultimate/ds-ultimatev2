@@ -44,9 +44,9 @@ return array (
   'columns' => 'Sloupce',
   'conquer' => 
   array (
-    'all' => 'Dobývání',
+    'all' => 'Dobytí',
     'allyOwn' => 'Interní / vlastní dobývání',
-    'daily' => 'Denní dobyté vesnice',
+    'daily' => 'Aktuálně dobyté vesnice',
     'highlight' => 
     array (
       'all' => 'Všechno',
@@ -75,8 +75,8 @@ return array (
   ),
   'ingame' => 
   array (
-    'guest' => 'Ve hře (přístup pro hosty)',
-    'normal' => 'Ve hře (normálně)',
+    'guest' => 'Zobrazit v hostovacím režimu',
+    'normal' => 'Zobrazit ve hře',
   ),
   'language' => 'Jazyk',
   'lightmode' => 'Světlý mód',
@@ -186,9 +186,9 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
   'server' => 
   array (
     'choose' => 'Vyber svůj server',
-    'code' => 'Kód',
+    'code' => 'Server',
     'dsLink' => 'Odkaz na server',
-    'ranking' => 'Umístění',
+    'ranking' => 'Statistika',
     'show' => 'Zvolit',
     'title' => 'Server',
     'tools' => 'Nástroje',
@@ -220,8 +220,8 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'bashGes' => 'Celkem',
     'bashOff' => 'Útočník',
     'bashPointsRatio' => 'K/P-Rate',
-    'bashStats' => 'Poražení protivníci',
-    'bashSup' => 'Obránce',
+    'bashStats' => 'Poražený protivník',
+    'bashSup' => 'Podporovatel',
     'bonusType' => 'Bonus',
     'conquer' => 'Dobytí',
     'continent' => 'Kontinent',
@@ -238,9 +238,9 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'playerPointPercent' => 'Kills/Points',
     'points' => 'Body',
     'possibleChanges' => 'Možné budovy',
-    'rank' => 'Umístění',
+    'rank' => 'Pozice',
     'supDeff' => 'Podpora',
-    'tag' => 'Označení',
+    'tag' => 'Tag',
     'time' => 'Čas',
     'village' => 'Vesnice',
     'villageName' => 'Název vesnice',
@@ -251,7 +251,7 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
   array (
     'allyRanking' => 'Kmenové umístění',
     'allys' => 'Kmen',
-    'bashStats' => 'Poražení protivníci',
+    'bashStats' => 'Poražený protivník',
     'casualWorlds' => 'Casual svět',
     'classicWorlds' => 'Classic svět',
     'general' => 'Obecné',
@@ -276,7 +276,7 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'searchResults' => 'Výsledky hledání',
     'settings' => 'Nastavení',
     'village' => 'Vesnice',
-    'worldOverview' => 'Přehled světa',
+    'worldOverview' => 'Přehled světů',
   ),
   'topAt' => 'v',
   'unit' => 

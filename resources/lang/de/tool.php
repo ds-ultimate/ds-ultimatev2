@@ -126,6 +126,19 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'errorKoordEmpty' => 'Start- und Zieldorf dürfen nicht leer sein',
     'uvModeDesc' => 'Die URLs werden passend für Urlaubsvertretungen generiert',
     'uvMode' => 'UV-Modus',
+    'hints' => 
+    array (
+      'selectMultiple' => 
+      array (
+        'title' => 'Mehrere Angriffe markieren',
+        'desc' => 'Es können mehrere Angriffe markiert werden in dem man die <div class="badge badge-primary h3">ctrl</div> [<div class="badge badge-primary">⌘</div>] und <div class="badge badge-primary"><i class="fas fa-arrow-up"></i></div>',
+      ),
+      'workbenchImport' => 
+      array (
+        'title' => 'Angriffe aus DS-Workbench importieren',
+        'desc' => 'In der Befehlsübersicht alle Angriffe die man übertragen möchte markieren und kopieren mit <span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">c</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">c</div>]</span>. Anschliesend beim Importfeld auf DS-Ultimate und die Angriffe einfügen <span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">v</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">v</div>]</span>.',
+      ),
+    ),
   ),
   'map' => 
   array (

@@ -16,4 +16,5 @@ return array (
   'oPaginate_sPrevious' => 'Previous',
   'oAria_sSortAscending' => ': activate to sort column ascending',
   'oAria_sSortDescending' => ': activate to sort column descending',
+  'sInfoThousands' => ',',
 );

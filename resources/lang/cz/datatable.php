@@ -10,7 +10,7 @@ return array (
   'oPaginate_sNext' => 'Další',
   'oPaginate_sPrevious' => 'Předchozí',
   'sEmptyTable' => 'V tabulce nejsou k dispozici žádné údaje',
-  'sInfo' => '_Začátek_ až _Konec_ _Celkového_počtuzáznamů',
+  'sInfo' => 'Zobrazeno _START_ z _END_ z _TOTAL_ celkových záznamů',
   'sInfoEmpty' => 'Nejsou k dispozici žádné údaje',
   'sInfoFiltered' => '(filtrováno z _MAX_ záznamů)',
   'sLengthMenu' => '_MENU_ Zobrazit položky',
@@ -18,4 +18,5 @@ return array (
   'sZeroRecords' => 'Žádné záznamy nejsou k dispozici',
   'select_rows_1' => 'Vybrán 1 řádek',
   'select_rows__' => '%d vybraných řádků',
+  'sInfoThousands' => '.',
 );

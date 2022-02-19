@@ -158,7 +158,7 @@ return [
     |
     */
 
-    'fallback_locale' => (config('app.debug')?'':'en'),
+    'fallback_locale' => (env('APP_DEBUG', false) ? '' : 'en'),
 
     /*
     |--------------------------------------------------------------------------

@@ -126,6 +126,19 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'errorKoordEmpty' => 'Start- and Targetvillage must not be empty',
     'uvMode' => 'Sitter-Mode',
     'uvModeDesc' => 'The Send-Troops URL will be genereated in the way it is needed for a sitter account',
+    'hints' => 
+    array (
+      'selectMultiple' => 
+      array (
+        'desc' => 'Multiple attacks can be selected by using <div class="badge badge-primary h3">ctrl</div> [<div class="badge badge-primary">⌘</div>] and <div class="badge badge-primary"><i class="fas fa-arrow-up"></i></div>',
+        'title' => 'Select multiple attacks',
+      ),
+      'workbenchImport' => 
+      array (
+        'desc' => 'Go into the attacks overview and copy all attack that should be imported with <span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">c</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">c</div>]</span>. Afterwards use the import input field inside the tab Import/Export <span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">v</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">v</div>]</span>.',
+        'title' => 'Importing attacks from DS-Workbench',
+      ),
+    ),
   ),
   'map' => 
   array (
