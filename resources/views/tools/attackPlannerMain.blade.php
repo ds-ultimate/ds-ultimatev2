@@ -636,18 +636,16 @@ $tabList = [
 
             $(".coord-input").on('paste', function(e) {
                 var pastedData = e.originalEvent.clipboardData.getData('text');
-                var coords = pastedData.split("|");
-                if (coords.length === 2) {
+                var match = pastedData.match(/(\d{1,3})\|(\d{1,3})/);
+                if(match !== null) {
                     e.preventDefault();
-                    x = coords[0].substring(0, 3);
-                    y = coords[1].substring(0, 3);
+                    x = match[1];
+                    y = match[2];
                     
                     var inputs = $(this).parent().children(".coord-input");
-                    $(inputs[0]).val(coords[0].substring(0, 3));
-                    $(inputs[1]).val(coords[1].substring(0, 3));
+                    $(inputs[0]).val(x);
+                    $(inputs[1]).val(y);
                     
-                    var input = this.id;
-                    var type = input.substring(1, 2).toUpperCase() + input.substring(2); //target or start
                     checkVillage(x, y, $(this).parent())
                 }
             });
