@@ -469,7 +469,10 @@
             });
         });
         
+        var initializedHistTable = false
         $('#hist-tab').on('click', function() {
+            if(initializedHistTable) return
+            initializedHistTable = true
             $('#history_table').DataTable({
                 "order": [[ 0, "desc" ]],
                 "ajax": "{{ route('api.playerHistory', [$worldData->server->code, $worldData->name, $playerData->playerID]) }}",

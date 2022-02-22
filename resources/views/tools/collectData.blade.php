@@ -14,7 +14,7 @@
                     <textarea class="form-control" name="data" style="height: 300px"></textarea>
                 </div>
                 <div class="form-row">
-                    <select class="col-md-6 form-control" id="select-world">
+                    <select class="select2 select2-single col-md-6 form-control" id="select-world">
                     @foreach ($worlds as $world)
                         <option value="{{ $world->server->code . $world->name }}">
                             {{ $world->display_name }} ({{ $world->server->code . $world->name }})
@@ -99,6 +99,30 @@
                 .catch((error) => {
 
                 });
+        });
+    });
+</script>
+<script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
+<script>
+    function loadText(state) {
+        if(!state.element) return state.text;
+
+        if(!state.element.attributes['data-content']) return state.text;
+        console.log($(state.element.attributes['data-content'].nodeValue));
+        return $("<p>"+state.element.attributes['data-content'].nodeValue+"</p>");
+    }
+
+    $(function() {
+        $('.select2-single').select2({
+            theme: "bootstrap4",
+            minimumResultsForSearch: 0,
+            templateResult: loadText,
+        });
+        $('.select2-multi').select2({
+            theme: "bootstrap4",
+            minimumResultsForSearch: 0,
+            closeOnSelect: false,
+            templateResult: loadText,
         });
     });
 </script>
