@@ -179,21 +179,21 @@
 
                 });
         }
-
-        var reloading = false;
-        function reloadMap() {
-            if(reloading) {
-                reloadNeeded = true;
-                return;
-            }
-            reloading = true;
-            var elm = $('.active.map-show-content')[0];
-            elm.style.widht = elm.clientWidth + "px";
-            elm.style.height = elm.clientHeight + "px";
-            $('.map-show-content').empty();
-            $('.active.map-show-tab').trigger('click');
-        }
     @endif
+
+    var reloading = false;
+    function reloadMap() {
+        if(reloading) {
+            reloadNeeded = true;
+            return;
+        }
+        reloading = true;
+        var elm = $('.active.map-show-content')[0];
+        elm.style.widht = elm.clientWidth + "px";
+        elm.style.height = elm.clientHeight + "px";
+        $('.map-show-content').empty();
+        $('.active.map-show-tab').trigger('click');
+    }
 </script>
 @endif
 <script>
