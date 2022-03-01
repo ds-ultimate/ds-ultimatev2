@@ -41,8 +41,8 @@
     @endif
     @stack('style')
 </head>
-<body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
-<div class="flex-center position-ref full-height">
+<body>
+<div class="flex-center main-container">
     @include('nav.standart')
     <div class="container mb-5 pb-3">
         <div id="toast-content" style="position: fixed; top: 60px; right: 10px; z-index: 100;">

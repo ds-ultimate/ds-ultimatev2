@@ -1,4 +1,20 @@
+/* Main styles for all layouts */
+.container {
+    flex-grow: 3;
+}
 
+body, html {
+    height: 100%;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+/* div other */
 .dropdown-submenu {
     position: relative;
 }
