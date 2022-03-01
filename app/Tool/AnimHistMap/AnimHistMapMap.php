@@ -386,6 +386,9 @@ class AnimHistMapMap extends Model
     public function preview() {
         $dbName = BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name);
         $histIdx = (new HistoryIndex())->setTable("$dbName.index")->orderBy("id", "desc")->first();
+        if($histIdx == null) {
+            return "";
+        }
         return route('tools.animHistMap.preview', [$this->id, $this->show_key, $histIdx->id, 'png']);
     }
     

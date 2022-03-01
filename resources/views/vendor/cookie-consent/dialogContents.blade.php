@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-6">
         <div class="p-2 rounded-lg">
             <div class="d-flex align-middle align-items-center flex-wrap">
-                <div class="w-0 flex-1 items-center hidden md:inline">
+                <div class="w-0 flex-1 items-center md:inline">
                     <p class="ml-3 cookie-consent__message d-inline align-middle">
                         {!! trans('cookie-consent::texts.message') !!}
                     </p>
