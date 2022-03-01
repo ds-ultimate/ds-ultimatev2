@@ -50,6 +50,7 @@ class Map extends Model
         'markerFactor',
         'continentNumbers',
         'shouldUpdate',
+        'autoDimensions',
     ];
 
     public function user(){
@@ -435,5 +436,9 @@ class Map extends Model
     public function isCached() {
         if($this->cached_at == null) return false;
         return $this->cached_at->diffInSeconds(Carbon::now()) > 24 * 60 * 60;
+    }
+    
+    public function quickChangesAllowed() {
+        return $this->shouldUpdate || !$this->isCached();
     }
 }

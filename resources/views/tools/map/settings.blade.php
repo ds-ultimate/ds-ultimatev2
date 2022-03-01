@@ -98,7 +98,7 @@
 @push('js')
 <script>
     $(function () {
-        @if($wantedMap->cached_at === null)
+        @if($wantedMap->quickChangesAllowed())
             $('#checkbox-show-player').change(store);
             $('#checkbox-show-barbarian').change(store);
             $('#checkbox-continent-numbers').change(store);
@@ -121,7 +121,7 @@
             $('.map-reset', $(this).parent()).click(function(ein) {
                 e.colorpicker.setValue($(this).attr("newValue"));
                 
-                @if($wantedMap->cached_at === null)
+                @if($wantedMap->quickChangesAllowed())
                     store();
                 @endif
             });

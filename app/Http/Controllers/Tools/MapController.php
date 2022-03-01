@@ -49,8 +49,11 @@ class MapController extends BaseController
             }
         }
         $mapModel->markerFactor = $mapModel->makerFactorDefault();
+        $mapModel->autoDimensions = true;
         $mapModel->edit_key = Str::random(40);
         $mapModel->show_key = Str::random(40);
+        $mapModel->save();
+        $this->cacheMapImage($mapModel);
         $mapModel->save();
         return redirect()->route('tools.map.mode', [$mapModel->id, 'edit', $mapModel->edit_key]);
     }
@@ -232,6 +235,7 @@ class MapController extends BaseController
         }
 
         $wantedMap->cached_at = null;
+        $this->cacheMapImage($wantedMap);
         $wantedMap->save();
 
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
@@ -284,49 +288,62 @@ class MapController extends BaseController
         abort_unless($token == $wantedMap->show_key, 403);
         $wantedMap->touch();
 
-        if($options == null && $wantedMap->cached_at !== null && (! $wantedMap->isCached() || !$wantedMap->shouldUpdate)) {
-            //use cached version
-            CacheLogger::logHit(CacheLogger::$MAP_TYPE, $wantedMap->id);
-            $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
-        } else {
+        if($options != null) {
             CacheLogger::logMiss(CacheLogger::$MAP_TYPE, $wantedMap->id);
             $skin = new \App\Util\Map\SkinSymbols();
             $map = new SQLMapGenerator($wantedMap->world, $skin, $this->decodeDimensions($width, $height), $this->debug);
             $wantedMap->prepareRendering($map);
             $map->setFont("fonts/arial.ttf");
+            
+            switch($options) {
+                case "noDrawing":
+                    $layers = $wantedMap->getLayerConfiguration();
+                    $final = array();
+                    foreach($layers as $layer)
+                        if($layer != AbstractMapGenerator::$LAYER_DRAWING)
+                            $final[] = $layer;
 
-            if($options != null) {
-                switch($options) {
-                    case "noDrawing":
-                        $layers = $wantedMap->getLayerConfiguration();
-                        $final = array();
-                        foreach($layers as $layer)
-                            if($layer != AbstractMapGenerator::$LAYER_DRAWING)
-                                $final[] = $layer;
-
-                        $map->setLayerOrder($final);
-                        break;
-                    case "pureDrawing":
-                        if(array_search(AbstractMapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
-                            $map->setLayerOrder([AbstractMapGenerator::$LAYER_DRAWING]);
-                        else
-                            $map->setLayerOrder([]);
-                        $map->setBackgroundColour([0,0,0,0]);
-                        break;
-                    default:
-                }
-            } else {
-                $map->renderAtNative();
-                $map->saveTo(storage_path(config('tools.map.cacheDir').$wantedMap->id), "png");
-                $wantedMap->cached_at = Carbon::now();
-                $wantedMap->save();
-                
-                $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
+                    $map->setLayerOrder($final);
+                    break;
+                case "pureDrawing":
+                    if(array_search(AbstractMapGenerator::$LAYER_DRAWING, $wantedMap->getLayerConfiguration()) !== False)
+                        $map->setLayerOrder([AbstractMapGenerator::$LAYER_DRAWING]);
+                    else
+                        $map->setLayerOrder([]);
+                    $map->setBackgroundColour([0,0,0,0]);
+                    break;
+                default:
             }
+        } else if($wantedMap->cached_at !== null && (! $wantedMap->isCached() || !$wantedMap->shouldUpdate)) {
+            //use cached version if:
+            //either the map has been cached and should not be updated
+            //or the map should be updated and has been cached not longer than 1day ago
+            CacheLogger::logHit(CacheLogger::$MAP_TYPE, $wantedMap->id);
+            $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
+        } else {
+            $this->cacheMapImage($wantedMap);
+            $map = new ImageCached(storage_path(config('tools.map.cacheDir').$wantedMap->id), $this->decodeDimensions($width, $height), $this->debug);
         }
 
         $map->render();
         return $map->output($ext);
+    }
+    
+    private function cacheMapImage(Map $wantedMap) {
+        CacheLogger::logMiss(CacheLogger::$MAP_TYPE, $wantedMap->id);
+        $skin = new \App\Util\Map\SkinSymbols();
+        $map = new SQLMapGenerator($wantedMap->world, $skin, $this->decodeDimensions(100, 100), $this->debug);
+        $wantedMap->prepareRendering($map);
+        $map->setFont("fonts/arial.ttf");
+
+        $map->renderAtNative();
+        if($wantedMap->autoDimensions) {
+            $wantedMap->setDimensions($map->getMapDimensions());
+        }
+
+        $map->saveTo(storage_path(config('tools.map.cacheDir').$wantedMap->id), "png");
+        $wantedMap->cached_at = Carbon::now();
+        $wantedMap->save();
     }
 
     public function getSizedMapByID(Map $wantedMap, $token, $width, $height, $ext){

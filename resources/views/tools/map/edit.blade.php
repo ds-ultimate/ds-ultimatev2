@@ -255,7 +255,7 @@
     @endphp
     
     function addCustomLibs(context) {
-        @if($wantedMap->cached_at === null)
+        @if($wantedMap->quickChangesAllowed())
             if(context != null) addStoreNewElements(context);
             $('.data-input-map', context).change(store);
         @endif
