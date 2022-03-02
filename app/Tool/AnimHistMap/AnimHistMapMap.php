@@ -395,4 +395,8 @@ class AnimHistMapMap extends Model
     public function makerFactorDefault() {
         return 0.2;
     }
+    
+    public function quickChangesAllowed() {
+        return true;
+    }
 }
