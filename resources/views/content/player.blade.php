@@ -74,7 +74,7 @@
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->points) }}</td>
                                         <td>{{ \App\Util\BasicFunctions::numberConv($playerData->village_count) }}</td>
                                         <td>{{ ($playerData->village_count != 0)?\App\Util\BasicFunctions::numberConv($playerData->points/$playerData->village_count): '-' }}</td>
-                                        <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $conquer, 'playerConquer') !!}</td>
+                                        <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $conquer, 'playerConquer', tooltipSpace: 'ui.conquer.highlight') !!}</td>
                                         <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $playerData->playerID, $allyChanges, 'playerAllyChanges') !!}</td>
                                     </tr>
                                     </tbody>

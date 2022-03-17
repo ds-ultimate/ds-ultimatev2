@@ -114,7 +114,7 @@ class AttackListItem extends CustomModel
             case '1':
                 return __('tool.attackPlanner.standSupport');
             case '7':
-                return __('.tool.attackPlanner.fastSupport');
+                return __('tool.attackPlanner.fastSupport');
             case '46':
                 return __('tool.attackPlanner.fakeSupport');
         }

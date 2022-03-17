@@ -154,3 +154,7 @@ table.dataTable > thead .sorting_desc_disabled:before,
 table.dataTable > thead .sorting_desc_disabled:after {
     bottom: 0 !important;
 }
+
+.nowrap {
+    white-space: nowrap;
+}

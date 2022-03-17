@@ -75,7 +75,7 @@
                                 <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
                                 <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
                                 <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $allyData->allyID, $conquer, 'allyConquer') !!}</td>
+                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $allyData->allyID, $conquer, 'allyConquer', tooltipSpace: 'ui.conquer.highlight') !!}</td>
                                 <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $allyData->allyID, $allyChanges, 'allyAllyChanges') !!}</td>
                             </tr>
                             </tbody>

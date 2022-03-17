@@ -122,29 +122,40 @@ class BasicFunctions
      * @param string|null $class
      * @return string
      */
-    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer, $route, $class = null, $blank=false){
-        $data = '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'all', $itemID]).'">'.
-                BasicFunctions::numberConv($conquer->get('total')).
-                '</a>';
+    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer,
+            $route, $class = null, $blank=false, $tooltipSpace=null){
+        $data = static::linkGeneric(BasicFunctions::numberConv($conquer->get('total')),
+                route($route,[$world->server->code, $world->name, 'all', $itemID]), $class, $blank, [$tooltipSpace, "total"]);
 
         if($conquer->has('new') && $conquer->has('old')) {
             //assume that there will be always gain an loose
+            $appCls = $class ?? "";
             $data .= ' ( ';
-            $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'new', $itemID]).'"><i class="text-success">'.
-                    BasicFunctions::numberConv($conquer->get('new')).
-                    '</i></a> - ';
+            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('new')),
+                    route($route,[$world->server->code, $world->name, 'new', $itemID]), $appCls." text-success", $blank, [$tooltipSpace, "win"]);
+            $data .= ' - ';
 
             if($conquer->has('own')) {
-                $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'own', $itemID]).'"><i class="text-info">'.
-                        BasicFunctions::numberConv($conquer->get('own')).
-                        '</i></a> - ';
+                $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('own')),
+                        route($route,[$world->server->code, $world->name, 'own', $itemID]), $appCls." text-info", $blank, [$tooltipSpace, "self"]);
+                $data .= ' - ';
             }
 
-            $data .= '<a class="'.$class.'" '.($blank?'target="_blank "':'').'href="'.route($route,[$world->server->code, $world->name, 'old', $itemID]).'"><i class="text-danger">'.
-                    BasicFunctions::numberConv($conquer->get('old')).
-                    '</i></a> )';
+            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('old')),
+                    route($route,[$world->server->code, $world->name, 'old', $itemID]), $appCls." text-danger", $blank, [$tooltipSpace, "loose"]);
+            $data .= ' )';
         }
         return $data;
+    }
+    
+    private static function linkGeneric($text, $href, $class=null, $blank=false, $toolT=null) {
+        $t = "";
+        if($toolT != null && $toolT[0] != null) {
+            $t = "title='" . __("{$toolT[0]}.{$toolT[1]}") . "' ";
+        }
+        $trg_blank = $blank ? 'target="_blank "' : '';
+        $cls = ($class !== null)?(" class='$class'"):"";
+        return "<a {$cls}{$trg_blank}{$t}href='$href'>$text</a>";
     }
 
     /**

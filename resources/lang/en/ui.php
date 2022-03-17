@@ -71,6 +71,7 @@ return array (
       'loose' => 'looses',
       'self' => 'self',
       'win' => 'gains',
+      'total' => 'total',
     ),
     'daily' => 'Conquer ranking daily',
   ),

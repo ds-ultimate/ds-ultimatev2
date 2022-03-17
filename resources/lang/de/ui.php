@@ -32,6 +32,7 @@ return array (
       'deleted' => 'Löschungen',
       'win' => 'Gewinne',
       'loose' => 'Verluste',
+      'total' => 'Gesamt',
     ),
     'daily' => 'Adelsrangliste Täglich',
   ),
