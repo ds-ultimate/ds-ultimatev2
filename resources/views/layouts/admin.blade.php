@@ -18,7 +18,8 @@
     @stack('style')
 </head>
 
-<body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
+<body>
+<div class="flex-center main-container">
     @include('admin.shared.menue')
     <div class="admin-content-wrapper">
         @include('admin.shared.header')
@@ -30,10 +31,11 @@
         </div>
     </div>
     @include('footer.standart')
-    
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/datatables.min.js') }}"></script>
-    @stack('js')
+</div>
+
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ asset('js/datatables.min.js') }}"></script>
+@stack('js')
 </body>
 </html>

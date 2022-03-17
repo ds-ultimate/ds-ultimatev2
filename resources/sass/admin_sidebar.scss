@@ -18,6 +18,7 @@ $adminLinkPadding: $adminLinkPaddingTB $adminLinkPaddingLR;
 .admin-content-wrapper {
     transition: margin-left 0.5s;
     margin-left: 250px;
+    flex-grow: 3;
 }
 
 .admin-nav-wrapper > ul {
