@@ -27,7 +27,7 @@ class VillageController extends Controller
         
         $villageHistory = [];
         $last = null;
-        $pointBuildingMap = \App\Util\BuildingUtils::getPointBuildingMap();
+        $pointBuildingMap = \App\Util\BuildingUtils::getPointBuildingMap($worldData);
         foreach($villageHistData as $vilHist) {
             $pntChange = $vilHist->points - ($last->points ?? 0);
             if($pntChange == 0) continue;

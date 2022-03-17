@@ -2,6 +2,8 @@
 
 namespace App\Util;
 
+use App\World;
+
 class BuildingUtils {
     public static $BUILDINGS = [
         'main' => ['min_level' => 1, 'max_level' => 30, 'wood' => 90, 'stone' => 80, 'iron' => 70, 'pop' => 5, 'build_time' => 900, 'point' => 10,
@@ -164,9 +166,26 @@ class BuildingUtils {
         return round($props[$propName] * pow($props[$propName."_factor"], $level-1));
     }
     
-    public static function getPointBuildingMap() {
+    public static function getPointBuildingMap(World $worldData=null) {
+        if($worldData != null && $worldData->buildings != null) {
+            $buildingConfig = simplexml_load_string($worldData->buildings);
+            $names = [];
+            foreach($buildingConfig as $key => $val) {
+                $names[] = $key;
+            }
+        } else {
+            $names = array_keys(static::$BUILDINGS);
+        }
+        
         $map = [];
-        foreach(static::$BUILDINGS as $name => $settings) {
+        foreach($names as $name) {
+            if($name == 'university') continue;
+            if(!isset(static::$BUILDINGS[$name])) {
+                //error silence? don't want to get spam
+                continue;
+            }
+            $settings = static::$BUILDINGS[$name];
+            
             for($i = max($settings['min_level'], 1); $i <= $settings['max_level']; $i++) {
                 $pnt = round($settings['point'] * pow($settings['point_factor'], $i-1));
                 $pnt_last = $i>1 ? round($settings['point'] * pow($settings['point_factor'], $i-2)) : 0;
