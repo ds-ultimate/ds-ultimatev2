@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light bg-footer">
+<nav class="navbar footer-bg">
     <div class="col-12 mx-auto text-center">
         <ul class="list-inline my-0">
             <li class="list-inline-item">

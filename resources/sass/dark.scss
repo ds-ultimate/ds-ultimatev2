@@ -1,23 +1,15 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
-// Variables
-//none since that is handled via bootstrap dark theme
+// General variables
+@import 'variables';
+
 $primaryBg: #000000;
 $secondaryBg: #2D1C08;
-
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
-$table-cell-padding:          .1rem !default;
-$popover-bg: #212529;
-$popover-border-color: #d3d3d3;
-$popover-body-color: #d3d3d3;
-$popover-header-bg: #212529;
-$popover-header-color: #d3d3d3;
+//most colors are beeing handled via bootstrap dark theme
 
 // Bootstrap
-@import '~@forevolve/bootstrap-dark/scss/bootstrap-dark';
+@import 'plugins/bootstrap-dark/bootstrap-dark';
 @import '~bootstrap-datepicker/dist/css/bootstrap-datepicker3.css';
 @import 'plugins/bootstrap-timeline/css/style';
 @import 'select2/src/scss/core';
@@ -26,4 +18,67 @@ $popover-header-color: #d3d3d3;
 // Plugins
 @import "plugins/flag-icon-css/flag-icon.min.css";
 
-@import "customStyles"
+@import "customStyles";
+
+body {
+    background: url(/images/background/background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.nav-bg {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAA8CAYAAAAUufjgAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAC4jAAAuIwF4pT92AAABl0lEQVRo3u2ZQY7DIAxFP1U35hQjzWLuf7ZGQZoN3QyjQHFCiA1ehFUaFPryMASM+/r+iTBYPBHWEPCwCAYAawjwRHYAt2CpmDBYA9vWPSyCTTXYAjbF4BmwoQZ7wIYYvAKmalACTMWgJJioQQ0wEYOaYJcMjgDrMjgS7JTBGWBNBmeC7Rq0AFY1aAksM2gRLDOYltYWy38MJnvWQD9GsTVQdh60Anr4JZkN2vwtngV6ejUzGrR7PTgK9PKKWhtUbE+iBSq+q5MGVdsXS4GqZxaugg7LzfSCDs9unQWdlh9sBZ2eYT0CNZOj5kBN5ahroCaz/CWoScAEd5+T9IKZGsX3OYkG2BSD9znJSDBVg9LnJE8AvwAiACcx8zNgXe2vIeAJYGEaSb+5xiMAV4BxbaTrVMp7tf+JyeBSPLx9AJUGElgsjLnKS8WDOk5IZvAl2JXi8bztYjNgpcHAxAcHVsbVXji0DBZ2AHmiyHZxBcxVYnXvfktxzEtWR/G0rmyKQUtgmUFPtPyB1YZ/zzUO4m9v0s7qPBHeANZflLu6OkcAAAAASUVORK5CYII=');
+    height: 60px;
+}
+
+.footer-bg {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABaCAYAAADKFBSnAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAC4jAAAuIwF4pT92AAACmElEQVRo3u2aS27EIAxA7WikKnOKSl30jj14WLqbIUpSTAz4g0ZlVc0k6euzMQEXP7++f0B5PNcVtpRUnvUAgBUAEADo9RkevqfKd1C4DgBgh7uAEvPs0u/CfP8DAJ5gNBjQpvuzQdPRC5oNrhX119AS8ywspMOfz7eUcujyz8Tcj68/jGohpkrOuRg9GgwZd6A5Bz8geHCgV4Nc/tzlGpdLXNoAU7quObobHCkzJK2NvUZDc1CyGnEhroWXCzlUShEKwkwAgC8w2lI6rSSlesfVPmRCSYVr7pY3uIDl8BIAoNtKIgllqcyUDEoGVsJI0lQ5gLHVIxt8zGKsdO3iCXYsIYLyBVtK9oCNYKdJZmqwE+xPwV6YpSgUrJaDOANYzWAEGJnMYkVjqGrQIpQqBj3BmgxGgIkMRoJVDc4AVjQoBCN3g43G0BP4ua6w5Fdr7RqmmoPHXdRsG6eF2+71Lk+aoWfroAAUPUJ/u5IYhp6GDDqAoorBBlAyncUjZyeW5WZ4T2JdntR2dVagWrs6sgLVMohWRs1PFkZBXU4WRkBdz2Z6QN0M9oK6G2wFjTJIUtAogyg1amGQtEO/KIOpvTTko+LFOmwdYPvxb/gsZg4MMLwOSk8yQg1KDgxCDLacZFgZpFGwEYPUOqNHTst6DKJFKF1z0LpPEglGEoNkCEat6TPUaeowhqM5SN451pqDOAtY0yx+xz4JmRpUMIYmBmdq4JwMzgh2MjjYJ/GZxe/YJ3HZpo70Scw38aK3mQ5QaqyHfQYHQLGxHuLdNkGrTzKah6j6Rl0AJYs81OyTmP1DuGafhGbtk+yhmrVP0jKZKNKgBBS1DJKT0W6DPbPydhWJ7pOIV5H/PokXaMkgzQRaMoiBfMXG+C++ixHs6HX4sQAAAABJRU5ErkJggg==');
+    height: 90px;
+}
+
+.container {
+    background-color: rgba(37, 37, 37, 0.95) !important;
+}
+
+.btn:focus,
+.btn:active,
+.form-control:active,
+.form-control:focus,
+.page-link:active,
+.page-link:focus {
+    box-shadow: 0px 1px 2px 3px rgba(189, 189, 189, 0.2) !important;
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    background-color: #6e6d6d !important;
+}
+
+.fas.fa-star.text-primary,
+.far.fa-star.text-primary {
+    color: rgb(24, 24, 24) !important;
+}
+
+.select2-dropdown {
+    background-color: rgb(78, 78, 78) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted{
+    background-color: #3e3e3f !important;
+    color: #ced4da !important;
+}
+
+.select2-selection,
+.custom-select {
+    background-color: #3e3e3f !important;
+}
+
+.select2-selection__placeholder {
+    color: rgb(202, 202, 202) !important;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
+    background-color: $input-focus-bg;
+}

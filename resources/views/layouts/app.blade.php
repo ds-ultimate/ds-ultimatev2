@@ -12,13 +12,14 @@
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
     @ifdarkmode
         <link href="{{ asset('css/dark.css') }}" rel="stylesheet">
+        <link href="{{ asset('plugin/jquery-ui/dark/jquery-ui.min.css') }}" rel="stylesheet">
     @else
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('plugin/jquery-ui/light/jquery-ui.min.css') }}" rel="stylesheet">
     @endif
     <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
-    <link href="{{ asset('plugin/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet">
     @if (config('app.debug') == false)
         <!-- Matomo -->
         <script type="text/javascript">
@@ -44,7 +45,7 @@
 <body>
 <div class="flex-center main-container">
     @include('nav.standart')
-    <div class="container mb-5 pb-3">
+    <div class="container">
         <div id="toast-content" style="position: fixed; top: 60px; right: 10px; z-index: 100;">
 
         </div>

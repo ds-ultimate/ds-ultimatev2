@@ -45,39 +45,6 @@
     </div>
 @endsection
 
-@push('style')
-<style>
-    .progress-text {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        font-size: 2.25rem;
-        text-align: center;
-        display: inline-block;
-        line-height: initial;
-        mix-blend-mode: difference;
-        color: white;
-        z-index: 2;
-    }
-    
-    .progress-bar {
-        background-color: black;
-    }
-    
-    .progress-bg2 {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        mix-blend-mode: screen;
-        z-index: 3;
-    }
-</style>
-@endpush
-
 @push('js')
 <script>
     var reloadTimeout;

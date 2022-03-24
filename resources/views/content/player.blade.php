@@ -5,12 +5,12 @@
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
-        <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
+        <div class="p-lg-3 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.player')).': '.\App\Util\BasicFunctions::decodeName($playerData->name) }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
-        <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
+        <div class="p-lg-3 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
                 {{ ucfirst(__('ui.titel.player')).': ' }}
             </h1>
@@ -389,7 +389,7 @@
         </div>
         <!-- ENDE Informationen -->
         <!-- Allgemein Chart -->
-        <div class="col-12 col-md-6 mt-2">
+        <div class="col-12 col-md-6 mt-3">
             <div class="card" style=" height: 320px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
@@ -410,7 +410,7 @@
         </div>
         <!-- ENDE Allgemein Chart -->
         <!-- Besiegte Gegner Chart -->
-        <div class="col-12 col-md-6 mt-2">
+        <div class="col-12 col-md-6 mt-3">
             <div class="card" style="height: 320px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:</h4>
@@ -431,7 +431,7 @@
         </div>
         <!-- ENDE Besiegte Gegner Chart -->
         <!-- Datachart Spieler -->
-        <div class="col-12 mt-2">
+        <div class="col-12 mt-3">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ ucfirst(__('ui.tabletitel.villages')) }}</h2>

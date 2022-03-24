@@ -94,7 +94,7 @@ function generateMobileMenuEntry($entry, $level=0) {
     }
 }
 ?>
-<nav class="navbar bg-nav">
+<nav class="navbar fixed-top nav-bg">
     <a class="navbar-brand" href="{{ route('index') }}">
         DS-Ultimate
     </a>
@@ -251,7 +251,11 @@ function generateMobileMenuEntry($entry, $level=0) {
         $('#logout-form').submit();
     });
     $(function () {
-        $('.nav-tooltip').tooltip();
+        $('.nav-tooltip').tooltip({
+            classes: {
+                "ui-tooltip": "ui-corner-all"
+            }
+        });
         $(".navbar-nav .dropdown-item a").parent().click(function (e) {
             window.location.href = $(">a", this)[0].href;
         })

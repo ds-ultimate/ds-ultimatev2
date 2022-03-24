@@ -5,12 +5,12 @@
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
-        <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
+        <div class="p-lg-3 mx-auto my-1 text-center d-none d-lg-block">
             <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.player')).': '.\App\Util\BasicFunctions::decodeName($playerTopData->name) }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
-        <div class="p-lg-5 mx-auto my-1 text-center d-lg-none truncate">
+        <div class="p-lg-3 mx-auto my-1 text-center d-lg-none truncate">
             <h1 class="font-weight-normal">
                 {{ ucfirst(__('ui.titel.player')).': ' }}
             </h1>
@@ -176,133 +176,10 @@
             </div>
         </div>
         <!-- ENDE Informationen -->
-        <!-- Allgemein Chart -->
-        <div class="col-12 col-md-6 mt-2">
-            <div class="card" style=" height: 320px">
-                <div class="card-body">
-                    <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
-                    <select id="statsGeneral" class="form-control form-control-sm">
-                        @for($i = 0; $i < count($statsGeneral); $i++)
-                            <option value="{{ $statsGeneral[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel.'.$statsGeneral[$i]) }}</option>
-                        @endfor
-                    </select>
-                    @for($i = 0; $i < count($statsGeneral); $i++)
-                        <div id="{{ $statsGeneral[$i] }}" class="col-12 position-absolute pl-0 mt-2">
-                            <div class="card mr-4">
-                                <div id="chart-{{ $statsGeneral[$i] }}"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            </div>
-        </div>
-        <!-- ENDE Allgemein Chart -->
-        <!-- Besiegte Gegner Chart -->
-        <div class="col-12 col-md-6 mt-2">
-            <div class="card" style="height: 320px">
-                <div class="card-body">
-                    <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:</h4>
-                    <select id="statsBash" class="form-control form-control-sm">
-                        @for($i = 0; $i < count($statsBash); $i++)
-                            <option value="{{ $statsBash[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel.'.$statsBash[$i]) }}</option>
-                        @endfor
-                    </select>
-                    @for($i = 0; $i < count($statsBash); $i++)
-                        <div id="{{ $statsBash[$i] }}" class="col-12 position-absolute pl-0 mt-2">
-                            <div class="card mr-4">
-                                <div id="chart-{{ $statsBash[$i] }}"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            </div>
-        </div>
-        <!-- ENDE Besiegte Gegner Chart -->
-        <!-- Datachart Spieler -->
-        <div class="col-12 mt-2">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">{{ ucfirst(__('ui.tabletitel.villages')) }}</h2>
-                    <table id="table_id" class="table table-hover table-sm w-100">
-                        <thead>
-                        <tr>
-                            <th>{{ ucfirst(__('ui.table.id')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.continent')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.coordinates')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bonusType')) }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- ENDE Datachart Spieler -->
     </div>
 @endsection
 
 @push('js')
-    <script>
-        $(document).ready(function () {
-            $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
-            $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-            $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[0] }}").css('visibility', 'visible');
-            $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
-        });
-
-        $("#statsGeneral").change(function () {
-            var option1 = $("#statsGeneral").val();
-            if (option1 == '{{ $statsGeneral[0] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsGeneral[1] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'visible');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsGeneral[2] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'visible');
-            }
-        });
-
-        $("#statsBash").change(function () {
-            var option1 = $("#statsBash").val();
-            if (option1 == '{{ $statsBash[0] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[1] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[2] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[3] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[3] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[3] }}").css('visibility', 'visible');
-            }
-        });
-    </script>
     <script>
         $(document).ready( function () {
             $('#data_top1').DataTable({
@@ -358,5 +235,4 @@
             @endisset
         });
     </script>
-    {!! $chartJS !!}
 @endpush

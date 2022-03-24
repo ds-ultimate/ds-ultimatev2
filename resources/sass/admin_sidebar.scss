@@ -1,6 +1,28 @@
 // Variables
 @import 'variables';
 
+// Body
+$body-bg: #f8fafc;
+
+// Colors
+$primary: #edd492;
+$secondary: #7d510f;
+$primaryBg: #fbf6e9;
+$secondaryBg: #edd492;
+$text-color: #7d510f;
+$link-color: #7d510f;
+
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66d9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+
 $adminLinkPaddingLR: 1rem;
 $adminLinkPaddingTB: 1rem;
 $adminLinkPadding: $adminLinkPaddingTB $adminLinkPaddingLR;

@@ -26,6 +26,13 @@ class PlayerController extends Controller
         
         $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
         
+        $conquer = Conquer::playerConquerCounts($server, $world, $player);
+        $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
+        
+        if($playerData == null) {
+            return view('content.playerDeleted', compact('playerTopData', 'conquer', 'worldData', 'server', 'allyChanges', 'playerOtherServers'));
+        }
+        
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash', 'supBash'];
 
@@ -38,13 +45,7 @@ class PlayerController extends Controller
         for ($i = 0; $i < count($statsBash); $i++){
             $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
         }
-
-        $conquer = Conquer::playerConquerCounts($server, $world, $player);
-        $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
         
-        if($playerData == null) {
-            return view('content.playerDeleted', compact('statsGeneral', 'statsBash', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers'));
-        }
         return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers'));
     }
     

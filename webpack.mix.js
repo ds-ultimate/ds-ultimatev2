@@ -65,8 +65,11 @@ mix.copy('resources/sass/plugins/flag-icon-css/flags', 'public/images/flags', fa
 /*
  * jqueryUi
  */
-mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.css', 'public/plugin/jquery-ui/jquery-ui.min.css');
-mix.copy('node_modules/jquery-ui-dist/jquery-ui.min.js', 'public/plugin/jquery-ui/jquery-ui.min.js');
+mix.copy('resources/plugins/jquery-ui/jquery-ui.min.js', 'public/plugin/jquery-ui/jquery-ui.min.js');
+mix.copy('resources/plugins/jquery-ui/light/jquery-ui.min.css', 'public/plugin/jquery-ui/light/jquery-ui.min.css');
+mix.copyDirectory('resources/plugins/jquery-ui/light/images', 'public/plugin/jquery-ui/light/images');
+mix.copy('resources/plugins/jquery-ui/dark/jquery-ui.min.css', 'public/plugin/jquery-ui/dark/jquery-ui.min.css');
+mix.copyDirectory('resources/plugins/jquery-ui/dark/images', 'public/plugin/jquery-ui/dark/images');
 
 
 /*

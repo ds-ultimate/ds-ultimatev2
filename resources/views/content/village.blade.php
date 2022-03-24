@@ -72,7 +72,7 @@
         </div>
         <!-- ENDE Informationen -->
         <!-- Besiegte Punkte Chart -->
-        <div class="col-12 mt-2">
+        <div class="col-12 mt-3">
             <div class="card" style="height: 320px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('chart.titel.points') }}:</h4>
@@ -82,7 +82,7 @@
         </div>
         <!-- ENDE Besiegte Punkte Chart -->
         <!-- Dorfausbau Tabelle -->
-        <div class="col-12 mt-2">
+        <div class="col-12 mt-3">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">{{ucfirst(__('ui.tabletitel.history'))}}</h4>

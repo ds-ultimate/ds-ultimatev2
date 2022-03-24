@@ -24,6 +24,13 @@ class AllyController extends Controller
         abort_if($allyData == null && $allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
                 " auf der Welt '$server$world' vorhanden.");
         
+        $conquer = Conquer::allyConquerCounts($server, $world, $ally);
+        $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
+        
+        if($allyData == null) {
+            return view('content.allyDeleted', compact('conquer', 'worldData', 'server', 'allyChanges', 'allyTopData'));
+        }
+        
         
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash'];
@@ -37,13 +44,7 @@ class AllyController extends Controller
         for ($i = 0; $i < count($statsBash); $i++){
             $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
         }
-
-        $conquer = Conquer::allyConquerCounts($server, $world, $ally);
-        $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
         
-        if($allyData == null) {
-            return view('content.allyDeleted', compact('statsGeneral', 'statsBash', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTopData'));
-        }
         return view('content.ally', compact('statsGeneral', 'statsBash', 'allyData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'allyTopData'));
     }
 

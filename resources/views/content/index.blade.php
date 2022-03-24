@@ -28,7 +28,7 @@
     <!-- News -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 mt-1 mb-3">
-            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="10000" style="border: 1px solid #edd492; border-radius: 0.25rem;">
+            <div id="newsCarousel" class="carousel slide border border-primary rounded" data-ride="carousel" data-interval="10000">
                 <div class="card-body">
                     <h5 class="card-title mb-1">{{ __('ui.news.title') }}:</h5>
                     <ol class="carousel-indicators">
@@ -36,7 +36,7 @@
                             $count = 0;
                         @endphp
                         @foreach($news as $list)
-                            <li data-target="#carouselExampleControls" style="background-color: #edd492" data-slide-to="{{ $count }}" class="{{ ($count == 0)? 'active' : '' }}"></li>
+                            <li data-target="#newsCarousel" data-slide-to="{{ $count }}" class="bg-secondary {{ ($count == 0)? 'active' : '' }}"></li>
                             @php
                                 $count++;
                             @endphp

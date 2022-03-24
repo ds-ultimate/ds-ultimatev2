@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-nav">
+<nav class="navbar fixed-top nav-bg">
     <a class="navbar-brand" href="{{ route('index') }}">
         DS-Ultimate
     </a>
