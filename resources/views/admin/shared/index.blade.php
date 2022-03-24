@@ -57,7 +57,7 @@
     @forceSet($handle)
     @if($handle)
     $.each($('.sortable').get(), function (k,v) {
-        var s = sortable.create(v, {
+        var s = sortable.Sortable.create(v, {
             animation: 300,
             handle: '.handle', // handle's class
             onEnd: function (e) {
