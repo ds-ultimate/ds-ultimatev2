@@ -96,43 +96,55 @@ class Chart
         }
     }
 
-    public static function generateChart($rawData, $chartType){
+    public static function generateChart($rawData, $chartType, $gapFill=false){
         if (!Chart::validType($chartType)) {
             return;
         }
+        $entryDiff = 4*60*60;
         
-        $population = \Lava::DataTable();
-
-        $population->addDateColumn('Tag')
+        $format = \Lava::DateFormat([
+            'pattern' => 'dd.MM HH:mm'
+        ]);
+        
+        $chart = \Lava::DataTable();
+        $chart->addDateTimeColumn(label: 'Tag', format: $format)
             ->addNumberColumn(Chart::chartLabel($chartType));
 
-        $oldTimestamp = 0;
-        $oldTimestampRaw = null;
-        $oldData = null;
-        $i = 0;
+        $old = [
+            't' => null, 'd' => null, 'l' => -1,
+        ];
+        
         foreach ($rawData as $data){
-            if (date('Y-m-d', $data->get('timestamp')) != $oldTimestamp){
-                if($oldTimestampRaw != null && $oldTimestampRaw + 24 * 60 * 60 < $data->get('timestamp')) {
-                    $oldTimestampRaw += 24 * 60 * 60;
-                    while(date('Y-m-d', $data->get('timestamp')) != date('Y-m-d', $oldTimestampRaw)) {
-                        $population->addRow([date('Y-m-d', $oldTimestampRaw), $oldData]);
-                        $oldTimestampRaw += 24 * 60 * 60;
-                    }
+            if($old['t'] != null && $old['t'] != $old['l']) {
+                $oldDiff = abs($old['t'] - $old['l'] - $entryDiff);
+                $newDiff = abs($data->get('timestamp') - $old['l'] - $entryDiff);
+                if($oldDiff < $newDiff) {
+                    static::customAdd($chart, $old['t'], $old['d']);
+                    $old['l'] = $old['t'];
                 }
-                
-                $population->addRow([date('Y-m-d', $data->get('timestamp')), $data->get($chartType)]);
-                $oldTimestamp = date('Y-m-d', $data->get('timestamp'));
-                $oldTimestampRaw = $data->get('timestamp');
-                $oldData = $data->get($chartType);
-                $i++;
+            }
+            
+            if($gapFill && $old['t'] != null) {
+                while($old['t'] + $entryDiff + 300 < $data->get('timestamp')) {
+                    $old['t'] += $entryDiff;
+                    static::customAdd($chart, $old['t'], $old['d']);
+                }
+            }
+            
+            $old['t'] = $data->get('timestamp');
+            $old['d'] = $data->get($chartType);
+            
+            if($old['l'] + $entryDiff - 300 < $data-> get('timestamp')) {
+                static::customAdd($chart, $data->get('timestamp'), $data->get($chartType));
+                $old['l'] = $data->get('timestamp');
             }
         }
-
-        if ($i == 1){
-            $population->addRow([date('Y-m-d', $data->get('timestamp')-60*60*24), 0]);
+        
+        if ($chart->getRowCount() < 2){
+            static::customAdd($chart, $data->get('timestamp')-$entryDiff, 0);
         }
 
-        \Lava::LineChart($chartType, $population, [
+        \Lava::LineChart($chartType, $chart, [
             'title' => Chart::chartTitel($chartType),
             'backgroundColor' => [
                 'fill' => (session('darkmode', false))?('#212529'):('#FFFFFF'),
@@ -157,5 +169,9 @@ class Chart
         ]);
 
         return \Lava::render('LineChart', $chartType, 'chart-'.$chartType);
+    }
+    
+    private static function customAdd($chart, $date, $val) {
+        $chart->addRow([date('Y-m-d H:i:s', $date), $val]);
     }
 }

@@ -22,7 +22,7 @@ class VillageController extends Controller
         
         $villageHistData = $villageData->getHistoryData();
         $datas = Village::pureVillageDataChart($villageHistData);
-        $chartJS = Chart::generateChart($datas, 'points');
+        $chartJS = Chart::generateChart($datas, 'points', gapFill: true);
         $conquer = Conquer::villageConquerCounts($server, $world, $village);
         
         $villageHistory = [];
