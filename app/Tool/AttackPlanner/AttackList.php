@@ -9,12 +9,12 @@
 namespace App\Tool\AttackPlanner;
 
 
+use App\CustomModel;
 use App\World;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
-class AttackList extends Model
+class AttackList extends CustomModel
 {
     use SoftDeletes;
 
@@ -32,6 +32,10 @@ class AttackList extends Model
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+    
+    protected $cache = [
+        'world',
     ];
 
     /**

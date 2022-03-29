@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Util\BasicFunctions;
 use App\Console\DatabaseUpdate\DoWorldData;
 use Illuminate\Console\Command;
 
@@ -43,7 +44,7 @@ class UpdateWorldData extends Command
         
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             if($server == "*" && $world == "*") {
-                foreach(\App\Util\BasicFunctions::getWorldQuery()->get() as $dbWorld) {
+                foreach(BasicFunctions::getWorldQuery()->get() as $dbWorld) {
                     DoWorldData::run($dbWorld, $this->argument('part'));
                 }
             } else {

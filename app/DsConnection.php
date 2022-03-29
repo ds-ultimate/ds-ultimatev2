@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class DsConnection extends Model
+class DsConnection extends CustomModel
 {
     protected $fillable = [
         'user_id', 'world_id', 'player_id', 'key',
@@ -13,6 +11,10 @@ class DsConnection extends Model
     protected $dates = [
         'created_at',
         'updated_at',
+    ];
+    
+    protected $cache = [
+        'world',
     ];
 
     public function user(){

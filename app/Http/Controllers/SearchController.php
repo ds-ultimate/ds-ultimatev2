@@ -40,47 +40,47 @@ class SearchController extends Controller
     public static function searchPlayer($server, $search){
         $worlds = Server::getWorldsByCode($server);
         $player = new PlayerTop();
-        $playerCollect = collect();
+        $allPlayer = [];
 
         foreach ($worlds as $world){
             $player->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_top');
             foreach ($player->where('name', 'LIKE', '%'. BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $players = collect();
-                $players->put('world', $world);
-                $players->put('player', $data);
-                $playerCollect->push($players);
+                $allPlayer = [
+                    'world' => $world,
+                    'player' => $data,
+                ];
                 
-                if($playerCollect->count() >= SearchController::$limit)
-                    return $playerCollect;
+                if(count($allPlayer) >= SearchController::$limit)
+                    return $allPlayer;
             }
         }
-        return $playerCollect;
+        return $allPlayer;
     }
 
     public static function searchAlly($server, $search){
         $worlds = Server::getWorldsByCode($server);
         $ally = new AllyTop();
-        $allyCollect = collect();
+        $allAlly = [];
 
         foreach ($worlds as $world){
             $ally->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.ally_top');
             foreach ($ally->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $allys = collect();
-                $allys->put('world', $world);
-                $allys->put('ally', $data);
-                $allyCollect->push($allys);
+                $allAlly = [
+                    'world' => $world,
+                    'ally' => $data,
+                ];
                 
-                if($allyCollect->count() >= SearchController::$limit)
-                    return $allyCollect;
+                if(count($allAlly) >= SearchController::$limit)
+                    return $allAlly;
             }
         }
-        return $allyCollect;
+        return $allAlly;
     }
 
     public static function searchVillage($server, $search){
         $worlds = Server::getWorldsByCode($server);
         $village = new Village();
-        $villageCollect = collect();
+        $allVillage = [];
 
         $coordsearch = false;
         if(strpos($search, '|') !== false) {
@@ -97,28 +97,28 @@ class SearchController extends Controller
         foreach ($worlds as $world){
             $village->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
             foreach ($village->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $villages = collect();
-                $villages->put('world', $world);
-                $villages->put('village', $data);
-                $villageCollect->push($villages);
+                $allVillage = [
+                    'world' => $world,
+                    'village' => $data,
+                ];
                 
-                if($villageCollect->count() >= SearchController::$limit)
-                    return $villageCollect;
+                if(count($allVillage) >= SearchController::$limit)
+                    return $allVillage;
             }
 
             if($coordsearch) {
                 foreach ($village->where('x', 'LIKE', '%'.BasicFunctions::likeSaveEscape($searchExp[0]).'%')
                         ->where('y', 'LIKE', '%'.BasicFunctions::likeSaveEscape($searchExp[1]).'%')->get() as $data){
-                    $villages = collect();
-                    $villages->put('world', $world);
-                    $villages->put('village', $data);
-                    $villageCollect->push($villages);
-                    
-                    if($villageCollect->count() >= SearchController::$limit)
-                        return $villageCollect;
+                    $allVillage = [
+                        'world' => $world,
+                        'village' => $data,
+                    ];
+
+                    if(count($allVillage) >= SearchController::$limit)
+                        return $allVillage;
                 }
             }
         }
-        return $villageCollect;
+        return $allVillage;
     }
 }

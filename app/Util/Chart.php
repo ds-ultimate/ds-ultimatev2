@@ -103,7 +103,7 @@ class Chart
         $entryDiff = 4*60*60;
         
         $format = \Lava::DateFormat([
-            'pattern' => 'dd.MM HH:mm'
+            'pattern' => 'dd.MM.yyyy HH:mm'
         ]);
         
         $chart = \Lava::DataTable();
@@ -117,7 +117,7 @@ class Chart
         foreach ($rawData as $data){
             if($old['t'] != null && $old['t'] != $old['l']) {
                 $oldDiff = abs($old['t'] - $old['l'] - $entryDiff);
-                $newDiff = abs($data->get('timestamp') - $old['l'] - $entryDiff);
+                $newDiff = abs($data['timestamp'] - $old['l'] - $entryDiff);
                 if($oldDiff < $newDiff) {
                     static::customAdd($chart, $old['t'], $old['d']);
                     $old['l'] = $old['t'];
@@ -125,23 +125,23 @@ class Chart
             }
             
             if($gapFill && $old['t'] != null) {
-                while($old['t'] + $entryDiff + 300 < $data->get('timestamp')) {
+                while($old['t'] + $entryDiff + 300 < $data['timestamp']) {
                     $old['t'] += $entryDiff;
                     static::customAdd($chart, $old['t'], $old['d']);
                 }
             }
             
-            $old['t'] = $data->get('timestamp');
-            $old['d'] = $data->get($chartType);
+            $old['t'] = $data['timestamp'];
+            $old['d'] = $data[$chartType];
             
-            if($old['l'] + $entryDiff - 300 < $data-> get('timestamp')) {
-                static::customAdd($chart, $data->get('timestamp'), $data->get($chartType));
-                $old['l'] = $data->get('timestamp');
+            if($old['l'] + $entryDiff - 300 < $data['timestamp']) {
+                static::customAdd($chart, $data['timestamp'], $data[$chartType]);
+                $old['l'] = $data['timestamp'];
             }
         }
         
         if ($chart->getRowCount() < 2){
-            static::customAdd($chart, $data->get('timestamp')-$entryDiff, 0);
+            static::customAdd($chart, $data['timestamp'] - $entryDiff, 0);
         }
 
         \Lava::LineChart($chartType, $chart, [

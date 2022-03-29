@@ -46,7 +46,7 @@ class PictureController extends Controller
         $rawStatData = Ally::allyDataChart($server, $world, $allyID);
         $statData = array();
         foreach ($rawStatData as $rawData){
-            $statData[$rawData->get('timestamp')] = $rawData->get($type);
+            $statData[$rawData['timestamp']] = $rawData[$type];
         }
         
         $name = \App\Util\BasicFunctions::decodeName($allyData->name);
@@ -79,7 +79,7 @@ class PictureController extends Controller
         $rawStatData = Player::playerDataChart($server, $world, $playerID);
         $statData = array();
         foreach ($rawStatData as $rawData){
-            $statData[$rawData->get('timestamp')] = $rawData->get($type);
+            $statData[$rawData['timestamp']] = $rawData[$type];
         }
         
         $name = \App\Util\BasicFunctions::decodeName($playerData->name);
@@ -111,7 +111,7 @@ class PictureController extends Controller
         $rawStatData = Village::villageDataChart($server, $world, $villageID);
         $statData = array();
         foreach ($rawStatData as $rawData){
-            $statData[$rawData->get('timestamp')] = $rawData->get($type);
+            $statData[$rawData['timestamp']] = $rawData[$type];
         }
         
         $name = \App\Util\BasicFunctions::decodeName($villageData->name);

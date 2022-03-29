@@ -17,7 +17,6 @@ use App\Village;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
-use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
 {

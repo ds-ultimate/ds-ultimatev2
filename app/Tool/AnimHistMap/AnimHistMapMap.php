@@ -3,6 +3,7 @@
 namespace App\Tool\AnimHistMap;
 
 use App\AllyTop;
+use App\CustomModel;
 use App\HistoryIndex;
 use App\PlayerTop;
 use App\Village;
@@ -10,10 +11,9 @@ use App\World;
 use App\Tool\Map\Map;
 use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AnimHistMapMap extends Model
+class AnimHistMapMap extends CustomModel
 {
     use SoftDeletes;
 
@@ -49,6 +49,10 @@ class AnimHistMapMap extends Model
         'showLegend',
         'legendSize',
         'legendPosition',
+    ];
+    
+    protected $cache = [
+        'world',
     ];
 
     public static $copyToJob = [

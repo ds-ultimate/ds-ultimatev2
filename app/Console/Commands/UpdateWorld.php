@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Console\DatabaseUpdate\DoWorld;
-use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 
 class UpdateWorld extends Command

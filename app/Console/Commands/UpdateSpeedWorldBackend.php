@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\SpeedWorld;
 use App\Console\DatabaseUpdate\DoSpeedWorldBackend;
 use Illuminate\Console\Command;
 

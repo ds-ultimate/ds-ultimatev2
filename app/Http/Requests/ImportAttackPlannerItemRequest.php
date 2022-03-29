@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Input;
 
 class ImportAttackPlannerItemRequest extends FormRequest
 {

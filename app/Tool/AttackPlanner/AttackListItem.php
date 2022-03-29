@@ -13,8 +13,6 @@ use App\CustomModel;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\Tool\AttackPlanner\AttackList as AttackList;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AttackListItem extends CustomModel
 {
@@ -47,6 +45,10 @@ class AttackListItem extends CustomModel
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+    
+    protected $cache = [
+        'attack_list_id',
     ];
 
     private static $unit = [

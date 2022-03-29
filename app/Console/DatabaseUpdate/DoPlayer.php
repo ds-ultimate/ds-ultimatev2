@@ -34,24 +34,25 @@ class DoPlayer
         $lines = DoWorldData::loadGzippedFile($world, "player.txt.gz", $minTime);
         if($lines === false) return false;
 
-        $players = collect();
-        $playerOffs = collect();
-        $playerDefs = collect();
-        $playerSups = collect();
-        $playerTots = collect();
+        $players = [];
+        $playerOffs = [];
+        $playerDefs = [];
+        $playerSups = [];
+        $playerTots = [];
 
         foreach($lines as $line) {
             $line = trim($line);
             if($line == "") continue;
             list($id, $name, $ally, $villages, $points, $rank) = explode(',', $line);
-            $player = collect();
-            $player->put('id', (int)$id);
-            $player->put('name', $name);
-            $player->put('ally', (int)$ally);
-            $player->put('villages', (int)$villages);
-            $player->put('points', (int)$points);
-            $player->put('rank', (int)$rank);
-            $players->put($player->get('id'),$player);
+            $player = [
+                'id' => (int)$id,
+                'name' => $name,
+                'ally' => (int)$ally,
+                'villages' => (int)$villages,
+                'points' => (int)$points,
+                'rank' => (int)$rank,
+            ];
+            $players[$player['id']] = $player;
         }
         
         $offs = DoWorldData::loadGzippedFile($world, "kill_att.txt.gz", $minTime);
@@ -60,10 +61,10 @@ class DoPlayer
             $off = trim($off);
             if($off == "") continue;
             list($rank, $id, $kills) = explode(',', $off);
-            $playerOff = collect();
-            $playerOff->put('offRank', (int)$rank);
-            $playerOff->put('off', (int)$kills);
-            $playerOffs->put($id, $playerOff);
+            $playerOffs[$id] = [
+                'offRank' => (int) $rank,
+                'off' => (int) $kills,
+            ];
         }
 
         $defs = DoWorldData::loadGzippedFile($world, "kill_def.txt.gz", $minTime);
@@ -72,10 +73,10 @@ class DoPlayer
             $def = trim($def);
             if($def == "") continue;
             list($rank, $id, $kills) = explode(',', $def);
-            $playerDef = collect();
-            $playerDef->put('defRank', (int)$rank);
-            $playerDef->put('def', (int)$kills);
-            $playerDefs->put($id, $playerDef);
+            $playerDefs[$id] = [
+                'defRank' => (int) $rank,
+                'def' => (int) $kills,
+            ];
         }
 
         $sups = DoWorldData::loadGzippedFile($world, "kill_sup.txt.gz", $minTime);
@@ -84,10 +85,10 @@ class DoPlayer
             $sup = trim($sup);
             if($sup == "") continue;
             list($rank, $id, $kills) = explode(',', $sup);
-            $playerSup = collect();
-            $playerSup->put('supRank', (int)$rank);
-            $playerSup->put('sup', (int)$kills);
-            $playerSups->put($id, $playerSup);
+            $playerSups[$id] = [
+                'supRank' => (int) $rank,
+                'sup' => (int) $kills,
+            ];
         }
 
         $tots = DoWorldData::loadGzippedFile($world, "kill_all.txt.gz", $minTime);
@@ -96,55 +97,55 @@ class DoPlayer
             $tot = trim($tot);
             if($tot == "") continue;
             list($rank, $id, $kills) = explode(',', $tot);
-            $playerTot = collect();
-            $playerTot->put('totRank', (int)$rank);
-            $playerTot->put('tot', (int)$kills);
-            $playerTots->put($id, $playerTot);
+            $playerTot[$id] = [
+                'totRank' => (int) $rank,
+                'tot' => (int) $kills,
+            ];
         }
         
         
         $playerChange = new Player();
         $playerChange->setTable($dbName . '.player_latest');
-        $databasePlayer = array();
+        $databasePlayer = [];
         foreach ($playerChange->get() as $player) {
             $databasePlayer[$player->playerID] = $player->ally_id;
         }
 
         $insert = new Player();
         $insert->setTable($dbName.'.player_latest_temp');
-        $arrayAllyChange = array();
+        $arrayAllyChange = [];
         $insertTime = Carbon::now();
         $arrayPlayer = [];
         
         foreach ($players as $player) {
-            $id = $player->get('id');
+            $id = $player['id'];
             $dataPlayer = [
-                'playerID' => $player->get('id'),
-                'name' => $player->get('name'),
-                'ally_id' => $player->get('ally'),
-                'village_count' => $player->get('villages'),
-                'points' => $player->get('points'),
-                'rank' => $player->get('rank'),
-                'offBash' => (is_null($playerOffs->get($id)))? 0 :$playerOffs->get($id)->get('off'),
-                'offBashRank' => (is_null($playerOffs->get($id)))? null : $playerOffs->get($id)->get('offRank'),
-                'defBash' => (is_null($playerDefs->get($id)))? 0 : $playerDefs->get($id)->get('def'),
-                'defBashRank' => (is_null($playerDefs->get($id)))? null : $playerDefs->get($id)->get('defRank'),
-                'supBash' => (is_null($playerSups->get($id)))? 0 : $playerSups->get($id)->get('sup'),
-                'supBashRank' => (is_null($playerSups->get($id)))? null : $playerSups->get($id)->get('supRank'),
-                'gesBash' => (is_null($playerTots->get($id)))? 0 : $playerTots->get($id)->get('tot'),
-                'gesBashRank' => (is_null($playerTots->get($id)))? null : $playerTots->get($id)->get('totRank'),
+                'playerID' => $player['id'],
+                'name' => $player['name'],
+                'ally_id' => $player['ally'],
+                'village_count' => $player['villages'],
+                'points' => $player['points'],
+                'rank' => $player['rank'],
+                'offBash' => (isset($playerOffs[$id]))? $playerOffs[$id]['off'] : 0,
+                'offBashRank' => (isset($playerOffs[$id]))? $playerOffs[$id]['offRank'] : null,
+                'defBash' => (isset($playerDefs[$id]))? $playerDefs[$id]['def'] : 0,
+                'defBashRank' => (isset($playerDefs[$id]))? $playerDefs[$id]['defRank'] : null,
+                'supBash' => (isset($playerSups[$id]))? $playerSups[$id]['sup'] : 0,
+                'supBashRank' => (isset($playerSups[$id]))? $playerSups[$id]['supRank'] : null,
+                'gesBash' => (isset($playerTots[$id]))? $playerTots[$id]['tot'] : 0,
+                'gesBashRank' => (isset($playerTots[$id]))? $playerTots[$id]['totRank'] : null,
                 'created_at' => $insertTime,
                 'updated_at' => $insertTime,
             ];
             $arrayPlayer []= $dataPlayer;
 
-            if((isset($databasePlayer[$player->get('id')]) && $databasePlayer[$player->get('id')] != $player->get('ally')) ||
-                    (!isset($databasePlayer[$player->get('id')]) && $player->get('ally') != 0)) {
+            if((isset($databasePlayer[$player['id']]) && $databasePlayer[$player['id']] != $player['ally']) ||
+                    (!isset($databasePlayer[$player['id']]) && $player['ally'] != 0)) {
                 $arrayAllyChange[] = [
-                    'player_id' => $player->get('id'),
-                    'old_ally_id' => $databasePlayer[$player->get('id')] ?? 0,
-                    'new_ally_id' => $player->get('ally'),
-                    'points' => $player->get('points'),
+                    'player_id' => $player['id'],
+                    'old_ally_id' => $databasePlayer[$player['id']] ?? 0,
+                    'new_ally_id' => $player['ally'],
+                    'points' => $player['points'],
                     'created_at' => $insertTime,
                     'updated_at' => $insertTime,
                 ];

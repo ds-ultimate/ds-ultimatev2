@@ -3,7 +3,6 @@
 namespace App\Console;
 
 use App\Console\Commands\Tools\RenderAnimatedMaps;
-use App\Console\Commands\UpdateSpeedWorldBackend;
 use App\Console\DatabaseUpdate\UpdateUtil;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -105,7 +104,7 @@ class Kernel extends ConsoleKernel
          * Generate next animatedWorldMap
          */
         $schedule->command("animHistMap:render")
-            ->everyFiveMinutes()
+            ->everyMinute()
             ->withoutOverlapping()
             ->skip(! RenderAnimatedMaps::renderNeeded())
             ->onSuccess(function (){

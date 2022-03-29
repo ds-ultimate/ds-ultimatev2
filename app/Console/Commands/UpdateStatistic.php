@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Console\DatabaseUpdate\DoConquer;
 use App\Console\DatabaseUpdate\DoStatistic;
 use App\Util\BasicFunctions;
-use App\World;
 use Illuminate\Console\Command;
 
 class UpdateStatistic extends Command

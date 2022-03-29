@@ -13,7 +13,7 @@
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    @if($worldsActive->get('world') != null && count($worldsActive->get('world')) > 0)
+                    @if(isset($worldsActive['world']) && count($worldsActive['world']) > 0)
                     <h2 class="card-title">{{ __('ui.tabletitel.normalWorlds') }}:</h2>
                     <table class="table table-hover table-striped no-wrap w-100">
                         <thead>
@@ -25,7 +25,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($worldsActive->get('world') as $world)
+                        @foreach($worldsActive['world'] as $world)
                             <tr>
                                 <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                     <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -43,7 +43,7 @@
                         </tbody>
                     </table>
                     @endif
-                    @if ($worldsInactive->get('world') != null && count($worldsInactive->get('world')) > 0)
+                    @if (isset($worldsInactive['world']) && count($worldsInactive['world']) > 0)
                         <div class="w-100 text-center my-3">
                             <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#inactive1" aria-expanded="false" aria-controls="inactive1" type="button">
                                 {{__('ui.showMoreWorlds')}}</button>
@@ -60,7 +60,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($worldsInactive->get('world') as $world)
+                                @foreach($worldsInactive['world'] as $world)
                                     <tr>
                                         <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                             <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -87,7 +87,7 @@
         <div class="col-12 col-md-6 mt-2">
             <div class="card">
                 <div class="card-body">
-                    @if (($worldsActive->get('casual') != null && count($worldsActive->get('casual')) > 0) || ($worldsActive->get('speed') != null && count($worldsActive->get('speed')) > 0) || ($worldsActive->get('classic') != null && count($worldsActive->get('classic')) > 0))
+                    @if ((isset($worldsActive['casual']) && count($worldsActive['casual']) > 0) || (isset($worldsActive['speed']) && count($worldsActive['speed']) > 0) || (isset($worldsActive['classic']) && count($worldsActive['classic']) > 0))
                     <h2 class="card-title">{{ __('ui.tabletitel.specialWorlds') }}:</h2>
                     <table class="table table-hover table-striped no-wrap w-100">
                         <thead>
@@ -99,8 +99,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if($worldsActive->get('speed') != null && count($worldsActive->get('speed')) > 0)
-                            @foreach($worldsActive->get('speed') as $world)
+                        @if(isset($worldsActive['casual']) && count($worldsActive['casual']) > 0)
+                            @foreach($worldsActive['casual'] as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -116,8 +116,8 @@
                                 </tr>
                             @endforeach
                         @endif
-                        @if($worldsActive->get('casual') != null && count($worldsActive->get('casual')) > 0)
-                            @foreach($worldsActive->get('casual') as $world)
+                        @if(isset($worldsActive['classic']) && count($worldsActive['classic']) > 0)
+                            @foreach($worldsActive['classic'] as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -133,8 +133,8 @@
                                 </tr>
                             @endforeach
                         @endif
-                        @if($worldsActive->get('classic') != null && count($worldsActive->get('classic')) > 0)
-                            @foreach($worldsActive->get('classic') as $world)
+                        @if(isset($worldsActive['speed']) && count($worldsActive['speed']) > 0)
+                            @foreach($worldsActive['speed'] as $world)
                                 <tr>
                                     <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                         <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -153,7 +153,7 @@
                         </tbody>
                     </table>
                     @endif
-                    @if (($worldsInactive->get('casual') != null && count($worldsInactive->get('casual')) > 0) || ($worldsInactive->get('speed') != null && count($worldsInactive->get('speed')) > 0) || ($worldsInactive->get('classic') != null && count($worldsInactive->get('classic')) > 0))
+                    @if ((isset($worldsInactive['casual']) && count($worldsInactive['casual']) > 0) || (isset($worldsInactive['speed']) && count($worldsInactive['speed']) > 0) || (isset($worldsInactive['classic']) && count($worldsInactive['classic']) > 0))
                         <div class="w-100 text-center my-3">
                             <button class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#inactive2" aria-expanded="false" aria-controls="inactive2" type="button">
                                 {{__('ui.showMoreWorlds')}}</button>
@@ -170,8 +170,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if($worldsInactive->get('speed') != null && count($worldsInactive->get('speed')) > 0)
-                                    @foreach($worldsInactive->get('speed') as $world)
+                                @if(isset($worldsInactive['casual']) && count($worldsInactive['casual']) > 0)
+                                    @foreach($worldsInactive['casual'] as $world)
                                         <tr>
                                             <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -187,8 +187,8 @@
                                         </tr>
                                     @endforeach
                                 @endif
-                                @if($worldsInactive->get('casual') != null && count($worldsInactive->get('casual')) > 0)
-                                    @foreach($worldsInactive->get('casual') as $world)
+                                @if(isset($worldsInactive['classic']) && count($worldsInactive['classic']) > 0)
+                                    @foreach($worldsInactive['classic'] as $world)
                                         <tr>
                                             <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
@@ -204,8 +204,8 @@
                                         </tr>
                                     @endforeach
                                 @endif
-                                @if($worldsInactive->get('classic') != null && count($worldsInactive->get('classic')) > 0)
-                                    @foreach($worldsInactive->get('classic') as $world)
+                                @if(isset($worldsInactive['speed']) && count($worldsInactive['speed']) > 0)
+                                    @foreach($worldsInactive['speed'] as $world)
                                         <tr>
                                             <td><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
                                                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>

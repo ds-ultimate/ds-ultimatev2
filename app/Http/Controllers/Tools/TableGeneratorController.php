@@ -8,8 +8,6 @@
 
 namespace App\Http\Controllers\Tools;
 
-
-use App\Ally;
 use App\Player;
 use App\Util\BasicFunctions;
 use App\Village;

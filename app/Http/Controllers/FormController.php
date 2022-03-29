@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Bugreport;
 use App\Http\Requests\BugreportRequest;
 use App\Permission;
-use App\User;
 use App\Util\BasicFunctions;
-use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
@@ -17,13 +15,9 @@ class FormController extends Controller
     }
 
     public function bugreportStore(BugreportRequest $request){
-
         $bugreport = Bugreport::create($request->all());
-
         $permission = Permission::where('title', 'bugreport_notification')->first();
-
         $roles = $permission->roles;
-
         $users = collect();
 
         foreach ($roles as $role){

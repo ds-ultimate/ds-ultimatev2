@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Conquer;
 use App\Ally;
 use App\AllyTop;
-use App\Player;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
 use App\World;

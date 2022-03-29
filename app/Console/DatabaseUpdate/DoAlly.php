@@ -25,24 +25,25 @@ class DoAlly
         $lines = DoWorldData::loadGzippedFile($world, "ally.txt.gz", $minTime);
         if($lines === false) return false;
 
-        $allys = collect();
-        $allyOffs = collect();
-        $allyDefs = collect();
-        $allyTots = collect();
+        $allys = [];
+        $allyOffs = [];
+        $allyDefs = [];
+        $allyTots = [];
 
         foreach ($lines as $line){
             $line = trim($line);
             if($line == "") continue;
             list($id, $name, $tag, $members, $villages, $points, $points_all, $rank) = explode(',', $line);
-            $ally = collect();
-            $ally->put('id', (int)$id);
-            $ally->put('name', $name);
-            $ally->put('tag', $tag);
-            $ally->put('member_count', (int)$members);
-            $ally->put('points', (int)$points_all);
-            $ally->put('village_count', (int)$villages);
-            $ally->put('rank', (int)$rank);
-            $allys->put($ally->get('id'),$ally);
+            $ally = [
+                'id' => (int)$id,
+                'name' => $name,
+                'tag' => $tag,
+                'member_count' => (int)$members,
+                'points' => (int)$points_all,
+                'village_count' => (int)$villages,
+                'rank' => (int)$rank,
+            ];
+            $allys[$ally['id']] = $ally;
         }
 
         $offs = DoWorldData::loadGzippedFile($world, "kill_att_tribe.txt.gz", $minTime);
@@ -51,11 +52,10 @@ class DoAlly
             $off = trim($off);
             if($off == "") continue;
             list($rank, $id, $kills) = explode(',', $off);
-            $allyOff = collect();
-            $allyOff->put('offRank', (int)$rank);
-            $allyOff->put('off', (int)$kills);
-            $allyOffs->put($id, $allyOff);
-
+            $allyOffs[$id] = [
+                'offRank' => (int) $rank,
+                'off' => (int) $kills,
+            ];
         }
 
         $defs = DoWorldData::loadGzippedFile($world, "kill_def_tribe.txt.gz", $minTime);
@@ -64,10 +64,10 @@ class DoAlly
             $def = trim($def);
             if($def == "") continue;
             list($rank, $id, $kills) = explode(',', $def);
-            $allyDef = collect();
-            $allyDef->put('defRank', (int)$rank);
-            $allyDef->put('def', (int)$kills);
-            $allyDefs->put($id, $allyDef);
+            $allyDefs[$id] = [
+                'defRank' => (int) $rank,
+                'def' => (int) $kills,
+            ];
         }
 
         $tots = DoWorldData::loadGzippedFile($world, "kill_all_tribe.txt.gz", $minTime);
@@ -76,10 +76,10 @@ class DoAlly
             $tot = trim($tot);
             if($tot == "") continue;
             list($rank, $id, $kills) = explode(',', $tot);
-            $allyTot = collect();
-            $allyTot->put('totRank', (int)$rank);
-            $allyTot->put('tot', (int)$kills);
-            $allyTots->put($id, $allyTot);
+            $allyTots[$id] = [
+                'totRank' => (int) $rank,
+                'tot' => (int) $kills,
+            ];
         }
 
         $insert = new Ally();
@@ -88,21 +88,21 @@ class DoAlly
         $insertTime = Carbon::now();
         
         foreach ($allys as $ally) {
-            $id = $ally->get('id');
+            $id = $ally['id'];
             $data = [
-                'allyID' => $ally->get('id'),
-                'name' => $ally->get('name'),
-                'tag' => $ally->get('tag'),
-                'member_count' => $ally->get('member_count'),
-                'points' => $ally->get('points'),
-                'village_count' => $ally->get('village_count'),
-                'rank' => $ally->get('rank'),
-                'offBash' => (is_null($allyOffs->get($id)))? 0 :$allyOffs->get($id)->get('off'),
-                'offBashRank' => (is_null($allyOffs->get($id)))? null : $allyOffs->get($id)->get('offRank'),
-                'defBash' => (is_null($allyDefs->get($id)))? 0 : $allyDefs->get($id)->get('def'),
-                'defBashRank' => (is_null($allyDefs->get($id)))? null : $allyDefs->get($id)->get('defRank'),
-                'gesBash' => (is_null($allyTots->get($id)))? 0 : $allyTots->get($id)->get('tot'),
-                'gesBashRank' => (is_null($allyTots->get($id)))? null : $allyTots->get($id)->get('totRank'),
+                'allyID' => $ally['id'],
+                'name' => $ally['name'],
+                'tag' => $ally['tag'],
+                'member_count' => $ally['member_count'],
+                'points' => $ally['points'],
+                'village_count' => $ally['village_count'],
+                'rank' => $ally['rank'],
+                'offBash' => (isset($allyOffs[$id]))? $allyOffs[$id]['off'] : 0,
+                'offBashRank' => (isset($allyOffs[$id]))? $allyOffs[$id]['offRank'] : null,
+                'defBash' => (isset($allyDefs[$id]))? $allyDefs[$id]['def'] : 0,
+                'defBashRank' => (isset($allyDefs[$id]))? $allyDefs[$id]['defRank'] : null,
+                'gesBash' => (isset($allyTots[$id]))? $allyTots[$id]['tot'] : 0,
+                'gesBashRank' => (isset($allyTots[$id]))? $allyTots[$id]['totRank'] : null,
                 'created_at' => $insertTime,
                 'updated_at' => $insertTime,
             ];

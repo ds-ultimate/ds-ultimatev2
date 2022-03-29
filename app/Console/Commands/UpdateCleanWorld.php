@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\World;
 use App\Console\DatabaseUpdate\DoClean;
-use App\Console\DatabaseUpdate\UpdateUtil;
 use Illuminate\Console\Command;
 
 class UpdateCleanWorld extends Command

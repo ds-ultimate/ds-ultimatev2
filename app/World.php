@@ -3,11 +3,9 @@
 namespace App;
 
 use App\Util\BasicFunctions;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 
-class World extends Model
+class World extends CustomModel
 {
     use SoftDeletes;
 
@@ -36,6 +34,10 @@ class World extends Model
         'buildings',
         'active',
         'display_name',
+    ];
+    
+    protected $cache = [
+        'server',
     ];
 
     /**
@@ -109,38 +111,38 @@ class World extends Model
      * @return \Illuminate\Support\Collection
      */
     public static function worldsCollection($server){
-        $worldsArray = collect();
+        $worldsArray = [];
 
         foreach (Server::getWorldsByCode($server) as $worldData){
-            if (! $worldsArray->has($worldData->sortType())) {
-                $worldsArray[$worldData->sortType()] = collect();
+            if (! isset($worldsArray[$worldData->sortType()])) {
+                $worldsArray[$worldData->sortType()] = [];
             }
-            $worldsArray[$worldData->sortType()]->push($worldData);
+            $worldsArray[$worldData->sortType()][] = $worldData;
         }
         return $worldsArray;
     }
 
-    public static function worldsCollectionActiveSorter(Collection $worldTypes){
-        $collect = collect();
-        $active = collect();
-        $inactive = collect();
+    public static function worldsCollectionActiveSorter($worldTypes){
+        $collect = [];
+        $active = [];
+        $inactive = [];
         foreach ($worldTypes as $key => $worldType){
             foreach ($worldType as $world){
                 if ($world->active){
-                    if (! $active->has($key)) {
-                        $active[$key] = collect();
+                    if (! isset($active[$key])) {
+                        $active[$key] = [];
                     }
-                    $active[$key]->push($world);
+                    $active[$key][] = $world;
                 }else{
-                    if (! $inactive->has($key)) {
-                        $inactive[$key] = collect();
+                    if (! isset($inactive[$key])) {
+                        $inactive[$key] = [];
                     }
-                    $inactive[$key]->push($world);
+                    $inactive[$key][] = $world;
                 }
             }
         }
-        $collect->put('active', $active);
-        $collect->put('inactive', $inactive);
+        $collect['active'] = $active;
+        $collect['inactive'] = $inactive;
         return $collect;
     }
 

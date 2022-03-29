@@ -30,8 +30,8 @@ class ContentController extends Controller
         World::existServer($server);
         $worldsArray = World::worldsCollection($server);
         $worldsArrays = World::worldsCollectionActiveSorter($worldsArray);
-        $worldsActive = $worldsArrays->get('active');
-        $worldsInactive = $worldsArrays->get('inactive');
+        $worldsActive = $worldsArrays['active'];
+        $worldsInactive = $worldsArrays['inactive'];
         return view('content.server', compact('worldsActive', 'worldsInactive', 'server'));
     }
 
@@ -123,19 +123,19 @@ class ContentController extends Controller
 
         foreach($serverArray as $server) {
             $worldsArray = World::worldsCollection($server->code);
-            $servers[$server->code] = collect();
+            $servers[$server->code] = [];
 
             if($worldsArray->get('world') != null && count($worldsArray->get('world')) > 0) {
-                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('world'));
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('world'));
             }
             if($worldsArray->get('speed') != null && count($worldsArray->get('speed')) > 0) {
-                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('speed'));
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('speed'));
             }
             if($worldsArray->get('casual') != null && count($worldsArray->get('casual')) > 0) {
-                $servers[$server->code] = $servers[$server->code]->merge($worldsArray->get('casual'));
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('casual'));
             }
             if($worldsArray->get('classic') != null && count($worldsArray->get('classic')) > 0) {
-                $servers[$server->code] =  $servers[$server->code]->merge($worldsArray->get('classic'));
+                $servers[$server->code] =  array_merge($servers[$server->code], $worldsArray->get('classic'));
             }
         }
 

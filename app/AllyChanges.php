@@ -70,8 +70,8 @@ class AllyChanges extends CustomModel
         $allyChangesModel = new AllyChanges();
         $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
         
-        $allyChanges = collect();
-        $allyChanges->put('total', $allyChangesModel->where('player_id', $playerID)->count());
+        $allyChanges = [];
+        $allyChanges['total'] = $allyChangesModel->where('player_id', $playerID)->count();
         return $allyChanges;
     }
 
@@ -85,11 +85,10 @@ class AllyChanges extends CustomModel
         $allyChangesModel = new AllyChanges();
         $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
         
-        $allyChanges = collect();
-        $allyChanges->put('old', $allyChangesModel->where('old_ally_id', $allyID)->count());
-        $allyChanges->put('new', $allyChangesModel->where('new_ally_id', $allyID)->count());
-        $allyChanges->put('total', $allyChanges->get('old')+$allyChanges->get('new'));
-
+        $allyChanges = [];
+        $allyChanges['old'] = $allyChangesModel->where('old_ally_id', $allyID)->count();
+        $allyChanges['new'] = $allyChangesModel->where('new_ally_id', $allyID)->count();
+        $allyChanges['total'] = $allyChanges['old'] + $allyChanges['new'];
         return $allyChanges;
     }
 }

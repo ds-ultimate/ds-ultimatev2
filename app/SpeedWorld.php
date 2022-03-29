@@ -2,11 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SpeedWorld extends Model
+class SpeedWorld extends CustomModel
 {
     use SoftDeletes;
 
@@ -27,6 +25,11 @@ class SpeedWorld extends Model
         'planned_end',
         'started',
         'worldCheck_at',
+    ];
+    
+    protected $cache = [
+        'server',
+        'world',
     ];
 
     /**

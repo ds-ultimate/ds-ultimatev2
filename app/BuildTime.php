@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class BuildTime extends Model
+class BuildTime extends CustomModel
 {
     protected $connection = 'mysql';
     protected $table = 'buildtimes';
@@ -20,6 +18,10 @@ class BuildTime extends Model
         'booster',
         'user_id',
         'world_id',
+    ];
+    
+    protected $cache = [
+        'world',
     ];
     
     public function world(){

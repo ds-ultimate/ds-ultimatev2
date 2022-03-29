@@ -72,13 +72,12 @@ class Village extends CustomModel
      * @return \Illuminate\Support\Collection
      */
     public static function pureVillageDataChart($villageDataArray){
-        $villageDatas = collect();
-
+        $villageDatas = [];
         foreach ($villageDataArray as $village){
-            $villageData = collect();
-            $villageData->put('timestamp', (int)$village->updated_at->timestamp);
-            $villageData->put('points', $village->points);
-            $villageDatas->push($villageData);
+            $villageDatas[] = [
+                'timestamp' => (int)$village->updated_at->timestamp,
+                'points' => $village->points,
+            ];
         }
 
         return $villageDatas;

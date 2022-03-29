@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Log;
 use App\Player;
-use App\User;
 use App\Village;
 use App\World;
 use App\Util\BasicFunctions;

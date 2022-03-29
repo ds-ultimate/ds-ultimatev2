@@ -118,7 +118,7 @@ class Ally extends CustomModel
      * @param string $server
      * @param $world
      * @param int $allyID
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
     public static function allyDataChart($server, $world, $allyID){
         $allyID = (int) $allyID;
@@ -129,18 +129,18 @@ class Ally extends CustomModel
 
         $allyDataArray = $allyModel->where('allyID', $allyID)->orderBy('updated_at', 'ASC')->get();
 
-        $allyDatas = collect();
+        $allyDatas = [];
 
         foreach ($allyDataArray as $ally){
-            $allyData = collect();
-            $allyData->put('timestamp', (int)$ally->updated_at->timestamp);
-            $allyData->put('points', $ally->points);
-            $allyData->put('rank', $ally->rank);
-            $allyData->put('village', $ally->village_count);
-            $allyData->put('gesBash', $ally->gesBash);
-            $allyData->put('offBash', $ally->offBash);
-            $allyData->put('defBash', $ally->defBash);
-            $allyDatas->push($allyData);
+            $allyData = [];
+            $allyData['timestamp'] = (int)$ally->updated_at->timestamp;
+            $allyData['points'] = $ally->points;
+            $allyData['rank'] = $ally->rank;
+            $allyData['village'] = $ally->village_count;
+            $allyData['gesBash'] = $ally->gesBash;
+            $allyData['offBash'] = $ally->offBash;
+            $allyData['defBash'] = $ally->defBash;
+            $allyDatas[] = $allyData;
         }
 
         return $allyDatas;

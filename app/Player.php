@@ -149,22 +149,20 @@ class Player extends CustomModel
         $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
         $playerDataArray = $playerModel
                 ->where('playerID', $playerID)
-                ->where('created_at', '>', Carbon::now()->subDays($dayDelta+1))
                 ->orderBy('updated_at', 'ASC')->get();
 
-        $playerDatas = collect();
-
+        $playerDatas = [];
         foreach ($playerDataArray as $player){
-            $playerData = collect();
-            $playerData->put('timestamp', (int)$player->updated_at->timestamp);
-            $playerData->put('points', $player->points);
-            $playerData->put('rank', $player->rank);
-            $playerData->put('village', $player->village_count);
-            $playerData->put('gesBash', $player->gesBash);
-            $playerData->put('offBash', $player->offBash);
-            $playerData->put('defBash', $player->defBash);
-            $playerData->put('supBash', $player->supBash);
-            $playerDatas->push($playerData);
+            $playerDatas[] = [
+                'timestamp' => (int)$player->updated_at->timestamp,
+                'points' => $player->points,
+                'rank' => $player->rank,
+                'village' => $player->village_count,
+                'gesBash' => $player->gesBash,
+                'offBash' => $player->offBash,
+                'defBash' => $player->defBash,
+                'supBash' => $player->supBash,
+            ];
         }
 
         return $playerDatas;

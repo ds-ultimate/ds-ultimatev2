@@ -45,6 +45,10 @@ class AnimHistMapJob extends AnimHistMapMap
         'animHistMapMap_id'
     ];
     
+    protected $cache = [
+        'world',
+    ];
+    
     public function getStateAsArray() {
         if($this->finished_at !== null) {
             return [

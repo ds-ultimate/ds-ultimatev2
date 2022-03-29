@@ -122,26 +122,26 @@ class BasicFunctions
      * @param string|null $class
      * @return string
      */
-    public static function linkWinLoose (World $world, $itemID, \Illuminate\Support\Collection $conquer,
+    public static function linkWinLoose (World $world, $itemID, Array $conquer,
             $route, $class = null, $blank=false, $tooltipSpace=null){
-        $data = static::linkGeneric(BasicFunctions::numberConv($conquer->get('total')),
+        $data = static::linkGeneric(BasicFunctions::numberConv($conquer['total']),
                 route($route,[$world->server->code, $world->name, 'all', $itemID]), $class, $blank, [$tooltipSpace, "total"]);
 
-        if($conquer->has('new') && $conquer->has('old')) {
+        if(isset($conquer['new']) && isset($conquer['old'])) {
             //assume that there will be always gain an loose
             $appCls = $class ?? "";
             $data .= ' ( ';
-            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('new')),
+            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer['new']),
                     route($route,[$world->server->code, $world->name, 'new', $itemID]), $appCls." text-success", $blank, [$tooltipSpace, "win"]);
             $data .= ' - ';
 
-            if($conquer->has('own')) {
-                $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('own')),
+            if(isset($conquer['own'])) {
+                $data .= static::linkGeneric(BasicFunctions::numberConv($conquer['own']),
                         route($route,[$world->server->code, $world->name, 'own', $itemID]), $appCls." text-info", $blank, [$tooltipSpace, "self"]);
                 $data .= ' - ';
             }
 
-            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer->get('old')),
+            $data .= static::linkGeneric(BasicFunctions::numberConv($conquer['old']),
                     route($route,[$world->server->code, $world->name, 'old', $itemID]), $appCls." text-danger", $blank, [$tooltipSpace, "loose"]);
             $data .= ' )';
         }

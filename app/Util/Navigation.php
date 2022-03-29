@@ -35,11 +35,11 @@ class Navigation
                             break;
                     }
                 }
-                if($worlds->get(0)->sortType() == "casual") {
+                if($worlds[0]->sortType() == "casual") {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.casualWorlds', subelements: $worldNav);
-                } else if($worlds->get(0)->sortType() == "speed") {
+                } else if($worlds[0]->sortType() == "speed") {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.speedWorlds', subelements: $worldNav);
-                } else if($worlds->get(0)->sortType() == "classic") {
+                } else if($worlds[0]->sortType() == "classic") {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.classicWorlds', subelements: $worldNav);
                 } else {
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.normalWorlds', subelements: $worldNav);

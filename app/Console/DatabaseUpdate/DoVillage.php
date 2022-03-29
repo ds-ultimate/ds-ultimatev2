@@ -25,21 +25,22 @@ class DoVillage
         $lines = DoWorldData::loadGzippedFile($world, "village.txt.gz", $minTime);
         if($lines === false) return false;
         
-        $villages = collect();
+        $villages = [];
         
         foreach ($lines as $line) {
             $line = trim($line);
             if($line == "") continue;
             list($id, $name, $x, $y, $owner, $points, $bonus_id) = explode(',', $line);
-            $village = collect();
-            $village->put('id', (int)$id);
-            $village->put('name', $name);
-            $village->put('x', (int)$x);
-            $village->put('y', (int)$y);
-            $village->put('points', (int)$points);
-            $village->put('owner', (int)$owner);
-            $village->put('bonus_id', (int)$bonus_id);
-            $villages->put($village->get('id'), $village);
+            $village = [
+                'id' => (int)$id,
+                'name' => $name,
+                'x' => (int) $x,
+                'y' => (int) $y,
+                'points' => (int) $points,
+                'owner' => (int) $owner,
+                'bonus_id' => (int) $bonus_id,
+            ];
+            $villages[$village['id']] = $village;
         }
 
         $insert = new Village();
@@ -49,13 +50,13 @@ class DoVillage
         
         foreach ($villages as $village) {
             $data = [
-                'villageID' => $village->get('id'),
-                'name' => $village->get('name'),
-                'x' => $village->get('x'),
-                'y' => $village->get('y'),
-                'points' => $village->get('points'),
-                'owner' => $village->get('owner'),
-                'bonus_id' => $village->get('bonus_id'),
+                'villageID' => $village['id'],
+                'name' => $village['name'],
+                'x' => $village['x'],
+                'y' => $village['y'],
+                'points' => $village['points'],
+                'owner' => $village['owner'],
+                'bonus_id' => $village['bonus_id'],
                 'created_at' => $insertTime,
                 'updated_at' => $insertTime,
             ];

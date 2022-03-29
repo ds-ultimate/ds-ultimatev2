@@ -6,13 +6,13 @@ use App\Ally;
 use App\Player;
 use App\Village;
 use App\World;
+use App\CustomModel;
 use App\Util\Map\AbstractMapGenerator;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Map extends Model
+class Map extends CustomModel
 {
     use SoftDeletes;
 
@@ -51,6 +51,10 @@ class Map extends Model
         'continentNumbers',
         'shouldUpdate',
         'autoDimensions',
+    ];
+    
+    protected $cache = [
+        'world',
     ];
 
     public function user(){

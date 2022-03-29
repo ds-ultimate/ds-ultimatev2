@@ -86,11 +86,11 @@ class Conquer extends CustomModel
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
-        $conquer = collect();
-        $conquer->put('old', $conquerModel->where([['old_owner', "=", $playerID],['new_owner', '!=', $playerID]])->count());
-        $conquer->put('new', $conquerModel->where([['old_owner', "!=", $playerID],['new_owner', '=', $playerID]])->count());
-        $conquer->put('own', $conquerModel->where([['old_owner', "=", $playerID],['new_owner', '=', $playerID]])->count());
-        $conquer->put('total', $conquer->get('old')+$conquer->get('new')+$conquer->get('own'));
+        $conquer = [];
+        $conquer['old'] = $conquerModel->where([['old_owner', "=", $playerID],['new_owner', '!=', $playerID]])->count();
+        $conquer['new'] = $conquerModel->where([['old_owner', "!=", $playerID],['new_owner', '=', $playerID]])->count();
+        $conquer['own'] = $conquerModel->where([['old_owner', "=", $playerID],['new_owner', '=', $playerID]])->count();
+        $conquer['total'] = $conquer['old'] + $conquer['new'] + $conquer['own'];
 
         return $conquer;
     }
@@ -113,11 +113,11 @@ class Conquer extends CustomModel
             $allyPlayers[] = $player->playerID;
         }
 
-        $conquer = collect();
-        $conquer->put('old', $conquerModel->whereIn('old_owner', $allyPlayers)->whereNotIn('new_owner', $allyPlayers)->count());
-        $conquer->put('new', $conquerModel->whereNotIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers)->count());
-        $conquer->put('own', $conquerModel->whereIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers)->count());
-        $conquer->put('total', $conquer->get('old')+$conquer->get('new')+$conquer->get('own'));
+        $conquer = [];
+        $conquer['old'] = $conquerModel->whereIn('old_owner', $allyPlayers)->whereNotIn('new_owner', $allyPlayers)->count();
+        $conquer['new'] = $conquerModel->whereNotIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers)->count();
+        $conquer['own'] = $conquerModel->whereIn('old_owner', $allyPlayers)->whereIn('new_owner', $allyPlayers)->count();
+        $conquer['total'] = $conquer['old'] + $conquer['new'] + $conquer['own'];
 
         return $conquer;
     }
@@ -132,8 +132,8 @@ class Conquer extends CustomModel
         $conquerModel = new Conquer();
         $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
 
-        $conquer = collect();
-        $conquer->put('total', $conquerModel->where('village_id', $villageID)->count());
+        $conquer = [];
+        $conquer['total'] = $conquerModel->where('village_id', $villageID)->count();
 
         return $conquer;
     }
