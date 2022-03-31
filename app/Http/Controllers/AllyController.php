@@ -35,6 +35,18 @@ class AllyController extends Controller
         $statsBash = ['gesBash', 'offBash', 'defBash'];
 
         $datas = Ally::allyDataChart($server, $world, $ally);
+        if(count($datas) < 1) {
+            $datas[] = [
+                "timestamp" => time(),
+                "points" => $allyData->points,
+                "rank" => $allyData->rank,
+                "village" => $allyData->village,
+                "gesBash" => $allyData->gesBash,
+                "offBash" => $allyData->offBash,
+                "defBash" => $allyData->defBash,
+            ];
+        }
+        
         
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){

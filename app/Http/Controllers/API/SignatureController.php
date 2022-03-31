@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Player;
 use App\PlayerTop;
-use App\Signature;
 use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;

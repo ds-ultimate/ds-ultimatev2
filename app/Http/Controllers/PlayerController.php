@@ -37,6 +37,18 @@ class PlayerController extends Controller
         $statsBash = ['gesBash', 'offBash', 'defBash', 'supBash'];
 
         $datas = Player::playerDataChart($server, $world, $player);
+        if(count($datas) < 1) {
+            $datas[] = [
+                "timestamp" => time(),
+                "points" => $playerData->points,
+                "rank" => $playerData->rank,
+                "village" => $playerData->village,
+                "gesBash" => $playerData->gesBash,
+                "offBash" => $playerData->offBash,
+                "defBash" => $playerData->defBash,
+                "supBash" => $playerData->supBash,
+            ];
+        }
         
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
