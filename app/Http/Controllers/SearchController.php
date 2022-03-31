@@ -45,7 +45,7 @@ class SearchController extends Controller
         foreach ($worlds as $world){
             $player->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_top');
             foreach ($player->where('name', 'LIKE', '%'. BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $allPlayer = [
+                $allPlayer[] = [
                     'world' => $world,
                     'player' => $data,
                 ];
@@ -65,7 +65,7 @@ class SearchController extends Controller
         foreach ($worlds as $world){
             $ally->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.ally_top');
             foreach ($ally->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $allAlly = [
+                $allAlly[] = [
                     'world' => $world,
                     'ally' => $data,
                 ];
@@ -97,7 +97,7 @@ class SearchController extends Controller
         foreach ($worlds as $world){
             $village->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
             foreach ($village->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
-                $allVillage = [
+                $allVillage[] = [
                     'world' => $world,
                     'village' => $data,
                 ];
@@ -109,7 +109,7 @@ class SearchController extends Controller
             if($coordsearch) {
                 foreach ($village->where('x', 'LIKE', '%'.BasicFunctions::likeSaveEscape($searchExp[0]).'%')
                         ->where('y', 'LIKE', '%'.BasicFunctions::likeSaveEscape($searchExp[1]).'%')->get() as $data){
-                    $allVillage = [
+                    $allVillage[] = [
                         'world' => $world,
                         'village' => $data,
                     ];
