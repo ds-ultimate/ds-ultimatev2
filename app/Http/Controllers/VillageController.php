@@ -22,6 +22,12 @@ class VillageController extends Controller
         
         $villageHistData = $villageData->getHistoryData();
         $datas = Village::pureVillageDataChart($villageHistData);
+        if(count($datas) < 1) {
+            $datas[] = [
+                "timestamp" => time(),
+                "points" => $villageData->points,
+            ];
+        }
         $chartJS = Chart::generateChart($datas, 'points', gapFill: true);
         $conquer = Conquer::villageConquerCounts($server, $world, $village);
         

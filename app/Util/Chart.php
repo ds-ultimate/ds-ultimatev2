@@ -141,7 +141,7 @@ class Chart
         }
         
         if ($chart->getRowCount() < 2){
-            static::customAdd($chart, $data['timestamp'] - $entryDiff, 0);
+            static::customAdd($chart, $data['timestamp'] - $entryDiff, $data[$chartType]);
         }
 
         \Lava::LineChart($chartType, $chart, [
