@@ -110,14 +110,19 @@ class World extends CustomModel
      * @param string $server
      * @return \Illuminate\Support\Collection
      */
-    public static function worldsCollection($server){
+    public static function worldsCollection($server, $mapping=[]){
         $worldsArray = [];
 
         foreach (Server::getWorldsByCode($server) as $worldData){
-            if (! isset($worldsArray[$worldData->sortType()])) {
-                $worldsArray[$worldData->sortType()] = [];
+            $type = $worldData->sortType();
+            if(isset($mapping[$type])) {
+                $type = $mapping[$type];
             }
-            $worldsArray[$worldData->sortType()][] = $worldData;
+            
+            if (! isset($worldsArray[$type])) {
+                $worldsArray[$type] = [];
+            }
+            $worldsArray[$type][] = $worldData;
         }
         return $worldsArray;
     }

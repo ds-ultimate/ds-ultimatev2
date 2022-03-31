@@ -28,7 +28,10 @@ class ContentController extends Controller
     public function server($server){
         BasicFunctions::local();
         World::existServer($server);
-        $worldsArray = World::worldsCollection($server);
+        $worldsArray = World::worldsCollection($server, ['speed' => 'special', 'casual' => 'special', 'classic' => 'special']);
+        usort($worldsArray['world'], function($a, $b) {
+            return -1*strcmp($a->name, $b->name);
+        });
         $worldsArrays = World::worldsCollectionActiveSorter($worldsArray);
         $worldsActive = $worldsArrays['active'];
         $worldsInactive = $worldsArrays['inactive'];
@@ -125,17 +128,17 @@ class ContentController extends Controller
             $worldsArray = World::worldsCollection($server->code);
             $servers[$server->code] = [];
 
-            if($worldsArray->get('world') != null && count($worldsArray->get('world')) > 0) {
-                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('world'));
+            if(isset($worldsArray['world']) && count($worldsArray['world']) > 0) {
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray['world']);
             }
-            if($worldsArray->get('speed') != null && count($worldsArray->get('speed')) > 0) {
-                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('speed'));
+            if(isset($worldsArray['speed']) && count($worldsArray['speed']) > 0) {
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray['speed']);
             }
-            if($worldsArray->get('casual') != null && count($worldsArray->get('casual')) > 0) {
-                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray->get('casual'));
+            if(isset($worldsArray['casual']) && count($worldsArray['casual']) > 0) {
+                $servers[$server->code] = array_merge($servers[$server->code], $worldsArray['casual']);
             }
-            if($worldsArray->get('classic') != null && count($worldsArray->get('classic')) > 0) {
-                $servers[$server->code] =  array_merge($servers[$server->code], $worldsArray->get('classic'));
+            if(isset($worldsArray['classic']) && count($worldsArray['classic']) > 0) {
+                $servers[$server->code] =  array_merge($servers[$server->code], $worldsArray['classic']);
             }
         }
 

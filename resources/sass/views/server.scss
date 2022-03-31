@@ -1,0 +1,14 @@
+@include media-breakpoint-down(lg) {
+    .server-truncate {
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .server-truncate {
+        max-width: 80px;
+    }
+}

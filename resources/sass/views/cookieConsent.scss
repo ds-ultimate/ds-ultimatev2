@@ -2,7 +2,7 @@
     @extend .fixed-bottom;
     @extend .navbar;
     @extend .justify-content-center;
-    height: 78px;
+    height: fit-content;
     @extend .dark-img-bg;
 }
 
