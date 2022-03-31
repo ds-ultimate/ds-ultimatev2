@@ -142,7 +142,7 @@ class SignatureController extends Controller
         $rawStatData = Player::playerDataChart($server, $world, $id, 17);
         $statData = array();
         foreach ($rawStatData as $rawData) {
-            $statData[$rawData->get('timestamp')] = $rawData->get('points');
+            $statData[$rawData['timestamp']] = $rawData['points'];
         }
 
         $name = BasicFunctions::decodeName($playerData->name);
