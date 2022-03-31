@@ -32,7 +32,8 @@ let safelist =
     "fa-volume-mute",
     "mx-1",
     /fa-.*/,
-    "fas",
+    "pull-left",
+    "dataTables_wrapper",
 ];
 mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')

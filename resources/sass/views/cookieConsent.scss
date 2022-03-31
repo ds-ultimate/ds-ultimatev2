@@ -3,7 +3,7 @@
     @extend .navbar;
     @extend .justify-content-center;
     height: 78px;
-    background: #212327 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QAIQAjACea4/AZAAAACXBIWXMAAC4jAAAuIwF4pT92AAAA5ElEQVRYw83YOw6AIBBF0dEOVmFi4f43J6VWGFGU33werc3JjQrMtKzbQYDLO0d7CDQjwoiI9hDIO4cDvMPigiiYg92fzYgw04I1MJOCLTDVgj0wlYIjMNGCHDCRgpww1oISMJaCkrChghqwroKasKaCFrCqgpaw34IIsGxBJFhSEBGWFIxHa8R1vYOxHhr09RWjQT//gyjQ4k5iDa3ei62gzacZbWj3eVALOnyiloay3UmkoOy3Om6o2L2YCyo+WRiFqs1meqHq061WqNl8sBZqPmEtQWFm1F9QqBl1Dgo55X9CT69VsrnBG367AAAAAElFTkSuQmCC');
+    @extend .dark-img-bg;
 }
 
 .cookie-consent__message {
