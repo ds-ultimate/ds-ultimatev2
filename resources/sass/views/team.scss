@@ -1,0 +1,19 @@
+
+.card-team .avatar {
+    display: block;
+    margin-top: -60px;
+    overflow: hidden;
+    width: 120px;
+}
+.card-team {
+    font-weight: 400;
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+    border-top-left-radius: calc(5rem - 1px);
+    @extend .bg-white;
+    @extend .text-center;
+}
+.card-img-top {
+    width: 100%;
+    border-top-left-radius: calc(5rem - 1px);
+}

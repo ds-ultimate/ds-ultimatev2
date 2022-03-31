@@ -1,0 +1,21 @@
+/* Stuff for tools/AnimHistMap/renderStatus */
+.progress-bar {
+    background-color: black;
+}
+
+.progress-text {
+    @extend .absolute-full-top;
+    font-size: 2.25rem;
+    text-align: center;
+    display: inline-block;
+    line-height: initial;
+    mix-blend-mode: difference;
+    color: white;
+    z-index: 2;
+}
+
+.progress-bg2 {
+    @extend .absolute-full-top;
+    mix-blend-mode: screen;
+    z-index: 3;
+}

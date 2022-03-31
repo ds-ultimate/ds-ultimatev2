@@ -15,7 +15,7 @@
                 <div class="card-body">
                     @if(isset($worldsActive['world']) && count($worldsActive['world']) > 0)
                     <h2 class="card-title">{{ __('ui.tabletitel.normalWorlds') }}:</h2>
-                    <table class="table table-hover table-striped no-wrap w-100">
+                    <table class="table table-hover table-striped nowrap w-100">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.world')) }}</th>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="collapse inactive" id="inactive1">
                             <h2 class="card-title">{{ __('ui.tabletitel.normalWorlds').' '.__('ui.archive') }}:</h2>
-                            <table class="table table-hover table-striped no-wrap w-100">
+                            <table class="table table-hover table-striped nowrap w-100">
                                 <thead>
                                 <tr>
                                     <th>{{ ucfirst(__('ui.table.world')) }}</th>
@@ -89,7 +89,7 @@
                 <div class="card-body">
                     @if ((isset($worldsActive['casual']) && count($worldsActive['casual']) > 0) || (isset($worldsActive['speed']) && count($worldsActive['speed']) > 0) || (isset($worldsActive['classic']) && count($worldsActive['classic']) > 0))
                     <h2 class="card-title">{{ __('ui.tabletitel.specialWorlds') }}:</h2>
-                    <table class="table table-hover table-striped no-wrap w-100">
+                    <table class="table table-hover table-striped nowrap w-100">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.world')) }}</th>
@@ -160,7 +160,7 @@
                         </div>
                         <div class="collapse inactive" id="inactive2">
                             <h2 class="card-title">{{ __('ui.tabletitel.specialWorlds').' '.__('ui.archive') }}:</h2>
-                            <table class="table table-hover table-striped no-wrap w-100">
+                            <table class="table table-hover table-striped nowrap w-100">
                                 <thead>
                                 <tr>
                                     <th>{{ ucfirst(__('ui.table.world')) }}</th>

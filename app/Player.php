@@ -31,7 +31,7 @@ class Player extends CustomModel
         'updated_at',
         'created_at',
     ];
-
+    
     public $timestamps = true;
 
     /**
@@ -59,15 +59,6 @@ class Player extends CustomModel
     {
         $table = explode('.', $this->table);
         return $this->mybelongsTo('App\Ally', 'ally_id', 'allyID', $table[0].'.ally_latest');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function allyTop()
-    {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\AllyTop', 'ally_id', 'allyID', $table[0].'.ally_top');
     }
 
     /**

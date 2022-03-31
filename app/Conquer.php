@@ -138,10 +138,14 @@ class Conquer extends CustomModel
         return $conquer;
     }
 
-    public function linkVillageCoordsWithName($world) {
+    public function linkVillageName($world) {
         if($this->village == null) return ucfirst (__("ui.player.deleted"));
-        return BasicFunctions::linkVillage($world, $this->village_id,
-                '['.$this->village->coordinates().'] '.BasicFunctions::outputName($this->village->name));
+        return BasicFunctions::linkVillage($world, $this->village_id, BasicFunctions::outputName($this->village->name));
+    }
+
+    public function linkVillageCoords($world) {
+        if($this->village == null) return ucfirst (__("ui.player.deleted"));
+        return BasicFunctions::linkVillage($world, $this->village_id, "[" . $this->village->coordinates() . "]");
     }
 
     public function linkOldPlayer($world) {
@@ -154,7 +158,7 @@ class Conquer extends CustomModel
                 $oldName = $this->oldPlayer->name;
             }
         }
-
+        
         return BasicFunctions::linkPlayer($world, $this->old_owner, BasicFunctions::outputName($oldName));
     }
 

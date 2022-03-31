@@ -41,169 +41,14 @@
                     </li>
                 </ul>
                 <div class="card-body tab-content">
-                    <!-- BEGIN NORMAL Table -->
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
-                            <span class="float-right">
-                                <a href="{{ $allyData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
-                                <a href="{{ $allyData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
-                            </span>
-                        </h4>
-                        <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
-                        <table id="data1" class="table table-bordered no-wrap w-100">
-                            <thead>
-                            <tr>
-                                <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
-                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.tag')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.members')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.allyChanges')) }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th>{{ \App\Util\BasicFunctions::numberConv($allyData->rank) }}</th>
-                                <td>{{ \App\Util\BasicFunctions::decodeName($allyData->name) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->points) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->village_count) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->member_count) }}</td>
-                                <td>{{ ($allyData->points != 0 && $allyData->member_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->member_count): '-' }}</td>
-                                <td>{{ ($allyData->points != 0 && $allyData->village_count != 0)?\App\Util\BasicFunctions::numberConv($allyData->points/$allyData->village_count): '-' }}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $allyData->allyID, $conquer, 'allyConquer', tooltipSpace: 'ui.conquer.highlight') !!}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $allyData->allyID, $allyChanges, 'allyAllyChanges') !!}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}
-                            <a class="h6" href="{{ route('allyBashRanking', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}">{{ __('ui.tabeltitel.allyBashRanking') }}</a>
-                        </h5>
-                        <table id="data2" class="table table-bordered no-wrap w-100">
-                            <thead>
-                            <tr>
-                                <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
-                                <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBashRank) }}</th>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->gesBash) }}</td>
-                                <td>{{ ($allyData->points != 0)?(\App\Util\BasicFunctions::numberConv(($allyData->gesBash/$allyData->points)*100)):('-') }}%</td>
-                                <th>{{ \App\Util\BasicFunctions::numberConv($allyData->offBashRank) }}</th>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->offBash) }}</td>
-                                <th>{{ \App\Util\BasicFunctions::numberConv($allyData->defBashRank) }}</th>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($allyData->defBash) }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <x-record.stat_elm_ally :data='$allyData' :worldData='$worldData' :conquer='$conquer' :allyChanges='$allyChanges'/>
                     </div>
                     
                     @isset($allyTopData)
-                    <!-- BEGIN TOP Table -->
                     <div class="tab-pane fade" id="tops" role="tabpanel" aria-labelledby="tops-tab">
-                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
-                            <span class="float-right">
-                                <a href="{{ $allyTopData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
-                                <a href="{{ $allyTopData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
-                            </span>
-                        </h4>
-                        <h5 class="card-subtitle">{{__('ui.tabletitel.general')}}</h5>
-                        <table id="data_top1" class="table table-bordered no-wrap w-100">
-                            <thead>
-                            <tr>
-                                <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
-                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.tag')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.villages')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.members')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.avgVillage')) }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->rank_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("rank") }}</span>
-                                </th>
-                                <td>{{ \App\Util\BasicFunctions::decodeName($allyTopData->name) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::decodeName($allyTopData->tag) }}</td>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->points_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("points") }}</span>
-                                </td>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->village_count_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("village_count") }}</span>
-                                </td>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->member_count_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("member_count") }}</span>
-                                </td>
-                                <td>{{ ($allyTopData->points_top != 0 && $allyTopData->member_count_top != 0)?\App\Util\BasicFunctions::numberConv($allyTopData->points_top/$allyTopData->member_count_top): '-' }}</td>
-                                <td>{{ ($allyTopData->points_top != 0 && $allyTopData->village_count_top != 0)?\App\Util\BasicFunctions::numberConv($allyTopData->points_top/$allyTopData->village_count_top): '-' }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <br>
-                        <h5 class="card-subtitle">{{__('ui.tabletitel.bashStats')}}</h5>
-                        <table id="data_top2" class="table table-bordered no-wrap w-100">
-                            <thead>
-                            <tr>
-                                <th class="all">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashGes') }})</th>
-                                <th class="all">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashGes') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.bashPointsRatio')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashOff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->gesBashRank_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("gesBashRank") }}</span>
-                                </th>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->gesBash_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("gesBash") }}</span>
-                                </td>
-                                <td>{{ ($allyTopData->points != 0)?(\App\Util\BasicFunctions::numberConv(($allyTopData->gesBash_top/$allyTopData->points_top)*100)):('-') }}%</td>
-                                <th>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->offBashRank_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("offBashRank") }}</span>
-                                </th>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->offBash_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("offBash") }}</span>
-                                </td>
-                                <th>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->defBashRank_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("defBashRank") }}</span>
-                                </th>
-                                <td>
-                                    {{ \App\Util\BasicFunctions::numberConv($allyTopData->defBash_top) }}
-                                    <br><span class="small float-right">{{ $allyTopData->getDate("defBash") }}</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <x-record.stat_elm_ally_top :data='$allyTopData' :worldData='$worldData' :conquer='$conquer' :allyChanges='$allyChanges' exists="true"/>
                     </div>
-                    <!-- END TOP Table -->
                     @endisset
                     
                     <!-- BEGIN HIST Table -->
@@ -218,19 +63,19 @@
                                     <a href="{{ $allyData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
                                 </span>
                             </div>
-                            <div class="col-12 mt-3">
-                                <table id="history_table" class="table table-hover table-sm w-100">
+                            <div class="col-12 mt-3 cust-responsive">
+                                <table id="history_table" class="table table-hover table-sm w-100 nowrap">
                                     <thead>
                                     <tr>
-                                        <th>{{ ucfirst(__('ui.table.date')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.ally')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.rank')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.members')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.villages')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.bashAllS')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.bashAttS')) }}</th>
-                                        <th>{{ ucfirst(__('ui.table.bashDefS')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.date')) }}</th>
+                                        <th class="desktop">{{ ucfirst(__('ui.table.ally')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.members')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.villages')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.bashAllS')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.bashAttS')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.bashDefS')) }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -247,7 +92,7 @@
         </div>
         <!-- ENDE Informationen -->
         <!-- Allgemein Chart -->
-        <div class="col-12 col-md-6 mt-3">
+        <div class="col-12 col-lg-6 mt-3">
             <div class="card" style=" height: 320px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
@@ -268,7 +113,7 @@
         </div>
         <!-- ENDE Allgemein Chart -->
         <!-- Besiegte Gegner Chart -->
-        <div class="col-12 col-md-6 mt-3">
+        <div class="col-12 col-lg-6 mt-3">
             <div class="card" style="height: 320px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:</h4>
@@ -291,18 +136,17 @@
         <!-- Datachart Spieler -->
         <div class="col-12 mt-3">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body cust-responsive">
                     <h2 class="card-title">{{ ucfirst(__('ui.tabletitel.player')) }}</h2>
-                    <table id="table_id" class="table table-hover table-sm w-100">
+                    <table id="table_id" class="table table-hover table-sm w-100 nowrap">
                         <thead>
                         <tr class="d-none d-md-table-row">
-                            <th colspan="6">{{ ucfirst(__('ui.tabletitel.general')) }}</th>
+                            <th colspan="5">{{ ucfirst(__('ui.tabletitel.general')) }}</th>
                             <th colspan="4">{{ ucfirst(__('ui.tabletitel.bashStats')) }}</th>
                         </tr>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.rank')) }}</th>
                             <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.ally')) }}</th>
                             <th>{{ ucfirst(__('ui.table.points')) }}</th>
                             <th>{{ ucfirst(__('ui.table.villages')) }}</th>
                             <th>{{ ucfirst(__('ui.table.avgVillage')) }}</th>
@@ -364,105 +208,34 @@
     </script>
     <script>
         $(document).ready(function () {
-            $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
-            $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-            $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[0] }}").css('visibility', 'visible');
-            $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-            $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
+            $("#statsGeneral").trigger('change');
+            $("#statsBash").trigger('change');
         });
 
-        $("#statsGeneral").change(function () {
-            var option1 = $("#statsGeneral").val();
-            if (option1 == '{{ $statsGeneral[0] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'visible');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsGeneral[1] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'visible');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsGeneral[2] }}') {
-                $("#{{ $statsGeneral[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsGeneral[2] }}").css('visibility', 'visible');
-            }
+        $("#statsGeneral").change(() => {
+            $("#statsGeneral option").each(function() {
+                $('#' + this.value).css('visibility', this.selected?'visible':'hidden');
+            });
         });
 
-        $("#statsBash").change(function () {
-            var option1 = $("#statsBash").val();
-            if (option1 == '{{ $statsBash[0] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[1] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'visible');
-                $("#{{ $statsBash[2] }}").css('visibility', 'hidden');
-            }
-            if (option1 == '{{ $statsBash[2] }}') {
-                $("#{{ $statsBash[0] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[1] }}").css('visibility', 'hidden');
-                $("#{{ $statsBash[2] }}").css('visibility', 'visible');
-            }
+        $("#statsBash").change(() => {
+            $("#statsBash option").each(function() {
+                $('#' + this.value).css('visibility', this.selected?'visible':'hidden');
+            });
         });
-
     </script>
     <script>
 
         $(document).ready( function () {
-            $.extend( $.fn.dataTable.defaults, {
-                responsive: true
-            } );
-
-            $('#data1').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                responsive: true,
-
-                keys: true, //enable KeyTable extension
-            });
-
-            $('#data2').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                responsive: true,
-
-                keys: true, //enable KeyTable extension
-            });
-
-            $('#data_top1').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                responsive: true,
-
-                keys: true, //enable KeyTable extension
-            });
-
-            $('#data_top2').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                responsive: true,
-
-                keys: true, //enable KeyTable extension
-            });
-
-            $('#table_id').DataTable({
+            var tbl = $('#table_id').DataTable({
                 "columnDefs": [
+                    {"targets": 2, "className": 'text-right'},
                     {"targets": 3, "className": 'text-right'},
                     {"targets": 4, "className": 'text-right'},
                     {"targets": 5, "className": 'text-right'},
                     {"targets": 6, "className": 'text-right'},
                     {"targets": 7, "className": 'text-right'},
                     {"targets": 8, "className": 'text-right'},
-                    {"targets": 9, "className": 'text-right'},
                 ],
                 "processing": true,
                 "serverSide": true,
@@ -470,7 +243,6 @@
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},
-                    { "data": "ally", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.ally_id +"'>"+ value +'</a>'}, "orderable": false},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_points", "render": function (value) {return numeral(value).format('0,0')}, "orderable": false},
@@ -479,10 +251,9 @@
                     { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                     { "data": "supBash", "render": function (value) {return numeral(value).format('0.[00] a')}},
                 ],
-                responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });
-        } );
+        });
     </script>
     {!! $chartJS !!}
 @endpush

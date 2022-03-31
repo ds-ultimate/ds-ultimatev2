@@ -168,22 +168,17 @@ class ConquerController extends Controller
         }
         return $data
             ->editColumn('timestamp', function (Conquer $conquer){
-                return Carbon::createFromTimestamp($conquer->timestamp)->format('Y-m-d H:i:s');
+                $time = Carbon::createFromTimestamp($conquer->timestamp);
+                return $this->multilineResponsiveTableCell($time->format('H:i:s'), $time->format('d-m-Y'));
             })
             ->addColumn('village', function (Conquer $conquer) use($world) {
-                return $conquer->linkVillageCoordsWithName($world);
+                return $this->multilineResponsiveTableCell($conquer->linkVillageCoords($world), $conquer->linkVillageName($world), dT: true);
             })
             ->editColumn('old_owner_name', function (Conquer $conquer) use($world) {
-                return $conquer->linkOldPlayer($world);
+                return $this->multilineResponsiveTableCell($conquer->linkOldPlayer($world), "[" . $conquer->linkOldAlly($world) . "]", uT: true);
             })
             ->editColumn('new_owner_name', function (Conquer $conquer) use($world) {
-                return $conquer->linkNewPlayer($world);
-            })
-            ->editColumn('old_ally_name', function (Conquer $conquer) use($world) {
-                return $conquer->linkOldAlly($world);
-            })
-            ->editColumn('new_ally_name', function (Conquer $conquer) use($world) {
-                return $conquer->linkNewAlly($world);
+                return $this->multilineResponsiveTableCell($conquer->linkNewPlayer($world), "[" . $conquer->linkNewAlly($world) . "]", uT: true);
             })
             ->addColumn('type', function (Conquer $conquer) {
                 return $conquer->getConquerType();
@@ -191,12 +186,16 @@ class ConquerController extends Controller
             ->addColumn('winLoose', function (Conquer $conquer) use($referTO, $id) {
                 return $conquer->getWinLoose($referTO, $id);
             })
-            ->rawColumns(['village', 'old_owner_name', 'new_owner_name', 'old_ally_name', 'new_ally_name'])
-            ->removeColumn('created_at')->removeColumn('updated_at')
-            ->removeColumn('new_owner')->removeColumn('old_owner')
-            ->removeColumn('old_ally')->removeColumn('new_ally')
-            ->removeColumn('old_ally_tag')->removeColumn('new_ally_tag')
+            ->rawColumns(['timestamp', 'village', 'old_owner_name', 'new_owner_name'])
+            ->removeColumn(['created_at', 'updated_at', 'old_owner', 'new_owner', 'old_ally_name', 'new_ally_name',
+                'old_ally', 'new_ally', 'old_ally_tag', 'new_ally_tag'])
             ->toJson();
+    }
+    
+    private function multilineResponsiveTableCell($up, $down, $uT=false, $dT=false) {
+        $ret = "<div class='d-md-inline-block mr-1".($uT?' conquer-truncate':'')."'>$up</div>";
+        $ret.= "<div class='d-md-inline-block".($dT?' conquer-truncate':'')."'>$down</div>";
+        return $ret;
     }
 
     public function getConquerDaily($server, $world, $type, $day=false)

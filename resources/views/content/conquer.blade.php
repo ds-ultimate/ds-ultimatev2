@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="card-body">
+            <div class="card-body cust-responsive">
                 <div id="legend">
                     @foreach(\App\Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value)
                     <span class="mr-4 nowrap">
@@ -44,19 +44,14 @@
                     </span>
                     @endforeach
                 </div>
-                <table id="table_id" class="table table-hover table-sm w-100">
-                    <thead>
-                    <tr>
-                        <th>{{ ucfirst(__('ui.table.date')) }}</th>
+                <table id="table_id" class="small-mdd table table-hover table-sm w-100 nowrap">
+                    <thead><tr>
                         <th>{{ ucfirst(__('ui.table.villageName')) }}</th>
                         <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.owner')) }}</th>
-                        <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.ally')) }}</th>
                         <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.owner')) }}</th>
-                        <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.ally')) }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
+                        <th>{{ ucfirst(__('ui.table.date')) }}</th>
+                    </tr></thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>
@@ -70,21 +65,16 @@
     var dataTable;
     $(document).ready( function () {
         dataTable = $('#table_id').DataTable({
-            "columnDefs": [
-                {"targets": 2, "className": 'text-right'},
-                {"targets": 4, "className": 'text-right'},
-            ],
             "processing": true,
             "serverSide": true,
-            "order": [[ 0, "desc" ]],
+            "order": [[ 3, "desc" ]],
+            "searching": false,
             "ajax": "{{ $routeDatatableAPI }}",
             "columns": [
-                { "data": "timestamp" },
                 { "data": "village", "orderable": false},
                 { "data": "old_owner_name"},
-                { "data": "old_ally_name"},
                 { "data": "new_owner_name"},
-                { "data": "new_ally_name"},
+                { "data": "timestamp"},
             ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian
@@ -99,7 +89,6 @@
                     $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['l'][1] }}'); //Red
                 }
             },
-            responsive: true,
             {!! \App\Util\Datatable::language() !!}
         });
         

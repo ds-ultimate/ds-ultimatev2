@@ -1,0 +1,12 @@
+//Styles for various records (Player / Ally / Village)
+.tbl-stretched td, .tbl-stretched th {
+    text-align: center;
+}
+
+.tbl-stretched td:last-child, .tbl-stretched th:last-child {
+    text-align: right;
+}
+
+.tbl-stretched td:first-child, .tbl-stretched th:first-child {
+    text-align: left;
+}

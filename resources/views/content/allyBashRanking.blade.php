@@ -6,7 +6,9 @@
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.ally')).': '.\App\Util\BasicFunctions::decodeName($allyData->name).' ['.\App\Util\BasicFunctions::decodeName($allyData->tag).']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('ui.titel.ally')).': '}}{!!
+                \App\Util\BasicFunctions::linkAlly($worldData, $allyData->allyID, \App\Util\BasicFunctions::outputName($allyData->name) 
+                . " [" . \App\Util\BasicFunctions::outputName($allyData->tag) . "]")!!}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -15,19 +17,17 @@
                 {{ ucfirst(__('ui.titel.ally')).': ' }}
             </h1>
             <h4>
-                {{ \App\Util\BasicFunctions::decodeName($allyData->name) }}
-                <br>
-                [{{ \App\Util\BasicFunctions::decodeName($allyData->tag) }}]
+                {!! \App\Util\BasicFunctions::linkAlly($worldData, $allyData->allyID, \App\Util\BasicFunctions::outputName($allyData->name) 
+                    . " [" . \App\Util\BasicFunctions::outputName($allyData->tag) . "]")!!}
             </h4>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Datachart Spieler -->
         <div class="col-12 mt-2">
             <div class="card">
-                <div class="card-body">
-                    <table id="table_id" class="table table-hover table-sm w-100">
-                        <thead>
-                        <tr>
+                <div class="card-body cust-responsive">
+                    <table id="table_id" class="table table-hover table-sm w-100 nowrap">
+                        <thead><tr>
                             <th>{{ ucfirst(__('ui.table.rank')) }}</th>
                             <th>{{ ucfirst(__('ui.table.name')) }}</th>
                             <th>{{ ucfirst(__('ui.table.bashGes')) }}</th>
@@ -36,10 +36,8 @@
                             <th>{{ ucfirst(__('ui.table.bashSup')) }}</th>
                             <th>{{ ucfirst(__('ui.table.allyKillsPercent')) }}</th>
                             <th>{{ ucfirst(__('ui.table.playerPointPercent')) }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
+                        </tr></thead>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -51,10 +49,6 @@
 @push('js')
     <script>
         $(document).ready( function () {
-            $.extend( $.fn.dataTable.defaults, {
-                responsive: true
-            } );
-
             $('#table_id').DataTable({
                 "columnDefs": [
 		    {"targets": 0, 'orderable': false},
@@ -66,7 +60,7 @@
                 ],
                 "order": [[ 2, "desc" ]],
                 "processing": true,
-                pageLength : 100,
+                "pageLength": 100,
                 "serverSide": true,
                 "ajax": "{{ route('api.allyPlayerBashRanking', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
                 "columns": [
@@ -79,7 +73,6 @@
                     { "data": "allyKillsPercent"},
                     { "data": "playerPointPercent"},
                 ],
-                responsive: true,
                 "drawCallback": function(settings, json) {
                     $('[data-toggle="popover"]').popover({
                         html : true,

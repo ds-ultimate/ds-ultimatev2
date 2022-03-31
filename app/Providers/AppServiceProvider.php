@@ -71,9 +71,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('hasSlot', function() {
             return '<?php if(isset($slot) && $slot != ""): ?>';
         });
-        Blade::directive('hasNoSlot', function() {
-            return '<?php if(!isset($slot) || $slot == ""): ?>';
-        });
         Blade::directive('setFalse', function($name) {
             return "<?php $name=false; ?>";
         });
@@ -84,11 +81,11 @@ class AppServiceProvider extends ServiceProvider
             return "<?php if(!isset($name)) {"."$name=null;} ?>";
         });
         
-        Blade::directive('ifdarkmode', function() {
-            return "<?php if(session('darkmode', false)): ?>";
+        Blade::if('darkmode', function() {
+            return session('darkmode', false);
         });
         
-        Blade::directive('darkmode', function($class) {
+        Blade::directive('toDarkmode', function($class) {
             $rep = [
                 "btn-outline-dark" => "btn-outline-light",
                 "btn-outline-light" => "btn-outline-dark",

@@ -5,3 +5,11 @@ $line-height-base: 1.6;
 
 //Table
 $table-cell-padding:          .1rem !default;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1250px
+);

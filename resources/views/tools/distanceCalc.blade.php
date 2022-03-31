@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
                     <form id="villageForm" method="POST" action="">
-                        <table class="table table-bordered table-striped no-wrap">
+                        <table class="table table-bordered table-striped nowrap">
                             <tr>
                                 <th>{{ __('tool.distCalc.startVillage') }}</th>
                                 <td>
@@ -48,7 +48,7 @@
                         </div>
                     </form>
                     <br>
-                    <table id="startVillage" class="table table-striped table-bordered no-wrap">
+                    <table id="startVillage" class="table table-striped table-bordered nowrap">
                         <tr>
                             <th width="150">{{ __('tool.distCalc.startVillage') }}</th>
                             <td>
@@ -75,7 +75,7 @@
                         </tr>
                     </table>
                     <br>
-                    <table id="targetVillage" class="table table-striped table-bordered no-wrap">
+                    <table id="targetVillage" class="table table-striped table-bordered nowrap">
                         <tr>
                             <th width="150">{{ __('tool.distCalc.targetVillage') }}</th>
                             <td>
@@ -110,7 +110,7 @@
             <div class="card" style="height: 500px">
                 <div class="card-body">
                     <h4 class="card-title">{{ __('global.units') }}:</h4>
-                    <table id="targetVillage" class="table table-striped table-bordered no-wrap">
+                    <table id="targetVillage" class="table table-striped table-bordered nowrap">
                         <tr>
                             <th>{{ __('global.unit') }}</th>
                             <th>{{ __('global.time') }}</th>

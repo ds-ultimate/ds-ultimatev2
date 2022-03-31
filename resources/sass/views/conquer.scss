@@ -1,0 +1,13 @@
+@include media-breakpoint-down(md) {
+    .small-mdd {
+        @include font-size($small-font-size);
+        font-weight: $font-weight-normal;
+    }
+    
+    .conquer-truncate {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

@@ -1,0 +1,40 @@
+/* Main styles for all layouts */
+.container {
+    flex-grow: 3;
+    border-radius: 5px;
+    @extend .mb-5;
+    @extend .pb-3;
+    margin-top: 5rem;
+}
+
+@include media-breakpoint-up(xl) {
+    .container {
+        max-width: inherit;
+        width: max(80%, calc(540px + 50%));
+    }
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    background: $primaryBg;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.discord{
+    height: 400px;
+    width: 280px;
+}
+
+.cust-responsive > .dataTables_wrapper > .row:nth-child(2) {
+    display: block;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}

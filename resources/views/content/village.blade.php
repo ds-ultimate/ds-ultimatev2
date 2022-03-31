@@ -32,38 +32,7 @@
                 </ul>
                 <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                        <h4 class="card-title">{{ucfirst(__('ui.tabletitel.info'))}}
-                            <span class="float-right">
-                                <a href="{{ $villageData->linkIngame($worldData, false) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.normal') }}</a>
-                                <a href="{{ $villageData->linkIngame($worldData, true) }}" target="_blank" class="btn btn-primary btn-sm">{{ __('ui.ingame.guest') }}</a>
-                            </span>
-                        </h4>
-                        <table id="data1" class="table table-bordered no-wrap w-100">
-                            <thead>
-                            <tr>
-                                <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
-                                <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.continent')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.coordinates')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.owner')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.conquer')) }}</th>
-                                <th class="desktop">{{ ucfirst(__('ui.table.bonusType')) }}</th>
-                                <th class="desktop"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>{{ \App\Util\BasicFunctions::decodeName($villageData->name) }}</td>
-                                <td>{{ \App\Util\BasicFunctions::numberConv($villageData->points) }}</td>
-                                <th>{{ $villageData->continentString() }}</th>
-                                <td>{{ $villageData->coordinates() }}</td>
-                                <td>{!! ($villageData->owner != 0)?(($villageData->playerLatest == null)? ucfirst(__('ui.player.deleted')) : \App\Util\BasicFunctions::linkPlayer($worldData, $villageData->owner, \App\Util\BasicFunctions::outputName($villageData->playerLatest->name))) : ucfirst(__('ui.player.barbarian')) !!}</td>
-                                <td>{!! \App\Util\BasicFunctions::linkWinLoose($worldData, $villageData->villageID, $conquer, 'villageConquer') !!}</td>
-                                <th>{{ $villageData->bonusText() }}</th>
-                                <td><img src="{!! asset('images/'.$villageData->getVillageSkinImage('default')) !!}"></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <x-record.stat_elm_village :data='$villageData' :worldData='$worldData' :conquer='$conquer'/>
                     </div>
                     <div class="tab-pane fade" id="map" role="tabpanel" aria-labelledby="map-tab">
                     </div>
@@ -83,10 +52,10 @@
         <!-- ENDE Besiegte Punkte Chart -->
         <!-- Dorfausbau Tabelle -->
         <div class="col-12 mt-3">
-            <div class="card">
+            <div class="card table-responsive">
                 <div class="card-body">
                     <h4 class="card-title">{{ucfirst(__('ui.tabletitel.history'))}}</h4>
-                    <table id="datahist" class="table table-bordered no-wrap w-100">
+                    <table id="datahist" class="table table-bordered nowrap w-100">
                         <thead>
                         <tr>
                             <th>{{ ucfirst(__('ui.table.date')) }}</th>
@@ -116,14 +85,14 @@
                                             <img src='{{ \app\Util\BuildingUtils::getImage($vilHist["possibleChanges"][0][0], \app\Util\BuildingUtils::BUILDING_SIZE_SMALL, $vilHist["possibleChanges"][0][1]) }}'>
                                             {{ __('ui.buildings.' . $vilHist["possibleChanges"][0][0]) }} ({{ $vilHist["possibleChanges"][0][1] }})
                                         @else
-                                            <span data-toggle="bs-tooltip" data-placement="right" data-html="true" title="
+                                            <a href="#" data-toggle="bs-tooltip" data-placement="right" data-html="true" title="
                                                 @foreach($vilHist["possibleChanges"] as $data)
                                                     <img src='{{ \app\Util\BuildingUtils::getImage($data[0], \app\Util\BuildingUtils::BUILDING_SIZE_SMALL, $data[1]) }}'>
                                                     {{ __('ui.buildings.' . $data[0]) }} ({{ $data[1] }})<br>
                                                 @endforeach
                                                     ">
                                                 {{ count($vilHist["possibleChanges"]) }} {{ __('ui.village.histPossibilities') }}
-                                            </span>
+                                            </a>
                                         @endif
                                     @endif
                                 </td>
@@ -152,35 +121,24 @@
         });
 
         $(document).ready( function () {
-            $.extend( $.fn.dataTable.defaults, {
-                responsive: true
-            } );
-
-            $('#data1').DataTable({
-                dom: 't',
-                ordering: false,
-                paging: false,
-                responsive: true,
-
-                keys: true, //enable KeyTable extension
-            });
             $('#datahist').DataTable({
                 columnDefs: [
                     {"targets": 0, "className": 'text-right'},
                     {"targets": 1, "className": 'text-center'},
                     {"targets": 2, "className": 'text-center'},
-                    {"targets": 3, "className": 'text-center'},
+                    {"targets": 3, "className": 'text-center', "orderable": false},
                 ],
                 dom: 't',
                 ordering: true,
                 order: [[ 0, "desc" ]],
                 paging: false,
-                responsive: true,
-
                 keys: true, //enable KeyTable extension
             });
             
             $('[data-toggle="bs-tooltip"]').tlp();
+            $('#datahist a[data-toggle="bs-tooltip"]').on('click', (e) => {
+                e.preventDefault();
+            });
         } );
     </script>
     {!! $chartJS !!}

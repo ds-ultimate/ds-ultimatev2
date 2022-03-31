@@ -86,7 +86,7 @@ $tabList = [
             </div>
             <div class="card">
                 <div class="card-body table-responsive">
-                    <table id="data1" class="table table-bordered table-striped no-wrap w-100">
+                    <table id="data1" class="table table-bordered table-striped nowrap w-100">
                         <thead>
                             <tr>
                                 @if($mode == 'edit')
