@@ -102,52 +102,51 @@ class AttackListItem extends CustomModel
     }
 
     public function typeIDToName(){
-        switch ($this->type) {
-            case '8':
-                return __('tool.attackPlanner.attack');
-            case '11':
-                return __('tool.attackPlanner.conquest');
-            case '14':
-                return __('tool.attackPlanner.fake');
-            case '45':
-                return __('tool.attackPlanner.wallbreaker');
-            case '0':
-                return __('tool.attackPlanner.support');
-            case '1':
-                return __('tool.attackPlanner.standSupport');
-            case '7':
-                return __('tool.attackPlanner.fastSupport');
-            case '46':
-                return __('tool.attackPlanner.fakeSupport');
+        return static::statTypeIDToName($this->type);
+    }
+    
+    public static function statTypeIDToName($type) {
+        switch ($type) {
+            case '8': return __('tool.attackPlanner.attack');
+            case '11': return __('tool.attackPlanner.conquest');
+            case '14': return __('tool.attackPlanner.fake');
+            case '45': return __('tool.attackPlanner.wallbreaker');
+            case '0': return __('tool.attackPlanner.support');
+            case '1': return __('tool.attackPlanner.standSupport');
+            case '7': return __('tool.attackPlanner.fastSupport');
+            case '46': return __('tool.attackPlanner.fakeSupport');
+            case '30': return __('ui.buildings.main');
+            case '31': return __('ui.buildings.barracks');
+            case '32': return __('ui.buildings.stable');
+            case '33': return __('ui.buildings.garage');
+            case '34': return __('ui.buildings.church');
+            case '35': return __('ui.buildings.snob');
+            case '36': return __('ui.buildings.smith');
+            case '37': return __('ui.buildings.place');
+            case '38': return __('ui.buildings.statue');
+            case '39': return __('ui.buildings.market');
+            case '40': return __('ui.buildings.wood');
+            case '41': return __('ui.buildings.stone');
+            case '42': return __('ui.buildings.iron');
+            case '43': return __('ui.buildings.farm');
+            case '44': return __('ui.buildings.storage');
         }
     }
 
     public function unitIDToNameOutput(){
         switch ($this->slowest_unit) {
-            case '0':
-                return __('ui.unit.spear');
-            case '1':
-                return __('ui.unit.sword');
-            case '2':
-                return __('ui.unit.axe');
-            case '3':
-                return __('ui.unit.archer');
-            case '4':
-                return __('ui.unit.spy');
-            case '5':
-                return __('ui.unit.light');
-            case '6':
-                return __('ui.unit.marcher');
-            case '7':
-                return __('ui.unit.heavy');
-            case '8':
-                return __('ui.unit.ram');
-            case '9':
-                return __('ui.unit.catapult');
-            case '10':
-                return __('ui.unit.knight');
-            case '11':
-                return __('ui.unit.snob');
+            case '0': return __('ui.unit.spear');
+            case '1': return __('ui.unit.sword');
+            case '2': return __('ui.unit.axe');
+            case '3': return __('ui.unit.archer');
+            case '4': return __('ui.unit.spy');
+            case '5': return __('ui.unit.light');
+            case '6': return __('ui.unit.marcher');
+            case '7': return __('ui.unit.heavy');
+            case '8': return __('ui.unit.ram');
+            case '9': return __('ui.unit.catapult');
+            case '10': return __('ui.unit.knight');
+            case '11': return __('ui.unit.snob');
         }
     }
 

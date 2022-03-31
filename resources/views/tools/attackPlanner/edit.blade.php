@@ -19,16 +19,19 @@
                                 <select name="type" class="custom-select attack-type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">
                                     <option value="-1">{{ __('ui.old.nodata') }}</option>
                                     <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
-                                        <option value="8">{{ __('tool.attackPlanner.attack') }}</option>
-                                        <option value="11">{{ __('tool.attackPlanner.conquest') }}</option>
-                                        <option value="14">{{ __('tool.attackPlanner.fake') }}</option>
-                                        <option value="45">{{ __('tool.attackPlanner.wallbreaker') }}</option>
+                                    @foreach([8, 11, 14, 45] as $idx)
+                                        <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
+                                    @endforeach
                                     </optgroup>
                                     <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
-                                        <option value="0">{{ __('tool.attackPlanner.support') }}</option>
-                                        <option value="1">{{ __('tool.attackPlanner.standSupport') }}</option>
-                                        <option value="7">{{ __('tool.attackPlanner.fastSupport') }}</option>
-                                        <option value="46">{{ __('tool.attackPlanner.fakeSupport') }}</option>
+                                    @foreach([0, 1, 7, 46] as $idx)
+                                        <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
+                                    @endforeach
+                                    </optgroup>
+                                    <optgroup label="{{ __('tool.accMgrDB.building') }}">
+                                    @foreach([30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44] as $idx)
+                                        <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
+                                    @endforeach
                                     </optgroup>
                                 </select>
                             </div>

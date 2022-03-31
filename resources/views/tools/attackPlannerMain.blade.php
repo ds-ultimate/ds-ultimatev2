@@ -575,15 +575,9 @@ $tabList = [
 
         function typ_img(input){
             switch (input) {
-                case '-1': return '{{ \App\Util\Icon::icons(-1) }}';
-                case '8': return '{{ \App\Util\Icon::icons(8) }}';
-                case '11': return '{{ \App\Util\Icon::icons(11) }}';
-                case '14': return '{{ \App\Util\Icon::icons(14) }}';
-                case '45': return '{{ \App\Util\Icon::icons(45) }}';
-                case '0': return '{{ \App\Util\Icon::icons(0) }}';
-                case '1': return '{{ \App\Util\Icon::icons(1) }}';
-                case '7': return '{{ \App\Util\Icon::icons(7) }}';
-                case '46': return '{{ \App\Util\Icon::icons(46) }}';
+            @foreach(\App\Util\Icon::attackPlannerTypeIcons() as $idx)
+                case '{{ $idx }}': return '{{ \App\Util\Icon::icons($idx) }}';
+            @endforeach
             }
         }
 
