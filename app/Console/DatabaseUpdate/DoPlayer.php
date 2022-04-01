@@ -97,7 +97,7 @@ class DoPlayer
             $tot = trim($tot);
             if($tot == "") continue;
             list($rank, $id, $kills) = explode(',', $tot);
-            $playerTot[$id] = [
+            $playerTots[$id] = [
                 'totRank' => (int) $rank,
                 'tot' => (int) $kills,
             ];
