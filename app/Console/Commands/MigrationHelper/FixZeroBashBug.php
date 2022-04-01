@@ -74,7 +74,7 @@ class FixZeroBashBug extends Command
         $playerModel = new Player();
         $playerModel->setTable($tblName);
         foreach($playerModel->get() as $play) {
-            $realGes = $play->offBash + $play->defBash + $play->SupBash;
+            $realGes = $play->offBash + $play->defBash + $play->supBash;
             if($play->gesBash == 0 && $realGes > 0) {
                 DB::update("UPDATE ".$play->getTable()." SET gesBash=? WHERE playerID=? AND created_at=?;", [
                     $realGes, $play->playerID, $play->created_at
