@@ -466,4 +466,8 @@ class BasicFunctions
             'dataAdditional' => "",
         ], $optional);
     }
+    
+    public static function asset($path) {
+        return asset($path) . "?" . filemtime(public_path($path));
+    }
 }

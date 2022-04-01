@@ -124,7 +124,7 @@ $tabList = [
 @endsection
 
 @push('js')
-    <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <audio id="audio-elm" controls class="d-none">
         <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.mp3') }}" type="audio/mpeg">
         Your browser does not support the audio element.

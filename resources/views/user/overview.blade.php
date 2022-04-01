@@ -57,7 +57,7 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('.nav-link', $('#user-overview')).on("click", function (e) {

@@ -29,7 +29,7 @@
     @if($formEntry['type'] == 'select') @setTrue($needSelect2) @endif
 @endforeach
 @if($needTinymce)
-    <script src="{{ asset('plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/tinymce/tinymce.min.js') }}"></script>
     <script>
         $(function() {
             tinymce.init({
@@ -44,7 +44,7 @@
     </script>
 @endif
 @if($needFasPicker)
-    <script src="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/fontIconPicker/jquery.fonticonpicker.min.js') }}"></script>
     <script>
         $(function() {
             var picker =$('.fas-icon-picker').fontIconPicker({
@@ -55,7 +55,7 @@
     </script>
 @endif
 @if($needSelect2)
-    <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/select2/select2.full.min.js') }}"></script>
     <script>
         function loadText(state) {
             if(!state.element) return state.text;
@@ -90,7 +90,7 @@
     @if($formEntry['type'] == 'fas') @setTrue($needFasPicker) @endif
 @endforeach
 @if($needFasPicker)
-    <link href="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('plugin/fontIconPicker/jquery.fonticonpicker.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('plugin/fontIconPicker/jquery.fonticonpicker.bootstrap.min.css') }}" rel="stylesheet">
 @endif
 @endpush

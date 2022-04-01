@@ -124,7 +124,7 @@
 @endpush
 
 @push('js')
-<script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/select2/select2.full.min.js') }}"></script>
 <script>
     /**
      * TITLE

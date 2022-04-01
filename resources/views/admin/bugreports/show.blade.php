@@ -88,7 +88,7 @@
 
 @section('scripts')
     @parent
-    <script src="{{ asset('plugin/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/tinymce/tinymce.min.js') }}"></script>
     <script>
         tinymce.init({
             height: 500,

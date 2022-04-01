@@ -10,11 +10,11 @@
 
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/admin_sidebar.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('css/admin_sidebar.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
-    <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
+    <link href="{{ \App\Util\BasicFunctions::asset('css/fontawesome.css') }}" rel="stylesheet" />
     @stack('style')
 </head>
 
@@ -33,9 +33,9 @@
     @include('footer.standart')
 </div>
 
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/app.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/datatables.min.js') }}"></script>
 @stack('js')
 </body>
 </html>

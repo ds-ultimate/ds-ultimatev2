@@ -3,7 +3,7 @@
 @section('titel', $worldData->display_name,': '.__('tool.animHistMap.title'))
 
 @push('style')
-    <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
     <style>
         #map-popup {
             position: absolute;
@@ -115,7 +115,7 @@
 
 @push('js')
 @if($mode == 'edit')
-<script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 <script>
     $(function () {
         $('#mapEditForm').on('submit', function (e) {

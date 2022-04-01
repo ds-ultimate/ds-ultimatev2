@@ -13,11 +13,11 @@
 </div>
 
 @push('style')
-    <link href="{{ asset('plugin/drawerJS/drawerJs.min.css') }}" rel="stylesheet" />
+    <link href="{{ \App\Util\BasicFunctions::asset('plugin/drawerJS/drawerJs.min.css') }}" rel="stylesheet" />
 @endpush
 
 @push('js')
-<script src="{{ asset('plugin/drawerJS/drawerJs.standalone.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/drawerJS/drawerJs.standalone.min.js') }}"></script>
 <script>
     var drawerPlugins = [
         'Pencil',

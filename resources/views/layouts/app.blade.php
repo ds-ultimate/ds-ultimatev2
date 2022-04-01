@@ -11,19 +11,19 @@
     <!-- Fonts -->
     <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css"> -->
     @darkmode
-        <link href="{{ asset('css/dark.css') }}" rel="stylesheet">
-        <link href="{{ asset('plugin/jquery-ui/dark/jquery-ui.min.css') }}" rel="stylesheet">
+        <link href="{{ \App\Util\BasicFunctions::asset('css/dark.css') }}" rel="stylesheet">
+        <link href="{{ \App\Util\BasicFunctions::asset('plugin/jquery-ui/dark/jquery-ui.min.css') }}" rel="stylesheet">
         <meta name="color-scheme" content="dark">
         <meta name="theme-color" content="#202327">
     @else
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <link href="{{ asset('plugin/jquery-ui/light/jquery-ui.min.css') }}" rel="stylesheet">
+        <link href="{{ \App\Util\BasicFunctions::asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ \App\Util\BasicFunctions::asset('plugin/jquery-ui/light/jquery-ui.min.css') }}" rel="stylesheet">
         <meta name="color-scheme" content="light">
         <meta name="theme-color" content="#edd492">
     @enddarkmode
-    <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('css/datatables.min.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
-    <link href="{{ asset('css/fontawesome.css') }}" rel="stylesheet" />
+    <link href="{{ \App\Util\BasicFunctions::asset('css/fontawesome.css') }}" rel="stylesheet" />
     @if (config('app.debug') == false)
         <!-- Matomo -->
         <script type="text/javascript">
@@ -58,9 +58,9 @@
     @include('footer.standart')
 </div>
 @include('cookie-consent::index')
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/app.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/datatables.min.js') }}"></script>
 @stack('js')
 </body>
 </html>

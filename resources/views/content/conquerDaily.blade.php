@@ -82,7 +82,7 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script>
         var dataTablePlayer;
         var dataTableAlly;

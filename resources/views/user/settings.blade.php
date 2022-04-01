@@ -3,7 +3,7 @@
 @section('titel', ucfirst(__('ui.titel.settings')).' von '.Auth::user()->name)
 
 @push('style')
-    <link href="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -259,9 +259,9 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('plugin/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/select2/select2.full.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-colorpicker/bootstrap-colorpicker.min.js') }}"></script>
     <script>
         var worldTable = $("#world");
         var playerTable = $("#player");

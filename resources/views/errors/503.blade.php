@@ -8,7 +8,7 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ \App\Util\BasicFunctions::asset('css/app.css') }}" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     @if (config('app.debug') == false)
         <!-- Matomo -->
@@ -58,6 +58,6 @@
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/app.js') }}"></script>
 </body>
 </html>
