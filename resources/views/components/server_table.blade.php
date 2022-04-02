@@ -1,14 +1,12 @@
 @props(['data'])
 
 <table class="table table-hover table-striped nowrap w-100 world-table">
-    <thead>
-    <tr>
+    <thead><tr>
         <th>{{ ucfirst(__('ui.table.world')) }}</th>
         <th>{{ ucfirst(__('ui.table.player')) }}</th>
         <th>{{ ucfirst(__('ui.table.ally')) }}</th>
         <th>{{ ucfirst(__('ui.table.village')) }}</th>
-    </tr>
-    </thead>
+    </tr></thead>
     <tbody>
     @foreach($data as $world)
         <tr>

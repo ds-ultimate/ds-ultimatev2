@@ -64,5 +64,27 @@
     $('.inactive').on('hide.bs.collapse', function (e) {
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showMoreWorlds')}}')
     })
+    
+    $(document).on("click", '.btn[data-toggle="collapse"]', resize)
+    $(window).on('resize', resize)
+    
+    function resize () {
+        $('.world-table').each((_, elm) => {
+            $('.server-truncate', elm).css('max-width', 'initial')
+            var sum = 0, first = -1
+            $('thead>tr>th', elm).each((_, elm) => {
+                if(first == -1) {
+                    first = $(elm).width()
+                }
+                sum += $(elm).width()
+            })
+
+            var ow = $(elm).parent().width()
+            if(sum <= ow) return //is ok
+
+            first = Math.max(first - (sum - ow), 100)
+            $('.server-truncate', elm).css('max-width', first + "px")
+        })
+    }
 </script>
 @endpush
