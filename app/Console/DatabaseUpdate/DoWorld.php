@@ -15,7 +15,7 @@ class DoWorld
             TableGenerator::worldTable();
         }
 
-        $serverArray = (new Server())->where("active", 1)->orWhere("classic_active", 1)->get();
+        $serverArray = (new Server())->where("active", 1)->get();
 
         foreach ($serverArray as $serverModel){
             $worldFile = file_get_contents($serverModel->url.'/backend/get_servers.php');
