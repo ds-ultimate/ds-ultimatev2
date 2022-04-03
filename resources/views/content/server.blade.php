@@ -64,7 +64,6 @@
     $('.inactive').on('hide.bs.collapse', function (e) {
         $('button[aria-controls=' + $(e.currentTarget).attr('id') + ']').html('{{__('ui.showMoreWorlds')}}')
     })
-    
     $(document).on("click", '.btn[data-toggle="collapse"]', resize)
     $(window).on('resize', resize)
     

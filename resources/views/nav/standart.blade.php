@@ -251,11 +251,7 @@ function generateMobileMenuEntry($entry, $level=0) {
         $('#logout-form').submit();
     });
     $(function () {
-        $('.nav-tooltip').tooltip({
-            classes: {
-                "ui-tooltip": "ui-corner-all"
-            }
-        });
+        $('.nav-tooltip').tooltip({classes: {"ui-tooltip": "ui-corner-all"}});
         $(".navbar-nav .dropdown-item a").parent().click(function (e) {
             window.location.href = $(">a", this)[0].href;
         })

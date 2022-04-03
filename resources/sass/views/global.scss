@@ -42,3 +42,53 @@ body {
 .dark-img-bg {
     background: #212327 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9bpSItInYQEcxQnSyIioiTVqEIFUKt0KqDyaVf0KQhSXFxFFwLDn4sVh1cnHV1cBUEwQ8QRycnRRcp8X9JoUWMB8f9eHfvcfcO8NfLTDU7xgBVs4xUIi5ksqtC8BUBDKEXMwhLzNTnRDEJz/F1Dx9f72I8y/vcnyOs5EwG+ATiWaYbFvEG8dSmpXPeJ46woqQQnxOPGnRB4keuyy6/cS447OeZESOdmieOEAuFNpbbmBUNlXiSOKqoGuX7My4rnLc4q+Uqa96TvzCU01aWuU5zEAksYgkiBMioooQyLMRo1UgxkaL9uId/wPGL5JLJVQIjxwIqUCE5fvA/+N2tmZ8Yd5NCcaDzxbY/hoHgLtCo2fb3sW03ToDAM3CltfyVOjD9SXqtpUWPgJ5t4OK6pcl7wOUO0P+kS4bkSAGa/nweeD+jb8oCfbdA95rbW3Mfpw9AmrpK3gAHh8BIgbLXPd7d1d7bv2ea/f0AoElyubvqUDUAAAAGYktHRAAgACMAJ6eD2akAAAAJcEhZcwAALiMAAC4jAXilP3YAAADlSURBVFjDzdjLDYAgEEXR0RKgARMX9l+YtKArjCjKbz6PrZuTGxWYaVm3gwCXd472EGhGhBER7SGQdw4HeIfFBVEwB7s/mxFhpgVrYCYFW2CqBXtgKgVHYKIFOWAiBTlhrAUlYCwFJWFDBTVgXQU1YU0FLWBVBS1hvwURYNmCSLCkICIsKRiP1ojregdjPTTo6ytGg37+B1GgxZ3EGlq9F1tBm08z2tDu86AWdPhELQ1lu5NIQdlvddxQsXsxF1R8sjAKVZvN9ELVp1utULP5YC3UfMJagsLMqL+gUDPqHBRyyv+EnvIFsrkTHGsUAAAAAElFTkSuQmCC');
 }
+
+table {
+    font-weight: bold;
+}
+
+.truncate {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.blink_me {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+table.dataTable > thead .sorting:before,
+table.dataTable > thead .sorting:after,
+table.dataTable > thead .sorting_asc:before,
+table.dataTable > thead .sorting_asc:after,
+table.dataTable > thead .sorting_desc:before,
+table.dataTable > thead .sorting_desc:after,
+table.dataTable > thead .sorting_asc_disabled:before,
+table.dataTable > thead .sorting_asc_disabled:after,
+table.dataTable > thead .sorting_desc_disabled:before,
+table.dataTable > thead .sorting_desc_disabled:after {
+    bottom: 0 !important;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.absolute-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.absolute-full-top {
+    @extend .absolute-top;
+    width: 100%;
+    height: 100%;
+}

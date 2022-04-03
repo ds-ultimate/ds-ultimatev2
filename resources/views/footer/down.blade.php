@@ -13,11 +13,4 @@
             </li>
         </ul>
     </div>
-    <div class="col-12 mx-auto text-center">
-        <ul class="list-inline my-0">
-            <li class="list-inline-item">
-                <small class="text-muted">{{ __('ui.footer.loadTime') }} {{ substr((microtime(true) - LARAVEL_START), 0, 7) }} {{ __('ui.footer.loadTimeUnit') }}</small>
-            </li>
-        </ul>
-    </div>
 </nav>

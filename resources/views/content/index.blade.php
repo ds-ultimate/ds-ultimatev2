@@ -28,7 +28,7 @@
     <!-- News -->
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 mt-1 mb-3">
-            <div id="newsCarousel" class="carousel slide border border-primary rounded" data-ride="carousel" data-interval="10000">
+            <div id="newsCarousel" class="carousel slide border rounded" data-ride="carousel" data-interval="10000">
                 <div class="card-body">
                     <h5 class="card-title mb-1">{{ __('ui.news.title') }}:</h5>
                     <ol class="carousel-indicators">

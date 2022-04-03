@@ -255,7 +255,7 @@ $tabList = [
 
         @if($mode == 'edit')
         $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip({classes: {"ui-tooltip": "ui-corner-all"}});
         });
 
         function destroy(id,key) {

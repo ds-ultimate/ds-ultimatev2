@@ -21,7 +21,7 @@ $secondaryBg: #2D1C08;
 @import "customStyles";
 
 body {
-    background: url(/images/background/background.jpg) no-repeat center center fixed;
+    background: url(/images/background/background-dark.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -79,4 +79,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
 
 .select2-container--bootstrap4 .select2-search--dropdown .select2-search__field {
     background-color: $input-focus-bg;
+}
+
+#newsCarousel{
+    @extend .border-primary;
 }

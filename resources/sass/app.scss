@@ -5,7 +5,6 @@
 @import 'variables';
 
 // Body
-$body-bg: #f8fafc;
 
 // Colors
 $primary: #edd492;
@@ -26,6 +25,18 @@ $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
 
+$body-bg:                   rgba(192, 192, 192, 0.835);
+$component-active-bg:       $body-bg;
+$card-bg:                   rgba(207, 207, 207, 0.6);
+$dropdown-bg:               rgb(207, 207, 207);
+
+$component-active-color: black;
+$pagination-disabled-color: black;
+$link-color: rgb(85, 58, 11);
+$pagination-color: black;
+$pagination-hover-color: black;
+$popover-bg: rgb(207, 207, 207);
+
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
@@ -39,17 +50,26 @@ $cyan: #6cb2eb;
 
 @import "customStyles";
 
+body {
+    background: url(/images/background/background-light.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .nav-bg {
-    background: $secondaryBg;
-    background: linear-gradient(180deg, $secondaryBg 0%, $secondaryBg calc(100% - 12px), $primaryBg 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#edd492",endColorstr="#fbf6e9",GradientType=1);
+    background: rgb(237, 212, 146,0.95);
+    border-bottom: 1px solid black;
 }
 
 .footer-bg {
-    background: $secondaryBg;
-    background: -webkit-gradient(linear, left bottom, left top, from($secondaryBg), color-stop(80%, $secondaryBg), to($primaryBg));
-    background: linear-gradient(0deg, $secondaryBg 0%, $secondaryBg 80%, $primaryBg 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#edd492",endColorstr="#fbf6e9",GradientType=1);
+    background: rgb(237, 212, 146,0.95);
+    border-top: 1px solid black;
+}
+
+.container {
+    background-color: rgba(245, 245, 245, 0.87);
 }
 
 // Tooltips should be white inside for light-mode
@@ -57,4 +77,8 @@ $cyan: #6cb2eb;
     background-color: #FFF;
     color: #000;
     border: 1px solid $primary;
+}
+
+#newsCarousel{
+    border: 1px solid black !important;
 }
