@@ -120,7 +120,6 @@ return array (
     'errorKoordEmpty' => 'Výchozí vesnice a cílová nesmí být prázdná',
     'errorKoordTitle' => 'Souřadnice vesnice',
     'errorUnitCount' => 'Číslo je příliš velké',
-    'errorUnitCountTitle' => 'Velikost jednotky',
     'export' => 
     array (
       'BB' => 
@@ -200,12 +199,11 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'updateSuccess' => 'Zpracování proběhlo úspěšně.',
     'updateSuccessTitle' => 'Úspěšně',
     'uvMode' => 'Zástup dovolené',
-    'villageNotExist' => 'Vesnice neexistuje',
     'uvModeDesc' => 'Adresy URL jsou generovány vhodně pro nahrazení dovolené.',
-    'villageNotExistTitle' => 'Chyba ve vesnici',
     'wallbreaker' => 'Bourání opevnění',
     'warnSending' => 'Tlačítko odeslat používáte na vlastní nebezpečí. Pokud narazíte na nějaké problémy, kontaktujte prosím tým DS-Ultimate (buď na Discordu, nebo prostřednictvím nahlášení chyb).',
     'withoutTitle' => 'Tento plánovač útoku nemá žádný název, a proto se používá při stisknutí tlačítka "attack planner". Chcete-li vytvořit nový plánovač útoku, musíte dát tomuto plánovači název.',
+    'villageNotExist' => 'Vesnice neexistuje',
   ),
   'distCalc' => 
   array (

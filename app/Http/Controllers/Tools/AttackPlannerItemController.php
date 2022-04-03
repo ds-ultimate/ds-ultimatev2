@@ -21,40 +21,15 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AttackPlannerItemController extends BaseController
 {
-
-    private static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
-
     public function store(Request $request)
     {
         $attackplaner = AttackList::findOrFail($request->attack_list_id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
-        $unitC = [];
-        foreach (self::$units as $unit){
-            if ($request->get($unit) == null){
-                $unitC[$unit] = 0;
-            }else{
-                $value = $request->get($unit);
-                if ($value <= 2147483648){
-                    $unitC[$unit] = intval($value);
-                }else{
-                    return \Response::json(array(
-                        'data' => 'error',
-                        'title' => __('tool.attackPlanner.errorUnitCountTitle'),
-                        'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
-                    ));
-                }
-            }
-        }
         
+        $err = [];
         $item = new AttackListItem();
         $item->attack_list_id = $request->attack_list_id;
-        if (!$item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
-            return \Response::json(array(
-                'data' => 'error',
-                'title' => __('tool.attackPlanner.villageNotExistTitle'),
-                'msg' => __('tool.attackPlanner.villageNotExist'),
-            ));
-        }
+        $err = array_merge($err, $item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
         $item->type = $request->type;
         $item->slowest_unit = $request->slowest_unit;
         $item->note = $request->note;
@@ -71,19 +46,14 @@ class AttackPlannerItemController extends BaseController
         }else{
             $item->ms = 0;
         }
-        $item->spear = $unitC["spear"];
-        $item->sword = $unitC["sword"];
-        $item->axe = $unitC["axe"];
-        $item->archer = $unitC["archer"];
-        $item->spy = $unitC["spy"];
-        $item->light = $unitC["light"];
-        $item->marcher = $unitC["marcher"];
-        $item->heavy = $unitC["heavy"];
-        $item->ram = $unitC["ram"];
-        $item->catapult = $unitC["catapult"];
-        $item->knight = $unitC["knight"];
-        $item->snob = $unitC["snob"];
+        $err = array_merge($err, $item->setUnits($request, true));
+        
         $item->send_time = $item->calcSend();
+        $err = array_merge($err, $item->verifyTime());
+        
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
+        }
         if($item->save()){
             return \Response::json(array(
                 'data' => 'success',
@@ -199,7 +169,7 @@ class AttackPlannerItemController extends BaseController
             })
             ->addColumn('info', function (AttackListItem $attackListItem){
                 $unitCount = '';
-                foreach (self::$units as $unit){
+                foreach (AttackListItem::$units as $unit){
                     if ($attackListItem->$unit != 0){
                         $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>".BasicFunctions::numberConv($attackListItem->$unit)."</b>".(($unit != 'snob')? '<br>':'');
                     }
@@ -243,32 +213,10 @@ class AttackPlannerItemController extends BaseController
     public function update(Request $request, AttackListItem $attackListItem){
         $attackplaner = $attackListItem->list;
         abort_unless($request->key == $attackplaner->edit_key, 403);
-        $unitC = [];
-        foreach (self::$units as $unit){
-            if ($request->get($unit) == null){
-                $unitC[$unit] = 0;
-            }else{
-                $value = $request->get($unit);
-                if ($value <= 2147483648){
-                    $unitC[$unit] = intval($value);
-                }else{
-                    return \Response::json(array(
-                        'data' => 'error',
-                        'title' => __('tool.attackPlanner.errorUnitCountTitle'),
-                        'msg' => __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount'),
-                    ));
-                }
-            }
-        }
 
+        $err = [];
+        $err = array_merge($err, $attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
         $attackListItem->type = $request->type;
-        if (!$attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget)){
-            return \Response::json(array(
-                'data' => 'error',
-                'title' => __('tool.attackPlanner.villageNotExistTitle'),
-                'msg' => __('tool.attackPlanner.villageNotExist'),
-            ));
-        }
         $attackListItem->slowest_unit = $request->slowest_unit;
         $attackListItem->note = $request->note;
         if($request->time_type == 0){
@@ -284,19 +232,15 @@ class AttackPlannerItemController extends BaseController
         }else{
             $attackListItem->ms = 0;
         }
-        $attackListItem->spear = $unitC["spear"];
-        $attackListItem->sword = $unitC["sword"];
-        $attackListItem->axe = $unitC["axe"];
-        $attackListItem->archer = $unitC["archer"];
-        $attackListItem->spy = $unitC["spy"];
-        $attackListItem->light = $unitC["light"];
-        $attackListItem->marcher = $unitC["marcher"];
-        $attackListItem->heavy = $unitC["heavy"];
-        $attackListItem->ram = $unitC["ram"];
-        $attackListItem->catapult = $unitC["catapult"];
-        $attackListItem->knight = $unitC["knight"];
-        $attackListItem->snob = $unitC["snob"];
+        $err = array_merge($err, $attackListItem->setUnits($request, true));
+        
         $attackListItem->send_time = $attackListItem->calcSend();
+        $err = array_merge($err, $attackListItem->verifyTime());
+        
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
+        }
+        
         if($attackListItem->update()){
             return \Response::json(array(
                 'data' => 'success',
@@ -327,7 +271,9 @@ class AttackPlannerItemController extends BaseController
             ));
         }
         
+        $err = [];
         foreach ($request->items as $item) {
+            $curErr = [];
             $attackListItem = AttackListItem::find($item);
             if($item == null) {
                 continue;
@@ -358,16 +304,14 @@ class AttackPlannerItemController extends BaseController
                     $xTarget = $villageTarget->x;
                     $yTarget = $villageTarget->y;
                 }
-                if (!$attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget)) {
-                    return \Response::json(array(
-                        'data' => 'error',
-                        'title' => __('tool.attackPlanner.villageNotExistTitle'),
-                        'msg' => __('tool.attackPlanner.villageNotExist'),
-                    ));
-                }
+                $curErr = array_merge($curErr, $attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
             }
 
-            $timeType = 0; //default keep arrival_time
+            if (isset($request->checkboxes['slowest_unit'])) {
+                $attackListItem->slowest_unit = $request->slowest_unit;
+            }
+
+            //default keep arrival_time
             if (isset($request->checkboxes['date'])) {
                 if ($request->time_type == 0) {
                     $attackListItem->arrival_time = Carbon::parse($request->day. ' ' .$request->time);
@@ -376,30 +320,18 @@ class AttackPlannerItemController extends BaseController
                     $attackListItem->arrival_time = $attackListItem->calcArrival();
                 }
             }
-
-            if (isset($request->checkboxes['slowest_unit'])) {
-                $attackListItem->slowest_unit = $request->slowest_unit;
-            }
-
-            foreach (self::$units as $unit){
-                if (isset($request->checkboxes[$unit])) {
-                    $value = $request->$unit;
-                    if ($value != null) {
-                        if ($value <= 2147483648) {
-                            $attackListItem->$unit = intval($value);
-                        } else {
-                            return \Response::json(array(
-                                'data' => 'error',
-                                'title' => __('tool.attackPlanner.errorUnitCountTitle'),
-                                'msg' => __('ui.unit.' . $unit) . ' ' . __('tool.attackPlanner.errorUnitCount'),
-                            ));
-                        }
-                    }
-                }
-            }
-
             $attackListItem->send_time = $attackListItem->calcSend();
-            $attackListItem->update();
+            $curErr = array_merge($curErr, $attackListItem->verifyTime());
+            $curErr = array_merge($curErr, $attackListItem->setUnits($request, false));
+            if(count($curErr) == 0) {
+                $attackListItem->update();
+            }
+            
+            $err = array_merge($err, $curErr);
+        }
+        
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
         }
 
         return \Response::json(array(

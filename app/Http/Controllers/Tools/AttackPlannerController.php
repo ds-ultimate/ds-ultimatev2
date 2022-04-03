@@ -234,35 +234,40 @@ class AttackPlannerController extends BaseController
 
     public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
         abort_unless($attackList->edit_key == $request->get('key'), 403);
-        $world = $attackList->world;
         $imports = explode(PHP_EOL, $request->import);
+        
+        $err = [];
         foreach ($imports as $import){
             if ($import == '') continue;
 
-
             $list = explode('&', $import);
             if (count($list) < 7) continue;
-            $villageModel = new Village();
-            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.village_latest');
-            $start = $villageModel->find($list[0]);
-            $target = $villageModel->find($list[1]);
 
-            if ($start != null && $target != null) {
-                $arrival = (int)$list[3];
+            $arrival = (int)$list[3];
+            $unitArray = null;
 
-                if (isset($list[7]) && $list[7] != '') {
-                    $units = explode('/', $list[7]);
-                    $unitArray = [];
-                    foreach ($units as $unit) {
-                        $unitSplit = explode('=', $unit, 2);
-                        if(count($unitSplit) < 2) continue;
-                        $unitArray += [$unitSplit[0] => intval(base64_decode(str_replace('/', '', $unitSplit[1])))];
-                    }
+            if (isset($list[7]) && $list[7] != '') {
+                $units = explode('/', $list[7]);
+                $unitArray = [];
+                foreach ($units as $unit) {
+                    $unitSplit = explode('=', $unit, 2);
+                    if(count($unitSplit) < 2) continue;
+                    $unitArray[$unitSplit[0]] = intval(base64_decode(str_replace('/', '', $unitSplit[1])));
                 }
-                self::newItem($attackList->id, $list[0], $list[1], AttackListItem::unitNameToID($list[2]), date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1, (isset($unitArray))?$unitArray:null);
             }
+            $err = array_merge($err, self::newItem($attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
+                    date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1,
+                    $unitArray));
         }
-
+        
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
+        }
+        return \Response::json(array(
+            'data' => 'success',
+            'title' => __('tool.attackPlanner.importWBSuccessTitle'),
+            'msg' => __('tool.attackPlanner.importWBSuccess'),
+        ));
     }
 
     public function destroyOutdated(AttackList $attackList){
@@ -280,32 +285,31 @@ class AttackPlannerController extends BaseController
         return ['success' => true, 'message' => 'cleared !!'];
     }
 
-    public static function newItem($attack_list_id, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
-        $attackplaner = AttackList::find($attack_list_id);
-        $startVillage = Village::village($attackplaner->world->server->code, $attackplaner->world->name, $start_village_id);
-        $targetVillage = Village::village($attackplaner->world->server->code, $attackplaner->world->name, $start_village_id);
-        if(!isset($startVillage) || !isset($targetVillage)){
-            return \Response::json(array(
-                'data' => 'error',
-                'msg' => __('ui.villageNotExist'),
-            ));
-        }
+    public static function newItem(AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
+        $err = [];
+        $sV = Village::village($parList->world->server->code, $parList->world->name, $start_village_id);
+        $tV = Village::village($parList->world->server->code, $parList->world->name, $start_village_id);
+        
         $item = new AttackListItem();
-        $item->attack_list_id = $attack_list_id;
-        $item->start_village_id = $start_village_id;
-        $item->target_village_id = $target_village_id;
+        $item->attack_list_id = $parList->id;
+        $err = array_merge($err, $item->setVillageID($sV->x, $sV->y, $tV->x, $tV->y));
+        $item->type = $type;
         $item->slowest_unit = $slowest_unit;
         $item->arrival_time = $arrival_time;
         $item->send_time = $item->calcSend();
-        $item->type = $type;
         if ($units != null) {
-            foreach ($units as $key => $unit) {
-                if ($key != 'militia'){
-                    $item->$key = $unit;
-                }
+            if(is_array($units)) {
+                $err = array_merge($err, $item->setUnitsArr($units));
+            } else {
+                $err = array_merge($err, $item->setUnits($units, true));
             }
         }
-        $item->save();
+        $err = array_merge($err, $item->verifyTime());
+        
+        if(count($err) == 0) {
+            $item->save();
+        }
+        return $err;
     }
 
     public static function title(AttackList $attackList, $key, $title){
@@ -365,22 +369,17 @@ class AttackPlannerController extends BaseController
         $list->show_key = Str::random(40);
         $list->save();
         
+        $err = [];
         foreach($req['items'] as $it) {
-            $item = new AttackListItem();
-            $item->attack_list_id = $list->id;
-            $item->start_village_id = $it['source'];
-            $item->target_village_id = $it['destination'];
-            $item->slowest_unit = $it['slowest_unit'];
-            $item->arrival_time = $it['arrival_time'];
-            $item->send_time = $item->calcSend();
-            $item->type = $it['type'];
-            $item->save();
+            $err = array_merge($err, self::newItem($list, $it['source'], $it['destination'], $it['slowest_unit'],
+                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, $unitArray));
         }
         
         return \Response::json(array(
-            'id' => $item->attack_list_id,
+            'id' => $list->id,
             'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
             'show' => route('tools.attackPlannerMode', [$list->id, "show", $list->show_key]),
+            'errors' => $err,
         ));
     }
 }

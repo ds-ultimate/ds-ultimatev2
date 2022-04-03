@@ -13,6 +13,7 @@ use App\CustomModel;
 use App\Util\BasicFunctions;
 use App\Village;
 use App\Tool\AttackPlanner\AttackList as AttackList;
+use Illuminate\Http\Request;
 
 class AttackListItem extends CustomModel
 {
@@ -51,20 +52,7 @@ class AttackListItem extends CustomModel
         'attack_list_id',
     ];
 
-    private static $unit = [
-        0 => 'spear',
-        1 => 'sword',
-        2 => 'axe',
-        3 => 'archer',
-        4 => 'spy',
-        5 => 'light',
-        6 => 'marcher',
-        7 => 'heavy',
-        8 => 'ram',
-        9 => 'catapult',
-        10 => 'knight',
-        11 => 'snob',
-    ];
+    public static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
 
     /**
      * @return AttackList
@@ -94,11 +82,11 @@ class AttackListItem extends CustomModel
     }
 
     public function unitIDToName(){
-        return AttackListItem::$unit[$this->slowest_unit];
+        return AttackListItem::$units[$this->slowest_unit];
     }
 
     public static function unitNameToID($input){
-        return array_search($input, self::$unit);
+        return array_search($input, self::$units);
     }
 
     public function typeIDToName(){
@@ -181,7 +169,7 @@ class AttackListItem extends CustomModel
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
-        $unit = self::$unit[$this->slowest_unit];
+        $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
         return $this->arrival_time->subSeconds($runningTime);
     }
@@ -189,7 +177,7 @@ class AttackListItem extends CustomModel
     public function calcArrival(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
-        $unit = self::$unit[$this->slowest_unit];
+        $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
         return $this->send_time->addSeconds($runningTime);
     }
@@ -199,12 +187,17 @@ class AttackListItem extends CustomModel
     }
 
     public function setVillageID($xStart, $yStart, $xTarget, $yTarget){
+        $err = [];
         $this->start_village_id = $this->getVillageID($xStart, $yStart);
-        $this->target_village_id = $this->getVillageID($xTarget, $yTarget);
-        if ($this->start_village_id === null || $this->target_village_id === null){
-            return false;
+        if ($this->start_village_id === null){
+            $err[] = __('tool.attackPlanner.villageNotExistStart');
         }
-        return true;
+        
+        $this->target_village_id = $this->getVillageID($xTarget, $yTarget);
+        if ($this->target_village_id === null){
+            $err[] = __('tool.attackPlanner.villageNotExistTarget');
+        }
+        return $err;
     }
 
     private function getVillageID($x, $y){
@@ -213,5 +206,70 @@ class AttackListItem extends CustomModel
         $village = $villageModel->where(['x' => $x, 'y' => $y])->first();
         return isset($village->villageID)? $village->villageID : null;
     }
-
+    
+    public function setUnits(Request $data, $forceAllow) {
+        $err = [];
+        foreach (self::$units as $unit){
+            if(!$forceAllow && !isset($data->checkboxes[$unit])) continue;
+            
+            if ($data->{$unit} == null){
+                $this->{$unit} = 0;
+            }else{
+                $value = $data->{$unit};
+                if ($value <= 2147483648){
+                    $this->{$unit} = intval($value);
+                }else{
+                    $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
+                }
+            }
+        }
+        return $err;
+    }
+    
+    
+    public function setUnitsArr(array $data) {
+        $err = [];
+        foreach (self::$units as $unit){
+            if (!isset($data[$unit]) || $data[$unit] == null){
+                $this[$unit] = 0;
+            } else {
+                $value = $data[$unit];
+                if ($value <= 2147483648){
+                    $this[$unit] = intval($value);
+                }else{
+                    $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
+                }
+            }
+        }
+        return $err;
+    }
+    
+    public function verifyTime() {
+        if($this->send_time->year <= 1970) {
+            return [ __('tool.attackPlanner.sendtimeToSoon') ];
+        }
+        if($this->send_time->year > 2037) {
+            return [ __('tool.attackPlanner.sendtimeToLate') ];
+        }
+        if($this->arrival_time->year <= 1970) {
+            return [ __('tool.attackPlanner.arrivetimeToSoon') ];
+        }
+        if($this->arrival_time->year > 2037) {
+            return [ __('tool.attackPlanner.arrivetimeToLate') ];
+        }
+        return [];
+    }
+    
+    public static function errJsonReturn($err) {
+        $msg = "";
+        foreach($err as $e) {
+            $msg .= $e . "<br>";
+        }
+        
+        return \Response::json(array(
+            'data' => 'error',
+            'title' => __('tool.attackPlanner.errorTitle'),
+            'msg' => $msg,
+        ));
+    }
 }

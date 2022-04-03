@@ -43,7 +43,9 @@
         })
             .then((response) => {
                 importWB.val('');
+                var data = response.data;
                 table.ajax.reload();
+                createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
             })
             .catch((error) => {
 
