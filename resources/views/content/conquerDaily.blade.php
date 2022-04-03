@@ -25,22 +25,20 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-4">
+                    <div class="m-auto">
                         <div class="form-inline">
                             <label class="control-label pr-3">{{ __('ui.table.date') }}: </label>
                             <input id="date_picker" class="form-control form-control-sm col-8" type="text" value="{{ Illuminate\Support\Carbon::now()->toDateString() }}" max="{{ Illuminate\Support\Carbon::now()->toDateString() }}" min="{{ Illuminate\Support\Carbon::now()->subDays(config('dsUltimate.db_save_day'))->toDateString() }}" readonly>
                         </div>
                     </div>
-                    <div class="col-4"></div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Datachart Eroberungen -->
-    <div class="col-12 col-md-6 mt-2">
+    <div class="col-12 col-lg-6 mt-2">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body cust-responsive">
                 <h2 class="card-title">{{ __('ui.tabletitel.player') }}</h2>
                 <table id="table_player" class="table table-hover table-sm w-100">
                     <thead>
@@ -57,9 +55,9 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 mt-2">
+    <div class="col-12 col-lg-6 mt-2">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body cust-responsive">
                 <h2 class="card-title">{{ __('ui.tabletitel.allys') }}</h2>
                 <table id="table_ally" class="table table-hover table-sm w-100">
                     <thead>
@@ -101,7 +99,6 @@
                     { "data": "ally"},
                     { "data": "total"},
                 ],
-                responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });
 
@@ -118,7 +115,6 @@
                     { "data": "tag"},
                     { "data": "total"},
                 ],
-                responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });
 

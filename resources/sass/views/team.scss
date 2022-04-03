@@ -10,7 +10,7 @@
     border: 0;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
     border-top-left-radius: calc(5rem - 1px);
-    @extend .bg-white;
+    background-color: $card-bg;
     @extend .text-center;
 }
 .card-img-top {

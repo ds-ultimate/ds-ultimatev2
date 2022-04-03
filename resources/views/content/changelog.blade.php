@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="justify-content-center">
-        <div class="col-12 text-center">
+    <div class="justify-content-center mt-4">
+        <div class="col-12 timeline-button">
             <a class="btn btn-primary" href="{{ url()->previous() }}">{{ __('global.back') }}</a>
         </div>
     </div>
     <ul class="timeline">
-        @foreach($changelogs as $key => $changelog)
-            <li class="{{ ($key % 2 != 0)? 'timeline-inverted' : '' }}">
+        @foreach($changelogs as $changelog)
+            <li class="{{ ($loop->even)? 'timeline-inverted' : '' }}">
                 <div class="timeline-badge" style="background-color: {{ $changelog->color }}"><i class="{{ $changelog->icon }}"></i></div>
-                <div class="timeline-panel bg-white">
+                <div class="timeline-panel">
                     <div class="timeline-heading">
                         <div class="d-none d-lg-block">
                             <div class="timeline-title form-inline">
