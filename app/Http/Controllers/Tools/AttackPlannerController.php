@@ -425,9 +425,28 @@ class AttackPlannerController extends BaseController
         $list->save();
         
         $err = [];
+        $all = [];
         foreach($req['items'] as $it) {
-            self::newItem($err, $list, $it['source'], $it['destination'], $it['slowest_unit'],
+            $it = self::newItem($err, $list, $it['source'], $it['destination'], $it['slowest_unit'],
                 $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, null);
+            
+            if($it != null) {
+                $all[] = $it;
+            }
+        }
+
+        $insert = new AttackListItem();
+        $allOk = true;
+        foreach (array_chunk($all,3000) as $t){
+            $allOk &= $insert->insert($t);
+        }
+        
+        if(! $allOk) {
+            $err[] = "Error during insert";
+        }
+        
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
         }
         
         return \Response::json(array(
