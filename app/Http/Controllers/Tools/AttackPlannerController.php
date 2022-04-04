@@ -372,7 +372,7 @@ class AttackPlannerController extends BaseController
         $err = [];
         foreach($req['items'] as $it) {
             $err = array_merge($err, self::newItem($list, $it['source'], $it['destination'], $it['slowest_unit'],
-                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, $unitArray));
+                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, null));
         }
         
         return \Response::json(array(
