@@ -171,7 +171,7 @@ class AttackListItem extends CustomModel
         $dist = $this->calcDistance();
         $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
-        return $this->arrival_time->subSeconds($runningTime);
+        return $this->arrival_time->copy()->subSeconds($runningTime);
     }
 
     public function calcArrival(){
@@ -179,7 +179,7 @@ class AttackListItem extends CustomModel
         $dist = $this->calcDistance();
         $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
-        return $this->send_time->addSeconds($runningTime);
+        return $this->send_time->copy()->addSeconds($runningTime);
     }
 
     public function calcDistance(){

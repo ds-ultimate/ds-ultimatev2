@@ -265,7 +265,11 @@ class World extends CustomModel
         return preg_match("/^\d+$/", $name);
     }
 
+    private $unitConfCache = null;
     public function unitConfig(){
-        return simplexml_load_string($this->units);
+        if($this->unitConfCache == null) {
+            $this->unitConfCache = simplexml_load_string($this->units);
+        }
+        return $this->unitConfCache;
     }
 }

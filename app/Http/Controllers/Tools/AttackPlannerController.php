@@ -19,6 +19,7 @@ use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
@@ -117,16 +118,17 @@ class AttackPlannerController extends BaseController
         $mode = 'edit';
         $now = Carbon::now();
 
-        $stats['total'] = $attackList->items()->count();
-        $stats['start_village'] = $attackList->items()->get()->groupBy('start_village_id')->count();
-        $stats['target_village'] = $attackList->items()->get()->groupBy('target_village_id')->count();
+        $allAtts = $attackList->items()->get();
+        $stats['total'] = $allAtts->count();
+        $stats['start_village'] = $allAtts->groupBy('start_village_id')->count();
+        $stats['target_village'] = $allAtts->groupBy('target_village_id')->count();
 
-        foreach ($attackList->items()->get()->groupBy('type') as $type){
+        foreach ($allAtts->groupBy('type') as $type){
             $stats['type'][$type[0]->type]['id'] = $type[0]->type;
             $stats['type'][$type[0]->type]['count'] = $type->count();
         }
 
-        foreach ($attackList->items()->get()->groupBy('slowest_unit') as $slowest_unit){
+        foreach ($allAtts->groupBy('slowest_unit') as $slowest_unit){
             $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['id'] = $slowest_unit[0]->slowest_unit;
             $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['count'] = $slowest_unit->count();
         }
@@ -237,7 +239,9 @@ class AttackPlannerController extends BaseController
         $imports = explode(PHP_EOL, $request->import);
         
         $err = [];
+        $all = [];
         foreach ($imports as $import){
+            $import = trim($import);
             if ($import == '') continue;
 
             $list = explode('&', $import);
@@ -255,9 +259,23 @@ class AttackPlannerController extends BaseController
                     $unitArray[$unitSplit[0]] = intval(base64_decode(str_replace('/', '', $unitSplit[1])));
                 }
             }
-            $err = array_merge($err, self::newItem($attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
+            $it = self::newItem($err, $attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
                     date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1,
-                    $unitArray));
+                    $unitArray);
+            
+            if($it != null) {
+                $all[] = $it;
+            }
+        }
+
+        $insert = new AttackListItem();
+        $allOk = true;
+        foreach (array_chunk($all,3000) as $t){
+            $allOk &= $insert->insert($t);
+        }
+        
+        if(! $allOk) {
+            $err[] = "Error during insert";
         }
         
         if(count($err) > 0) {
@@ -285,31 +303,64 @@ class AttackPlannerController extends BaseController
         return ['success' => true, 'message' => 'cleared !!'];
     }
 
-    public static function newItem(AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
-        $err = [];
-        $sV = Village::village($parList->world->server->code, $parList->world->name, $start_village_id);
-        $tV = Village::village($parList->world->server->code, $parList->world->name, $target_village_id);
+    public static $villageCache = null;
+    public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
+        if(static::$villageCache == null) {
+            $tableName = BasicFunctions::getDatabaseName($parList->world->server->code, $parList->world->name).'.village_latest';
+            self::$villageCache = [];
+            foreach(DB::select("SELECT villageID,x,y FROM $tableName") as $v) {
+                self::$villageCache[$v->villageID] = $v;
+            }
+        }
         
+        $curErr = [];
         $item = new AttackListItem();
         $item->attack_list_id = $parList->id;
-        $err = array_merge($err, $item->setVillageID($sV->x, $sV->y, $tV->x, $tV->y));
+        
+        if(isset(self::$villageCache[$start_village_id])) {
+            $item->start_village_id = $start_village_id;
+            $sVillage = self::$villageCache[$start_village_id];
+        } else {
+            $curErr[] = __('tool.attackPlanner.villageNotExistStart');
+        }
+        if(isset(self::$villageCache[$target_village_id])) {
+            $item->target_village_id = $target_village_id;
+            $tVillage = self::$villageCache[$target_village_id];
+        } else {
+            $curErr[] = __('tool.attackPlanner.villageNotExistTarget');
+        }
+        
         $item->type = $type;
         $item->slowest_unit = $slowest_unit;
         $item->arrival_time = $arrival_time;
-        $item->send_time = $item->calcSend();
+        if(count($curErr) == 0) {
+            $unitConfig = $parList->world->unitConfig();
+            $dist = sqrt(pow($sVillage->x - $tVillage->x, 2) + pow($sVillage->y - $tVillage->y, 2));
+            $unit = AttackListItem::$units[$item->slowest_unit];
+            $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+            $item->send_time = $item->arrival_time->copy()->subSeconds($runningTime);
+        }
+        
         if ($units != null) {
             if(is_array($units)) {
-                $err = array_merge($err, $item->setUnitsArr($units));
+                $curErr = array_merge($curErr, $item->setUnitsArr($units));
             } else {
-                $err = array_merge($err, $item->setUnits($units, true));
+                $curErr = array_merge($curErr, $item->setUnits($units, true));
             }
         }
-        $err = array_merge($err, $item->verifyTime());
         
-        if(count($err) == 0) {
-            $item->save();
+        if(count($curErr) == 0) $curErr = array_merge($curErr, $item->verifyTime());
+        $err = array_merge($err, $curErr);
+        
+        if(count($curErr) > 0) {
+            return null;
         }
-        return $err;
+
+        $insertTime = Carbon::now();
+        return array_merge($item->getAttributes(), [
+            'created_at' => $insertTime,
+            'updated_at' => $insertTime,
+        ]);
     }
 
     public static function title(AttackList $attackList, $key, $title){
@@ -371,8 +422,8 @@ class AttackPlannerController extends BaseController
         
         $err = [];
         foreach($req['items'] as $it) {
-            $err = array_merge($err, self::newItem($list, $it['source'], $it['destination'], $it['slowest_unit'],
-                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, null));
+            self::newItem($err, $list, $it['source'], $it['destination'], $it['slowest_unit'],
+                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, null);
         }
         
         return \Response::json(array(
