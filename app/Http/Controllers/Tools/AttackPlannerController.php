@@ -288,7 +288,7 @@ class AttackPlannerController extends BaseController
     public static function newItem(AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
         $err = [];
         $sV = Village::village($parList->world->server->code, $parList->world->name, $start_village_id);
-        $tV = Village::village($parList->world->server->code, $parList->world->name, $start_village_id);
+        $tV = Village::village($parList->world->server->code, $parList->world->name, $target_village_id);
         
         $item = new AttackListItem();
         $item->attack_list_id = $parList->id;
