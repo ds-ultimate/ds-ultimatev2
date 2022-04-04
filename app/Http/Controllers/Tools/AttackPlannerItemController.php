@@ -35,10 +35,9 @@ class AttackPlannerItemController extends BaseController
         $item->note = $request->note;
         if($request->time_type == 0){
             $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
-            $item->send_time = $item->calcSend();
         }else{
             $item->send_time = Carbon::parse($request->day.' '.$request->time);
-            $item->arrival_time = $item->calcArrival();
+            if(count($err) == 0) $item->arrival_time = $item->calcArrival();
         }
         $ms = explode('.',$request->time);
         if (count($ms) > 1){
@@ -48,8 +47,10 @@ class AttackPlannerItemController extends BaseController
         }
         $err = array_merge($err, $item->setUnits($request, true));
         
-        $item->send_time = $item->calcSend();
-        $err = array_merge($err, $item->verifyTime());
+        if(count($err) == 0) {
+            $item->send_time = $item->calcSend();
+            $err = array_merge($err, $item->verifyTime());
+        }
         
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
@@ -221,10 +222,9 @@ class AttackPlannerItemController extends BaseController
         $attackListItem->note = $request->note;
         if($request->time_type == 0){
             $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);
-            $attackListItem->send_time = $attackListItem->calcSend();
         }else{
             $attackListItem->send_time = Carbon::parse($request->day.' '.$request->time);
-            $attackListItem->arrival_time = $attackListItem->calcArrival();
+            if(count($err) == 0) $attackListItem->arrival_time = $attackListItem->calcArrival();
         }
         $ms = explode('.',$request->time);
         if (count($ms) > 1){
@@ -234,8 +234,10 @@ class AttackPlannerItemController extends BaseController
         }
         $err = array_merge($err, $attackListItem->setUnits($request, true));
         
-        $attackListItem->send_time = $attackListItem->calcSend();
-        $err = array_merge($err, $attackListItem->verifyTime());
+        if(count($err) == 0) {
+            $attackListItem->send_time = $attackListItem->calcSend();
+            $err = array_merge($err, $attackListItem->verifyTime());
+        }
         
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
@@ -317,11 +319,14 @@ class AttackPlannerItemController extends BaseController
                     $attackListItem->arrival_time = Carbon::parse($request->day. ' ' .$request->time);
                 } else {
                     $attackListItem->send_time = Carbon::parse($request->day . ' ' . $request->time);
-                    $attackListItem->arrival_time = $attackListItem->calcArrival();
+                    if(count($curErr) == 0) $attackListItem->arrival_time = $attackListItem->calcArrival();
                 }
             }
-            $attackListItem->send_time = $attackListItem->calcSend();
-            $curErr = array_merge($curErr, $attackListItem->verifyTime());
+            
+            if(count($curErr) == 0) {
+                $attackListItem->send_time = $attackListItem->calcSend();
+                $curErr = array_merge($curErr, $attackListItem->verifyTime());
+            }
             $curErr = array_merge($curErr, $attackListItem->setUnits($request, false));
             if(count($curErr) == 0) {
                 $attackListItem->update();
