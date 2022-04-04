@@ -50,6 +50,7 @@ class AttackPlannerController extends BaseController
         }
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
+        $list->api = false;
         $list->save();
 
         return redirect()->route('tools.attackPlannerMode', [$list->id, 'edit', $list->edit_key]);
@@ -64,10 +65,12 @@ class AttackPlannerController extends BaseController
         switch ($mode){
             case 'edit':
                 abort_unless($attackList->edit_key == $key, 403);
+                $attackList->api = false;
                 $attackList->touch();
                 return $this->edit($attackList);
             case 'show':
                 abort_unless($attackList->show_key == $key, 403);
+                $attackList->api = false;
                 $attackList->touch();
                 return $this->show($attackList);
             case 'exportAll':
@@ -418,6 +421,7 @@ class AttackPlannerController extends BaseController
         }
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
+        $list->api = true;
         $list->save();
         
         $err = [];
