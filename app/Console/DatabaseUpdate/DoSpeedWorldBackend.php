@@ -142,11 +142,11 @@ class DoSpeedWorldBackend
                         continue;
                     }
                     TableGenerator::allyChangeTable($name);
-                    TableGenerator::allyLatestTable($name, 'latest_temp');
+                    TableGenerator::allyLatestTable($name, 'latest');
                     TableGenerator::conquerTable($name);
                     TableGenerator::historyIndexTable($name);
-                    TableGenerator::playerLatestTable($name, 'latest_temp');
-                    TableGenerator::villageLatestTable($name, 'latest_temp');
+                    TableGenerator::playerLatestTable($name, 'latest');
+                    TableGenerator::villageLatestTable($name, 'latest');
                     TableGenerator::playerTopTable($name);
                     TableGenerator::allyTopTable($name);
                     BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
