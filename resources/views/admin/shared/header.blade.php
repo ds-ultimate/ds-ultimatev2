@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light bg-nav">
+<nav class="navbar navbar-light nav-bg">
     <ul class="ml-auto navbar-nav flex-row">
         <li class="nav-item">
             <div class="dropdown">

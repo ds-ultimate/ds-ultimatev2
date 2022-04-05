@@ -199,7 +199,7 @@ $tabList = [
                             '</div>' +
                             '<div class="pl-3">' +
                                 '<h5>' +
-                                    '<a class="btn btn-outline-dark float-right" onclick="muteAudio()" role="button">' +
+                                    '<a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">' +
                                         '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
                                     '</a>' +
                                 '</h5>' +
