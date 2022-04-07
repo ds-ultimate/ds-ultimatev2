@@ -77,6 +77,7 @@ class AttackPlannerAPIController extends BaseController
         }
         
         $list = AttackList::find($req['id']);
+        abort_if($list == null, 404);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         return self::apiInternalCreateItems($request);
     }
@@ -128,6 +129,7 @@ class AttackPlannerAPIController extends BaseController
             abort(403);
         }
         $list = AttackList::find($req['id']);
+        abort_if($list == null, 404);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         return \Response::json(array_merge(AttackPlannerController::destroyOutdated($list) ,[
             'id' => $list->id,
@@ -145,6 +147,7 @@ class AttackPlannerAPIController extends BaseController
             abort(403);
         }
         $list = AttackList::find($req['id']);
+        abort_if($list == null, 404);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         return \Response::json(array_merge(AttackPlannerController::clear($list) ,[
             'id' => $list->id,
