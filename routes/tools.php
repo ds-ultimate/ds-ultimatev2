@@ -8,7 +8,7 @@
 |
 */
 
-Route::post('/toolsreateItems/follow', [\App\Http\Controllers\FollowController::class, 'createFollowTool'])->name('follow');
+Route::post('/tools/follow', [\App\Http\Controllers\FollowController::class, 'createFollowTool'])->name('follow');
 
 //Distance calculator
 Route::get('/{server}/{world}/tools/distanceCalc', [\App\Http\Controllers\Tools\DistanceCalcController::class, 'index'])->name('distanceCalc');
