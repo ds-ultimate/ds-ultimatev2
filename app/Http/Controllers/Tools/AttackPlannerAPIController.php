@@ -55,7 +55,7 @@ class AttackPlannerAPIController extends BaseController
         $list->show_key = Str::random(40);
         $list->api = true;
         $list->save();
-        return self::apiInternalCreateItems($request);
+        return self::apiInternalCreateItems($req, $list);
     }
     
     public function apiItemCreate(Request $request) {
@@ -79,7 +79,7 @@ class AttackPlannerAPIController extends BaseController
         $list = AttackList::find($req['id']);
         abort_if($list == null, 404);
         abort_unless($list->edit_key == $req['edit_key'], 403);
-        return self::apiInternalCreateItems($request);
+        return self::apiInternalCreateItems($req, $list);
     }
     
     private static function apiInternalCreateItems($req, AttackList $list) {
