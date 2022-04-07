@@ -146,6 +146,7 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'importWBSuccess' => 'Import erfolgreich',
     'villageNotExist' => 'Das Dorf existiert nicht',
     'arrivetimeToLate' => 'Die Ankunftszeit liegt zu weit in der Zukunft',
+    'wbImportWrongData' => 'Fehlerhafte Input Daten gefunden. Eventuell falsches Format?',
   ),
   'map' => 
   array (

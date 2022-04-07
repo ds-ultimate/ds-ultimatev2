@@ -146,6 +146,7 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'villageNotExistTarget' => 'The target village doesn\'t exist',
     'importWBSuccess' => 'Import successful',
     'importWBSuccessTitle' => 'Workbench data has been imported successfully',
+    'wbImportWrongData' => 'Incorrect input data found. Maybe wrong format?',
   ),
   'map' => 
   array (

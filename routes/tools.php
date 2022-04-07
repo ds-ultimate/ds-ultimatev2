@@ -8,7 +8,7 @@
 |
 */
 
-Route::post('/tools/follow', [\App\Http\Controllers\FollowController::class, 'createFollowTool'])->name('follow');
+Route::post('/toolsreateItems/follow', [\App\Http\Controllers\FollowController::class, 'createFollowTool'])->name('follow');
 
 //Distance calculator
 Route::get('/{server}/{world}/tools/distanceCalc', [\App\Http\Controllers\Tools\DistanceCalcController::class, 'index'])->name('distanceCalc');
@@ -29,7 +29,11 @@ Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', [\App\Http\
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'mode'])->name('attackPlannerMode');
 Route::post('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'modePost'])->name('attackPlannerModePost');
 Route::delete('/tools/attackPlanner/{attackList}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'destroy'])->name('attackPlannerDestroy');
-Route::post('/toolAPI/attackPlanner/create', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'apiCreate'])->name('attackPlannerAPICreate');
+
+Route::post('/toolAPI/attackPlanner/create', [\App\Http\Controllers\Tools\AttackPlannerAPIController::class, 'apiCreate'])->name('attackPlannerAPICreate');
+Route::post('/toolAPI/attackPlanner/createItems', [\App\Http\Controllers\Tools\AttackPlannerAPIController::class, 'apiItemCreate'])->name('attackPlannerAPICreateItems');
+Route::post('/toolAPI/attackPlanner/destroyOutdated', [\App\Http\Controllers\Tools\AttackPlannerAPIController::class, 'destroyOutdated'])->name('attackPlannerAPIDestroyOutdated');
+Route::post('/toolAPI/attackPlanner/clear', [\App\Http\Controllers\Tools\AttackPlannerAPIController::class, 'clear'])->name('attackPlannerAPIClear');
 
 //Map Tool
 Route::get('/tools/create/map/{server}/{world}', [\App\Http\Controllers\Tools\MapController::class, 'new'])->name('mapNew');
