@@ -269,14 +269,14 @@ $tabList = [
                     table.ajax.reload();
                 });
         }
-        
+
         function destroyAll() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, "clear", $attackList->edit_key]) }}")
                 .then((response) => {
                     table.ajax.reload();
                 });
         }
-        
+
         $(function() {
             $('[data-toggle=confirmation]').confirmation({
                 rootSelector: '[data-toggle=confirmation]',
@@ -326,7 +326,7 @@ $tabList = [
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
             var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) ? rowData.type : -1;
-            
+
             $('input[name="attack_list_item"', context).val(data.id);
             $('select[name="type"', context).val(type);
             $('input[name="xStart"', context).val(rowData.xStart);
@@ -348,8 +348,10 @@ $tabList = [
             $('input[name="catapult"', context).val(data.catapult);
             $('input[name="knight"', context).val(data.knight);
             $('input[name="snob"', context).val(data.snob);
+            $('select[name="support_boost"', context).val(+(data.support_boost));
+            $('select[name="tribe_skill"', context).val(+(data.tribe_skill));
             $('textarea[name="note"', context).val(data.note);
-            
+
             $('.attack-type').trigger("change");
             $('.slowest-unit').trigger("change");
             $('.time-switcher[value=0]', context).click();
@@ -371,7 +373,7 @@ $tabList = [
                     });
             }
         }
-        
+
         function validatePreSend(par) {
             var sX = $('input[name="xStart"]', par).val();
             var sY = $('input[name="yStart"]', par).val();
@@ -464,7 +466,7 @@ $tabList = [
                 muteaudio = true;
             }
         }
-        
+
         function countdown(){
             update_delay();
             $('countdown').each(function () {
@@ -472,7 +474,7 @@ $tabList = [
                 startTimer(date, $(this));
             });
         }
-        
+
         var timeDiff = null;
         function update_delay() {
             if(timeDiff == null) {
@@ -481,7 +483,7 @@ $tabList = [
                 timeDiff = serverPage - localTime;
                 //console.log("Server delay", timeDiff);
             }
-            
+
             axios.post('{{ route('api.time') }}')
                 .then((response) => {
                     var localTime = new Date().getTime() / 1000;
@@ -493,7 +495,7 @@ $tabList = [
                 .catch((error) => {
                 });
         }
-        
+
         function startTimer(arrive, display) {
             var duration = arrive - new Date().getTime() / 1000 - timeDiff;
             if (duration < 0){
@@ -506,9 +508,9 @@ $tabList = [
                 })
             }
         }
-        
+
         var countdownUpdateElements = [];
-        
+
         function update_allCountdowns() {
             var days, hours, minutes, seconds;
             countdownUpdateElements.forEach(function(elm) {
@@ -534,10 +536,10 @@ $tabList = [
                 }
             })
         }
-        
+
         var intervalUpdateCntdown = setInterval(update_allCountdowns, 1000);
         var intervalUpdateDelay = setInterval(update_delay, 300000);
-        
+
         function audio(){
             if(!muteaudio){
                 var $audio = $('#audio-elm');
@@ -597,7 +599,7 @@ $tabList = [
                     titleSave();
                 }
             });
-            
+
             $('.time-switcher').click(function(e) {
                 $(".time-title", $(this).parent().parent()).html($(this).html());
                 $(".time-type", $(this).parent().parent()).val($(this).attr("value"));
@@ -635,15 +637,15 @@ $tabList = [
                     e.preventDefault();
                     x = match[1];
                     y = match[2];
-                    
+
                     var inputs = $(this).parent().children(".coord-input");
                     $(inputs[0]).val(x);
                     $(inputs[1]).val(y);
-                    
+
                     checkVillage(x, y, $(this).parent())
                 }
             });
-            
+
             $('.attack-type').trigger("change");
             $('.slowest-unit').trigger("change");
         })

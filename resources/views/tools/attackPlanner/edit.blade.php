@@ -199,10 +199,59 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-12">
+                                    <div class="input-group-prepend mb-2">
+                            <span class="input-group-text inputGroup-sizing-sm">
+                            <img src="{{asset("/images/ds_images/boost/tribe_skill.png")}}"
+                                 alt="tribe_boost"></span>
+                                        <select class="form-control form-control-sm" name="tribe_skill" data-toggle="tooltip" data-placement="top"
+                                                title="{{ __('tool.attackPlanner.type_tribe_boost') }}">
+                                            <option value="0">0%</option>
+                                            <option value="0.01">1%</option>
+                                            <option value="0.02">2%</option>
+                                            <option value="0.03">3%</option>
+                                            <option value="0.04">4%</option>
+                                            <option value="0.05">5%</option>
+                                            <option value="0.06">6%</option>
+                                            <option value="0.07">7%</option>
+                                            <option value="0.08">8%</option>
+                                            <option value="0.09">9%</option>
+                                            <option value="0.1">10%</option>
+                                            <option value="0.11">11%</option>
+                                            <option value="0.12">12%</option>
+                                            <option value="0.13">13%</option>
+                                            <option value="0.14">14%</option>
+                                            <option value="0.15">15%</option>
+                                            <option value="0.16">16%</option>
+                                            <option value="0.17">17%</option>
+                                            <option value="0.18">18%</option>
+                                            <option value="0.19">19%</option>
+                                            <option value="0.2">20%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-xs-12 mb-2">
+                                    <div class="input-group-prepend">
+                            <span class="input-group-text inputGroup-sizing-sm">
+                            <img src="{{asset("/images/ds_images/boost/support_boost.png")}}"
+                                 alt="support_boost" height="16px"></span>
+                                        <select class="form-control form-control-sm" name="support_boost" data-toggle="tooltip" data-placement="top"
+                                                title="{{ __('tool.attackPlanner.type_support_boost') }}">
+                                            <option value="0">0%</option>
+                                            <option value="0.1">10%</option>
+                                            <option value="0.2">20%</option>
+                                            <option value="0.3">30%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!--/span-->
                         <div class="col-md-12">
                             <div class="form-group row">
-                                <label class="control-label col-3">Notizen</label>
+                                <label class="control-label col-3">{{ __('tool.attackplaner.notes') }}</label>
                                 <div class="col-12">
                                     <textarea name="note" class="form-control form-control-sm"  rows="2"></textarea>
                                 </div>

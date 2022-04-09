@@ -147,6 +147,8 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'villageNotExist' => 'Das Dorf existiert nicht',
     'arrivetimeToLate' => 'Die Ankunftszeit liegt zu weit in der Zukunft',
     'wbImportWrongData' => 'Fehlerhafte Input Daten gefunden. Eventuell falsches Format?',
+    'type_tribe_boost' => 'Freundschaftsskill',
+    'type_support_boost' => 'Unterstützungsboost',
   ),
   'map' => 
   array (
@@ -396,5 +398,9 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
     'renderedDestroySuccess' => 'Animierte Weltkarte erfolgreich gelöscht',
     'renderedDestroyError' => 'Die animierte Weltkarte konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst, melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'preview' => 'Vorschau',
+  ),
+  'attackplaner' => 
+  array (
+    'notes' => 'Notizen',
   ),
 );

@@ -25,7 +25,7 @@ class AttackPlannerItemController extends BaseController
     {
         $attackplaner = AttackList::findOrFail($request->attack_list_id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
-        
+
         $err = [];
         $item = new AttackListItem();
         $item->attack_list_id = $request->attack_list_id;
@@ -33,6 +33,9 @@ class AttackPlannerItemController extends BaseController
         $item->type = $request->type;
         $item->slowest_unit = $request->slowest_unit;
         $item->note = $request->note;
+        $item->support_boost = floatval($request->support_boost);
+        $item->tribe_skill = floatval($request->tribe_skill);
+
         if($request->time_type == 0){
             $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
         }else{
@@ -46,12 +49,12 @@ class AttackPlannerItemController extends BaseController
             $item->ms = 0;
         }
         $err = array_merge($err, $item->setUnits($request, true));
-        
+
         if(count($err) == 0) {
             $item->send_time = $item->calcSend();
             $err = array_merge($err, $item->verifyTime());
         }
-        
+
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
         }
@@ -175,13 +178,21 @@ class AttackPlannerItemController extends BaseController
                         $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>".BasicFunctions::numberConv($attackListItem->$unit)."</b>".(($unit != 'snob')? '<br>':'');
                     }
                 }
+                $speedBoost = "";
+                if($attackListItem->support_boost != 0.00){
+                    $speedBoost .= "<img class='pr-3' src='".asset("/images/ds_images/boost/support_boost.png")."' height='15px'>  <b> ".BasicFunctions::floatConvtoProcent($attackListItem->support_boost)."%</b> <br>";
+                };
+                if($attackListItem->tribe_skill != 0.00){
+                    $speedBoost .= "<img class='pr-3' src='".asset("/images/ds_images/boost/tribe_skill.png")."' height='15px'> <b>".BasicFunctions::floatConvtoProcent($attackListItem->tribe_skill)."%</b> <br>";
+                };
                 $popoverData = "";
-                if($unitCount != '' || ($attackListItem->note != null && strlen($attackListItem->note) > 0)) {
-                    $popoverData = ' data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"';
+                if($unitCount != '' || $speedBoost != '' || ($attackListItem->note != null && strlen($attackListItem->note) > 0)) {
+                    $popoverData = ' data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').(($speedBoost == '')?'':$speedBoost.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"';
                 }
+
                 if($attackListItem->note != null && strlen($attackListItem->note) > 0) {
                     $color = "text-danger";
-                } else if($unitCount != '') {
+                } else if($unitCount != '' || $speedBoost != '') {
                     $color = "text-info";
                 } else {
                     $color = "text-muted";
@@ -220,6 +231,9 @@ class AttackPlannerItemController extends BaseController
         $attackListItem->type = $request->type;
         $attackListItem->slowest_unit = $request->slowest_unit;
         $attackListItem->note = $request->note;
+        $attackListItem->support_boost = floatval($request->support_boost);
+        $attackListItem->tribe_skill = floatval($request->tribe_skill);
+
         if($request->time_type == 0){
             $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);
         }else{
@@ -233,16 +247,16 @@ class AttackPlannerItemController extends BaseController
             $attackListItem->ms = 0;
         }
         $err = array_merge($err, $attackListItem->setUnits($request, true));
-        
+
         if(count($err) == 0) {
             $attackListItem->send_time = $attackListItem->calcSend();
             $err = array_merge($err, $attackListItem->verifyTime());
         }
-        
+
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
         }
-        
+
         if($attackListItem->update()){
             return \Response::json(array(
                 'data' => 'success',
@@ -272,7 +286,7 @@ class AttackPlannerItemController extends BaseController
                 'msg' => __('tool.attackPlanner.attackCount'),
             ));
         }
-        
+
         $err = [];
         foreach ($request->items as $item) {
             $curErr = [];
@@ -287,6 +301,12 @@ class AttackPlannerItemController extends BaseController
 
             if (isset($request->checkboxes['note'])) {
                 $attackListItem->note = $request->note;
+            }
+            if (isset($request->checkboxes['support_boost'])) {
+                $attackListItem->support_boost = $request->support_boost;
+            }
+            if (isset($request->checkboxes['tribe_skill'])) {
+                $attackListItem->tribe_skill = $request->tribe_skill;
             }
 
             if (isset($request->checkboxes['start']) || isset($request->checkboxes['target'])){
@@ -322,7 +342,7 @@ class AttackPlannerItemController extends BaseController
                     if(count($curErr) == 0) $attackListItem->arrival_time = $attackListItem->calcArrival();
                 }
             }
-            
+
             if(count($curErr) == 0) {
                 $attackListItem->send_time = $attackListItem->calcSend();
                 $curErr = array_merge($curErr, $attackListItem->verifyTime());
@@ -331,10 +351,10 @@ class AttackPlannerItemController extends BaseController
             if(count($curErr) == 0) {
                 $attackListItem->update();
             }
-            
+
             $err = array_merge($err, $curErr);
         }
-        
+
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
         }

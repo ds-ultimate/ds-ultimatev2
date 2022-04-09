@@ -47,7 +47,7 @@ class AttackListItem extends CustomModel
         'updated_at',
         'deleted_at',
     ];
-    
+
     protected $cache = [
         'attack_list_id',
     ];
@@ -92,7 +92,7 @@ class AttackListItem extends CustomModel
     public function typeIDToName(){
         return static::statTypeIDToName($this->type);
     }
-    
+
     public static function statTypeIDToName($type) {
         switch ($type) {
             case '8': return __('tool.attackPlanner.attack');
@@ -169,16 +169,18 @@ class AttackListItem extends CustomModel
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
+        $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];
-        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
         return $this->arrival_time->copy()->subSeconds($runningTime);
     }
 
     public function calcArrival(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
+        $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];
-        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+        $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
         return $this->send_time->copy()->addSeconds($runningTime);
     }
 
@@ -192,7 +194,7 @@ class AttackListItem extends CustomModel
         if ($this->start_village_id === null){
             $err[] = __('tool.attackPlanner.villageNotExistStart');
         }
-        
+
         $this->target_village_id = $this->getVillageID($xTarget, $yTarget);
         if ($this->target_village_id === null){
             $err[] = __('tool.attackPlanner.villageNotExistTarget');
@@ -206,12 +208,12 @@ class AttackListItem extends CustomModel
         $village = $villageModel->where(['x' => $x, 'y' => $y])->first();
         return isset($village->villageID)? $village->villageID : null;
     }
-    
+
     public function setUnits(Request $data, $forceAllow) {
         $err = [];
         foreach (self::$units as $unit){
             if(!$forceAllow && !isset($data->checkboxes[$unit])) continue;
-            
+
             if ($data->{$unit} == null){
                 $this->{$unit} = 0;
             }else{
@@ -225,8 +227,8 @@ class AttackListItem extends CustomModel
         }
         return $err;
     }
-    
-    
+
+
     public function setUnitsArr(array $data) {
         $err = [];
         foreach (self::$units as $unit){
@@ -243,7 +245,7 @@ class AttackListItem extends CustomModel
         }
         return $err;
     }
-    
+
     public function verifyTime() {
         if($this->send_time->year <= 1970) {
             return [ __('tool.attackPlanner.sendtimeToSoon') ];
@@ -259,13 +261,13 @@ class AttackListItem extends CustomModel
         }
         return [];
     }
-    
+
     public static function errJsonReturn($err) {
         $msg = "";
         foreach($err as $e) {
             $msg .= $e . "<br>";
         }
-        
+
         return \Response::json(array(
             'data' => 'error',
             'title' => __('tool.attackPlanner.errorTitle'),

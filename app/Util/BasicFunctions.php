@@ -26,6 +26,14 @@ class BasicFunctions
     }
 
     /**
+     * @param int $float
+     * @return string
+     */
+    public static function floatConvtoProcent($float){
+        return round($float*100);
+    }
+
+    /**
      * @param $world
      * @return int
      */
@@ -147,7 +155,7 @@ class BasicFunctions
         }
         return $data;
     }
-    
+
     private static function linkGeneric($text, $href, $class=null, $blank=false, $toolT=null) {
         $t = "";
         if($toolT != null && $toolT[0] != null) {
@@ -206,7 +214,7 @@ class BasicFunctions
         $locale = \Session::get('locale');
         if($locale === null) {
             $replacements = ["cs" => "cz"];
-            
+
             $locale = substr(\Request::server('HTTP_ACCEPT_LANGUAGE'), 0, 2);
             if(isset($replacements[$locale])) {
                 $locale = $replacements[$locale];
@@ -241,14 +249,14 @@ class BasicFunctions
 
     /**
      *{!! BasicFunctions::outputName($test) !!}
-     * 
+     *
      * @param string $name
      * @return string
      */
     public static function outputName($name) {
         return self::escape(urldecode($name));
     }
-    
+
     public static function escape($text) {
         return nl2br(htmlentities($text));
     }
@@ -342,7 +350,7 @@ class BasicFunctions
     public static function sign( $number ) {
         return ( $number > 0 ) ? 1 : (( $number < 0 ) ? -1 : 0 );
     }
-    
+
     public static function flattenArray($array) {
         if (!is_array($array)) {
             // nothing to do if it's not an array
@@ -390,7 +398,7 @@ class BasicFunctions
         if($oldModel == null) {
             return self::thousandsCurrencyFormat($newModel->$type);
         }
-        
+
         if ($newModel->$type != $oldModel->$type){
             if ($newModel->$type > $oldModel->$type){
                 $result = ($invert == false)?'up':'down';
@@ -407,7 +415,7 @@ class BasicFunctions
     /**
      * Formats a given value with according suffix
      * rounds to 3 import digits
-     * 
+     *
      * @param type $num the given number
      * @return string
      */
@@ -417,15 +425,15 @@ class BasicFunctions
             $exp++;
             $num/= 1000;
         }
-        
+
         $suffixes = array('', 'K', 'M', 'G', 'T');
         $suffix = $suffixes[$exp];
-        
+
         $num_digits = floor(log10($num + 0.01));
         $num = round($num, 2 - $num_digits);
-        
+
         $converted = $num . " " . $suffix;
-        
+
         return $converted;
     }
 
@@ -438,7 +446,7 @@ class BasicFunctions
                 't' => Carbon::createFromTimestamp($val)->format("H:i"),
             ];
         }
-        
+
         return array_merge([
             'type' => $type,
             'name' => $name,
@@ -466,7 +474,7 @@ class BasicFunctions
             'dataAdditional' => "",
         ], $optional);
     }
-    
+
     public static function asset($path) {
         return asset($path) . "?" . filemtime(public_path($path));
     }

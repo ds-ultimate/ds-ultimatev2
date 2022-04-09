@@ -147,6 +147,8 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'importWBSuccess' => 'Import successful',
     'importWBSuccessTitle' => 'Workbench data has been imported successfully',
     'wbImportWrongData' => 'Incorrect input data found. Maybe wrong format?',
+    'type_support_boost' => 'support boost',
+    'type_tribe_boost' => 'friendship skill',
   ),
   'map' => 
   array (
@@ -396,5 +398,9 @@ If that problem persists please create a bug-report',
     'renderedDestroyError' => 'The rendered animated map could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'renderedDestroySuccess' => 'Rendered animated map successfully deleted',
     'preview' => 'preview',
+  ),
+  'attackplaner' => 
+  array (
+    'notes' => 'notes',
   ),
 );
