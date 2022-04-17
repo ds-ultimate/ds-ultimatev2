@@ -174,7 +174,8 @@ class AttackPlannerController extends BaseController
         // Workbench
         $exportWB = "";
         foreach ($items as $item){
-            $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&".(strtotime($item->arrival_time)*1000)."&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
+            $arrTimestamp = (strtotime($item->arrival_time)*1000) + $item->ms;
+            $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&$arrTimestamp&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
         }
         
         //BB-Code
@@ -266,7 +267,7 @@ class AttackPlannerController extends BaseController
             }
             $it = self::newItem($err, $attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
                     date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1,
-                    $unitArray);
+                    $unitArray, ms: $arrival%1000);
             
             if($it != null) {
                 $all[] = $it;
@@ -309,7 +310,8 @@ class AttackPlannerController extends BaseController
     }
 
     public static $villageCache = null;
-    public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time, $type, $units){
+    public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time,
+            $type, $units, $support_boost=0.0, $tribe_skill=0.0, $ms=0){
         if(static::$villageCache == null) {
             $tableName = BasicFunctions::getDatabaseName($parList->world->server->code, $parList->world->name).'.village_latest';
             self::$villageCache = [];
@@ -337,12 +339,17 @@ class AttackPlannerController extends BaseController
         
         $item->type = $type;
         $item->slowest_unit = $slowest_unit;
+        $item->support_boost = $support_boost;
+        $item->tribe_skill = $tribe_skill;
+        
         $item->arrival_time = $arrival_time;
+        $item->ms = $ms;
         if(count($curErr) == 0) {
             $unitConfig = $parList->world->unitConfig();
             $dist = sqrt(pow($sVillage->x - $tVillage->x, 2) + pow($sVillage->y - $tVillage->y, 2));
             $unit = AttackListItem::$units[$item->slowest_unit];
-            $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist);
+            $boost = 1 + ($item->slowest_unit ?? 0.0) + ($item->support_boost ?? 0.0);
+            $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
             $item->send_time = $item->arrival_time->copy()->subSeconds($runningTime);
         }
         

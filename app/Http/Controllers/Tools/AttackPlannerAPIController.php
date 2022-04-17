@@ -20,20 +20,13 @@ use Illuminate\Http\Request;
 class AttackPlannerAPIController extends BaseController
 {
     public function apiCreate(Request $request) {
-        $req = $request->validate([
+        $req = $request->validate(array_merge([
             'title' => '',
             'server' => 'required',
             'world' => 'required',
             'sitterMode' => 'string',
             'API_KEY' => 'required',
-            'items' => 'array',
-            'items.*' => 'array',
-            'items.*.source' => 'required|integer',
-            'items.*.destination' => 'required|integer',
-            'items.*.slowest_unit' => 'required|integer',
-            'items.*.arrival_time' => 'required|integer',
-            'items.*.type' => 'required|integer',
-        ]);
+        ], static::itemVerificationArray()));
         
         if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
             abort(403);
@@ -59,18 +52,11 @@ class AttackPlannerAPIController extends BaseController
     }
     
     public function apiItemCreate(Request $request) {
-        $req = $request->validate([
+        $req = $request->validate(array_merge([
             'id' => 'required',
             'edit_key' => 'required',
             'API_KEY' => 'required',
-            'items' => 'array',
-            'items.*' => 'array',
-            'items.*.source' => 'required|integer',
-            'items.*.destination' => 'required|integer',
-            'items.*.slowest_unit' => 'required|integer',
-            'items.*.arrival_time' => 'required|integer',
-            'items.*.type' => 'required|integer',
-        ]);
+        ], static::itemVerificationArray()));
         
         if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
             abort(403);
@@ -81,12 +67,28 @@ class AttackPlannerAPIController extends BaseController
         return self::apiInternalCreateItems($req, $list);
     }
     
+    private static function itemVerificationArray() {
+        return [
+            'items' => 'array',
+            'items.*' => 'array',
+            'items.*.source' => 'required|integer',
+            'items.*.destination' => 'required|integer',
+            'items.*.type' => 'required|integer',
+            'items.*.slowest_unit' => 'required|integer',
+            'items.*.support_boost' => 'numeric',
+            'items.*.tribe_skill' => 'numeric',
+            'items.*.arrival_time' => 'required|integer',
+            'items.*.ms' => 'integer',
+        ];
+    }
+    
     private static function apiInternalCreateItems($req, AttackList $list) {
         $err = [];
         $all = [];
         foreach($req['items'] as $it) {
             $it = AttackPlannerController::newItem($err, $list, $it['source'], $it['destination'], $it['slowest_unit'],
-                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, null);
+                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, $it,
+                $it['support_boost']??0.0, $it['tribe_skill']??0.0,$it['ms']??0);
             
             if($it != null) {
                 $all[] = $it;

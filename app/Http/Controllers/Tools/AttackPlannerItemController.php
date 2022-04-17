@@ -23,32 +23,35 @@ class AttackPlannerItemController extends BaseController
 {
     public function store(Request $request)
     {
-        $attackplaner = AttackList::findOrFail($request->attack_list_id);
-        abort_unless($request->key == $attackplaner->edit_key, 403);
+        $req = $request->validate(array_merge([
+            'attack_list_id' => 'required|integer',
+        ], static::generateEditValidation()));
+        $attackplaner = AttackList::findOrFail($req['attack_list_id']);
+        abort_unless($req['key'] == $attackplaner->edit_key, 403);
 
         $err = [];
         $item = new AttackListItem();
-        $item->attack_list_id = $request->attack_list_id;
-        $err = array_merge($err, $item->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
-        $item->type = $request->type;
-        $item->slowest_unit = $request->slowest_unit;
-        $item->note = $request->note;
-        $item->support_boost = floatval($request->support_boost);
-        $item->tribe_skill = floatval($request->tribe_skill);
+        $item->attack_list_id = $req['attack_list_id'];
+        $err = array_merge($err, $item->setVillageID($req['xStart'], $req['yStart'], $req['xTarget'], $req['yTarget']));
+        $item->type = $req['type'];
+        $item->slowest_unit = $req['slowest_unit'];
+        $item->note = $req['note'];
+        $item->support_boost = floatval($req['support_boost']);
+        $item->tribe_skill = floatval($req['tribe_skill']);
 
-        if($request->time_type == 0){
-            $item->arrival_time = Carbon::parse($request->day.' '.$request->time);
+        if($req['time_type'] == 0){
+            $item->arrival_time = Carbon::parse($req['day'].' '.$req['time']);
         }else{
-            $item->send_time = Carbon::parse($request->day.' '.$request->time);
+            $item->send_time = Carbon::parse($req['day'].' '.$req['time']);
             if(count($err) == 0) $item->arrival_time = $item->calcArrival();
         }
-        $ms = explode('.',$request->time);
+        $ms = explode('.',$req['time']);
         if (count($ms) > 1){
             $item->ms = $ms[1];
         }else{
             $item->ms = 0;
         }
-        $err = array_merge($err, $item->setUnits($request, true));
+        $err = array_merge($err, $item->setUnitsArr($req, true));
 
         if(count($err) == 0) {
             $item->send_time = $item->calcSend();
@@ -216,37 +219,41 @@ class AttackPlannerItemController extends BaseController
 
     public function destroy(Request $request, AttackListItem $attackListItem)
     {
-        if ($attackListItem->list->edit_key === $request->key){
+        $req = $request->validate([
+            'key' => 'required|string',
+        ]);
+        if ($attackListItem->list->edit_key === $req['key']){
             $attackListItem->delete();
             return ['success' => true, 'message' => 'destroy !!'];
         }
     }
 
     public function update(Request $request, AttackListItem $attackListItem){
+        $req = $request->validate(static::generateEditValidation());
         $attackplaner = $attackListItem->list;
-        abort_unless($request->key == $attackplaner->edit_key, 403);
+        abort_unless($req['key'] == $attackplaner->edit_key, 403);
 
         $err = [];
-        $err = array_merge($err, $attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
-        $attackListItem->type = $request->type;
-        $attackListItem->slowest_unit = $request->slowest_unit;
-        $attackListItem->note = $request->note;
-        $attackListItem->support_boost = floatval($request->support_boost);
-        $attackListItem->tribe_skill = floatval($request->tribe_skill);
+        $err = array_merge($err, $attackListItem->setVillageID($req['xStart'], $req['yStart'], $req['xTarget'], $req['yTarget']));
+        $attackListItem->type = $req['type'];
+        $attackListItem->slowest_unit = $req['slowest_unit'];
+        $attackListItem->note = $req['note'];
+        $attackListItem->support_boost = floatval($req['support_boost']);
+        $attackListItem->tribe_skill = floatval($req['tribe_skill']);
 
-        if($request->time_type == 0){
-            $attackListItem->arrival_time = Carbon::parse($request->day.' '.$request->time);
+        if($req['time_type'] == 0){
+            $attackListItem->arrival_time = Carbon::parse($req['day'].' '.$req['time']);
         }else{
-            $attackListItem->send_time = Carbon::parse($request->day.' '.$request->time);
+            $attackListItem->send_time = Carbon::parse($req['day'].' '.$req['time']);
             if(count($err) == 0) $attackListItem->arrival_time = $attackListItem->calcArrival();
         }
-        $ms = explode('.',$request->time);
+        $ms = explode('.',$req['time']);
         if (count($ms) > 1){
             $attackListItem->ms = $ms[1];
         }else{
             $attackListItem->ms = 0;
         }
-        $err = array_merge($err, $attackListItem->setUnits($request, true));
+        $err = array_merge($err, $attackListItem->setUnitsArr($req, true));
 
         if(count($err) == 0) {
             $attackListItem->send_time = $attackListItem->calcSend();
@@ -271,9 +278,28 @@ class AttackPlannerItemController extends BaseController
             ));
         }
     }
+    
+    private static function generateEditValidation() {
+        return array_merge([
+            'key' => 'required|string',
+            'xStart' => 'required|integer',
+            'yStart' => 'required|integer',
+            'xTarget' => 'required|integer',
+            'yTarget' => 'required|integer',
+            'type' => 'required|integer',
+            'slowest_unit' => 'required|integer',
+            'note' => '',
+            'support_boost' => 'required|numeric',
+            'tribe_skill' => 'required|numeric',
+            
+            'time_type' => 'required|integer',
+            'day' => 'required|string',
+            'time' => 'required|string',
+        ], AttackListItem::unitVerifyArray());
+    }
 
     public function multiedit(Request $request) {
-        $attackplaner = AttackList::find($request->id);
+        $attackplaner = AttackList::findorfail($request->id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
 
         $server = $attackplaner->world->server->code;
@@ -290,47 +316,47 @@ class AttackPlannerItemController extends BaseController
         $err = [];
         foreach ($request->items as $item) {
             $curErr = [];
-            $attackListItem = AttackListItem::find($item);
+            $attackListItem = AttackListItem::find(intval($item));
             if($item == null) {
                 continue;
             }
 
             if (isset($request->checkboxes['type'])) {
-                $attackListItem->type = $request->type;
+                $attackListItem->type = intval($request->type);
             }
 
             if (isset($request->checkboxes['note'])) {
                 $attackListItem->note = $request->note;
             }
             if (isset($request->checkboxes['support_boost'])) {
-                $attackListItem->support_boost = $request->support_boost;
+                $attackListItem->support_boost = floatval($request->support_boost);
             }
             if (isset($request->checkboxes['tribe_skill'])) {
-                $attackListItem->tribe_skill = $request->tribe_skill;
+                $attackListItem->tribe_skill = floatval($request->tribe_skill);
             }
 
             if (isset($request->checkboxes['start']) || isset($request->checkboxes['target'])){
                 if (isset($request->checkboxes['start'])) {
-                    $xStart = $request->xStart;
-                    $yStart = $request->yStart;
+                    $xStart = intval($request->xStart);
+                    $yStart = intval($request->yStart);
                 } else {
                     $villageStart = Village::village($server, $world, $attackListItem->start_village_id);
                     $xStart = $villageStart->x;
                     $yStart = $villageStart->y;
                 }
                 if (isset($request->checkboxes['target'])) {
-                    $xTarget = $request->xTarget;
-                    $yTarget = $request->yTarget;
+                    $xTarget = intval($request->xTarget);
+                    $yTarget = intval($request->yTarget);
                 } else {
                     $villageTarget = Village::village($server, $world, $attackListItem->target_village_id);
                     $xTarget = $villageTarget->x;
                     $yTarget = $villageTarget->y;
                 }
-                $curErr = array_merge($curErr, $attackListItem->setVillageID($request->xStart, $request->yStart, $request->xTarget, $request->yTarget));
+                $curErr = array_merge($curErr, $attackListItem->setVillageID($xStart, $yStart, $xTarget, $yTarget));
             }
 
             if (isset($request->checkboxes['slowest_unit'])) {
-                $attackListItem->slowest_unit = $request->slowest_unit;
+                $attackListItem->slowest_unit = intval($request->slowest_unit);
             }
 
             //default keep arrival_time
@@ -340,6 +366,12 @@ class AttackPlannerItemController extends BaseController
                 } else {
                     $attackListItem->send_time = Carbon::parse($request->day . ' ' . $request->time);
                     if(count($curErr) == 0) $attackListItem->arrival_time = $attackListItem->calcArrival();
+                }
+                $ms = explode('.',$request['time']);
+                if (count($ms) > 1){
+                    $attackListItem->ms = $ms[1];
+                }else{
+                    $attackListItem->ms = 0;
                 }
             }
 

@@ -217,9 +217,9 @@ class AttackListItem extends CustomModel
             if ($data->{$unit} == null){
                 $this->{$unit} = 0;
             }else{
-                $value = $data->{$unit};
+                $value = intval($data->{$unit});
                 if ($value <= 2147483648){
-                    $this->{$unit} = intval($value);
+                    $this->{$unit} = $value;
                 }else{
                     $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
                 }
@@ -229,21 +229,31 @@ class AttackListItem extends CustomModel
     }
 
 
-    public function setUnitsArr(array $data) {
+    public function setUnitsArr(array $data, $forceAllow=true) {
         $err = [];
         foreach (self::$units as $unit){
+            if(!$forceAllow && !isset($data['checkboxes'][$unit])) continue;
+            
             if (!isset($data[$unit]) || $data[$unit] == null){
                 $this[$unit] = 0;
             } else {
-                $value = $data[$unit];
+                $value = intval($data[$unit]);
                 if ($value <= 2147483648){
-                    $this[$unit] = intval($value);
+                    $this[$unit] = $value;
                 }else{
                     $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
                 }
             }
         }
         return $err;
+    }
+    
+    public static function unitVerifyArray() {
+        $ret = [];
+        foreach (self::$units as $unit) {
+            $ret[$unit] = 'required|integer';
+        }
+        return $ret;
     }
 
     public function verifyTime() {
