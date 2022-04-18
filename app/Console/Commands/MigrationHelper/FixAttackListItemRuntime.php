@@ -40,6 +40,7 @@ class FixAttackListItemRuntime extends Command
     public function handle()
     {
         foreach((new AttackListItem())->get() as $item) {
+            if($item->list == null) continue; //list has been deleted using soft deletes
             echo $item->id . "/" . $item->send_time . "/";
             $item->send_time = $item->calcSend();
             echo $item->send_time . "\n";
