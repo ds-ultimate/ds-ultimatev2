@@ -43,7 +43,7 @@ class FixAttackListItemRuntime extends Command
             echo $item->id . "/" . $item->send_time . "/";
             $item->send_time = $item->calcSend();
             echo $item->send_time . "\n";
-            if($item->send_time != -1) {
+            if($item->send_time != null) {
                 $item->save();
             }
         }
