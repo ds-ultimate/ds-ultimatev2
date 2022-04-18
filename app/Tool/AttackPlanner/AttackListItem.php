@@ -169,6 +169,7 @@ class AttackListItem extends CustomModel
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
+        if($dist == -1) return -1;
         $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
@@ -178,6 +179,7 @@ class AttackListItem extends CustomModel
     public function calcArrival(){
         $unitConfig = $this->list->world->unitConfig();
         $dist = $this->calcDistance();
+        if($dist == -1) return -1;
         $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];
         $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
@@ -185,6 +187,7 @@ class AttackListItem extends CustomModel
     }
 
     public function calcDistance(){
+        if($this->start_village == null || $this->target_village == null) return -1;
         return sqrt(pow($this->start_village->x - $this->target_village->x, 2) + pow($this->start_village->y - $this->target_village->y, 2));
     }
 
