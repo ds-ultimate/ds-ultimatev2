@@ -251,7 +251,7 @@ class AttackListItem extends CustomModel
     public static function unitVerifyArray() {
         $ret = [];
         foreach (self::$units as $unit) {
-            $ret[$unit] = 'required|integer';
+            $ret[$unit] = 'integer';
         }
         return $ret;
     }
