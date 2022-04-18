@@ -348,7 +348,7 @@ class AttackPlannerController extends BaseController
             $unitConfig = $parList->world->unitConfig();
             $dist = sqrt(pow($sVillage->x - $tVillage->x, 2) + pow($sVillage->y - $tVillage->y, 2));
             $unit = AttackListItem::$units[$item->slowest_unit];
-            $boost = 1 + ($item->slowest_unit ?? 0.0) + ($item->support_boost ?? 0.0);
+            $boost = 1 + ($item->support_boost ?? 0.0) + ($item->tribe_skill ?? 0.0);
             $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
             $item->send_time = $item->arrival_time->copy()->subSeconds($runningTime);
         }
