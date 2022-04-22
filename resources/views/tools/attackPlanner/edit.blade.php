@@ -1,4 +1,4 @@
-<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+<div class="modal fade edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -279,13 +279,29 @@
             axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), $('#editItemForm').serialize())
                 .then((response) => {
                     var data = response.data;
-                    table.ajax.reload();
+                    reloadData();
                     createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {
 
-                });
+                })
         }
-    });
+    })
+    
+    var autoFilledTime = true;
+    $(document).on('change', '#editItemForm input[name="day"], #editItemForm input[name="time"]', () => {
+        autoFilledTime = false;
+    })
+    
+    function editUpdateTime(day, time) {
+        if(! autoFilledTime) return;
+        var context = $('#editItemForm');
+        $('input[name="day"]', context).val(day);
+        $('input[name="time"]', context).val(time);
+    }
+    
+    function editSetAutoTime() {
+        autoFilledTime = true;
+    }
 </script>
 @endpush

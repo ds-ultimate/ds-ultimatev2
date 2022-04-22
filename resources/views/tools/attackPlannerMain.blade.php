@@ -150,15 +150,15 @@ $tabList = [
                     @if($mode == 'edit')
                     { data: 'select', name: 'select'},
                     @endif
-                    { data: 'start_village', name: 'start_village'},
+                    { data: 'start_village_id', name: 'start_village_id'},
                     { data: 'attacker', name: 'attacker'},
-                    { data: 'target_village', name: 'target_village'},
+                    { data: 'target_village_id', name: 'target_village_id'},
                     { data: 'defender', name: 'defender'},
                     { data: 'slowest_unit', name: 'slowest_unit'},
                     { data: 'type', name: 'type'},
                     { data: 'send_time', name: 'send_time'},
                     { data: 'arrival_time', name: 'arrival_time'},
-                    { data: 'time', name: 'time'},
+                    { data: 'time', name: 'arrival_time'},
                     { data: 'info', name: 'info'},
                     { data: 'action', name: 'action'},
                     @if($mode == 'edit')
@@ -169,9 +169,9 @@ $tabList = [
                     {
                         'orderable': false,
                         @if($mode == 'edit')
-                        'targets': [1,3,9,10,11,12]
+                        'targets': [10,11,12]
                         @else
-                        'targets': [0,2,8,9,10,]
+                        'targets': [9,10]
                         @endif
                     },
                     @if($mode == 'edit')
@@ -183,13 +183,13 @@ $tabList = [
                     @endif
                 ],
                 "drawCallback": function(settings, json) {
-                    @if($mode == 'edit')
-                    if(typeof updateExports !== 'undefined')
-                        updateExports();
-                    @endif
                     countdown();
                     popover();
                     if(firstDraw) {
+                        @if($mode == 'edit')
+                        if(typeof updateExports !== 'undefined')
+                            updateExports();
+                        @endif
                         $('#data1_wrapper div.row:first-child').addClass("justify-content-between")
                         $('#data1_wrapper div.row:first-child > div').removeClass("col-md-6 col-sm-12")
                         $('#data1_wrapper div.row:first-child > div:eq(1)').html('<div class="form-inline d-print-none">' +
@@ -233,7 +233,7 @@ $tabList = [
                                 'value': $('#checkAsUV').is(':checked'),
                             })
                                 .then((response) => {
-                                    table.ajax.reload();
+                                    reloadData();
                                 });
                         });
                         firstDraw = false
@@ -241,6 +241,14 @@ $tabList = [
                 },
                 {!! \App\Util\Datatable::language() !!}
             });
+
+        function reloadData() {
+            table.ajax.reload();
+            @if($mode == 'edit')
+            if(typeof updateExports !== 'undefined')
+                updateExports();
+            @endif
+        }
 
         $(document).on('input', '#audioTiming', function () {
             var value = this.value;
@@ -258,22 +266,22 @@ $tabList = [
             $('[data-toggle="tooltip"]').tooltip({classes: {"ui-tooltip": "ui-corner-all"}});
         });
 
-        function destroy(id,key) {
+        function destroy(id) {
             var url = "{{ route('tools.attackListItem.destroy', ['itemID']) }}/";
             axios.delete(url.replaceAll('itemID', id), {
                 data: {
-                    "key": key,
+                    "key": "{{ $attackList->edit_key }}",
                 }
             })
                 .then((response) => {
-                    table.ajax.reload();
+                    reloadData();
                 });
         }
 
         function destroyAll() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, "clear", $attackList->edit_key]) }}")
                 .then((response) => {
-                    table.ajax.reload();
+                    reloadData();
                 });
         }
 
@@ -293,7 +301,7 @@ $tabList = [
         function destroyOutdated() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}")
                 .then((response) => {
-                    table.ajax.reload();
+                    reloadData();
                 });
         }
 
@@ -320,44 +328,54 @@ $tabList = [
             }
             $(this).val(output).attr('type', 'time')
         });
-
+        
+        var editData = null
         function edit(id) {
             var context = $('#editItemForm');
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
+            editData = data;
             var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) ? rowData.type : -1;
 
-            $('input[name="attack_list_item"', context).val(data.id);
-            $('select[name="type"', context).val(type);
-            $('input[name="xStart"', context).val(rowData.xStart);
-            $('input[name="yStart"', context).val(rowData.yStart);
-            $('input[name="xTarget"', context).val(rowData.xTarget);
-            $('input[name="yTarget"', context).val(rowData.yTarget);
-            $('input[name="day"', context).val(rowData.day);
-            $('input[name="time"', context).val(rowData.time);
-            $('select[name="slowest_unit"', context).val(rowData.slowest_unit);
-            $('input[name="spear"', context).val(data.spear);
-            $('input[name="sword"', context).val(data.sword);
-            $('input[name="axe"', context).val(data.axe);
-            $('input[name="archer"', context).val(data.archer);
-            $('input[name="spy"', context).val(data.spy);
-            $('input[name="light"', context).val(data.light);
-            $('input[name="marcher"', context).val(data.marcher);
-            $('input[name="heavy"', context).val(data.heavy);
-            $('input[name="ram"', context).val(data.ram);
-            $('input[name="catapult"', context).val(data.catapult);
-            $('input[name="knight"', context).val(data.knight);
-            $('input[name="snob"', context).val(data.snob);
-            $('select[name="support_boost"', context).val(+(data.support_boost));
-            $('select[name="tribe_skill"', context).val(+(data.tribe_skill));
-            $('textarea[name="note"', context).val(data.note);
+            $('input[name="attack_list_item"]', context).val(data.id);
+            $('select[name="type"]', context).val(type);
+            $('input[name="xStart"]', context).val(rowData.xStart);
+            $('input[name="yStart"]', context).val(rowData.yStart);
+            $('input[name="xTarget"]', context).val(rowData.xTarget);
+            $('input[name="yTarget"]', context).val(rowData.yTarget);
+            $('input[name="day"]', context).val(rowData.day);
+            $('input[name="time"]', context).val(rowData.time);
+            $('select[name="slowest_unit"]', context).val(rowData.slowest_unit);
+            $('input[name="spear"]', context).val(data.spear);
+            $('input[name="sword"]', context).val(data.sword);
+            $('input[name="axe"]', context).val(data.axe);
+            $('input[name="archer"]', context).val(data.archer);
+            $('input[name="spy"]', context).val(data.spy);
+            $('input[name="light"]', context).val(data.light);
+            $('input[name="marcher"]', context).val(data.marcher);
+            $('input[name="heavy"]', context).val(data.heavy);
+            $('input[name="ram"]', context).val(data.ram);
+            $('input[name="catapult"]', context).val(data.catapult);
+            $('input[name="knight"]', context).val(data.knight);
+            $('input[name="snob"]', context).val(data.snob);
+            $('select[name="support_boost"]', context).val(+(data.support_boost));
+            $('select[name="tribe_skill"]', context).val(+(data.tribe_skill));
+            $('textarea[name="note"]', context).val(data.note);
 
             $('.attack-type').trigger("change");
             $('.slowest-unit').trigger("change");
             $('.time-switcher[value=0]', context).click();
-            checkVillage(rowData.xStart, rowData.yStart, $('input[name="xStart"', context).parent());
-            checkVillage(rowData.xTarget, rowData.yTarget, $('input[name="xTarget"', context).parent());
+            checkVillage(rowData.xStart, rowData.yStart, $('input[name="xStart"]', context).parent());
+            checkVillage(rowData.xTarget, rowData.yTarget, $('input[name="xTarget"]', context).parent());
+            
+            if(typeof editSetAutoTime !== 'undefined'){
+                editSetAutoTime();
+            }
         }
+        
+        $(document).on('hidden.bs.modal', '.edit-modal', function() {
+            editData = null;
+        })
 
         function checkVillage(x, y, parent) {
             if (x != '' && y != '') {
@@ -440,7 +458,7 @@ $tabList = [
                 'key': '{{$attackList->show_key}}',
             })
                 .then((response) => {
-                    table.ajax.reload();
+                    reloadData();
                 })
                 .catch((error) => {
                 });
@@ -468,6 +486,7 @@ $tabList = [
         }
 
         function countdown(){
+            countdownUpdateElements = [];
             update_delay();
             $('countdown').each(function () {
                 var date = $(this).attr('date');
@@ -526,7 +545,8 @@ $tabList = [
                 seconds = seconds < 10 ? "0" + seconds : seconds;
                 elm.display.html(days + hours + ":" + minutes + ":" + seconds);
 
-                if (duration <= 0) {
+                if (Math.floor(duration) <= 0) {
+                    elm.display.html("00:00:00");
                     elm.display.parent().addClass("bg-danger text-white");
                     countdownUpdateElements = countdownUpdateElements.filter(function(elmInner) {return elm != elmInner});
                 }
@@ -601,8 +621,17 @@ $tabList = [
             });
 
             $('.time-switcher').click(function(e) {
+                var time_id = $(this).attr("value");
                 $(".time-title", $(this).parent().parent()).html($(this).html());
-                $(".time-type", $(this).parent().parent()).val($(this).attr("value"));
+                $(".time-type", $(this).parent().parent()).val(time_id);
+                
+                if($(this).parents('#editItemForm').length > 0 && editData != null && typeof editUpdateTime !== 'undefined'){
+                    if(time_id == 0) {
+                        editUpdateTime(editData.DT_RowData.day, editData.DT_RowData.time);
+                    } else if(time_id == 1) {
+                        editUpdateTime(editData.DT_RowData.sday, editData.DT_RowData.stime);
+                    }
+                }
             });
 
             $('.attack-type').change(function (e) {

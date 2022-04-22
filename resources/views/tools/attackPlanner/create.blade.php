@@ -294,7 +294,7 @@
                 axios.post('{{ route('tools.attackListItem.store') }}', $('#createItemForm').serialize())
                     .then((response) => {
                         var data = response.data;
-                        table.ajax.reload();
+                        reloadData();
                         createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success' ? 'fas fa-check-circle text-success' : 'fas fa-exclamation-circle text-danger')
                     })
                     .catch((error) => {

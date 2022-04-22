@@ -124,6 +124,17 @@ class AttackPlannerItemController extends BaseController
                     }
                     return $attackListItem->arrival_time->format('H:i:s').'.'.$ms;
                 },
+                'sday' => function(AttackListItem $attackListItem) {
+                    return $attackListItem->send_time->format('Y-m-d');
+                },
+                'stime' => function(AttackListItem $attackListItem) {
+                    if (strlen($attackListItem->ms) < 3){
+                        $ms = (strlen($attackListItem->ms) == 2)? '0'.$attackListItem->ms : '00'.$attackListItem->ms;
+                    }else{
+                        $ms = $attackListItem->ms;
+                    }
+                    return $attackListItem->send_time->format('H:i:s').'.'.$ms;
+                },
                 'type' => function(AttackListItem $attackListItem) {
                     return $attackListItem->type;
                 },
@@ -134,14 +145,14 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('select', function (){
                 return '';
             })
-            ->addColumn('start_village', function (AttackListItem $attackListItem) {
+            ->editColumn('start_village_id', function (AttackListItem $attackListItem) {
                 $village = $attackListItem->start_village;
                 if($village == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
-            ->addColumn('target_village', function (AttackListItem $attackListItem) {
+            ->editColumn('target_village_id', function (AttackListItem $attackListItem) {
                 $village = $attackListItem->target_village;
                 if($village == null) {
                     return __('tool.attackPlanner.villageNotExist');
@@ -211,9 +222,10 @@ class AttackPlannerItemController extends BaseController
                 return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$href.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){
-                return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".bd-example-modal-xl"><i class="fas fa-edit"></i></a><a class="text-danger" onclick="destroy('.$attackListItem->id.',\''.$attackListItem->list->edit_key.'\')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
+                return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".edit-modal"><i class="fas fa-edit"></i></a>' .
+                        '<a class="text-danger" onclick="destroy('.$attackListItem->id.')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
-            ->rawColumns(['type', 'start_village', 'target_village', 'attacker', 'defender', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
+            ->rawColumns(['type', 'start_village_id', 'target_village_id', 'attacker', 'defender', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
             ->make(true);
     }
 
