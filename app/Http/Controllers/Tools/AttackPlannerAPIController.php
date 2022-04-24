@@ -42,7 +42,7 @@ class AttackPlannerAPIController extends BaseController
         $list->world_id = $worldData->id;
         $list->title = $req['title'] ?? "";
         if(isset($req['sitterMode'])) {
-            $list->uvMode = $req['sitterMode'] == true;
+            $list->uvMode = filter_var($req['sitterMode'], FILTER_VALIDATE_BOOLEAN);
         }
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
@@ -83,6 +83,17 @@ class AttackPlannerAPIController extends BaseController
     }
     
     private static function apiInternalCreateItems($req, AttackList $list) {
+        if($req['items']) {
+            return \Response::json(array(
+                'id' => $list->id,
+                'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
+                'show' => route('tools.attackPlannerMode', [$list->id, "show", $list->show_key]),
+                'edit_key' => $list->edit_key,
+                'show_key' => $list->show_key,
+                'errors' => ['items array is empty'],
+            ));
+        }
+        
         $err = [];
         $all = [];
         foreach($req['items'] as $it) {
