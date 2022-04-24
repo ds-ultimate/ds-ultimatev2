@@ -83,7 +83,7 @@ class AttackPlannerAPIController extends BaseController
     }
     
     private static function apiInternalCreateItems($req, AttackList $list) {
-        if($req['items']) {
+        if(! isset($req['items'])) {
             return \Response::json(array(
                 'id' => $list->id,
                 'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
