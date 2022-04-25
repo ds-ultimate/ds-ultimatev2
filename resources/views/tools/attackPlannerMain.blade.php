@@ -156,9 +156,9 @@ $tabList = [
                     { data: 'defender', name: 'defender'},
                     { data: 'slowest_unit', name: 'slowest_unit'},
                     { data: 'type', name: 'type'},
-                    { data: 'send_time', name: 'send_time'},
+                    { data: 'send_time', name: 'send_time', orderSequence:["desc", "asc"]},
                     { data: 'arrival_time', name: 'arrival_time'},
-                    { data: 'time', name: 'arrival_time'},
+                    { data: 'time', name: 'send_time', orderSequence:["desc", "asc"]},
                     { data: 'info', name: 'info'},
                     { data: 'action', name: 'action'},
                     @if($mode == 'edit')
