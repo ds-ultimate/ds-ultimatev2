@@ -74,7 +74,7 @@ class AttackPlannerAPIController extends BaseController
             'items.*.source' => 'required|integer',
             'items.*.destination' => 'required|integer',
             'items.*.type' => 'required|integer',
-            'items.*.slowest_unit' => 'required|integer',
+            'items.*.slowest_unit' => 'required|integer|between:0,' . (count(AttackListItem::$units)-1),
             'items.*.support_boost' => 'numeric',
             'items.*.tribe_skill' => 'numeric',
             'items.*.arrival_time' => 'required|integer',
