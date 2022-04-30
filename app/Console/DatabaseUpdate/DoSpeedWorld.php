@@ -47,6 +47,7 @@ class DoSpeedWorld
     //Various replacements for other language support than provided by native Carbon
     private static $REPLACEMENTS = [
         //support for CH / (de)
+        "Mai" => "May",
         "Dez" => "Dec",
     ];
     
