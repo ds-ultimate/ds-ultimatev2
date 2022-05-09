@@ -233,7 +233,7 @@ $tabList = [
                                 'value': $('#checkAsUV').is(':checked'),
                             })
                                 .then((response) => {
-                                    reloadData();
+                                    reloadData(false);
                                 });
                         });
                         firstDraw = false
@@ -242,10 +242,10 @@ $tabList = [
                 {!! \App\Util\Datatable::language() !!}
             });
 
-        function reloadData() {
+        function reloadData(upExp) {
             table.ajax.reload();
             @if($mode == 'edit')
-            if(typeof updateExports !== 'undefined')
+            if(upExp && typeof updateExports !== 'undefined')
                 updateExports();
             @endif
         }
@@ -267,21 +267,21 @@ $tabList = [
         });
 
         function destroy(id) {
-            var url = "{{ route('tools.attackListItem.destroy', ['itemID']) }}/";
+            var url = "{{ route('tools.attackListItem.destroy', ['itemID']) }}";
             axios.delete(url.replaceAll('itemID', id), {
                 data: {
                     "key": "{{ $attackList->edit_key }}",
                 }
             })
                 .then((response) => {
-                    reloadData();
+                    reloadData(true);
                 });
         }
 
         function destroyAll() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, "clear", $attackList->edit_key]) }}")
                 .then((response) => {
-                    reloadData();
+                    reloadData(true);
                 });
         }
 
@@ -301,7 +301,7 @@ $tabList = [
         function destroyOutdated() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}")
                 .then((response) => {
-                    reloadData();
+                    reloadData(true);
                 });
         }
 
@@ -458,7 +458,7 @@ $tabList = [
                 'key': '{{$attackList->show_key}}',
             })
                 .then((response) => {
-                    reloadData();
+                    reloadData(false);
                 })
                 .catch((error) => {
                 });

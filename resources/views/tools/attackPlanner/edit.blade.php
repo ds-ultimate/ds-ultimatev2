@@ -279,7 +279,7 @@
             axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), $('#editItemForm').serialize())
                 .then((response) => {
                     var data = response.data;
-                    reloadData();
+                    reloadData(true);
                     createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                 })
                 .catch((error) => {

@@ -347,7 +347,7 @@
                 axios.post('{{ route('tools.attackListItemMultiedit') }}', postData)
                     .then((response) => {
                         var data = response.data;
-                        reloadData();
+                        reloadData(true);
                         createToast(data['msg'], data['title'], '{{ __('global.now') }}', data['data'] === 'success'? 'fas fa-check-circle text-success' :'fas fa-exclamation-circle text-danger')
                     })
                     .catch((error) => {
