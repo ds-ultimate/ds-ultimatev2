@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 
 class AttackPlannerAPIController extends BaseController
 {
-    public function apiCreate(Request $request) {
+    public function create(Request $request) {
         $req = $request->validate(array_merge([
             'title' => '',
             'server' => 'required',
@@ -51,7 +51,7 @@ class AttackPlannerAPIController extends BaseController
         return self::apiInternalCreateItems($req, $list);
     }
     
-    public function apiItemCreate(Request $request) {
+    public function itemCreate(Request $request) {
         $req = $request->validate(array_merge([
             'id' => 'required',
             'edit_key' => 'required',
@@ -162,5 +162,80 @@ class AttackPlannerAPIController extends BaseController
         return \Response::json(array_merge(AttackPlannerController::clear($list) ,[
             'id' => $list->id,
         ]));
+    }
+
+    public function fetchItems(Request $request) {
+        $req = $request->validate([
+            'id' => 'required|integer',
+            'edit_key' => 'required_without:show_key',
+            'show_key' => 'required_without:edit_key',
+            'API_KEY' => 'required',
+            'length' => 'integer',
+            'start' => 'integer',
+        ]);
+        
+        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
+            abort(403);
+        }
+        $list = AttackList::findOrFail($req['id']);
+        
+        if(isset($req['edit_key'])) {
+            abort_unless($list->edit_key == $req['edit_key'], 403, "Edit key wrong");
+            $result = [
+                'id' => $list->id,
+                'sitterMode' => $list->uvMode,
+                'title' => $list->title,
+                'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
+                'show' => route('tools.attackPlannerMode', [$list->id, "show", $list->show_key]),
+                'edit_key' => $list->edit_key,
+                'show_key' => $list->show_key,
+            ];
+        } else if(isset($req['show_key'])) {
+            abort_unless($list->show_key == $req['show_key'], 403, "Show key wrong");
+            $result = [
+                'id' => $list->id,
+                'sitterMode' => $list->uvMode,
+                'title' => $list->title,
+                'show' => route('tools.attackPlannerMode', [$list->id, "show", $list->show_key]),
+                'show_key' => $list->show_key,
+            ];
+        } else {
+            abort(404, "Edit and show key are not present");
+        }
+        
+        $items = $list->items();
+        if(isset($req['start'])) {
+            if($req['start'] < 0) abort(422, "Start must be at least 0");
+            $items = $items->skip($req['start']);
+        }
+        if(isset($req['length'])) {
+            if($req['length'] < 0) abort(422, "Length must be at least 0");
+            $items = $items->take($req['length']);
+        }
+        $items = $items->get();
+        $result['items'] = [];
+        
+        foreach($items as $it) {
+            $r = [
+                'id' => $it->id,
+                'type' => $it->type,
+                'type' => $it->type,
+                'start_village_id' => $it->start_village_id,
+                'target_village_id' => $it->target_village_id,
+                'slowest_unit' => $it->slowest_unit,
+                'send_time' => $it->send_time->timestamp,
+                'arrival_time' => $it->arrival_time->timestamp,
+                'ms' => $it->ms,
+                'send' => $it->send,
+                'support_boost' => $it->support_boost,
+                'tribe_skill' => $it->tribe_skill,
+            ];
+            foreach(AttackListItem::$units as $u) {
+                $r[$u] = $it->{$u};
+            }
+            $result['items'][] = $r;
+        }
+        
+        return \Response::json($result);
     }
 }
