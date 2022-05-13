@@ -41,6 +41,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($driver)
     {
+        abort_unless(in_array($driver, array_keys(static::$drivers)), 404);
         if ($driver == 'discord'){
             return Socialite::driver($driver)->scopes(['email'])->redirect();
         }

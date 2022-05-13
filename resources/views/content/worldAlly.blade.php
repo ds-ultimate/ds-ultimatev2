@@ -11,24 +11,24 @@
         </div>
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <table id="table_id" class="table table-striped table-hover table-sm w-100">
+                <div class="card-body cust-responsive">
+                    <table id="table_id" class="table table-striped table-hover table-sm w-100 nowrap">
                         <thead>
-                        <tr class="d-none d-md-table-row">
+                        <tr class="d-none d-lg-table-row">
                             <th colspan="7">{{ ucfirst(__('ui.tabletitel.general')) }}</th>
                             <th colspan="3">{{ ucfirst(__('ui.tabletitel.bashStats')) }}</th>
                         </tr>
                         <tr>
-                            <th>{{ ucfirst(__('ui.table.rank')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.name')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.tag')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.points')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.members')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.villages')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashGes')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashOff')) }}</th>
-                            <th>{{ ucfirst(__('ui.table.bashDeff')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.rank')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.name')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.tag')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.points')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.members')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.villages')) }}</th>
+                            <th class="tablet-l desktop">{{ ucfirst(__('ui.table.avgPlayer')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.bashGes')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.bashOff')) }}</th>
+                            <th class="desktop">{{ ucfirst(__('ui.table.bashDeff')) }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,22 +45,17 @@
         $(document).ready( function () {
             $('#table_id').DataTable({
                 "columnDefs": [
-                    {"targets": 3, "className": 'text-right'},
-                    {"targets": 4, "className": 'text-right'},
-                    {"targets": 5, "className": 'text-right'},
-                    {"targets": 6, "className": 'text-right'},
-                    {"targets": 7, "className": 'text-right'},
-                    {"targets": 8, "className": 'text-right'},
-                    {"targets": 9, "className": 'text-right'},
+                    {"targets": [3, 4, 6, 7, 8, 9], "className": 'text-right'},
                     {"targets": [3, 4, 5, 7, 8, 9], "orderSequence": ["desc", "asc"]},
                 ],
                 "processing": true,
                 "serverSide": true,
+                responsive: true,
                 "ajax": "{{ route('api.worldAlly', [$worldData->server->code, $worldData->name]) }}",
                 "columns": [
                     { "data": "rank" },
-                    { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
-                    { "data": "tag", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/ally/"+ row.allyID +"'>"+ value +'</a>' }},
+                    { "data": "name", "render": function (value, type, row) {return "<a href='" + ("{{ route('ally', [$worldData->server->code, $worldData->name, "%allyID%"]) }}".replace("%allyID%", row.allyID)) +"'>"+ value +'</a>' }},
+                    { "data": "tag", "render": function (value, type, row) {return "<a href='" + ("{{ route('ally', [$worldData->server->code, $worldData->name, "%allyID%"]) }}".replace("%allyID%", row.allyID)) +"'>"+ value +'</a>' }},
                     { "data": "points", "render": function (value) {return numeral(value).format('0.[00] a')}},
                     { "data": "member_count", "render": function (value) {return numeral(value).format('0,0')}},
                     { "data": "village_count", "render": function (value) {return numeral(value).format('0,0')}},
@@ -69,7 +64,6 @@
                     { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                     { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                 ],
-                responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

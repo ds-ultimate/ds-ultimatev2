@@ -133,7 +133,7 @@ class Icon
             case 'down':
                 return ['color' => 'danger', 'icon' => 'caret-down'];
             case 'equals':
-                return ['color' => 'dark', 'icon' => 'grip-lines'];
+                return ['color' => null, 'icon' => null];
         }
     }
 

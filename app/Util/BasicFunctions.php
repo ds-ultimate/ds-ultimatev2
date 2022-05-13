@@ -377,7 +377,7 @@ class BasicFunctions
             $result = 'equals';
         }
         $icon = Icon::historyIconsTextColor($result);
-        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($oldModel->$type)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($newModel->$type)."</span>";
+        return self::historyReturn($type, $oldModel->$type, $newModel->$type, $icon, true);
     }
 
     public static function historyCalc($new, $old, $type, $invert = false){
@@ -391,7 +391,7 @@ class BasicFunctions
             $result = 'equals';
         }
         $icon = Icon::historyIconsTextColor($result);
-        return "<span class=\"text-".$icon['color']."\" data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($new)."</span>";
+        return self::historyReturn($type, $old, $new, $icon, true);
     }
 
     public static function modelHistoryCalcPopupless($newModel, $oldModel, $type, $invert = false){
@@ -409,7 +409,23 @@ class BasicFunctions
             $result = 'equals';
         }
         $icon = Icon::historyIconsTextColor($result);
-        return "<span class=\"text-".$icon['color']."\"><i class=\"fas fa-".$icon['icon']."\"></i> ".self::thousandsCurrencyFormat($newModel->$type)."</span>";
+        return self::historyReturn($type, $oldModel->$type, $newModel->$type, $icon, false);
+    }
+    
+    private static function historyReturn($type, $old, $new, $icon, $hasPopup) {
+        $cls = "";
+        if($icon['color'] != null) {
+            $cls = " class=\"text-".$icon['color']."\"";
+        }
+        $popup = "";
+        if($hasPopup) {
+            $popup = "data-toggle=\"popover\" data-trigger=\"hover\" data-placement=\"top\" data-content=\"".__('ui.old.'.$type).": <b>".self::thousandsCurrencyFormat($old)."</b>\"";
+        }
+        $ret = "<span$cls$popup>";
+        if($icon['icon'] != null) {
+            $ret .= "<i class=\"fas fa-".$icon['icon']."\"></i> ";
+        }
+        return $ret.self::thousandsCurrencyFormat($new)."</span>";
     }
 
     /**

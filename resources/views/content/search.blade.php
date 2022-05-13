@@ -11,13 +11,13 @@
         </div>
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body cust-responsive">
                     <h4 class="card-title">{{ucfirst(__('ui.titel.searchResults'))}}: {{ count($result) }}</h4>
                     @if (count($result) >= App\Http\Controllers\SearchController::$limit)
                     {{ str_replace('$limit', App\Http\Controllers\SearchController::$limit, __('ui.titel.searchLimited')) }}<br><br>
                     @endif
                     @if ($type == 'player')
-                        <table id="table_id" class="table table-striped table-hover table-sm w-100">
+                        <table id="table_id" class="table table-striped table-hover table-sm w-100 nowrap">
                             <thead><tr>
                                 <th>{{ ucfirst(__('ui.table.world')) }}</th>
                                 <th>{{ ucfirst(__('ui.table.name')) }}</th>
@@ -28,8 +28,8 @@
                             <tbody>
                             @foreach($result as $player)
                                 <tr>
-                                    <th>{{$player['world']->display_name}}</th>
-                                    <td>{!! \App\Util\BasicFunctions::linkPlayer($player['world'],$player['player']->playerID,\App\Util\BasicFunctions::outputName($player['player']->name)) !!}</td>
+                                    <th class="text-truncate" style="max-width: 130px">{{$player['world']->display_name}}</th>
+                                    <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkPlayer($player['world'],$player['player']->playerID,\App\Util\BasicFunctions::outputName($player['player']->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player['player']->points_top)}}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player['player']->village_count_top)}}</td>
                                 </tr>
@@ -49,8 +49,8 @@
                             <tbody>
                             @foreach($result as $ally)
                                 <tr>
-                                    <th>{{$ally['world']->display_name}}</th>
-                                    <td>{!! \App\Util\BasicFunctions::linkAlly($ally['world'],$ally['ally']->allyID,\App\Util\BasicFunctions::outputName($ally['ally']->name)) !!}</td>
+                                    <th class="text-truncate" style="max-width: 130px">{{$ally['world']->display_name}}</th>
+                                    <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkAlly($ally['world'],$ally['ally']->allyID,\App\Util\BasicFunctions::outputName($ally['ally']->name)) !!}</td>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally['world'],$ally['ally']->allyID,\App\Util\BasicFunctions::outputName($ally['ally']->tag)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($ally['ally']->points_top)}}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($ally['ally']->village_count_top)}}</td>
@@ -72,8 +72,8 @@
                             <tbody>
                             @foreach($result as $village)
                                 <tr>
-                                    <th>{{$village['world']->display_name}}</th>
-                                    <td>{!! \App\Util\BasicFunctions::linkVillage($village['world'],$village['village']->villageID,\App\Util\BasicFunctions::outputName($village['village']->name)) !!}</td>
+                                    <th class="text-truncate" style="max-width: 130px">{{$village['world']->display_name}}</th>
+                                    <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkVillage($village['world'],$village['village']->villageID,\App\Util\BasicFunctions::outputName($village['village']->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($village['village']->points)}}</td>
                                     <td>{{$village['village']->continentString()}}</td>
                                     <td>{{$village['village']->coordinates()}}</td>
@@ -94,7 +94,6 @@
         $(document).ready( function () {
             $('#table_id').DataTable({
                 ordering: false,
-                responsive: true,
                 {!! \App\Util\Datatable::language() !!}
             });
         } );
