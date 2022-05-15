@@ -243,7 +243,7 @@ $tabList = [
             });
 
         function reloadData(upExp) {
-            table.ajax.reload();
+            table.ajax.reload(null, false);
             @if($mode == 'edit')
             if(upExp && typeof updateExports !== 'undefined')
                 updateExports();
