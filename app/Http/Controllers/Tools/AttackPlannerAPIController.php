@@ -218,17 +218,16 @@ class AttackPlannerAPIController extends BaseController
         foreach($items as $it) {
             $r = [
                 'id' => $it->id,
-                'type' => $it->type,
-                'type' => $it->type,
-                'start_village_id' => $it->start_village_id,
-                'target_village_id' => $it->target_village_id,
+                'source' => $it->start_village_id,
+                'destination' => $it->target_village_id,
                 'slowest_unit' => $it->slowest_unit,
                 'send_time' => $it->send_time->timestamp,
                 'arrival_time' => $it->arrival_time->timestamp,
-                'ms' => $it->ms,
-                'send' => $it->send,
+                'type' => $it->type,
                 'support_boost' => $it->support_boost,
                 'tribe_skill' => $it->tribe_skill,
+                'ms' => $it->ms,
+                'send' => $it->send,
             ];
             foreach(AttackListItem::$units as $u) {
                 $r[$u] = $it->{$u};
