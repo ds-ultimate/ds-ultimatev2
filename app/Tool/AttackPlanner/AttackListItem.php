@@ -250,6 +250,13 @@ class AttackListItem extends CustomModel
         }
         return $err;
     }
+
+
+    public function setEmptyUnits() {
+        foreach (self::$units as $unit){
+            $this[$unit] = 0;
+        }
+    }
     
     public static function unitVerifyArray() {
         $ret = [];

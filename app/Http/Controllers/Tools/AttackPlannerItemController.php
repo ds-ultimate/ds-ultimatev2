@@ -413,6 +413,7 @@ class AttackPlannerItemController extends BaseController
     function sendattack(Request $request){
         $attackListItem = AttackListItem::find($request->id);
         abort_if($attackListItem === null, 404);
+        abort_if($attackListItem->list === null, 404);
         abort_unless($request->key == $attackListItem->list->show_key, 403);
         $attackListItem->send = 1;
         $attackListItem->update();

@@ -359,6 +359,8 @@ class AttackPlannerController extends BaseController
             } else {
                 $curErr = array_merge($curErr, $item->setUnits($units, true));
             }
+        } else {
+            $item->setEmptyUnits();
         }
         
         if(count($curErr) == 0) $curErr = array_merge($curErr, $item->verifyTime());
