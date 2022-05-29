@@ -14,7 +14,7 @@ class DoPlayer
 {
     public static function run(World $world){
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '600M');
+        ini_set('memory_limit', '1800M');
         $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         $minTime = Carbon::now()->subHour()->subMinutes(5);
 
