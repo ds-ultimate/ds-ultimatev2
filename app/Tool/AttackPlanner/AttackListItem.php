@@ -99,10 +99,12 @@ class AttackListItem extends CustomModel
             case '11': return __('tool.attackPlanner.conquest');
             case '14': return __('tool.attackPlanner.fake');
             case '45': return __('tool.attackPlanner.wallbreaker');
+
             case '0': return __('tool.attackPlanner.support');
             case '1': return __('tool.attackPlanner.standSupport');
             case '7': return __('tool.attackPlanner.fastSupport');
             case '46': return __('tool.attackPlanner.fakeSupport');
+
             case '30': return __('ui.buildings.main');
             case '31': return __('ui.buildings.barracks');
             case '32': return __('ui.buildings.stable');
@@ -118,6 +120,32 @@ class AttackListItem extends CustomModel
             case '42': return __('ui.buildings.iron');
             case '43': return __('ui.buildings.farm');
             case '44': return __('ui.buildings.storage');
+            
+            case '2': return __('ui.unit.axe');
+            case '3': return __('ui.unit.archer');
+            case '4': return __('ui.unit.spy');
+            case '5': return __('ui.unit.light');
+            case '6': return __('ui.unit.marcher');
+            case '9': return __('ui.unit.catapult');
+            case '10': return __('ui.unit.knight');
+            
+            case '12': return __('tool.attackPlanner.icons.devCav');
+            case '13': return __('tool.attackPlanner.icons.devArcher');
+            case '15': return __('tool.attackPlanner.icons.wbAlly');
+            case '16': return __('tool.attackPlanner.icons.moveOut');
+            case '17': return __('tool.attackPlanner.icons.moveIn');
+            case '18': return __('tool.attackPlanner.icons.ballBlue');
+            case '19': return __('tool.attackPlanner.icons.ballGreen');
+            case '20': return __('tool.attackPlanner.icons.ballYellow');
+            case '21': return __('tool.attackPlanner.icons.ballRed');
+            case '22': return __('tool.attackPlanner.icons.ballGrey');
+            case '23': return __('tool.attackPlanner.icons.wbWarning');
+            case '24': return __('tool.attackPlanner.icons.wbDie');
+            case '25': return __('tool.attackPlanner.icons.wbAdd');
+            case '26': return __('tool.attackPlanner.icons.wbRemove');
+            case '27': return __('tool.attackPlanner.icons.wbCheckbox');
+            case '28': return __('tool.attackPlanner.icons.wbEye');
+            case '29': return __('tool.attackPlanner.icons.wbEyeForbidden');
         }
     }
 
@@ -136,6 +164,26 @@ class AttackListItem extends CustomModel
             case '10': return __('ui.unit.knight');
             case '11': return __('ui.unit.snob');
         }
+    }
+
+    public static function attackPlannerTypeIcons(){
+        return [
+            -1 ,8,11,14,45,
+            0,1,7,46,
+            30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+            2, 3, 4, 5, 6, 9, 10,
+            12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+        ];
+    }
+
+    public static function attackPlannerTypeIconsGrouped(){
+        return [
+            __('tool.attackPlanner.offensive') => [8, 11, 14, 45],
+            __('tool.attackPlanner.defensive') => [0, 1, 7, 46],
+            __('tool.accMgrDB.building') => [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
+            __('tool.attackPlanner.otherUnits') => [2, 3, 4, 5, 6, 9, 10],
+            __('tool.attackPlanner.iconsTitle') => [12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+        ];
     }
 
     public function attackerName(){

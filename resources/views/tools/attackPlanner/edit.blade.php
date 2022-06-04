@@ -18,21 +18,13 @@
                                 </div>
                                 <select name="type" class="custom-select attack-type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">
                                     <option value="-1">{{ __('ui.old.nodata') }}</option>
-                                    <optgroup label="{{ __('tool.attackPlanner.offensive') }}">
-                                    @foreach([8, 11, 14, 45] as $idx)
+                                    @foreach(\App\Tool\AttackPlanner\AttackListItem::attackPlannerTypeIconsGrouped() as $name => $grp)
+                                    <optgroup label="{{ $name }}">
+                                    @foreach($grp as $idx)
                                         <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
                                     @endforeach
                                     </optgroup>
-                                    <optgroup label="{{ __('tool.attackPlanner.defensive') }}">
-                                    @foreach([0, 1, 7, 46] as $idx)
-                                        <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
                                     @endforeach
-                                    </optgroup>
-                                    <optgroup label="{{ __('tool.accMgrDB.building') }}">
-                                    @foreach([30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44] as $idx)
-                                        <option value="{{ $idx }}">{{ \App\Tool\AttackPlanner\AttackListItem::statTypeIDToName($idx) }}</option>
-                                    @endforeach
-                                    </optgroup>
                                 </select>
                             </div>
                         </div>

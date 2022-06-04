@@ -295,6 +295,19 @@ It is not specified which village you have to give the name to, but it must belo
   array (
     'histPossibilities' => 'possibilities',
     'histUnknown' => 'unknown',
+    'bonus' => 
+    array (
+      'wood' => ':amount wood',
+      'clay' => ':amount clay',
+      'iron' => ':amount iron',
+      'allResources' => ':amount for each resource type',
+      'fastBarracks' => ':amount faster barracks',
+      'fastStable' => ':amount faster stable',
+      'fastWorkshop' => ':amount faster workshop',
+      'greatSiege' => ':amountDef defense strength. :points influencepoints daily.',
+      'merchants' => ':amount merchants & storage',
+      'population' => ':amount popupation',
+    ),
   ),
   'topAt' => 'at',
   'otherWorldsPlayer' => 'other worlds of that player',

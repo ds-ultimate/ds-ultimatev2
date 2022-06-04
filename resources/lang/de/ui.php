@@ -295,6 +295,19 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
   array (
     'histUnknown' => 'Unbekannt',
     'histPossibilities' => 'Möglichkeiten',
+    'bonus' => 
+    array (
+      'wood' => ':amount Holz',
+      'clay' => ':amount Lehm',
+      'iron' => ':amount Eisen',
+      'population' => ':amount Bevölkerung',
+      'fastBarracks' => ':amount schnellere Kaserne',
+      'fastStable' => ':amount schnellerer Stall',
+      'fastWorkshop' => ':amount schnellere Werkstatt',
+      'allResources' => ':amount auf alle Rohstoffe',
+      'merchants' => ':amount Händler & Speicher',
+      'greatSiege' => ':amountDef Verteidigungsstärke. :points Einflusspunkte täglich.',
+    ),
   ),
   'topAt' => 'am',
   'otherWorldsPlayer' => 'Andere Welten dieses Spielers',

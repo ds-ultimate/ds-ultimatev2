@@ -11,7 +11,6 @@ namespace App\Http\Controllers\Tools;
 
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
-use App\Util\Icon;
 use App\World;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Str;
@@ -98,7 +97,7 @@ class AttackPlannerAPIController extends BaseController
         $all = [];
         foreach($req['items'] as $it) {
             $it = AttackPlannerController::newItem($err, $list, $it['source'], $it['destination'], $it['slowest_unit'],
-                $it['arrival_time'], (in_array($it['type'], Icon::attackPlannerTypeIcons()))?$it['type']: -1, $it,
+                $it['arrival_time'], (in_array($it['type'], AttackListItem::attackPlannerTypeIcons()))?$it['type']: -1, $it,
                 $it['support_boost']??0.0, $it['tribe_skill']??0.0,$it['ms']??0);
             
             if($it != null) {

@@ -56,6 +56,18 @@ class Icon
     public static $TROOPS = 'images/ds_images/wb/troops.png';
     public static $VILLAGE = 'images/ds_images/wb/village.png';
     public static $ALLY = 'images/ds_images/wb/ally_forum.png';
+    public static $WB_ALLY = 'images/ds_images/wb/ally.png';
+    
+    public static $MOVE_OUT = 'images/ds_images/wb/move_out.png';
+    public static $MOVE_IN = 'images/ds_images/wb/move_in.png';
+    
+    public static $WB_WARNING = 'images/ds_images/wb/warning.png';
+    public static $WB_DIE = 'images/ds_images/wb/die.png';
+    public static $WB_ADD = 'images/ds_images/wb/add.png';
+    public static $WB_REMOVE = 'images/ds_images/wb/remove.png';
+    public static $WB_CHECKBOX = 'images/ds_images/wb/checkbox.png';
+    public static $WB_EYE = 'images/ds_images/wb/eye.png';
+    public static $WB_EYE_FORBIDDEN = 'images/ds_images/wb/eye_forbidden.png';
     
     public static function fontawesome(){
         return array(
@@ -75,54 +87,54 @@ class Icon
 
     public static function icons($icon){
         switch ($icon){
-            case '0': return asset('images/ds_images/unit/spear.png');
-            case '1': return asset('images/ds_images/unit/sword.png');
-            case '2': return asset('images/ds_images/unit/axe.png');
-            case '3': return asset('images/ds_images/unit/archer.png');
-            case '4': return asset('images/ds_images/unit/spy.png');
-            case '5': return asset('images/ds_images/unit/light.png');
-            case '6': return asset('images/ds_images/unit/marcher.png');
-            case '7': return asset('images/ds_images/unit/heavy.png');
-            case '8': return asset('images/ds_images/unit/ram.png');
-            case '9': return asset('images/ds_images/unit/catapult.png');
-            case '10': return asset('images/ds_images/unit/knight.png');
-            case '11': return asset('images/ds_images/unit/snob.png');
-            case '12': return asset('images/ds_images/wb/def_cav.png');
-            case '13': return asset('images/ds_images/wb/def_archer.png');
-            case '14': return asset('images/ds_images/wb/fake.png');
-            case '15': return asset('images/ds_images/wb/ally.png');
-            case '16': return asset('images/ds_images/wb/move_out.png');
-            case '17': return asset('images/ds_images/wb/move_in.png');
-            case '18': return asset('images/ds_images/wb/bullet_ball_blue.png');
-            case '19': return asset('images/ds_images/wb/bullet_ball_green.png');
-            case '20': return asset('images/ds_images/wb/bullet_ball_yellow.png');
-            case '21': return asset('images/ds_images/wb/bullet_ball_red.png');
-            case '22': return asset('images/ds_images/wb/bullet_ball_grey.png');
-            case '23': return asset('images/ds_images/wb/warning.png');
-            case '24': return asset('images/ds_images/wb/die.png');
-            case '25': return asset('images/ds_images/wb/add.png');
-            case '26': return asset('images/ds_images/wb/remove.gif');
-            case '27': return asset('images/ds_images/wb/checkbox.png');
-            case '28': return asset('images/ds_images/wb/eye.png');
-            case '29': return asset('images/ds_images/wb/eye_forbidden.png');
-            case '30': return asset('images/ds_images/buildings/small/main.png');
-            case '31': return asset('images/ds_images/buildings/small/barracks.png');
-            case '32': return asset('images/ds_images/buildings/small/stable.png');
-            case '33': return asset('images/ds_images/buildings/small/garage.png');
-            case '34': return asset('images/ds_images/buildings/small/church.png');
-            case '35': return asset('images/ds_images/buildings/small/snob.png');
-            case '36': return asset('images/ds_images/buildings/small/smith.png');
-            case '37': return asset('images/ds_images/buildings/small/place.png');
-            case '38': return asset('images/ds_images/buildings/small/statue.png');
-            case '39': return asset('images/ds_images/buildings/small/market.png');
-            case '40': return asset('images/ds_images/buildings/small/wood.png');
-            case '41': return asset('images/ds_images/buildings/small/stone.png');
-            case '42': return asset('images/ds_images/buildings/small/iron.png');
-            case '43': return asset('images/ds_images/buildings/small/farm.png');
-            case '44': return asset('images/ds_images/buildings/small/storage.png');
-            case '45': return asset('images/ds_images/buildings/small/wall.png');
-            case '46': return asset('images/ds_images/wb/def_fake.png');
-            default: return asset('images/ds_images/wb/remove.gif');
+            case '0': return asset(static::$UNIT_SPEAR);
+            case '1': return asset(static::$UNIT_SWORD);
+            case '2': return asset(static::$UNIT_AXE);
+            case '3': return asset(static::$UNIT_ARCHER);
+            case '4': return asset(static::$UNIT_SPY);
+            case '5': return asset(static::$UNIT_LIGHT);
+            case '6': return asset(static::$UNIT_MARCHER);
+            case '7': return asset(static::$UNIT_HEAVY);
+            case '8': return asset(static::$UNIT_RAM);
+            case '9': return asset(static::$UNIT_CATAPULT);
+            case '10': return asset(static::$UNIT_KNIGHT);
+            case '11': return asset(static::$UNIT_SNOB);
+            case '12': return asset(static::$DEF_CAV);
+            case '13': return asset(static::$DEF_ARCHER);
+            case '14': return asset(static::$FAKE);
+            case '15': return asset(static::$WB_ALLY);
+            case '16': return asset(static::$MOVE_OUT);
+            case '17': return asset(static::$MOVE_IN);
+            case '18': return asset(static::$BALL_BLUE);
+            case '19': return asset(static::$BALL_GREEN);
+            case '20': return asset(static::$BALL_YELLOW);
+            case '21': return asset(static::$BALL_RED);
+            case '22': return asset(static::$BALL_GREY);
+            case '23': return asset(static::$WB_WARNING);
+            case '24': return asset(static::$WB_DIE);
+            case '25': return asset(static::$WB_ADD);
+            case '26': return asset(static::$WB_REMOVE);
+            case '27': return asset(static::$WB_CHECKBOX);
+            case '28': return asset(static::$WB_EYE);
+            case '29': return asset(static::$WB_EYE_FORBIDDEN);
+            case '30': return asset(static::$BUILDING_MAIN);
+            case '31': return asset(static::$BUILDING_BARRACKS);
+            case '32': return asset(static::$BUILDING_STABLE);
+            case '33': return asset(static::$BUILDING_GARAGE);
+            case '34': return asset(static::$BUILDING_CHURCH);
+            case '35': return asset(static::$BUILDING_SNOB);
+            case '36': return asset(static::$BUILDING_SMITH);
+            case '37': return asset(static::$BUILDING_PLACE);
+            case '38': return asset(static::$BUILDING_STATUE);
+            case '39': return asset(static::$BUILDING_MARKET);
+            case '40': return asset(static::$BUILDING_WOOD);
+            case '41': return asset(static::$BUILDING_STONE);
+            case '42': return asset(static::$BUILDING_IRON);
+            case '43': return asset(static::$BUILDING_FARM);
+            case '44': return asset(static::$BUILDING_STORAGE);
+            case '45': return asset(static::$BUILDING_WALL);
+            case '46': return asset(static::$DEF_FAKE);
+            default: return asset(static::$WB_REMOVE);
         }
     }
 
@@ -135,10 +147,5 @@ class Icon
             case 'equals':
                 return ['color' => null, 'icon' => null];
         }
-    }
-
-    public static function attackPlannerTypeIcons(){
-        return [-1 ,8,11,14,45,0,1,7,46,
-            30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
     }
 }

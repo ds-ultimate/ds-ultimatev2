@@ -266,7 +266,7 @@ class AttackPlannerController extends BaseController
                 }
             }
             $it = self::newItem($err, $attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
-                    date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], Icon::attackPlannerTypeIcons()))?$list[4]: -1,
+                    date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], AttackListItem::attackPlannerTypeIcons()))?$list[4]: -1,
                     $unitArray, ms: $arrival%1000);
             
             if($it != null) {

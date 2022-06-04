@@ -105,26 +105,28 @@ class Village extends CustomModel
      */
     public static function bonusTextStat($bonus_id) {
         switch($bonus_id) {
-            case 0:
-                return "-";
-            case 1:
-                return "+100% Holz";
-            case 2:
-                return "+100% Lehm";
-            case 3:
-                return "+100% Eisen";
-            case 4:
-                return "+10% Bevölkerung";
-            case 5:
-                return "+33% schnellere Kaserne";
-            case 6:
-                return "+33% schnellerer Stall";
-            case 7:
-                return "+50% schnellere Werkstatt";
-            case 8:
-                return "+30% auf alle Rohstoffe";
-            case 9:
-                return "+50% Händler & Speicher";
+            case 0: return "-";
+            case 1: return __("ui.village.bonus.wood", ["amount" => "+100%"]);
+            case 2: return __("ui.village.bonus.clay", ["amount" => "+100%"]);
+            case 3: return __("ui.village.bonus.iron", ["amount" => "+100%"]);
+            case 4: return __("ui.village.bonus.population", ["amount" => "+10%"]);
+            case 5: return __("ui.village.bonus.fastBarracks", ["amount" => "+33%"]);
+            case 6: return __("ui.village.bonus.fastStable", ["amount" => "+33%"]);
+            case 7: return __("ui.village.bonus.fastWorkshop", ["amount" => "+50%"]);
+            case 8: return __("ui.village.bonus.allResources", ["amount" => "+33%"]);
+            case 9: return __("ui.village.bonus.merchants", ["amount" => "+50%"]);
+                
+            case 11: return __("ui.village.bonus.greatSiege", ["amountDef" => "-25%", "points" => 7]);
+            case 12: return __("ui.village.bonus.greatSiege", ["amountDef" => "-30%", "points" => 9]);
+            case 13: return __("ui.village.bonus.greatSiege", ["amountDef" => "-35%", "points" => 10]);
+            case 14: return __("ui.village.bonus.greatSiege", ["amountDef" => "-40%", "points" => 11]);
+            case 15: return __("ui.village.bonus.greatSiege", ["amountDef" => "-45%", "points" => 13]);
+            case 16: return __("ui.village.bonus.greatSiege", ["amountDef" => "-50%", "points" => 15]);
+            case 17: return __("ui.village.bonus.greatSiege", ["amountDef" => "-55%", "points" => 17]);
+            case 18: return __("ui.village.bonus.greatSiege", ["amountDef" => "-60%", "points" => 19]);
+            case 19: return __("ui.village.bonus.greatSiege", ["amountDef" => "-65%", "points" => 21]);
+            case 20: return __("ui.village.bonus.greatSiege", ["amountDef" => "-70%", "points" => 23]);
+            case 21: return __("ui.village.bonus.greatSiege", ["amountDef" => "-75%", "points" => 25]);
         }
         return '-';
     }

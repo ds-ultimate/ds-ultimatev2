@@ -335,7 +335,7 @@ $tabList = [
             var data = table.row('#' + id).data();
             var rowData = data.DT_RowData;
             editData = data;
-            var type = $.inArray(rowData.type, {{ json_encode(\App\Util\Icon::attackPlannerTypeIcons()) }}) ? rowData.type : -1;
+            var type = $.inArray(rowData.type, {{ json_encode(\App\Tool\AttackPlanner\AttackListItem::attackPlannerTypeIcons()) }}) ? rowData.type : -1;
 
             $('input[name="attack_list_item"]', context).val(data.id);
             $('select[name="type"]', context).val(type);
@@ -597,7 +597,7 @@ $tabList = [
 
         function typ_img(input){
             switch (input) {
-            @foreach(\App\Util\Icon::attackPlannerTypeIcons() as $idx)
+            @foreach(\App\Tool\AttackPlanner\AttackListItem::attackPlannerTypeIcons() as $idx)
                 case '{{ $idx }}': return '{{ \App\Util\Icon::icons($idx) }}';
             @endforeach
             }
