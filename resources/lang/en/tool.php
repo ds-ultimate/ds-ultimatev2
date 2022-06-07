@@ -425,4 +425,9 @@ If that problem persists please create a bug-report',
   array (
     'notes' => 'notes',
   ),
+  'greatSiegeCalc' => 
+  array (
+    'title' => 'Great siege calculator',
+    'notAvailable' => 'The greate siege calculator is not available for this world',
+  ),
 );

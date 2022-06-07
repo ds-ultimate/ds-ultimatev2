@@ -216,7 +216,16 @@ class AttackListItem extends CustomModel
 
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
-        $dist = $this->calcDistance();
+        if($this->target_village != null && $this->target_village->bonus_id >= 11 && $this->target_village->bonus_id <= 21) {
+            //great siege village always same distance
+            if($this->slowest_unit == 4) {
+                $dist = 3; // spy
+            } else {
+                $dist = 15;
+            }
+        } else {
+            $dist = $this->calcDistance();
+        }
         if($dist == null) return null;
         $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];

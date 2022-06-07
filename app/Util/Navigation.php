@@ -66,6 +66,9 @@ class Navigation
 
         $tools = [];
         if($worldArg !== null) {
+            if($worldArg->win_condition == 9) {
+                $tools[] = self::navElement('tool.greatSiegeCalc.title', 'tools.greatSiegeCalc', routeArgs: $serverCodeName);
+            }
             if($worldArg->config != null && $worldArg->units != null) {
                 $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', routeArgs: $serverCodeName);
                 $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', routeArgs: $serverCodeName, nofollow: true);

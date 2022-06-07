@@ -425,4 +425,9 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
   array (
     'notes' => 'Notizen',
   ),
+  'greatSiegeCalc' => 
+  array (
+    'notAvailable' => 'Der Belagerungsrechner ist auf dieser Welt nicht verfügbar',
+    'title' => 'Belagerungsrechner',
+  ),
 );
