@@ -265,7 +265,7 @@ class Map extends CustomModel
     }
 
     public function continentNumbersEnabled() {
-        if(!isset($this->continentNumbers) || $this->continentNumbers == null) {
+        if(!isset($this->continentNumbers) || $this->continentNumbers === null) {
             return true;
         }
 

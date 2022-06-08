@@ -169,9 +169,9 @@ $tabList = [
                     {
                         'orderable': false,
                         @if($mode == 'edit')
-                        'targets': [10,11,12]
+                        'targets': [2,4,10,11,12]
                         @else
-                        'targets': [9,10]
+                        'targets': [1,3,9,10]
                         @endif
                     },
                     @if($mode == 'edit')
