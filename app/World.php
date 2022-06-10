@@ -280,7 +280,7 @@ class World extends CustomModel
         } else {
             $this->win_condition = simplexml_load_string($this->config)->win->check;
         }
-        parent::save($options);
+        return parent::save($options);
     }
     
     public function touch() {
@@ -289,6 +289,6 @@ class World extends CustomModel
         } else {
             $this->win_condition = simplexml_load_string($this->config)->win->check;
         }
-        parent::touch();
+        return parent::touch();
     }
 }
