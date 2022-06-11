@@ -45,10 +45,10 @@
                         <div class="form-group">
                             <label for="priority">{{ __('user.bugreport.priority') }}*</label>
                             <select class="form-control {{ $errors->has('priority') ? 'is-invalid' : '' }}" name="priority">
-                                <option value="0"{{ (old('priority', 0)==0)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.low') }}</option>
-                                <option value="1"{{ (old('priority', 0)==1)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.normal') }}</option>
-                                <option value="2"{{ (old('priority', 0)==2)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.high') }}</option>
-                                <option value="3"{{ (old('priority', 0)==3)?(' selected="selected"'):('') }}>{{ __('user.bugreport.prioritySelect.critical') }}</option>
+                                <option value="0" @selected((old('priority', 0)==0)) >{{ __('user.bugreport.prioritySelect.low') }}</option>
+                                <option value="1" @selected((old('priority', 0)==1)) >{{ __('user.bugreport.prioritySelect.normal') }}</option>
+                                <option value="2" @selected((old('priority', 0)==2)) >{{ __('user.bugreport.prioritySelect.high') }}</option>
+                                <option value="3" @selected((old('priority', 0)==3)) >{{ __('user.bugreport.prioritySelect.critical') }}</option>
                             </select>
                             @if($errors->has('priority'))
                                 <div class="in valid-feedback">

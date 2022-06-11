@@ -78,26 +78,26 @@
 
                 <div class="form-group">
                     <div class="form-check form-check-inline">
-                        <input type="checkbox" id="remove_additional" name="remove_additional" class="form-check-input" {{ $template->remove_additional ? 'checked' : '' }} disabled>
+                        <input type="checkbox" id="remove_additional" name="remove_additional" class="form-check-input" @checked($template->remove_additional) disabled>
                         <label for="remove_additional">{{ __('tool.accMgrDB.remAddit') }}</label>
                     </div>
                 </div>
                 @if($template->remove_additional)
                     <div class="form-group ml-4">
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" id="removeIgno_church" name="removeIgno_church" class="form-check-input" {{ $ignored['church'] ? 'checked' : '' }} disabled>
+                            <input type="checkbox" id="removeIgno_church" name="removeIgno_church" class="form-check-input" @checked($ignored['church']) disabled>
                             <label for="removeIgno_church">{{ __('tool.accMgrDB.remChurch') }}</label>
                         </div>
                     </div>
                     <div class="form-group ml-4">
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" id="removeIgno_church_f" name="removeIgno_church_f" class="form-check-input" {{ $ignored['church_f'] ? 'checked' : '' }} disabled>
+                            <input type="checkbox" id="removeIgno_church_f" name="removeIgno_church_f" class="form-check-input" @checked($ignored['church_f']) disabled>
                             <label for="removeIgno_church_f">{{ __('tool.accMgrDB.remFirstChurch') }}</label>
                         </div>
                     </div>
                     <div class="form-group ml-4">
                         <div class="form-check form-check-inline">
-                            <input type="checkbox" id="removeIgno_watchtower" name="removeIgno_watchtower" class="form-check-input" {{ $ignored['watchtower'] ? 'checked' : '' }} disabled>
+                            <input type="checkbox" id="removeIgno_watchtower" name="removeIgno_watchtower" class="form-check-input" @checked($ignored['watchtower']) disabled>
                             <label for="removeIgno_watchtower">{{ __('tool.accMgrDB.remWT') }}</label>
                         </div>
                     </div>

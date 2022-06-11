@@ -98,7 +98,7 @@
                     <h4 class="card-title">{{ __('ui.tabletitel.general') }}:</h4>
                     <select id="statsGeneral" class="form-control form-control-sm">
                         @for($i = 0; $i < count($statsGeneral); $i++)
-                            <option value="{{ $statsGeneral[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel.'.$statsGeneral[$i]) }}</option>
+                            <option value="{{ $statsGeneral[$i] }}" @selected(($i == 0)) >{{ __('chart.titel.'.$statsGeneral[$i]) }}</option>
                         @endfor
                     </select>
                     @for($i = 0; $i < count($statsGeneral); $i++)
@@ -119,7 +119,7 @@
                     <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:</h4>
                     <select id="statsBash" class="form-control form-control-sm">
                         @for($i = 0; $i < count($statsBash); $i++)
-                            <option value="{{ $statsBash[$i] }}" {{ ($i == 0)? 'selected=""' : null }}>{{ __('chart.titel.'.$statsBash[$i]) }}</option>
+                            <option value="{{ $statsBash[$i] }}" @selected(($i == 0)) >{{ __('chart.titel.'.$statsBash[$i]) }}</option>
                         @endfor
                     </select>
                     @for($i = 0; $i < count($statsBash); $i++)

@@ -118,7 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function avatarPath(){
         SettingsController::existProfile();
         $avatar = $this->profile->avatar;
-        if (Storage::disk('local')->exists($avatar)){
+        if ($avatar !== null && Storage::disk('local')->exists($avatar)){
             return Storage::url('app/'.$avatar);
         }else{
             return asset('images/default/user.png');

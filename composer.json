@@ -14,9 +14,10 @@
         "buzz/laravel-google-captcha": "^2.1",
         "doctrine/dbal": "dev-dev-3.x.x",
         "google/recaptcha": "^1.2",
+        "guzzlehttp/guzzle": "^7.4",
         "khill/lavacharts": "3.1.*",
         "laravel-notification-channels/discord": "^1.1",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^9.0",
         "laravel/socialite": "^5.0",
         "laravel/ui": "^3.0",
         "rap2hpoutre/laravel-log-viewer": "^2.0",
@@ -28,7 +29,7 @@
         "barryvdh/laravel-debugbar": "^3.5",
         "filp/whoops": "^2.0",
         "laravel/tinker": "^2.0",
-        "nunomaduro/collision": "^5.0",
+        "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.0"
     },
     "repositories": [

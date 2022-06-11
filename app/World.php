@@ -283,7 +283,7 @@ class World extends CustomModel
         return parent::save($options);
     }
     
-    public function touch() {
+    public function touch($attribute = null) {
         if($this->config == null) {
             $this->win_condition = -1;
         } else {

@@ -224,7 +224,7 @@ $tabList = [
                             '</div>')
                         $('#data1_wrapper div.row:first-child').append(
                             '<div data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">'+
-                                '<input type="checkbox" id="checkAsUV" class="mr-1"{{ ($attackList->uvMode)?(' checked="checked"'):("")}}>'+
+                                '<input type="checkbox" id="checkAsUV" class="mr-1" @checked($attackList->uvMode) >'+
                                 '<label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>'+
                             '</div>')
                         $('#audioTimingInput').val(audioTiming)

@@ -12,7 +12,7 @@
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
             <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
-            <input id="checkbox-show-player" name="showPlayer" type="checkbox" defVal="{{ $wantedMap->playerEnabledDefault() }}" class="form-check-input resetable" {{ ($wantedMap->playerEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-show-player" name="showPlayer" type="checkbox" defVal="{{ $wantedMap->playerEnabledDefault() }}" class="form-check-input resetable" @checked($wantedMap->playerEnabled()) />
             <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
         </div>
         <div id='default-player-div' class='col-lg-9 input-group'>
@@ -29,7 +29,7 @@
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
             <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
-            <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" defVal="{{ $wantedMap->barbarianEnabledDefault() }}" class="form-check-input resetable" {{ ($wantedMap->barbarianEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" defVal="{{ $wantedMap->barbarianEnabledDefault() }}" class="form-check-input resetable" @checked($wantedMap->barbarianEnabled()) />
             <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
         </div>
         <div id='default-barbarian-div' class='col-lg-9 input-group'>
@@ -46,22 +46,22 @@
     <div class="form-inline mb-2">
         <div class="col-lg-3 input-group">
             <input id="map-zoom-auto-hid" name="zoomAutoHere" type="hidden" value="true" />
-            <input id="map-zoom-auto" name="zoomAuto" type="checkbox" defVal="true" class="form-check-input resetable" {{ ($wantedMap->autoDimensions)?('checked="checked"'):('') }}/>
+            <input id="map-zoom-auto" name="zoomAuto" type="checkbox" defVal="true" class="form-check-input resetable" @checked($wantedMap->autoDimensions) />
             <label for="map-zoom-auto">{{ __('tool.map.autoZoom') }}</label>
         </div>
         <div class="col-lg-3 input-group">
             <label for="map-zoom-value" class="mr-2">{{ __('tool.map.zoom') }}</label>
             <select class="form-control resetable" defVal="{{ $defMapDimensions['w'] }}" id="map-zoom-value" name="zoomValue">
-                <option value="1000"{{ ($mapDimensions['w'] == 1000)?(' selected="selected"'):('') }}>0</option>
-                <option value="599"{{ ($mapDimensions['w'] == 599)?(' selected="selected"'):('') }}>1</option>
-                <option value="359"{{ ($mapDimensions['w'] == 359)?(' selected="selected"'):('') }}>2</option>
-                <option value="215"{{ ($mapDimensions['w'] == 215)?(' selected="selected"'):('') }}>3</option>
-                <option value="129"{{ ($mapDimensions['w'] == 129)?(' selected="selected"'):('') }}>4</option>
-                <option value="77"{{ ($mapDimensions['w'] == 77)?(' selected="selected"'):('') }}>5</option>
-                <option value="46"{{ ($mapDimensions['w'] == 46)?(' selected="selected"'):('') }}>6</option>
-                <option value="28"{{ ($mapDimensions['w'] == 28)?(' selected="selected"'):('') }}>7</option>
-                <option value="16"{{ ($mapDimensions['w'] == 16)?(' selected="selected"'):('') }}>8</option>
-                <option value="10"{{ ($mapDimensions['w'] == 10)?(' selected="selected"'):('') }}>9</option>
+                <option value="1000" @selected(($mapDimensions['w'] == 1000)) >0</option>
+                <option value="599" @selected(($mapDimensions['w'] == 599)) >1</option>
+                <option value="359" @selected(($mapDimensions['w'] == 359)) >2</option>
+                <option value="215" @selected(($mapDimensions['w'] == 215)) >3</option>
+                <option value="129" @selected(($mapDimensions['w'] == 129)) >4</option>
+                <option value="77" @selected(($mapDimensions['w'] == 77)) >5</option>
+                <option value="46" @selected(($mapDimensions['w'] == 46)) >6</option>
+                <option value="28" @selected(($mapDimensions['w'] == 28)) >7</option>
+                <option value="16" @selected(($mapDimensions['w'] == 16)) >8</option>
+                <option value="10" @selected(($mapDimensions['w'] == 10)) >9</option>
             </select>
         </div>
         <div id="center-pos-div" class="input-group col-lg-6 mb-2">
@@ -78,13 +78,13 @@
     <div class="form-inline mb-2">
         <div class="form-check col-lg-4">
             <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
-            <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input resetable" defVal="true" {{ ($wantedMap->continentNumbersEnabled())?('checked="checked"'):('') }}/>
+            <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input resetable" defVal="true" @checked($wantedMap->continentNumbersEnabled()) />
             <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
         </div>
         @if($mapType == "map")
             <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
                 <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
-                <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input resetable" defVal="false" {{ ($wantedMap->shouldUpdate)?('checked="checked"'):('') }}/>
+                <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input resetable" defVal="false" @checked($wantedMap->shouldUpdate) />
                 <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
             </div>
         @endif
