@@ -6,12 +6,12 @@ use App\World;
 use App\WorldStatistic;
 use App\Notifications\DiscordNotificationQueueElement;
 use App\Util\BasicFunctions;
-use App\Util\HTTPRequests;
 use App\Console\DatabaseUpdate\DoAlly;
 use App\Console\DatabaseUpdate\DoConquer;
 use App\Console\DatabaseUpdate\DoPlayer;
 use App\Console\DatabaseUpdate\DoVillage;
 use App\Console\DatabaseUpdate\WorldHistory;
+use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
 /**
@@ -68,29 +68,27 @@ class DoWorldData
     }
     
     public static function loadGzippedFile(World $world, $name, $minTime) {
-        $url = "$world->url/map/$name";
-        $file = (new HTTPRequests($url))->send()->gunzipData();
-        if($file->responseCode() != 200) {
+        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
+        if(!$response->ok()) {
             BasicFunctions::createLog("ERROR_update[{$world->server->code}{$world->name}]", "$name konnte nicht ge&ouml;ffnet werden");
-            DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $file->responseCode(), $url);
+            DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);
             return false;
         }
-        if($file->modificationTime()->lessThan($minTime)) {
+        if(Carbon::parse($response->header("Last-Modified"))->lessThan($minTime)) {
             //This is just error spam. Maybe just send broken servers once?
-            //DiscordNotificationQueueElement::worldUpdate($world, $name . ' too old - ' . $file->modificationTime(), $url);
+            //DiscordNotificationQueueElement::worldUpdate($world, $name . ' too old - ' . $response->header("Last-Modified"), $url);
             return false;
         }
-        return explode("\n", $file->responseData());
+        return explode("\n", gzdecode($response->body()));
     }
     
     public static function loadUncompressedFile(World $world, $urlEnd, $name) {
-        $url = "$world->url/$urlEnd";
-        $file = (new HTTPRequests($url))->send();
-        if($file->responseCode() != 200) {
+        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
+        if(!$response->ok()) {
             BasicFunctions::createLog("ERROR_update[{$world->server->code}{$world->name}]", "$name konnte nicht ge&ouml;ffnet werden");
-            DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $file->responseCode(), $url);
+            DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);
             return false;
         }
-        return explode("\n", $file->responseData());
+        return explode("\n", $response->body());
     }
 }
