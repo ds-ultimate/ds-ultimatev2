@@ -58,12 +58,11 @@ class FixZeroBashBug extends Command
     private static function runFix($world) {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
-        static::fix($dbName . '.player_latest');
+        static::fix(BasicFunctions::getWorldDataTable($world, 'player_latest'));
         for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
-            if (BasicFunctions::existTable($dbName, 'player_' . $i)) {
-                static::fix($dbName . '.player_' . $i);
+            if (BasicFunctions::hasWorldDataTable($world, "player_$i")) {
+                static::fix(BasicFunctions::getWorldDataTable($world, "player_$i"));
             }
         }
     }

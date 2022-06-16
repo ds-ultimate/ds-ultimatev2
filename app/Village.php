@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Util\BasicFunctions;
-
 class Village extends CustomModel
 {
     private $hash = 109;
@@ -14,12 +12,15 @@ class Village extends CustomModel
     
     public $timestamps = true;
 
-    public function __construct(array $attributes = [])
+    public function __construct($arg1 = [], $arg2 = null)
     {
-        parent::__construct($attributes);
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "village_latest";
+        }
+        parent::__construct($arg1, $arg2);
 
         $this->hash = config('dsUltimate.hash_village');
-
     }
 
     /**
@@ -39,29 +40,24 @@ class Village extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $village
      * @return $this
      */
-    public static function village($server, $world, $village){
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
-
+    public static function village(World $world, $village){
+        $villageModel = new Village($world);
         return $villageModel->find($village);
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $villageID
      * @return \Illuminate\Support\Collection
      */
-    public static function villageDataChart($server, $world, $villageID){
+    public static function villageDataChart(World $world, $villageID){
         $villageID = (int) $villageID;
         $tabelNr = $villageID % config('dsUltimate.hash_village');
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_'.$tabelNr);
+        $villageModel = new Village($world, "village_$tabelNr");
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
         return static::pureVillageDataChart($villageDataArray);
@@ -106,27 +102,27 @@ class Village extends CustomModel
     public static function bonusTextStat($bonus_id) {
         switch($bonus_id) {
             case 0: return "-";
-            case 1: return __("ui.village.bonus.wood", ["amount" => "+100%"]);
-            case 2: return __("ui.village.bonus.clay", ["amount" => "+100%"]);
-            case 3: return __("ui.village.bonus.iron", ["amount" => "+100%"]);
-            case 4: return __("ui.village.bonus.population", ["amount" => "+10%"]);
-            case 5: return __("ui.village.bonus.fastBarracks", ["amount" => "+33%"]);
-            case 6: return __("ui.village.bonus.fastStable", ["amount" => "+33%"]);
-            case 7: return __("ui.village.bonus.fastWorkshop", ["amount" => "+50%"]);
-            case 8: return __("ui.village.bonus.allResources", ["amount" => "+33%"]);
-            case 9: return __("ui.village.bonus.merchants", ["amount" => "+50%"]);
+            case 1: return "+100% Holz";
+            case 2: return "+100% Lehm";
+            case 3: return "+100% Eisen";
+            case 4: return "+10% Bevölkerung";
+            case 5: return "+33% schnellere Kaserne";
+            case 6: return "+33% schnellerer Stall";
+            case 7: return "+50% schnellere Werkstatt";
+            case 8: return "+30% auf alle Rohstoffe";
+            case 9: return "+50% Händler & Speicher";
                 
-            case 11: return __("ui.village.bonus.greatSiege", ["amountDef" => "-25%", "points" => 7]);
-            case 12: return __("ui.village.bonus.greatSiege", ["amountDef" => "-30%", "points" => 9]);
-            case 13: return __("ui.village.bonus.greatSiege", ["amountDef" => "-35%", "points" => 10]);
-            case 14: return __("ui.village.bonus.greatSiege", ["amountDef" => "-40%", "points" => 11]);
-            case 15: return __("ui.village.bonus.greatSiege", ["amountDef" => "-45%", "points" => 13]);
-            case 16: return __("ui.village.bonus.greatSiege", ["amountDef" => "-50%", "points" => 15]);
-            case 17: return __("ui.village.bonus.greatSiege", ["amountDef" => "-55%", "points" => 17]);
-            case 18: return __("ui.village.bonus.greatSiege", ["amountDef" => "-60%", "points" => 19]);
-            case 19: return __("ui.village.bonus.greatSiege", ["amountDef" => "-65%", "points" => 21]);
-            case 20: return __("ui.village.bonus.greatSiege", ["amountDef" => "-70%", "points" => 23]);
-            case 21: return __("ui.village.bonus.greatSiege", ["amountDef" => "-75%", "points" => 25]);
+            case 11: return "-25% Verteidigungsstärke. 7 Einflusspunkte täglich.";
+            case 12: return "-30% Verteidigungsstärke. 9 Einflusspunkte täglich.";
+            case 13: return "-35% Verteidigungsstärke. 10 Einflusspunkte täglich.";
+            case 14: return "-40% Verteidigungsstärke. 11 Einflusspunkte täglich.";
+            case 15: return "-45% Verteidigungsstärke. 13 Einflusspunkte täglich.";
+            case 16: return "-50% Verteidigungsstärke. 15 Einflusspunkte täglich.";
+            case 17: return "-55% Verteidigungsstärke. 17 Einflusspunkte täglich.";
+            case 18: return "-60% Verteidigungsstärke. 19 Einflusspunkte täglich.";
+            case 19: return "-65% Verteidigungsstärke. 21 Einflusspunkte täglich.";
+            case 20: return "-70% Verteidigungsstärke. 23 Einflusspunkte täglich.";
+            case 21: return "-75% Verteidigungsstärke. 25 Einflusspunkte täglich.";
         }
         return '-';
     }

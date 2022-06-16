@@ -20,10 +20,8 @@ class TableGeneratorController extends BaseController
 {
     public function index($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
         return view('tools.tableGenerator', compact('worldData', 'server'));
     }
 
@@ -45,8 +43,7 @@ class TableGeneratorController extends BaseController
     public function playerByAlly(Request $request){
         BasicFunctions::local();
         $world = World::find($request->get('world'));
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
+        $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'').
@@ -87,8 +84,7 @@ class TableGeneratorController extends BaseController
     public function villageByPlayer(Request $request){
         BasicFunctions::local();
         $world = World::find($request->get('world'));
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+        $villageModel = new Village($world);
         $villages = $villageModel->where('owner', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'') .
@@ -124,8 +120,7 @@ class TableGeneratorController extends BaseController
     public function villageByAlly(Request $request){
         BasicFunctions::local();
         $world = World::find($request->get('world'));
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
+        $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->get();
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'').
@@ -139,8 +134,7 @@ class TableGeneratorController extends BaseController
         $outputArray = array();
 
         foreach ($players as $player){
-            $villageModel = new Village();
-            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+            $villageModel = new Village($world);
             $villages = $villageModel->where('owner', $player->playerID)->orderBy('points', 'desc')->get();
 
             foreach ($villages as $village){
@@ -166,8 +160,7 @@ class TableGeneratorController extends BaseController
     public function villageAndPlayerByAlly(Request $request){
         BasicFunctions::local();
         $world = World::find($request->get('world'));
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_latest');
+        $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'').
@@ -182,8 +175,7 @@ class TableGeneratorController extends BaseController
         $outputArray = array();
 
         foreach ($players as $player){
-            $villageModel = new Village();
-            $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+            $villageModel = new Village($world);
             $villages = $villageModel->where('owner', $player->playerID)->orderBy('points', 'desc')->get();
 
             foreach ($villages as $village){

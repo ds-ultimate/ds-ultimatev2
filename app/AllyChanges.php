@@ -2,10 +2,18 @@
 
 namespace App;
 
-use App\Util\BasicFunctions;
-
 class AllyChanges extends CustomModel
 {
+
+    public function __construct($arg1 = [], $arg2 = null)
+    {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "ally_changes";
+        }
+        parent::__construct($arg1, $arg2);
+    }
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -61,14 +69,12 @@ class AllyChanges extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $playerID
      * @return int
      */
-    public static function playerAllyChangeCount($server, $world, $playerID){
-        $allyChangesModel = new AllyChanges();
-        $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
+    public static function playerAllyChangeCount(World $world, $playerID){
+        $allyChangesModel = new AllyChanges($world);
         
         $allyChanges = [];
         $allyChanges['total'] = $allyChangesModel->where('player_id', $playerID)->count();
@@ -76,14 +82,12 @@ class AllyChanges extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $allyID
      * @return \Illuminate\Support\Collection
      */
-    public static function allyAllyChangeCounts($server, $world, $allyID){
-        $allyChangesModel = new AllyChanges();
-        $allyChangesModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_changes');
+    public static function allyAllyChangeCounts(World $world, $allyID){
+        $allyChangesModel = new AllyChanges($world);
         
         $allyChanges = [];
         $allyChanges['old'] = $allyChangesModel->where('old_ally_id', $allyID)->count();

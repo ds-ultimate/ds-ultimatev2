@@ -11,6 +11,7 @@ namespace App\Tool\AttackPlanner;
 
 use App\CustomModel;
 use App\World;
+use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -37,6 +38,22 @@ class AttackList extends CustomModel
     protected $cache = [
         'world',
     ];
+    
+    
+    public function __construct($arg1 = [], $arg2 = null) {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "attack_lists";
+        }
+        if($arg1 instanceof World) {
+            //call with world + tableName
+            parent::__construct();
+            $this->setTable(BasicFunctions::getUserWorldDataTable($arg1, $arg2));
+        } else {
+            //called with attributeArray
+            parent::__construct($arg1);
+        }
+    }
 
     /**
      * @return World
@@ -53,7 +70,6 @@ class AttackList extends CustomModel
 
     public function follows(){
         return $this->morphToMany('App\User', 'followable', 'follows');
-        //return $this->morphedByMany('App\Tool\AttackPlanner\AttackList', 'followable');
     }
 
     public function nextAttack(){

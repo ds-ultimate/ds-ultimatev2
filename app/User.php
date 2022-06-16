@@ -3,8 +3,6 @@
 namespace App;
 
 use App\Http\Controllers\User\SettingsController;
-use Auth;
-use Carbon\Carbon;
 use Hash;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -118,7 +116,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function avatarPath(){
         SettingsController::existProfile();
         $avatar = $this->profile->avatar;
-        if ($avatar !== null && Storage::disk('local')->exists($avatar)){
+        if (Storage::disk('local')->exists($avatar)){
             return Storage::url('app/'.$avatar);
         }else{
             return asset('images/default/user.png');

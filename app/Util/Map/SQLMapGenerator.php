@@ -19,8 +19,7 @@ class SQLMapGenerator extends AbstractMapGenerator {
     protected function grabAlly() {
         //Translate ally marks into player marks + Text
         if(count($this->ally) > 0) {
-            $allyModel = new Ally();
-            $allyModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.ally_latest');
+            $allyModel = new Ally($this->world);
             $evaluateModel = false;
             
             foreach($this->ally as $ally) {
@@ -41,8 +40,7 @@ class SQLMapGenerator extends AbstractMapGenerator {
         
         
         if(count($this->dataAlly) > 0) {
-            $playerModel = new Player();
-            $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
+            $playerModel = new Player($this->world);
             foreach($this->dataAlly as $ally) {
                 $playerModel = $playerModel->orWhere('ally_id', $ally['id']);
             }
@@ -66,8 +64,7 @@ class SQLMapGenerator extends AbstractMapGenerator {
     protected function grabPlayer() {
         //Translate player marks into village marks + Text
         if(count($this->player) > 0) {
-            $playerModel = new Player();
-            $playerModel->setTable(BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'.player_latest');
+            $playerModel = new Player($this->world);
             $evaluateModel = false;
             
             foreach($this->player as $player) {
@@ -89,7 +86,7 @@ class SQLMapGenerator extends AbstractMapGenerator {
     
     protected function grabVillage() {
         //DO NOT use Laravel functions here as they use way more memory than this code
-        $tableName = "`".BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name).'`.`village_latest`';
+        $tableName = BasicFunctions::getWorldDataTable($this->world, "village_latest") ;
         $res = DB::select("SELECT name, x, y, points, bonus_id, villageID, owner FROM $tableName WHERE".
                 " x >= ".intval($this->mapDimension['xs']).
                 " AND y >= ".intval($this->mapDimension['ys']).

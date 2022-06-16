@@ -140,9 +140,10 @@ class ExportImportWorlds extends Command
         
         $worlds = (new World())->get();
         foreach ($worlds as $world){
-            $name = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+            $name = BasicFunctions::getWorldDataTable($world, "");
+            $name = substr($name, 0, strlen($name) - 1);
             if(!in_array($name, $all)) {
-                echo "Deleting {$world->server->code} {$world->name}\n";
+                echo "Deleting " . $world->serName() . "\n";
                 $world->delete();
             }
         }

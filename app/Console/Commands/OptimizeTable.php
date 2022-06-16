@@ -71,29 +71,28 @@ class OptimizeTable extends Command
     }
     
     static private function getTablesForTarget(World $world, $target) {
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         $tables = [];
         
         switch($target) {
             case "history":
-                $tables[] = "{$dbName}.index";
+                $tables[] = BasicFunctions::getWorldDataTable($world, "index");
                 break;
             
             case "ally":
                 for($num = 0; $num < config('dsUltimate.hash_ally'); $num++) {
-                    $tables[] = "{$dbName}.ally_{$num}";
+                    $tables[] = BasicFunctions::getWorldDataTable($world, "ally_{$num}");
                 }
                 break;
             
             case "player":
                 for($num = 0; $num < config('dsUltimate.hash_player'); $num++) {
-                    $tables[] = "{$dbName}.player_{$num}";
+                    $tables[] = BasicFunctions::getWorldDataTable($world, "player_{$num}");
                 }
                 break;
             
             case "village":
                 for ($num = 0; $num < config('dsUltimate.hash_village'); $num++){
-                    $tables[] = "{$dbName}.village_{$num}";
+                    $tables[] = BasicFunctions::getWorldDataTable($world, "village_{$num}");
                 }
                 break;
             

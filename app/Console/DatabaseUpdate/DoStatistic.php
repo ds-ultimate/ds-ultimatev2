@@ -12,27 +12,22 @@ use Carbon\Carbon;
 
 class DoStatistic
 {
-    public static function run($server, $world){
+    public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $worldUpdate = World::getWorld($server, $world);
 
-        $village = new Village();
-        $village->setTable($dbName.'.village_latest');
-        $conqer = new Conquer();
-        $conqer->setTable($dbName.'.conquer');
-        $allyChanges = new AllyChanges();
-        $allyChanges->setTable($dbName.'.ally_changes');
+        $village = new Village($world);
+        $conqer = new Conquer($world);
+        $allyChanges = new AllyChanges($world);
 
         $day = Carbon::now()->startOfDay();
 
-        $statistic = WorldStatistic::todayWorldStatistic($worldUpdate);
+        $statistic = WorldStatistic::todayWorldStatistic($world);
 
         if ($statistic){
-            $statistic->total_player = $worldUpdate->player_count;
-            $statistic->total_ally = $worldUpdate->ally_count;
-            $statistic->total_villages = $worldUpdate->village_count;
+            $statistic->total_player = $world->player_count;
+            $statistic->total_ally = $world->ally_count;
+            $statistic->total_villages = $world->village_count;
             $statistic->total_barbarian_village = $village->where('owner', 0)->count();
             $statistic->total_conquere = $conqer->count();
             $statistic->daily_conquer = $conqer->where('timestamp', '>', $day->getTimestamp())->count();
@@ -40,10 +35,10 @@ class DoStatistic
 
         }else{
             $statistic = new WorldStatistic();
-            $statistic->world_id = $worldUpdate->id;
-            $statistic->total_player = $worldUpdate->player_count;
-            $statistic->total_ally = $worldUpdate->ally_count;
-            $statistic->total_villages = $worldUpdate->village_count;
+            $statistic->world_id = $world->id;
+            $statistic->total_player = $world->player_count;
+            $statistic->total_ally = $world->ally_count;
+            $statistic->total_villages = $world->village_count;
             $statistic->total_barbarian_village = $village->where('owner', 0)->count();
             $statistic->total_conquere = $conqer->count();
             $statistic->daily_conquer = $conqer->where('timestamp', '>', $day->getTimestamp())->count();

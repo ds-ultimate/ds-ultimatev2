@@ -17,10 +17,6 @@ class DoSpeedWorldBackend
      * should be run whenever there is a speed world active or one will get active soon
      */
     public static function run(){
-        if (BasicFunctions::existTable(null, 'worlds') === false){
-            TableGenerator::worldTable();
-        }
-
         $serverArray = Server::getServer();
 
         foreach ($serverArray as $serverModel){
@@ -132,24 +128,25 @@ class DoSpeedWorldBackend
                     $match->update();
 
                     BasicFunctions::createLog('insert[World]', "Welt $world wurde erfolgreich der Tabelle '$world' hinzugefügt.");
-                    $name = BasicFunctions::getDatabaseName('', '').$world;
-                    if (BasicFunctions::existDatabase($name) !== false) {
-                        BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' existierte bereits.");
+                    $dbRaw = BasicFunctions::getWorldDataDatabase($worldNew);
+                    if (BasicFunctions::existDatabase($dbRaw) !== false) {
+                        BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$dbRaw' existierte bereits.");
                         continue;
                     }
-                    if (DB::statement('CREATE DATABASE ' . $name) !== true) {
-                        BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$name' konnte nicht erstellt werden.");
+                    if (DB::statement('CREATE DATABASE ' . $dbRaw) !== true) {
+                        BasicFunctions::createLog("ERROR_createBD[$world]", "DB '$dbRaw' konnte nicht erstellt werden.");
                         continue;
                     }
-                    TableGenerator::allyChangeTable($name);
-                    TableGenerator::allyLatestTable($name, 'latest');
-                    TableGenerator::conquerTable($name);
-                    TableGenerator::historyIndexTable($name);
-                    TableGenerator::playerLatestTable($name, 'latest');
-                    TableGenerator::villageLatestTable($name, 'latest');
-                    TableGenerator::playerTopTable($name);
-                    TableGenerator::allyTopTable($name);
-                    BasicFunctions::createLog("createBD[$world]", "DB '$name' wurde erfolgreich erstellt.");
+                    TableGenerator::allyChangeTable($worldNew);
+                    TableGenerator::allyLatestTable($worldNew, 'latest');
+                    TableGenerator::conquerTable($worldNew);
+                    TableGenerator::historyIndexTable($worldNew);
+                    TableGenerator::playerLatestTable($worldNew, 'latest');
+                    TableGenerator::villageLatestTable($worldNew, 'latest');
+                    TableGenerator::playerTopTable($worldNew);
+                    TableGenerator::allyTopTable($worldNew);
+                    TableGenerator::attackPlannerTables($worldNew);
+                    BasicFunctions::createLog("createBD[$world]", "DB '$dbRaw' wurde erfolgreich erstellt.");
                 }
             }
         }

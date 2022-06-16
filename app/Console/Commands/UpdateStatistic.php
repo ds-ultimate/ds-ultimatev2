@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\World;
 use App\Console\DatabaseUpdate\DoStatistic;
 use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
@@ -43,11 +44,12 @@ class UpdateStatistic extends Command
         $world = $this->argument('world');
 
         if ($server != null && $world != null && $server != "null" && $world != "null") {
-            DoStatistic::run($this->argument('server'), $this->argument('world'));
+            $world = World::getWorld($this->argument('server'), $this->argument('world'));
+            DoStatistic::run($world);
         }else{
             $worlds = BasicFunctions::getWorldQuery()->get();
             foreach ($worlds as $world){
-                DoStatistic::run($world->server->code, $world->name);
+                DoStatistic::run($world);
             }
         }
         return 0;

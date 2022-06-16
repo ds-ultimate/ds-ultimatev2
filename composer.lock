@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e798fae7791b991c2f1b7fc6a3831ba",
+    "content-hash": "af09946d7e2c314797f68220d8d33d5c",
     "packages": [
         {
             "name": "barryvdh/laravel-translation-manager",
@@ -129,76 +129,6 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
-        },
-        {
-            "name": "buzz/laravel-google-captcha",
-            "version": "v2.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thinhbuzz/laravel-google-captcha.git",
-                "reference": "a2d56ebed4f33cda60e3f2c53e026954c7693250"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thinhbuzz/laravel-google-captcha/zipball/a2d56ebed4f33cda60e3f2c53e026954c7693250",
-                "reference": "a2d56ebed4f33cda60e3f2c53e026954c7693250",
-                "shasum": ""
-            },
-            "require": {
-                "google/recaptcha": "1.*",
-                "illuminate/support": "5.*|6.*|7.*|8.*|9.*",
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Buzz\\LaravelGoogleCaptcha\\CaptchaServiceProvider"
-                    ],
-                    "aliases": {
-                        "Captcha": "Buzz\\LaravelGoogleCaptcha\\CaptchaFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Buzz\\LaravelGoogleCaptcha\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "ThinhBuzz",
-                    "email": "mr.thinhbuzz@gmail.com",
-                    "homepage": "https://www.facebook.com/thinh.buzz"
-                }
-            ],
-            "description": "Google captcha for Laravel",
-            "homepage": "https://github.com/thinhbuzz/laravel-google-captcha",
-            "keywords": [
-                "captcha",
-                "google-captcha",
-                "laravel",
-                "laravel 5",
-                "laravel 6",
-                "laravel 7",
-                "laravel 8",
-                "laravel 9",
-                "laravel5",
-                "laravel6",
-                "laravel7",
-                "laravel8",
-                "no-captcha",
-                "recaptcha"
-            ],
-            "support": {
-                "issues": "https://github.com/thinhbuzz/laravel-google-captcha/issues",
-                "source": "https://github.com/thinhbuzz/laravel-google-captcha/tree/v2.3.4"
-            },
-            "time": "2022-02-15T12:06:15+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -2124,16 +2054,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.0.20",
+            "version": "3.0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "42a2f47dcf39944e2aee1b660ee55ab6ef69b535"
+                "reference": "8f1fcf9d2304ff77a006aa36dd2cb5f236999b12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/42a2f47dcf39944e2aee1b660ee55ab6ef69b535",
-                "reference": "42a2f47dcf39944e2aee1b660ee55ab6ef69b535",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8f1fcf9d2304ff77a006aa36dd2cb5f236999b12",
+                "reference": "8f1fcf9d2304ff77a006aa36dd2cb5f236999b12",
                 "shasum": ""
             },
             "require": {
@@ -2194,7 +2124,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.0.20"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.0.21"
             },
             "funding": [
                 {
@@ -2210,7 +2140,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-25T19:18:39+00:00"
+            "time": "2022-06-12T17:54:28+00:00"
         },
         {
             "name": "league/mime-type-detection",

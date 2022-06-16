@@ -2,33 +2,16 @@
 
 namespace App\Console\DatabaseUpdate;
 
+use App\Server;
+use App\World;
+use App\Util\BasicFunctions;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class TableGenerator
 {
-    public static function worldTable(){
-        Schema::create('worlds', function (Blueprint $table){
-            $table->increments('id');
-            $table->integer('server_id');
-            $table->text('name');
-            $table->integer('ally_count')->nullable();
-            $table->integer('player_count')->nullable();
-            $table->integer('village_count')->nullable();
-            $table->text('url');
-            $table->text('config');
-            $table->text('units');
-            $table->boolean('active')->default(1)->nullable();
-            $table->timestamps();
-            $table->timestamp('worldCheck_at')->useCurrent();
-            $table->timestamp('worldUpdated_at')->useCurrent();
-            $table->timestamp('worldCleaned_at')->useCurrent();
-            $table->softDeletes();
-        });
-    }
-
-    public static function playerTable($dbName, $tableName){
-        Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
+    public static function playerTable(World $model, $num) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'player_'.$num), function (Blueprint $table) {
             $table->integer('playerID');
             $table->string('name', 288);
             $table->integer('ally_id');
@@ -48,8 +31,8 @@ class TableGenerator
         });
     }
 
-    public static function playerLatestTable($dbName, $tableName){
-        Schema::create($dbName.'.player_'.$tableName, function (Blueprint $table) {
+    public static function playerLatestTable(World $model, $latestSuffix) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'player_'.$latestSuffix), function (Blueprint $table) {
             $table->integer('playerID');
             $table->string('name', 288);
             $table->integer('ally_id');
@@ -69,8 +52,8 @@ class TableGenerator
         });
     }
 
-    public static function allyTable($dbName, $tableName){
-        Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
+    public static function allyTable(World $model, $num) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'ally_'.$num), function (Blueprint $table) {
             $table->integer('allyID');
             $table->string('name', 384);
             $table->string('tag', 72);
@@ -89,8 +72,8 @@ class TableGenerator
         });
     }
 
-    public static function allyLatestTable($dbName, $tableName){
-        Schema::create($dbName.'.ally_'.$tableName, function (Blueprint $table) {
+    public static function allyLatestTable(World $model, $latestSuffix) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'ally_'.$latestSuffix), function (Blueprint $table) {
             $table->integer('allyID');
             $table->string('name', 384);
             $table->string('tag', 72);
@@ -109,8 +92,8 @@ class TableGenerator
         });
     }
 
-    public static function villageTable($dbName, $tableName){
-        Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
+    public static function villageTable(World $model, $num) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'village_'.$num), function (Blueprint $table) {
             $table->integer('villageID');
             $table->string('name', 384);
             $table->integer('x');
@@ -123,8 +106,8 @@ class TableGenerator
         });
     }
 
-    public static function villageLatestTable($dbName, $tableName){
-        Schema::create($dbName.'.village_'.$tableName, function (Blueprint $table) {
+    public static function villageLatestTable(World $model, $latestSuffix) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'village_'.$latestSuffix), function (Blueprint $table) {
             $table->integer('villageID');
             $table->string('name', 384);
             $table->integer('x');
@@ -137,8 +120,8 @@ class TableGenerator
         });
     }
 
-    public static function allyChangeTable($dbName){
-        Schema::create($dbName.'.ally_changes', function (Blueprint $table) {
+    public static function allyChangeTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'ally_changes'), function (Blueprint $table) {
             $table->integer('player_id');
             $table->integer('old_ally_id');
             $table->integer('new_ally_id');
@@ -147,8 +130,8 @@ class TableGenerator
         });
     }
 
-    public static function conquerTable($dbName){
-        Schema::create($dbName.'.conquer', function (Blueprint $table) {
+    public static function conquerTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'conquer'), function (Blueprint $table) {
             $table->integer('village_id');
             $table->bigInteger('timestamp');
             $table->integer('new_owner');
@@ -162,20 +145,21 @@ class TableGenerator
             $table->string('new_ally_name', 384)->nullable()->default(null);
             $table->string('old_ally_tag', 72)->nullable()->default(null);
             $table->string('new_ally_tag', 72)->nullable()->default(null);
+            $table->integer('points')->default(-1);
             $table->timestamps();
         });
     }
     
-    public static function historyIndexTable($dbName) {
-        Schema::create($dbName.'.index', function(Blueprint $table) {
+    public static function historyIndexTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'index'), function (Blueprint $table) {
             $table->increments('id');
             $table->text('date');
             $table->timestamps();
         });
     }
     
-    public static function playerTopTable($dbName) {
-        Schema::create($dbName.'.player_top', function (Blueprint $table) {
+    public static function playerTopTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'player_top'), function (Blueprint $table) {
             $table->integer('playerID');
             $table->string('name', 288);
             $table->integer('village_count_top');
@@ -205,8 +189,8 @@ class TableGenerator
         });
     }
     
-    public static function allyTopTable($dbName) {
-        Schema::create($dbName.'.ally_top', function (Blueprint $table) {
+    public static function allyTopTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'ally_top'), function (Blueprint $table) {
             $table->integer('allyID');
             $table->string('name', 384);
             $table->string('tag', 72);
@@ -235,8 +219,59 @@ class TableGenerator
         });
     }
     
-    public static function otherServersTable($serverCode) {
-        Schema::create("other_servers_" . $serverCode, function (Blueprint $table) {
+    public static function attackPlannerTables(World $model) {
+        Schema::create(BasicFunctions::getUserWorldDataTable($model, "attack_lists"), function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('edit_key');
+            $table->string('show_key');
+            $table->string('title')->nullable();
+            $table->boolean('uvMode')->default(False);
+            $table->integer('api')->default(0);
+            $table->boolean('apiKey')->nullable();
+            
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        
+        Schema::create(BasicFunctions::getUserWorldDataTable($model, "attack_list_items"), function (Blueprint $table) use($model) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('attack_list_id');
+            $table->tinyInteger('type');
+            $table->integer('start_village_id');
+            $table->integer('target_village_id');
+            $table->integer('slowest_unit');
+            $table->text('note')->nullable();
+            $table->timestamp('send_time')->useCurrent();
+            $table->timestamp('arrival_time')->useCurrent();
+            $table->smallInteger('ms')->default(0);
+            $table->boolean('send')->default(0);
+            
+            $table->float('support_boost')->default(0.00);
+            $table->float('tribe_skill')->default(0.00);
+            
+            $table->integer('spear')->default(0);
+            $table->integer('sword')->default(0);
+            $table->integer('axe')->default(0);
+            $table->integer('archer')->default(0);
+            $table->integer('spy')->default(0);
+            $table->integer('light')->default(0);
+            $table->integer('marcher')->default(0);
+            $table->integer('heavy')->default(0);
+            $table->integer('ram')->default(0);
+            $table->integer('catapult')->default(0);
+            $table->integer('knight')->default(0);
+            $table->integer('snob')->default(0);
+            
+            $table->timestamps();
+
+            $table->foreign('attack_list_id', $model->server->code.$model->name.'attack_list_id_foreign')->references('id')
+                    ->on(BasicFunctions::getUserWorldDataTable($model, "attack_lists"));
+        });
+    }
+    
+    public static function otherServersTable(Server $model) {
+        Schema::create("other_servers_" . $model->code, function (Blueprint $table) {
             $table->integer('playerID');
             $table->string('name', 288);
             $table->text('worlds');

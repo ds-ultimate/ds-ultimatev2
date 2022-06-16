@@ -20,9 +20,8 @@ class Village extends JsonResource
         abort_unless(isset($this->villageID), 404);
         $server = $request->route('server');
         $world = $request->route('world');
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
-        $conquer = Conquer::villageConquerCounts($server, $world, $this->villageID);
+        $worldData = World::getAndCheckWorld($server, $world);
+        $conquer = Conquer::villageConquerCounts($worldData, $this->villageID);
         
         $ownerAlly = 0;
         $ownerAllyName = '-';

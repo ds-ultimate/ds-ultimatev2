@@ -40,7 +40,7 @@ class DoWorldData
         
         if($allGood && $world->isSpeed()) {
             //save history data every time
-            WorldHistory::run($world->server->code, $world->name, true);
+            WorldHistory::run($world);
         }
         
         $world->worldUpdated_at = Carbon::now();
@@ -70,7 +70,7 @@ class DoWorldData
     public static function loadGzippedFile(World $world, $name, $minTime) {
         $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
         if(!$response->ok()) {
-            BasicFunctions::createLog("ERROR_update[{$world->server->code}{$world->name}]", "$name konnte nicht ge&ouml;ffnet werden");
+            BasicFunctions::createLog("ERROR_update[" . $world->serName() . "]", "$name konnte nicht ge&ouml;ffnet werden");
             DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);
             return false;
         }
@@ -85,7 +85,7 @@ class DoWorldData
     public static function loadUncompressedFile(World $world, $urlEnd, $name) {
         $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
         if(!$response->ok()) {
-            BasicFunctions::createLog("ERROR_update[{$world->server->code}{$world->name}]", "$name konnte nicht ge&ouml;ffnet werden");
+            BasicFunctions::createLog("ERROR_update[" . $world->serName() . "]", "$name konnte nicht ge&ouml;ffnet werden");
             DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);
             return false;
         }

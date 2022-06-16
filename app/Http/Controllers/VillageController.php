@@ -12,13 +12,12 @@ class VillageController extends Controller
 {
     public function village($server, $world, $village){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
-
-        $villageData = Village::village($server, $world, $village);
+        $villageData = Village::village($worldData, $village);
         abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
-                "auf der Welt '$server$world' vorhanden.");
+                "auf der Welt '{$world->serName()}' vorhanden.");
         
         $villageHistData = $villageData->getHistoryData();
         $datas = Village::pureVillageDataChart($villageHistData);
@@ -29,7 +28,7 @@ class VillageController extends Controller
             ];
         }
         $chartJS = Chart::generateChart($datas, 'points', gapFill: true);
-        $conquer = Conquer::villageConquerCounts($server, $world, $village);
+        $conquer = Conquer::villageConquerCounts($worldData, $village);
         
         $villageHistory = [];
         $last = null;
@@ -63,12 +62,12 @@ class VillageController extends Controller
     
     public function conquer($server, $world, $type, $villageID){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-        $villageData = Village::village($server, $world, $villageID);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $villageData = Village::village($worldData, $villageID);
         abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$villageID'" .
-                "auf der Welt '$server$world' vorhanden.");
+                "auf der Welt '{$world->serName()}' vorhanden.");
 
         switch($type) {
             case "all":

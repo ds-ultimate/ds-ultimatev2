@@ -68,11 +68,10 @@ class GenerateTopsFromHist extends Command
     public static function internalGenerateTops($world, $type) {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2000M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
         switch ($type) {
             case 'a':
-                $model = new Ally();
+                $model = new AllyTop($world);
                 $values = [
                     ['member_count', 'member_count_top', 'member_count_date', 1, 3],
                     ['village_count', 'village_count_top', 'village_count_date', 1, 5],
@@ -91,12 +90,12 @@ class GenerateTopsFromHist extends Command
                 ];
                 $typeN = 'ally';
                 $hashSize = config('dsUltimate.hash_ally');
-                $generateCallback = function() {
-                    return new AllyTop();
+                $generateCallback = function() use($world) {
+                    return new AllyTop($world);
                 };
                 break;
             case 'p':
-                $model = new Player();
+                $model = new PlayerTop($world);
                 $values = [
                     ['village_count', 'village_count_top', 'village_count_date', 1, 4],
                     ['points', 'points_top', 'points_date', 1, 3],
@@ -115,8 +114,8 @@ class GenerateTopsFromHist extends Command
                 ];
                 $typeN = 'player';
                 $hashSize = config('dsUltimate.hash_player');
-                $generateCallback = function() {
-                    return new PlayerTop();
+                $generateCallback = function() use($world) {
+                    return new PlayerTop($world);
                 };
                 break;
             default:
@@ -126,16 +125,14 @@ class GenerateTopsFromHist extends Command
         //load all current top data into memory
         $curData = [];
         $idCol = $typeN . "ID";
-        $model->setTable("$dbName.{$typeN}_top");
         foreach($model->get() as $elm) {
             $curData[$elm->$idCol] = $elm;
         }
         
-        $hist = new HistoryIndex();
-        $hist->setTable("$dbName.index");
+        $hist = new HistoryIndex($world);
         
         foreach($hist->get() as $history) {
-            $fileName = storage_path(config('dsUltimate.history_directory') . "{$dbName}/{$typeN}_{$history->date}.gz");
+            $fileName = storage_path(config('dsUltimate.history_directory') . $world->serName() . "/{$typeN}_{$history->date}.gz");
             $file = gzopen($fileName, "r");
             
             $i = 0;
@@ -153,7 +150,6 @@ class GenerateTopsFromHist extends Command
                     $curModel = $curData[$elm[0]];
                 } else {
                     $curModel = $generateCallback();
-                    $curModel->setTable("$dbName.{$typeN}_top");
                     $curModel->$idCol = $elm[0];
                     foreach($copy as $cp) {
                         $curModel->{$cp[0]} = $elm[$cp[1]];
@@ -179,7 +175,7 @@ class GenerateTopsFromHist extends Command
                 }
                 $i++;
                 if($i % 100 == 0) {
-                    echo "\r$dbName $typeN doing: {$history->date} at: $i";
+                    echo "\r" . $world->serName() . " $typeN doing: {$history->date} at: $i";
                 }
             }
             gzclose($file);
@@ -192,7 +188,7 @@ class GenerateTopsFromHist extends Command
                 $changed++;
             }
             $entry->save();
-            echo "\r$dbName $typeN Inserting: $changed";
+            echo "\r" . $world->serName() . " $typeN Inserting: $changed";
         }
         echo "\n";
     }

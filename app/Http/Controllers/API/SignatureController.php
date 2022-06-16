@@ -22,16 +22,15 @@ class SignatureController extends Controller
     private static $cBGDarker = [242, 221, 152];
         
     public function signature($server, $world, $type, $id){
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $worldData = World::getWorld($server, $world);
         switch($type) {
             case "player":
-                $modelData = Player::player($server, $world, $id);
+                $modelData = Player::player($worldData, $id);
                 $createFkt = [static::class, 'createPlayerSignature'];
                 break;
             case "playerTop":
-                $modelData = PlayerTop::player($server, $world, $id);
+                $modelData = PlayerTop::player($worldData, $id);
                 $createFkt = [static::class, 'createTopPlayerSignature'];
                 break;
             default:
@@ -59,7 +58,7 @@ class SignatureController extends Controller
             }
             
             $cFile = $signature->getCacheFile();
-            if($createFkt(substr($cFile, 0, strrpos($cFile, ".")), $server, $world, $id)) {
+            if($createFkt(substr($cFile, 0, strrpos($cFile, ".")), $worldData, $id)) {
                 $signature->cached = Carbon::now();
                 $signature->save();
             } else {
@@ -80,23 +79,20 @@ class SignatureController extends Controller
         return $image;
     }
     
-    private static function createPlayerSignature($targetFile, $server, $world, $id) {
-        World::existWorld($server, $world);
-        
+    private static function createPlayerSignature($targetFile, World $world, $id) {
         // Content type
-        $worldData = World::getWorld($server, $world);
-        $playerData = Player::player($server, $world, $id);
+        $playerData = Player::player($world, $id);
         
         $img = new TextImageRenderer(font: public_path("/fonts/arial.ttf"), dim: ["width" => 500, "height" => 60]);
         imagefill($img->getRawImage(), 0, 0, $img->colAllocate(static::$cBG));
         
         $img->setFont(public_path("/fonts/arial_b.ttf"));
-        if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $worldData->display_name, static::$cBlack, 90);
+        if (strpos($world->name, 'p') !== false || strpos($world->name, 'c') !== false) {
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->display_name, static::$cBlack, 90);
         } else {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $worldData->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->display_name, static::$cBlack, 90);
         }
-        $img->insertPubImage("images/default/signature/{$worldData->server->flag}.png", 27, 3, 16, 12);
+        $img->insertPubImage("images/default/signature/{$world->server->flag}.png", 27, 3, 16, 12);
         
         $img->renderAlignedText(TextImageRenderer::$ANCHOR_TOP_LEFT, 50, 3, 10, BasicFunctions::decodeName($playerData->name), static::$cPrimary);
         $img->setFont(public_path("/fonts/arial_i.ttf"));
@@ -138,7 +134,7 @@ class SignatureController extends Controller
         static::renderBoxedSignature($img, $data, $insets, static::$cBGDarker, static::$cPrimary);
         
         //copy from PictureController getPlayerSizedPic
-        $rawStatData = Player::playerDataChart($server, $world, $id, 17);
+        $rawStatData = Player::playerDataChart($world, $id, 17);
         $statData = array();
         foreach ($rawStatData as $rawData) {
             $statData[$rawData['timestamp']] = $rawData['points'];
@@ -159,22 +155,19 @@ class SignatureController extends Controller
         return true;
     }
     
-    public static function createTopPlayerSignature($targetFile, $server, $world, $id){
-        World::existWorld($server, $world);
-        
+    private static function createTopPlayerSignature($targetFile, World $world, $id){
         // Content type
-        $worldData = World::getWorld($server, $world);
-        $playerData = PlayerTop::player($server, $world, $id);
+        $playerData = PlayerTop::player($world, $id);
         
         $img = new TextImageRenderer(font: public_path("/fonts/arial_b.ttf"), dim: ["width" => 500, "height" => 60]);
         imagefill($img->getRawImage(), 0, 0, $img->colAllocate(static::$cBG));
         
-        if (strpos($worldData->name, 'p') !== false || strpos($worldData->name, 'c') !== false) {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $worldData->display_name, static::$cBlack, 90);
+        if (strpos($world->name, 'p') !== false || strpos($world->name, 'c') !== false) {
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->display_name, static::$cBlack, 90);
         } else {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $worldData->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->display_name, static::$cBlack, 90);
         }
-        $img->insertPubImage("images/default/signature/{$worldData->server->flag}.png", 27, 3, 16, 12);
+        $img->insertPubImage("images/default/signature/{$world->server->flag}.png", 27, 3, 16, 12);
         
         $img->renderAlignedText(TextImageRenderer::$ANCHOR_TOP_LEFT, 50, 3, 10, BasicFunctions::decodeName($playerData->name), static::$cPrimary);
         $img->setFont(public_path("/fonts/arial_i.ttf"));

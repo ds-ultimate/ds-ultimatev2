@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use App\Conquer;
 use App\Ally;
 use App\AllyTop;
+use App\Server;
+use App\World;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
-use App\World;
 use App\AllyChanges;
 
 class AllyController extends Controller
 {
     public function ally($server, $world, $ally){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
-
-        $allyData = Ally::ally($server, $world, $ally);
-        $allyTopData = AllyTop::ally($server, $world, $ally);
+        $allyData = Ally::ally($worldData, $ally);
+        $allyTopData = AllyTop::ally($worldData, $ally);
         abort_if($allyData == null && $allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
         
-        $conquer = Conquer::allyConquerCounts($server, $world, $ally);
-        $allyChanges = AllyChanges::allyAllyChangeCounts($server, $world, $ally);
+        $conquer = Conquer::allyConquerCounts($worldData, $ally);
+        $allyChanges = AllyChanges::allyAllyChangeCounts($worldData, $ally);
         
         if($allyData == null) {
             return view('content.allyDeleted', compact('conquer', 'worldData', 'server', 'allyChanges', 'allyTopData'));
@@ -34,7 +34,7 @@ class AllyController extends Controller
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash'];
 
-        $datas = Ally::allyDataChart($server, $world, $ally);
+        $datas = Ally::allyDataChart($worldData, $ally);
         if(count($datas) < 1) {
             $datas[] = [
                 "timestamp" => time(),
@@ -62,25 +62,24 @@ class AllyController extends Controller
     public function allyBashRanking($server, $world, $ally)
     {
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
-
-        $allyData = Ally::ally($server, $world, $ally);
+        $allyData = Ally::ally($worldData, $ally);
         abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
-            " auf der Welt '$server$world' vorhanden.");
+            " auf der Welt '{$world->serName()}' vorhanden.");
 
         return view('content.allyBashRanking', compact('allyData', 'worldData', 'server'));
     }
 
     public function allyChanges($server, $world, $type, $allyID){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-        $allyTopData = AllyTop::ally($server, $world, $allyID);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $allyTopData = AllyTop::ally($worldData, $allyID);
         abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
 
         switch($type) {
             case "all":
@@ -101,12 +100,12 @@ class AllyController extends Controller
 
     public function conquer($server, $world, $type, $allyID){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-        $allyTopData = AllyTop::ally($server, $world, $allyID);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $allyTopData = AllyTop::ally($worldData, $allyID);
         abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
 
         switch($type) {
             case "all":
@@ -144,10 +143,8 @@ class AllyController extends Controller
     }
 
     public function rank($server, $world){
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
         return view('content.rankAlly', compact('worldData', 'server'));
     }
 }

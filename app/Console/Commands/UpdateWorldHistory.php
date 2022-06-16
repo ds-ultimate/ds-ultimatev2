@@ -52,10 +52,11 @@ class UpdateWorldHistory extends Command
                 }
                 $server = $dbWorld->server->code;
                 $world = $dbWorld->name;
-                WorldHistory::run($server, $world, $dbWorld->isSpeed());
+                WorldHistory::run($dbWorld);
             }
         } else {
-            WorldHistory::run($server, $world, World::isSpeedName($world));
+            $dbWorld = World::getWorld($server, $world);
+            WorldHistory::run($dbWorld);
         }
         return 0;
     }

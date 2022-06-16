@@ -34,7 +34,6 @@ class World extends CustomModel
         'buildings',
         'active',
         'display_name',
-        'win_condition',
     ];
     
     protected $cache = [
@@ -51,39 +50,6 @@ class World extends CustomModel
     }
 
     /**
-     * Prüft ob der Server 'de' vorhanden ist, in dem er die Tabelle worlds durchsucht.
-     * Falls er keine Welt mit 'de' am Anfang findet gibt er eine Fehlermeldung zurück.
-     *
-     * @param string $server
-     * @return bool
-     */
-    public static function existServer($server){
-        if(Server::getQuery()->where("code", "=", $server)->get()->count() > 0){
-            return true;
-        }
-
-        abort(404, "Keine Daten über diesen Server '$server' vorhanden.");
-    }
-
-    /**
-     * Prüft ob die Welt 'de164' vorhanden ist, in dem er die Tabelle worlds durchsucht.
-     * Falls er keine Welt mit 'de164' findet gibt er eine Fehlermeldung zurück.
-     *
-     * @param string $server
-     * @param $world
-     * @return bool
-     */
-    public static function existWorld($server, $world){
-        World::existServer($server);
-        $serverData = Server::getServerByCode($server);
-        if(World::where('name', $world)->where('server_id', $serverData->id)->get()->count() > 0){
-            return true;
-        }
-
-        abort(404, "Keine Daten über diese Welt '$server$world' vorhanden.");
-    }
-
-    /**
      * Gibt eine bestimmte Welt zurück.
      *
      * @param string $server
@@ -96,13 +62,22 @@ class World extends CustomModel
     }
 
     /**
-     * Sucht alle Welten mit dem entsprechendem ISO.
+     * Schaut ob die Welt existiert und falls ja gibt diese zurück,
+     * sonst wird ein Error 404 zurück gegeben
      *
-     * @param $server
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param string $server
+     * @param $world
+     * @return World
      */
-    public static function worldsByServer($server){
-        return Server::getWorldsByCode($server);
+    public static function getAndCheckWorld($server, $world){
+        if($server instanceof Server) {
+            $serverData = $server;
+        } else {
+            $serverData = Server::getAndCheckServerByCode($server);
+        }
+        $worldData = World::where('name', $world)->where('server_id', $serverData->id)->first();
+        abort_if($worldData == null, 404, __("ui.errors.404.noWorld", ["world" => "$server$world"]));
+        return $worldData;
     }
 
     /**
@@ -114,7 +89,7 @@ class World extends CustomModel
     public static function worldsCollection($server, $mapping=[]){
         $worldsArray = [];
 
-        foreach (Server::getWorldsByCode($server) as $worldData){
+        foreach (Server::getWorlds($server) as $worldData){
             $type = $worldData->sortType();
             if(isset($mapping[$type])) {
                 $type = $mapping[$type];
@@ -200,7 +175,7 @@ class World extends CustomModel
      */
     public function num()
     {
-        return BasicFunctions::getWorldNum($this->name);
+        return (int)preg_replace("/[^0-9]+/", '', $world);
     }
 
     /**
@@ -274,21 +249,7 @@ class World extends CustomModel
         return $this->unitConfCache;
     }
     
-    public function save(array $options = []) {
-        if($this->config == null) {
-            $this->win_condition = -1;
-        } else {
-            $this->win_condition = simplexml_load_string($this->config)->win->check;
-        }
-        return parent::save($options);
-    }
-    
-    public function touch($attribute = null) {
-        if($this->config == null) {
-            $this->win_condition = -1;
-        } else {
-            $this->win_condition = simplexml_load_string($this->config)->win->check;
-        }
-        return parent::touch();
+    public function serName() {
+        return $this->server->code . $this->name;
     }
 }

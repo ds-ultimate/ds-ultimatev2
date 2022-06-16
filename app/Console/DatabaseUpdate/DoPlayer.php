@@ -15,20 +15,22 @@ class DoPlayer
     public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1800M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         $minTime = Carbon::now()->subHour()->subMinutes(5);
+        
+        $liveTbl = BasicFunctions::getWorldDataTable($world, "player_latest");
+        $tmpTbl = BasicFunctions::getWorldDataTable($world, "player_latest_temp");
 
-        Schema::dropIfExists("$dbName.player_latest_temp");
-        if (BasicFunctions::existTable($dbName, 'player_latest_temp') === false){
-            TableGenerator::playerLatestTable($dbName, 'latest_temp');
+        Schema::dropIfExists($tmpTbl);
+        if (BasicFunctions::hasWorldDataTable($world, 'player_latest_temp') === false){
+            TableGenerator::playerLatestTable($world, 'latest_temp');
         }
 
-        if (BasicFunctions::existTable($dbName, 'ally_changes') === false){
-            TableGenerator::allyChangeTable($dbName);
+        if (BasicFunctions::hasWorldDataTable($world, 'ally_changes') === false){
+            TableGenerator::allyChangeTable($world);
         }
 
-        if (BasicFunctions::existTable($dbName, 'player_latest') === false){
-            TableGenerator::playerLatestTable($dbName, 'latest');
+        if (BasicFunctions::hasWorldDataTable($world, 'player_latest') === false){
+            TableGenerator::playerLatestTable($world, 'latest');
         }
         
         $lines = DoWorldData::loadGzippedFile($world, "player.txt.gz", $minTime);
@@ -104,15 +106,13 @@ class DoPlayer
         }
         
         
-        $playerChange = new Player();
-        $playerChange->setTable($dbName . '.player_latest');
+        $playerChange = new Player($world);
         $databasePlayer = [];
         foreach ($playerChange->get() as $player) {
             $databasePlayer[$player->playerID] = $player->ally_id;
         }
 
-        $insert = new Player();
-        $insert->setTable($dbName.'.player_latest_temp');
+        $insert = new Player($world, 'player_latest_temp');
         $arrayAllyChange = [];
         $insertTime = Carbon::now();
         $arrayPlayer = [];
@@ -156,23 +156,22 @@ class DoPlayer
             $insert->insert($t);
         }
 
-        $allyChangeModel = new AllyChanges();
-        $allyChangeModel->setTable($dbName.'.ally_changes');
+        $allyChangeModel = new AllyChanges($world);
         foreach (array_chunk($arrayAllyChange,3000) as $t){
             $allyChangeModel->insert($t);
         }
 
-        Schema::dropIfExists("$dbName.player_latest");
-        DB::statement("ALTER TABLE $dbName.player_latest_temp RENAME TO $dbName.player_latest");
+        Schema::dropIfExists($liveTbl);
+        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
         $hashPlayer = UpdateUtil::hashTable($arrayPlayer, 'p', 'playerID');
 
         for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
             if (array_key_exists($i ,$hashPlayer)) {
-                if (BasicFunctions::existTable($dbName, 'player_' . $i) === false) {
-                    TableGenerator::playerTable($dbName, $i);
+                if (BasicFunctions::hasWorldDataTable($world, 'player_' . $i) === false) {
+                    TableGenerator::playerTable($world, $i);
                 }
-                $insert->setTable($dbName . '.player_' . $i);
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.player_' . $i));
                 foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
                     $insert->insert($t);
                 }

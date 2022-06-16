@@ -1,20 +1,21 @@
 <?php
 namespace App\Util;
 
+use App\Server;
 use App\World;
 use App\Http\Controllers\Tools\AnimatedHistoryMapController;
 
 class Navigation
 {
-    public static function generateNavArray($serverArg, $worldArg) {
+    public static function generateNavArray(Server $serModel, $worldArg) {
         $retArray = [];
         if($worldArg !== null) {
             $serverCodeName = [$worldArg->server->code, $worldArg->name];
         }
 
-        if($serverArg !== null) {
+        if($serModel !== null) {
             $serverNav = [];
-            foreach(World::worldsCollection($serverArg) as $worlds) {
+            foreach(World::worldsCollection($serModel) as $worlds) {
                 $worldNav = [];
                 foreach($worlds as $world) {
                     switch(\Request::route()->getName()) {
@@ -45,7 +46,7 @@ class Navigation
                     $serverNav[] = self::navDropdown(title: 'ui.tabletitel.normalWorlds', subelements: $worldNav);
                 }
             }
-            $retArray[] = self::navElement('ui.titel.worldOverview', 'server', routeArgs: [$serverArg]);
+            $retArray[] = self::navElement('ui.titel.worldOverview', 'server', routeArgs: [$serModel->code]);
             $retArray[] = self::navDropdown(title: 'ui.server.worlds', subelements: $serverNav);
         }
 
@@ -66,9 +67,6 @@ class Navigation
 
         $tools = [];
         if($worldArg !== null) {
-            if($worldArg->win_condition == 9) {
-                $tools[] = self::navElement('tool.greatSiegeCalc.title', 'tools.greatSiegeCalc', routeArgs: $serverCodeName);
-            }
             if($worldArg->config != null && $worldArg->units != null) {
                 $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', routeArgs: $serverCodeName);
                 $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', routeArgs: $serverCodeName, nofollow: true);
@@ -111,8 +109,8 @@ class Navigation
         return $retArray;
     }
 
-    public static function generateMobileNavArray($serverArg, $worldArg) {
-        $navArray = self::generateNavArray($serverArg, $worldArg);
+    public static function generateMobileNavArray(Server $serModel, $worldArg) {
+        $navArray = self::generateNavArray($serModel, $worldArg);
         $transSub = [];
         foreach(static::getAvailableTranslations() as $trans) {
             $transSub[] = self::navElement($trans['n'], 'locale', routeArgs: [$trans['s']], translated: false, icon: 'flag-icon '.$trans['f']);

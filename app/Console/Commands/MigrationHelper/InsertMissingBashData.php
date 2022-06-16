@@ -55,14 +55,14 @@ class InsertMissingBashData extends Command
     private function insertMissing(World $worldModel) {
         $this->doPlayer($worldModel, "latest");
         for ($num = 0; $num < config('dsUltimate.hash_player'); $num++){
-            if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($worldModel->server->code, $worldModel->name), "player_$num")) {
+            if(!BasicFunctions::hasWorldDataTable($worldModel, "player_$num")) {
                 continue;
             }
             $this->doPlayer($worldModel, "$num");
         }
         $this->doAlly($worldModel, 'latest');
         for ($num = 0; $num < config('dsUltimate.hash_ally'); $num++){
-            if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($worldModel->server->code, $worldModel->name), "ally_$num")) {
+            if(!BasicFunctions::hasWorldDataTable($worldModel, "ally_$num")) {
                 continue;
             }
             $this->doAlly($worldModel, "$num");
@@ -70,22 +70,18 @@ class InsertMissingBashData extends Command
     }
     
     private function doPlayer(World $worldModel, $tableSuffix) {
-        $playerModel = new Player();
-        $server = $worldModel->server->code;
-        $world = $worldModel->name;
-        $dbPre = BasicFunctions::getDatabaseName($server, $world);
         $tablePre = "player_";
-        $playerModel->setTable("$dbPre.$tablePre$tableSuffix");
-        echo "Run with $server$world player_$tableSuffix\n";
+        $playerModel = new Player($worldModel, "$tablePre$tableSuffix");
+        echo "Run with " . $world->serName() . " player_$tableSuffix\n";
         
         while(($todo = $playerModel->whereNull('offBash')
                 ->orWhereNull('defBash')
                 ->orWhereNull('supBash')
                 ->orWhereNull('gesBash')
                 ->first()) !== null) {
-            echo "Doing: $dbPre.$tablePre$tableSuffix {$todo->created_at->timestamp} ";
+            echo "Doing: " . $world->serName() . ".$tablePre$tableSuffix {$todo->created_at->timestamp} ";
             
-            $similar = $this->getEntriesFromSameTime($dbPre, $tablePre, $tableSuffix, $playerModel, $todo, config('dsUltimate.hash_player'));
+            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $playerModel, $todo, config('dsUltimate.hash_player'));
             foreach($similar as $entry) {
                 if($entry->offBash === null) $entry->offBash = 0;
                 if($entry->defBash === null) $entry->defBash = 0;
@@ -115,26 +111,22 @@ class InsertMissingBashData extends Command
                 }
             }
             echo "Finished\n";
-            $playerModel->setTable("$dbPre.$tablePre$tableSuffix");
+            $playerModel->setTable(BasicFunctions::getWorldDataTable($worldModel, "$tablePre$tableSuffix"));
         }
     }
     
     private function doAlly(World $worldModel, $tableSuffix) {
-        $allyModel = new Ally();
-        $server = $worldModel->server->code;
-        $world = $worldModel->name;
-        $dbPre = BasicFunctions::getDatabaseName($server, $world);
         $tablePre = "ally_";
-        $allyModel->setTable("$dbPre.$tablePre$tableSuffix");
+        $allyModel = new Ally($worldModel, "$tablePre$tableSuffix");
         echo "Run with $server$world ally_$tableSuffix\n";
         
         while(($todo = $allyModel->whereNull('offBash')
                 ->orWhereNull('defBash')
                 ->orWhereNull('gesBash')
                 ->first()) !== null) {
-            echo "Doing: $dbPre.$tablePre$tableSuffix {$todo->created_at->timestamp} ";
+            echo "Doing: " . $world->serName() . ".$tablePre$tableSuffix {$todo->created_at->timestamp} ";
             
-            $similar = $this->getEntriesFromSameTime($dbPre, $tablePre, $tableSuffix, $allyModel, $todo, config('dsUltimate.hash_ally'));
+            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $allyModel, $todo, config('dsUltimate.hash_ally'));
             echo $similar->count() . " ";
             foreach($similar as $entry) {
                 if($entry->offBash === null) $entry->offBash = 0;
@@ -150,11 +142,11 @@ class InsertMissingBashData extends Command
                 }
             }
             echo "Finished\n";
-            $allyModel->setTable("$dbPre.$tablePre$tableSuffix");
+            $allyModel->setTable(BasicFunctions::getWorldDataTable($worldModel, "$tablePre$tableSuffix"));
         }
     }
     
-    private function getEntriesFromSameTime($db, $tablePre, $tableSuffix, $model, $similarOf, $amount) {
+    private function getEntriesFromSameTime(World $worldModel, $tablePre, $tableSuffix, $model, $similarOf, $amount) {
         $timeStart = $similarOf->created_at->copy()->subSeconds(10);
         $timeEnd = $similarOf->created_at->copy()->addSeconds(10);
         if($tableSuffix == 'latest') {
@@ -164,10 +156,10 @@ class InsertMissingBashData extends Command
         
         $data = collect();
         for($i = 0; $i < $amount; $i++) {
-            if(!BasicFunctions::existTable($db, $tablePre . $i)) {
+            if(!BasicFunctions::hasWorldDataTable($worldModel, $tablePre . $i)) {
                 continue;
             }
-            $model->setTable("$db.$tablePre$i");
+            $model->setTable(BasicFunctions::getWorldDataTable($worldModel, "$tablePre$i"));
             $res = $model->where('created_at', '>', $timeStart)
                     ->where('created_at', '<', $timeEnd)->get();
             $data = $data->merge($res);

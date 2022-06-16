@@ -45,7 +45,7 @@ class DeleteTable extends Command
         $bar->start();
 
         foreach ($worlds as $world){
-            Schema::dropIfExists(BasicFunctions::getDatabaseName($world->server->code, $world->name) . '.' . $this->argument('tableName'));
+            Schema::dropIfExists(BasicFunctions::getWorldDataTable($world, $this->argument('tableName')));
             $bar->advance();
         }
         $bar->finish();

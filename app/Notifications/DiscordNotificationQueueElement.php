@@ -106,9 +106,9 @@ class DiscordNotificationQueueElement extends Model
     }
     
     public static function conquere($user_id, $world, $conquerArr){
-        $old = Player::player($world->server->code, $world->name, $conquerArr['old_owner']);
-        $new = Player::player($world->server->code, $world->name, $conquerArr['new_owner']);
-        $village = Village::village($world->server->code, $world->name, $conquerArr['village_id']);
+        $old = Player::player($world, $conquerArr['old_owner']);
+        $new = Player::player($world, $conquerArr['new_owner']);
+        $village = Village::village($world, $conquerArr['village_id']);
         $time = Carbon::createFromTimestamp($conquerArr['timestamp']);
 
         if ($old !== null && $new !== null){

@@ -17,11 +17,8 @@ class CreateTopTables extends Migration
     public function up()
     {
         foreach((new World())->get() as $dbWorld) {
-            $server = $dbWorld->server->code;
-            $world = $dbWorld->name;
-            $dbName = BasicFunctions::getDatabaseName($server, $world);
-            TableGenerator::allyTopTable($dbName);
-            TableGenerator::playerTopTable($dbName);
+            TableGenerator::allyTopTable($dbWorld);
+            TableGenerator::playerTopTable($dbWorld);
         }
         
         Schema::table('worlds', function (Blueprint $table) {
@@ -37,11 +34,8 @@ class CreateTopTables extends Migration
     public function down()
     {
         foreach((new World())->get() as $dbWorld) {
-            $server = $dbWorld->server->code;
-            $world = $dbWorld->name;
-            $dbName = BasicFunctions::getDatabaseName($server, $world);
-            Schema::dropIfExists($dbName . '.ally_top');
-            Schema::dropIfExists($dbName . '.player_top');
+            Schema::dropIfExists(BasicFunctions::getWorldDataTable($dbWorld, 'ally_top'));
+            Schema::dropIfExists(BasicFunctions::getWorldDataTable($dbWorld, 'player_top'));
         }
     }
 }

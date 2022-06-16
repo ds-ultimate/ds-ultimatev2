@@ -2,10 +2,9 @@
 
 namespace App\Console\DatabaseUpdate;
 
-use App\Ally;
 use App\AllyTop;
-use App\Player;
 use App\PlayerTop;
+use App\World;
 use App\Util\BasicFunctions;
 
 class DoGenerateTops
@@ -14,14 +13,13 @@ class DoGenerateTops
      * @param \App\World $world model
      * @param String $type can be a for ally or p for player
      */
-    public static function run($world, $type, $progress=true){
+    public static function run(World $world, $type, $progress=true){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2000M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
         switch ($type) {
             case 'a':
-                $model = new Ally();
+                $model = new AllyTop($world);
                 $values = [
                     ['member_count', 'member_count_top', 'member_count_date', 1],
                     ['village_count', 'village_count_top', 'village_count_date', 1],
@@ -40,12 +38,12 @@ class DoGenerateTops
                 ];
                 $typeN = 'ally';
                 $hashSize = config('dsUltimate.hash_ally');
-                $generateCallback = function() {
-                    return new AllyTop();
+                $generateCallback = function() use($world) {
+                    return new AllyTop($world);
                 };
                 break;
             case 'p':
-                $model = new Player();
+                $model = new PlayerTop($world);
                 $values = [
                     ['village_count', 'village_count_top', 'village_count_date', 1],
                     ['points', 'points_top', 'points_date', 1],
@@ -64,8 +62,8 @@ class DoGenerateTops
                 ];
                 $typeN = 'player';
                 $hashSize = config('dsUltimate.hash_player');
-                $generateCallback = function() {
-                    return new PlayerTop();
+                $generateCallback = function() use($world) {
+                    return new PlayerTop($world);
                 };
                 break;
             default:
@@ -75,18 +73,17 @@ class DoGenerateTops
         //load all current top data into memory
         $curData = [];
         $idCol = $typeN . "ID";
-        $model->setTable("$dbName.{$typeN}_top");
         foreach($model->get() as $elm) {
             $curData[$elm->$idCol] = $elm;
         }
         
         for($num = 0; $num < $hashSize; $num++) {
-            if (BasicFunctions::existTable($dbName, "{$typeN}_$num") === false){
+            if (BasicFunctions::hasWorldDataTable($world, "{$typeN}_$num") === false){
                 continue;
             }
             
             $curModel = null;
-            $model->setTable("$dbName.{$typeN}_$num");
+            $model->setTable(BasicFunctions::getWorldDataTable($world, "{$typeN}_$num"));
             if($world->worldTop_at !== null) {
                 $query = $model->where("created_at", ">", $world->worldTop_at)->orderBy($idCol);
             } else {
@@ -110,7 +107,6 @@ class DoGenerateTops
                         $curModel = $curData[$elm->$idCol];
                     } else {
                         $curModel = $generateCallback();
-                        $curModel->setTable("$dbName.{$typeN}_top");
                         $curModel->$idCol = $elm->$idCol;
                         foreach($copy as $cp) {
                             $curModel->$cp = $elm->$cp;
@@ -145,7 +141,7 @@ class DoGenerateTops
                 }
                 $i++;
                 if($progress && $i % 100 == 0) {
-                    echo "\r$dbName $typeN doing: $num at: $i  inserted:$changed      ";
+                    echo "\r" . $world->serName() . " $typeN doing: $num at: $i  inserted:$changed      ";
                 }
             }
             if($curModel !== null) {

@@ -30,9 +30,13 @@ class Ally extends CustomModel
         'created_at',
     ];
 
-    public function __construct(array $attributes = [])
+    public function __construct($arg1 = [], $arg2 = null)
     {
-        parent::__construct($attributes);
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "ally_latest";
+        }
+        parent::__construct($arg1, $arg2);
 
         $this->hash = config('dsUltimate.hash_ally');
     }
@@ -72,60 +76,36 @@ class Ally extends CustomModel
     }
 
     /**
-     * Gibt alle Stämme einer Welt zurück.
-     *
-     * @param string $server
-     * @param $world
-     * @return Collection
-     */
-    public static function getAllyAll($server, $world){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-
-        return $allyModel->orderBy('rank')->get();
-    }
-
-    /**
      * Gibt die besten 10 Stämme zurück
      *
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @return Collection
      */
-    public static function top10Ally($server, $world){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-
+    public static function top10Ally(World $world){
+        $allyModel = new Ally($world);
         return $allyModel->orderBy('rank')->limit(10)->get();
-
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param  int $ally
      * @return $this
      */
-    public static function ally($server, $world, $ally){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-
-        return $allyModel->find($ally);
-
+    public static function ally(World $world, $ally){
+        $allyModel = new Ally($world);
+        return $allyModel->find((int) $ally);
     }
 
     /**
-     * @param string $server
-     * @param $world
-     * @param int $allyID
+     * @param World $world
+     * @param int $ally
      * @return array
      */
-    public static function allyDataChart($server, $world, $allyID){
-        $allyID = (int) $allyID;
+    public static function allyDataChart(World $world, $ally){
+        $allyID = (int) $ally;
         $tabelNr = $allyID % config('dsUltimate.hash_ally');
 
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_'.$tabelNr);
+        $allyModel = new Ally($world, 'ally_'.$tabelNr);
 
         $allyDataArray = $allyModel->where('allyID', $allyID)->orderBy('updated_at', 'ASC')->get();
 
@@ -144,14 +124,13 @@ class Ally extends CustomModel
         }
 
         return $allyDatas;
-
     }
 
-    public function linkTag($world) {
+    public function linkTag(World $world) {
         return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName("[".$this->tag."]"));
     }
 
-    public function linkName($world) {
+    public function linkName(World $world) {
         return BasicFunctions::linkAlly($world, $this->allyID, BasicFunctions::outputName($this->name));
     }
 
@@ -165,9 +144,9 @@ class Ally extends CustomModel
         $tableNr = $this->allyID % config('dsUltimate.hash_ally');
         $dbName = explode('.', $this->getTable());
 
-        $playerModel = new Player();
-        $playerModel->setTable($dbName[0].'.ally_'.$tableNr);
+        $allyModel = new Ally();
+        $allyModel->setTable($dbName[0].'.ally_'.$tableNr);
         $timestamp = Carbon::now()->subDays($days);
-        return $playerModel->where('allyID', $this->allyID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
+        return $allyModel->where('allyID', $this->allyID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
     }
 }

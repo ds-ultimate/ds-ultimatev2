@@ -119,8 +119,7 @@ class CollectDataController extends BaseController
         
         $server = substr($pServer, 0, 2);
         $world = substr($pServer, 2);
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
         $loLang = $this->lang[$server];
         

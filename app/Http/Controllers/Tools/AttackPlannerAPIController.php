@@ -31,8 +31,7 @@ class AttackPlannerAPIController extends BaseController
             abort(403);
         }
 
-        World::existWorld($req['server'], $req['world']);
-        $worldData = World::getWorld($req['server'], $req['world']);
+        $worldData = World::getAndCheckWorld($req['server'], $req['world']);
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.attackPlanner.notAvailable'));
         }

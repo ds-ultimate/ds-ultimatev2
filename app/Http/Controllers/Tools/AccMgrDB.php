@@ -28,9 +28,8 @@ class AccMgrDB extends BaseController
     
     public function index_world($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
         
         $buildingConfig = simplexml_load_string($worldData->buildings);
         $unitConfig = $worldData->unitConfig();

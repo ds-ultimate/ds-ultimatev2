@@ -14,7 +14,7 @@ class GenerateOtherServersTables extends Migration
     public function up()
     {
         foreach((new Server())->get() as $server) {
-            TableGenerator::otherServersTable($server->code);
+            TableGenerator::otherServersTable($server);
         }
     }
 

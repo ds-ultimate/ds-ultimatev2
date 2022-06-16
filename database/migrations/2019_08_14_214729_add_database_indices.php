@@ -16,54 +16,53 @@ class AddDatabaseIndices extends Migration
     public function up()
     {
         foreach((new World())->get() as $world) {
-            $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
-            $this->changeAllyTables($dbName);
-            $this->changePlayerTables($dbName);
-            $this->changeVillageTables($dbName);
+            $this->changeAllyTables($world);
+            $this->changePlayerTables($world);
+            $this->changeVillageTables($world);
         }
     }
     
-    private function changeAllyTables($dbName) {
+    private function changeAllyTables(World $world) {
         $tablePrefix = 'ally';
         $envHashIndex = 'hash_ally';
         for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
-            if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
-            Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
+            if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_'.$i)) continue;
+            Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_'.$i), function (Blueprint $table) {
                 $table->index('allyID');
             });
         }
-        if(!BasicFunctions::existTable($dbName, $tablePrefix.'_latest')) return;
-        Schema::table($dbName.'.'.$tablePrefix.'_latest', function (Blueprint $table) {
+        if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_latest')) return;
+        Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_latest'), function (Blueprint $table) {
             $table->primary('allyID');
         });
     }
     
-    private function changePlayerTables($dbName) {
+    private function changePlayerTables(World $world) {
         $tablePrefix = 'player';
         $envHashIndex = 'hash_player';
         for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
-            if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
-            Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
+            if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_'.$i)) continue;
+            Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_'.$i), function (Blueprint $table) {
                 $table->index('playerID');
             });
         }
-        if(!BasicFunctions::existTable($dbName, $tablePrefix.'_latest')) return;
-        Schema::table($dbName.'.'.$tablePrefix.'_latest', function (Blueprint $table) {
+        if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_latest')) return;
+        Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_latest'), function (Blueprint $table) {
             $table->primary('playerID');
         });
     }
     
-    private function changeVillageTables($dbName) {
+    private function changeVillageTables(World $world) {
         $tablePrefix = 'village';
         $envHashIndex = 'hash_village';
         for($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++) {
-            if(!BasicFunctions::existTable($dbName, $tablePrefix.'_'.$i)) continue;
-            Schema::table($dbName.'.'.$tablePrefix.'_'.$i, function (Blueprint $table) {
+            if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_'.$i)) continue;
+            Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_'.$i), function (Blueprint $table) {
                 $table->index('villageID');
             });
         }
-        if(!BasicFunctions::existTable($dbName, $tablePrefix.'_latest')) return;
-        Schema::table($dbName.'.'.$tablePrefix.'_latest', function (Blueprint $table) {
+        if(!BasicFunctions::hasWorldDataTable($world, $tablePrefix.'_latest')) return;
+        Schema::table(BasicFunctions::getWorldDataTable($world, $tablePrefix.'_latest'), function (Blueprint $table) {
             $table->primary('villageID');
         });
     }

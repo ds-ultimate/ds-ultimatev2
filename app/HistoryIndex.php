@@ -19,22 +19,30 @@ class HistoryIndex extends Model
         'id',
         'date',
     ];
+
+    public function __construct($arg1 = [], $arg2 = null)
+    {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "index";
+        }
+        parent::__construct($arg1, $arg2);
+    }
     
-    public static function find($dbName, $id) {
-        $model = new HistoryIndex();
-        $model->setTable("$dbName.index");
+    public static function find(World $world, $id) {
+        $model = new HistoryIndex($world);
         return $model->where('id', $id)->first();
     }
     
-    public function allyFile($dbName) {
-        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/ally_{$this->date}.gz");
+    public function allyFile(World $worldData) {
+        return storage_path(config('dsUltimate.history_directory') . "{$worldData->serName()}/ally_{$this->date}.gz");
     }
     
-    public function playerFile($dbName) {
-        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/player_{$this->date}.gz");
+    public function playerFile(World $worldData) {
+        return storage_path(config('dsUltimate.history_directory') . "{$worldData->serName()}/player_{$this->date}.gz");
     }
     
-    public function villageFile($dbName) {
-        return storage_path(config('dsUltimate.history_directory') . "{$dbName}/village_{$this->date}.gz");
+    public function villageFile(World $worldData) {
+        return storage_path(config('dsUltimate.history_directory') . "{$worldData->serName()}/village_{$this->date}.gz");
     }
 }

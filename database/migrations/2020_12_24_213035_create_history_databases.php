@@ -16,13 +16,11 @@ class CreateHistoryDatabases extends Migration
     public function up()
     {
         foreach((new World())->get() as $dbWorld) {
-            $server = $dbWorld->server->code;
-            $world = $dbWorld->name;
-            $dbName = BasicFunctions::getDatabaseName($server, $world);
+            $dbName = BasicFunctions::getWorldDataDatabase($dbWorld);
             if (DB::statement('CREATE DATABASE ' . $dbName . '_history') !== true) {
                 echo("DB '$dbName\_history' konnte nicht erstellt werden.");
             }
-            TableGenerator::historyIndexTable($dbName);
+            TableGenerator::historyIndexTable($dbWorld);
         }
     }
 
@@ -34,9 +32,7 @@ class CreateHistoryDatabases extends Migration
     public function down()
     {
         foreach((new World())->get() as $dbWorld) {
-            $server = $dbWorld->server->code;
-            $world = $dbWorld->name;
-            $dbName = BasicFunctions::getDatabaseName($server, $world);
+            $dbName = BasicFunctions::getWorldDataDatabase($dbWorld);
             if (DB::statement('DROP DATABASE ' . $dbName . '_history') !== true) {
                 echo("DB '$dbName\_history' konnte nicht geloescht werden.");
             }

@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Util\BasicFunctions;
-
 class AllyTop extends CustomModel
 {
     protected $primaryKey = 'allyID';
@@ -48,6 +46,15 @@ class AllyTop extends CustomModel
         'created_at',
     ];
 
+    public function __construct($arg1 = [], $arg2 = null)
+    {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "ally_top";
+        }
+        parent::__construct($arg1, $arg2);
+    }
+
     /**
      * @return Player
      */
@@ -76,17 +83,13 @@ class AllyTop extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param  int $ally
      * @return $this
      */
-    public static function ally($server, $world, $ally){
-        $allyModel = new AllyTop();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_top');
-
+    public static function ally(World $world, $ally){
+        $allyModel = new AllyTop($world);
         return $allyModel->find($ally);
-
     }
 
     public function linkIngame(World $world, $guest=false) {

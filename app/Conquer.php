@@ -22,6 +22,7 @@ class Conquer extends CustomModel
         'new_ally_name',
         'old_ally_tag',
         'new_ally_tag',
+        'points',
         'created_at',
         'updated_at',
     ];
@@ -30,6 +31,15 @@ class Conquer extends CustomModel
         'updated_at',
         'created_at',
     ];
+
+    public function __construct($arg1 = [], $arg2 = null)
+    {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "conquer";
+        }
+        parent::__construct($arg1, $arg2);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -77,14 +87,12 @@ class Conquer extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $playerID
      * @return \Illuminate\Support\Collection
      */
-    public static function playerConquerCounts($server, $world, $playerID){
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+    public static function playerConquerCounts(World $world, $playerID){
+        $conquerModel = new Conquer($world);
 
         $conquer = [];
         $conquer['old'] = $conquerModel->where([['old_owner', "=", $playerID],['new_owner', '!=', $playerID]])->count();
@@ -96,17 +104,13 @@ class Conquer extends CustomModel
     }
 
     /**
-     * @param  string $server
-     * @param $world
+     * @param World $world
      * @param int $allyID
      * @return \Illuminate\Support\Collection
      */
-    public static function allyConquerCounts($server, $world, $allyID){
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+    public static function allyConquerCounts(World $world, $allyID){
+        $conquerModel = new Conquer($world);
+        $playerModel = new Player($world);
 
         $allyPlayers = array();
         foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
@@ -123,14 +127,12 @@ class Conquer extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $villageID
      * @return \Illuminate\Support\Collection
      */
-    public static function villageConquerCounts($server, $world, $villageID){
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+    public static function villageConquerCounts(World $world, $villageID){
+        $conquerModel = new Conquer($world);
 
         $conquer = [];
         $conquer['total'] = $conquerModel->where('village_id', $villageID)->count();
@@ -138,17 +140,17 @@ class Conquer extends CustomModel
         return $conquer;
     }
 
-    public function linkVillageName($world) {
+    public function linkVillageName(World $world) {
         if($this->village == null) return ucfirst (__("ui.player.deleted"));
         return BasicFunctions::linkVillage($world, $this->village_id, BasicFunctions::outputName($this->village->name));
     }
 
-    public function linkVillageCoords($world) {
+    public function linkVillageCoords(World $world) {
         if($this->village == null) return ucfirst (__("ui.player.deleted"));
         return BasicFunctions::linkVillage($world, $this->village_id, "[" . $this->village->coordinates() . "]");
     }
 
-    public function linkOldPlayer($world) {
+    public function linkOldPlayer(World $world) {
         if($this->old_owner == 0) return ucfirst(__('ui.player.barbarian'));
         $oldName = $this->old_owner_name;
         if($oldName == null || $oldName == "") {
@@ -162,7 +164,7 @@ class Conquer extends CustomModel
         return BasicFunctions::linkPlayer($world, $this->old_owner, BasicFunctions::outputName($oldName));
     }
 
-    public function linkNewPlayer($world) {
+    public function linkNewPlayer(World $world) {
         if($this->new_owner == 0) return ucfirst(__('ui.player.barbarian'));
         $newName = $this->new_owner_name;
         if($newName == null || $newName == "") {
@@ -176,7 +178,7 @@ class Conquer extends CustomModel
         return BasicFunctions::linkPlayer($world, $this->new_owner, BasicFunctions::outputName($newName));
     }
 
-    public function linkOldAlly($world, $useTag=true) {
+    public function linkOldAlly(World $world, $useTag=true) {
         if($this->old_owner == 0) return "-";
         if($useTag) {
             $oldAlly = $this->old_ally_tag;
@@ -205,7 +207,7 @@ class Conquer extends CustomModel
         return BasicFunctions::linkAlly($world, $oldID, BasicFunctions::outputName($oldAlly));
     }
 
-    public function linkNewAlly($world, $useTag=true) {
+    public function linkNewAlly(World $world, $useTag=true) {
         if($this->new_owner == 0) return "-";
         if($useTag) {
             $newAlly = $this->new_ally_tag;

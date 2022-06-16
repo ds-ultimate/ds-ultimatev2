@@ -19,23 +19,20 @@ class AddSupportBash extends Migration
     {
         $worlds = (new World())->get();
         foreach ($worlds as $world){
-            echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_latest\n";
+            echo $world->serName() . " player_latest\n";
             $blueprint = function (Blueprint $table) {
                 $table->bigInteger('supBash')->nullable()->default(null);
                 $table->integer('supBashRank')->nullable()->default(null);
             };
-            if ($this->noColumn(BasicFunctions::getDatabaseName($world->server->code, $world->name), "player_latest", 'supBash')) {
-                Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_latest", $blueprint);
-            }
+            Schema::table(BasicFunctions::getWorldDataTable($world, "player_latest"), $blueprint);
+
             for ($num = 0; $num < config('dsUltimate.hash_player'); $num++){
-                if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($world->server->code, $world->name), "player_$num")) {
+                if(!BasicFunctions::existTable(BasicFunctions::getWorldDataTable($world, "player_$num"))) {
                     continue;
                 }
                 
-                if ($this->noColumn(BasicFunctions::getDatabaseName($world->server->code, $world->name), "player_$num", 'supBash')) {
-                    echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_$num\n";
-                    Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_$num", $blueprint);
-                }
+                echo $world->serName() . ".player_$num\n";
+                Schema::table(BasicFunctions::getWorldDataTable($world, "player_$num"), $blueprint);
             }
         }
     }

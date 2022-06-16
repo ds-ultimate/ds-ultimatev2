@@ -14,12 +14,14 @@ class DoVillage
     public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1800M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         $minTime = Carbon::now()->subHour()->subMinutes(5);
+        
+        $liveTbl = BasicFunctions::getWorldDataTable($world, "village_latest");
+        $tmpTbl = BasicFunctions::getWorldDataTable($world, "village_latest_temp");
 
-        Schema::dropIfExists("$dbName.village_latest_temp");
-        if (BasicFunctions::existTable($dbName, 'village_latest_temp') === false) {
-            TableGenerator::villageLatestTable($dbName, 'latest_temp');
+        Schema::dropIfExists($tmpTbl);
+        if (BasicFunctions::hasWorldDataTable($world, 'village_latest_temp') === false) {
+            TableGenerator::villageLatestTable($world, 'latest_temp');
         }
 
         $lines = DoWorldData::loadGzippedFile($world, "village.txt.gz", $minTime);
@@ -43,8 +45,7 @@ class DoVillage
             $villages[$village['id']] = $village;
         }
 
-        $insert = new Village();
-        $insert->setTable($dbName . '.village_latest_temp');
+        $insert = new Village($world, 'village_latest_temp');
         $array = array();
         $insertTime = Carbon::now();
         
@@ -66,17 +67,17 @@ class DoVillage
             $insert->insert($t);
         }
 
-        $villageDB = static::prepareVillageChangeCheck($dbName);
-        Schema::dropIfExists("$dbName.village_latest");
-        DB::statement("ALTER TABLE $dbName.village_latest_temp RENAME TO $dbName.village_latest");
+        $villageDB = static::prepareVillageChangeCheck($world);
+        Schema::dropIfExists($liveTbl);
+        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
         $hashVillage = UpdateUtil::hashTable($array, 'v', 'villageID', array(static::class, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < config('dsUltimate.hash_village'); $i++) {
             if (array_key_exists($i, $hashVillage)) {
-                if (BasicFunctions::existTable($dbName, 'village_' . $i) === false) {
-                    TableGenerator::villageTable($dbName, $i);
+                if (BasicFunctions::hasWorldDataTable($world, 'village_' . $i) === false) {
+                    TableGenerator::villageTable($world, $i);
                 }
-                $insert->setTable($dbName . '.village_' . $i);
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.village_' . $i));
                 foreach (array_chunk($hashVillage[$i], 3000) as $t) {
                     $insert->insert($t);
                 }
@@ -88,12 +89,11 @@ class DoVillage
         return true;
     }
     
-    private static function prepareVillageChangeCheck($dbName) {
-        if(!BasicFunctions::existTable($dbName, 'village_latest')) {
+    private static function prepareVillageChangeCheck(World $world) {
+        if(!BasicFunctions::hasWorldDataTable($world, 'village_latest')) {
             return array();
         }
-        $villageModel = new Village();
-        $villageModel->setTable($dbName . '.village_latest');
+        $villageModel = new Village($world);
 
         $arrVil = array();
         foreach ($villageModel->get() as $village) {

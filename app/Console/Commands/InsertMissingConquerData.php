@@ -50,14 +50,21 @@ class InsertMissingConquerData extends Command
     }
     
     private function insertMissing(World $worldModel) {
-        $server = $worldModel->server->code;
-        $world = $worldModel->name;
-        if(! BasicFunctions::existTable(BasicFunctions::getDatabaseName($server, $world), 'conquer')) {
+        todo here points
+        
+        todo general:
+        -> move hash stuff into world -> different hash sizes per world
+        -> migration for changing the hash size
+        -> Api changes use internal world id where appropriate
+        -> Move to self hosted captcha
+        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
+        -> disallow access via ds-ultimate.de/index.php/...
+        
+        if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {
             return;
         }
         
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world) . '.conquer');
+        $conquerModel = new Conquer($worldModel);
         
         $todo = $conquerModel->whereNull('old_owner_name')
                 ->orWhereNull('new_owner_name')

@@ -166,8 +166,7 @@ class SettingsController extends Controller
     public function checkConnection(Request $request){
         $connection = DsConnection::find($request->get('id'));
         $world = $connection->world;
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+        $villageModel = new Village($world);
         $villageCount = $villageModel->where(['owner' => $connection->player_id, 'name' => $connection->key])->count();
         if ($connection->created_at->floatDiffInHours($world->worldUpdated_at, false) < 0){
             return \Response::json(array(
@@ -235,7 +234,7 @@ class SettingsController extends Controller
                 return $connection->world->display_name;
             })
             ->addColumn('player', function ($connection) {
-                $player = Player::player($connection->world->server->code, $connection->world->name, $connection->player_id);
+                $player = Player::player($connection->world, $connection->player_id);
                 return BasicFunctions::decodeName(($player != null)?$player->name:'<b>'.__('ui.player.deleted').'</b>');
             })
             ->editColumn('key', function ($connection) {

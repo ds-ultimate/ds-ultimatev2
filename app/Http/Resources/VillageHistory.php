@@ -6,7 +6,6 @@ use App\AllyTop;
 use App\Conquer;
 use App\PlayerTop;
 use App\Village;
-use App\World;
 use App\Util\BasicFunctions;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,11 +20,11 @@ class VillageHistory extends JsonResource
     public function toArray($request)
     {
         $line = $this->resource["line"];
-        $server = $this->resource["server"];
-        $world = $this->resource["world"];
+        $worldData = $this->resource["worldData"];
+        $server = $worldData->server->code;
+        $world = $worldData->name;
         $histIdx = $this->resource["histIdx"];
-        $worldData = World::getWorld($server, $world);
-        $conquer = Conquer::villageConquerCounts($server, $world, $line[0]);
+        $conquer = Conquer::villageConquerCounts($worldData, $line[0]);
         
         $ownerAlly = 0;
         $ownerAllyName = '-';
@@ -38,7 +37,7 @@ class VillageHistory extends JsonResource
             $ownerName = ucfirst(__('ui.player.barbarian'));
             $ownerNameRaw = ucfirst(__('ui.player.barbarian'));
         } else {
-            $playerTop = PlayerTop::player($server, $world, $line[5]);
+            $playerTop = PlayerTop::player($worldData, $line[5]);
             if($playerTop == null) {
                 $ownerName = ucfirst(__('ui.player.deleted'));
                 $ownerNameRaw = ucfirst(__('ui.player.deleted'));
@@ -46,8 +45,8 @@ class VillageHistory extends JsonResource
                 $ownerName = BasicFunctions::outputName($playerTop->name);
                 $ownerNameRaw = BasicFunctions::decodeName($playerTop->name);
                 $ownerLink = route('player',[$server, $world, $line[5]]);
-                $ownerAlly = $this->historyAllyFromPlayer($line[5], $histIdx, $this->resource["dbName"]);
-                $ownerAllyElm = AllyTop::ally($server, $world, $ownerAlly);
+                $ownerAlly = $this->historyAllyFromPlayer($line[5], $histIdx, $worldData);
+                $ownerAllyElm = AllyTop::ally($worldData, $ownerAlly);
                 
                 if($ownerAlly != 0 && $ownerAllyElm != null) {
                     $ownerAllyName = BasicFunctions::outputName($ownerAllyElm->name);
@@ -86,8 +85,8 @@ class VillageHistory extends JsonResource
         ];
     }
     
-    private function historyAllyFromPlayer($playerId, $histIdx, $dbName) {
-        $file = gzopen($histIdx->playerFile($dbName), "r");
+    private function historyAllyFromPlayer($playerId, $histIdx, $worldData) {
+        $file = gzopen($histIdx->playerFile($worldData), "r");
         while(! gzeof($file)) {
             $lineOrig = gzgets($file, 4096);
             if($lineOrig === false) continue;

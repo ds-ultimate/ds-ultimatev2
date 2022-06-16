@@ -12,11 +12,10 @@ class HistoryMapGenerator extends AbstractMapGenerator {
     public function __construct(World $world, HistoryIndex $histIdx, AbstractSkinRenderer $skin, $dim=null, $show_errs=false) {
         parent::__construct($skin, $dim, $show_errs);
         $this->world = $world;
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
-        $this->allyFile = $histIdx->allyFile($dbName);
-        $this->playerFile = $histIdx->playerFile($dbName);
-        $this->villageFile = $histIdx->villageFile($dbName);
+        $this->allyFile = $histIdx->allyFile($world);
+        $this->playerFile = $histIdx->playerFile($world);
+        $this->villageFile = $histIdx->villageFile($world);
     }
     
     protected function grabAlly() {

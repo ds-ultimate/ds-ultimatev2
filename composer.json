@@ -11,7 +11,6 @@
     "require": {
         "php": "^8.0.0",
         "barryvdh/laravel-translation-manager": "^0.6.1",
-        "buzz/laravel-google-captcha": "^2.1",
         "doctrine/dbal": "dev-dev-3.x.x",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.4",

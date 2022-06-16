@@ -16,13 +16,10 @@ class ConquerController extends Controller
     public function getAllyConquer($server, $world, $type, $allyID)
     {
         DatatablesController::limitResults(200);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+        $conquerModel = new Conquer($worldData);
+        $playerModel = new Player($worldData);
 
         $allyPlayers = array();
         foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
@@ -65,17 +62,15 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
 
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_ALLY, $allyID, $filt);
+        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_ALLY, $allyID, $filt);
     }
 
     public function getPlayerConquer($server, $world, $type, $playerID)
     {
         DatatablesController::limitResults(200);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-
+        $conquerModel = new Conquer($worldData);
         $query = $conquerModel->newQuery();
         $filt = null;
 
@@ -112,17 +107,15 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_PLAYER, $playerID, $filt);
+        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_PLAYER, $playerID, $filt);
     }
 
     public function getVillageConquer($server, $world, $type, $villageID)
     {
         DatatablesController::limitResults(200);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-
+        $conquerModel = new Conquer($worldData);
         $query = $conquerModel->newQuery();
         $filt = null;
 
@@ -138,17 +131,15 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_VILLAGE, $villageID, $filt);
+        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_VILLAGE, $villageID, $filt);
     }
 
     public function getWorldConquer($server, $world, $type)
     {
         DatatablesController::limitResults(200);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer();
-        $conquerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
-
+        $conquerModel = new Conquer($worldData);
         $query = $conquerModel->newQuery();
 
         switch($type) {
@@ -158,7 +149,7 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, World::getWorld($server, $world), Conquer::$REFERTO_VILLAGE, 0);
+        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_VILLAGE, 0);
     }
     
     private function doConquerReturn($query, $world, $referTO, $id, $filter=null) {
@@ -201,15 +192,15 @@ class ConquerController extends Controller
     public function getConquerDaily($server, $world, $type, $day=false)
     {
         DatatablesController::limitResults(100);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         switch ($type) {
             case 'player':
-                return $this->getConquerDailyPlayer($server, $world, $day);
+                return $this->getConquerDailyPlayer($worldData, $day);
                 break;
             
             case 'ally':
-                return $this->getConquerDailyAlly($server, $world, $day);
+                return $this->getConquerDailyAlly($worldData, $day);
                 break;
             
             default:
@@ -217,18 +208,14 @@ class ConquerController extends Controller
         }
     }
     
-    private function getConquerDailyPlayer($server, $world, $day) {
-        $table = BasicFunctions::getDatabaseName($server, $world);
-        $worldModel = World::getWorld($server, $world);
-        
-        $conquerModel = new Conquer();
-        $conquerModel->setTable($table.'.conquer');
+    private function getConquerDailyPlayer(World $worldData, $day) {
+        $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
         
         $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
 
         return DataTables::eloquent($datas)
-            ->filter(function ($data) use ($table, $date){
+            ->filter(function ($data) use ($date){
                 $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->select('new_owner', DB::raw('count(*) as total'))
@@ -237,21 +224,21 @@ class ConquerController extends Controller
                     ->get();
             })
             ->addIndexColumn()
-            ->editColumn('name', function ($conquer) use ($worldModel, $conquerModel, $date){
+            ->editColumn('name', function ($conquer) use ($worldData, $conquerModel, $date){
                 $referConquer = $conquerModel->where('new_owner', $conquer->new_owner)
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
                 
-                return $referConquer->linkNewPlayer($worldModel);
+                return $referConquer->linkNewPlayer($worldData);
             })
-            ->addColumn('ally', function ($conquer) use ($worldModel, $conquerModel, $date){
+            ->addColumn('ally', function ($conquer) use ($worldData, $conquerModel, $date){
                 $referConquer = $conquerModel->where('new_owner', $conquer->new_owner)
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
                 
-                return $referConquer->linkNewAlly($worldModel);
+                return $referConquer->linkNewAlly($worldData);
             })
             ->addColumn('total', function ($conquer){
                 return $conquer->total;
@@ -260,18 +247,14 @@ class ConquerController extends Controller
             ->toJson();
     }
     
-    private function getConquerDailyAlly($server, $world, $day) {
-        $table = BasicFunctions::getDatabaseName($server, $world);
-        $worldModel = World::getWorld($server, $world);
-        
-        $conquerModel = new Conquer();
-        $conquerModel->setTable($table.'.conquer');
+    private function getConquerDailyAlly(World $worldData, $day) {
+        $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
         
         $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
 
         return DataTables::eloquent($datas)
-            ->filter(function ($data) use ($table, $date){
+            ->filter(function ($data) use ($date){
                 $data->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->where('new_ally', '!=', 0)
@@ -281,21 +264,21 @@ class ConquerController extends Controller
                     ->get();
             })
             ->addIndexColumn()
-            ->editColumn('name', function ($conquer) use ($worldModel, $conquerModel, $date){
+            ->editColumn('name', function ($conquer) use ($worldData, $conquerModel, $date){
                 $referConquer = $conquerModel->where('new_ally', $conquer->new_ally)
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
                 
-                return $referConquer->linkNewAlly($worldModel, false);
+                return $referConquer->linkNewAlly($worldData, false);
             })
-            ->addColumn('tag', function ($conquer) use ($worldModel, $conquerModel, $date){
+            ->addColumn('tag', function ($conquer) use ($worldData, $conquerModel, $date){
                 $referConquer = $conquerModel->where('new_ally', $conquer->new_ally)
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
                 
-                return $referConquer->linkNewAlly($worldModel, true);
+                return $referConquer->linkNewAlly($worldData, true);
             })
             ->addColumn('total', function ($conquer){
                 return $conquer->total;

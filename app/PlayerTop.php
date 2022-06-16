@@ -50,6 +50,15 @@ class PlayerTop extends CustomModel
         'created_at',
     ];
 
+    public function __construct($arg1 = [], $arg2 = null)
+    {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "player_top";
+        }
+        parent::__construct($arg1, $arg2);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -69,15 +78,12 @@ class PlayerTop extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $player
      * @return $this
      */
-    public static function player($server, $world, $player){
-        $playerModel = new PlayerTop();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_top');
-
+    public static function player(World $world, $player){
+        $playerModel = new PlayerTop($world);
         return $playerModel->find($player);
     }
 

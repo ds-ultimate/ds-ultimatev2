@@ -10,9 +10,10 @@ namespace App\Tool\AttackPlanner;
 
 
 use App\CustomModel;
-use App\Util\BasicFunctions;
 use App\Village;
+use App\World;
 use App\Tool\AttackPlanner\AttackList as AttackList;
+use App\Util\BasicFunctions;
 use Illuminate\Http\Request;
 
 class AttackListItem extends CustomModel
@@ -54,6 +55,22 @@ class AttackListItem extends CustomModel
 
     public static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
 
+    
+    public function __construct($arg1 = [], $arg2 = null) {
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "attack_list_items";
+        }
+        if($arg1 instanceof World) {
+            //call with world + tableName
+            parent::__construct();
+            $this->setTable(BasicFunctions::getUserWorldDataTable($arg1, $arg2));
+        } else {
+            //called with attributeArray
+            parent::__construct($arg1);
+        }
+    }
+
     /**
      * @return AttackList
      */
@@ -66,9 +83,9 @@ class AttackListItem extends CustomModel
      */
     public function start_village(){
         $world = $this->list->world;
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $tblName = BasicFunctions::getWorldDataTable($world, "village_latest");
 
-        return $this->mybelongsTo('App\Village', 'start_village_id', 'villageID', $dbName.'.village_latest');
+        return $this->mybelongsTo('App\Village', 'start_village_id', 'villageID', $tblName);
     }
 
     /**
@@ -76,9 +93,9 @@ class AttackListItem extends CustomModel
      */
     public function target_village(){
         $world = $this->list->world;
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $tblName = BasicFunctions::getWorldDataTable($world, "village_latest");
 
-        return $this->mybelongsTo('App\Village', 'target_village_id', 'villageID', $dbName.'.village_latest');
+        return $this->mybelongsTo('App\Village', 'target_village_id', 'villageID', $tblName);
     }
 
     public function unitIDToName(){
@@ -120,32 +137,6 @@ class AttackListItem extends CustomModel
             case '42': return __('ui.buildings.iron');
             case '43': return __('ui.buildings.farm');
             case '44': return __('ui.buildings.storage');
-            
-            case '2': return __('ui.unit.axe');
-            case '3': return __('ui.unit.archer');
-            case '4': return __('ui.unit.spy');
-            case '5': return __('ui.unit.light');
-            case '6': return __('ui.unit.marcher');
-            case '9': return __('ui.unit.catapult');
-            case '10': return __('ui.unit.knight');
-            
-            case '12': return __('tool.attackPlanner.icons.devCav');
-            case '13': return __('tool.attackPlanner.icons.devArcher');
-            case '15': return __('tool.attackPlanner.icons.wbAlly');
-            case '16': return __('tool.attackPlanner.icons.moveOut');
-            case '17': return __('tool.attackPlanner.icons.moveIn');
-            case '18': return __('tool.attackPlanner.icons.ballBlue');
-            case '19': return __('tool.attackPlanner.icons.ballGreen');
-            case '20': return __('tool.attackPlanner.icons.ballYellow');
-            case '21': return __('tool.attackPlanner.icons.ballRed');
-            case '22': return __('tool.attackPlanner.icons.ballGrey');
-            case '23': return __('tool.attackPlanner.icons.wbWarning');
-            case '24': return __('tool.attackPlanner.icons.wbDie');
-            case '25': return __('tool.attackPlanner.icons.wbAdd');
-            case '26': return __('tool.attackPlanner.icons.wbRemove');
-            case '27': return __('tool.attackPlanner.icons.wbCheckbox');
-            case '28': return __('tool.attackPlanner.icons.wbEye');
-            case '29': return __('tool.attackPlanner.icons.wbEyeForbidden');
         }
     }
 
@@ -167,13 +158,8 @@ class AttackListItem extends CustomModel
     }
 
     public static function attackPlannerTypeIcons(){
-        return [
-            -1 ,8,11,14,45,
-            0,1,7,46,
-            30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
-            2, 3, 4, 5, 6, 9, 10,
-            12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-        ];
+        return [-1 ,8,11,14,45,0,1,7,46,
+            30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
     }
 
     public static function attackPlannerTypeIconsGrouped(){
@@ -181,8 +167,7 @@ class AttackListItem extends CustomModel
             __('tool.attackPlanner.offensive') => [8, 11, 14, 45],
             __('tool.attackPlanner.defensive') => [0, 1, 7, 46],
             __('tool.accMgrDB.building') => [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
-            __('tool.attackPlanner.otherUnits') => [2, 3, 4, 5, 6, 9, 10],
-            __('tool.attackPlanner.iconsTitle') => [12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+            //Fehlend: 2-6, 9, 10, 12, 13, 15-29
         ];
     }
 
@@ -216,16 +201,7 @@ class AttackListItem extends CustomModel
 
     public function calcSend(){
         $unitConfig = $this->list->world->unitConfig();
-        if($this->target_village != null && $this->target_village->bonus_id >= 11 && $this->target_village->bonus_id <= 21) {
-            //great siege village always same distance
-            if($this->slowest_unit == 4) {
-                $dist = 3; // spy
-            } else {
-                $dist = 15;
-            }
-        } else {
-            $dist = $this->calcDistance();
-        }
+        $dist = $this->calcDistance();
         if($dist == null) return null;
         $boost = $this->support_boost + $this->tribe_skill + 1.00;
         $unit = self::$units[$this->slowest_unit];
@@ -263,8 +239,7 @@ class AttackListItem extends CustomModel
     }
 
     private function getVillageID($x, $y){
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($this->list->world->server->code, $this->list->world->name).'.village_latest');
+        $villageModel = new Village($this->list->world);
         $village = $villageModel->where(['x' => $x, 'y' => $y])->first();
         return isset($village->villageID)? $village->villageID : null;
     }

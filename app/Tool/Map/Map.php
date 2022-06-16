@@ -128,8 +128,8 @@ class Map extends CustomModel
 
             switch($parts[0]) {
                 case 'a':
-                    $ally = Ally::ally($world->server->code, $world->name, $parts[1]);
-                    if($ally == null) break;
+                    $ally = Ally::ally($world, $parts[1]);
+                    if($ally === null) break;
                     $result[] = [
                         'id' => $ally->allyID,
                         'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
@@ -139,7 +139,7 @@ class Map extends CustomModel
                     ];
                     break;
                 case 'p':
-                    $player = Player::player($world->server->code, $world->name, $parts[1]);
+                    $player = Player::player($world, $parts[1]);
                     if($player == null) break;
                     $result[] = [
                         'id' => $player->playerID,
@@ -150,7 +150,7 @@ class Map extends CustomModel
                     ];
                     break;
                 case 'v':
-                    $vil = Village::village($world->server->code, $world->name, $parts[1]);
+                    $vil = Village::village($world, $parts[1]);
                     if($vil == null) break;
                     $result[] = [
                         'id' => $vil->villageID,
@@ -265,7 +265,7 @@ class Map extends CustomModel
     }
 
     public function continentNumbersEnabled() {
-        if(!isset($this->continentNumbers) || $this->continentNumbers === null) {
+        if(!isset($this->continentNumbers) || $this->continentNumbers == null) {
             return true;
         }
 

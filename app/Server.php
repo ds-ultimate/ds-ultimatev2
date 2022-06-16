@@ -51,7 +51,20 @@ class Server extends Model
     }
 
     /**
-     * Giebt einen bestimmten Server zurüch.
+     * Schaut ob der Server existiert und falls ja gibt diesen zurück,
+     * sonst wird ein Error 404 zurück gegeben
+     *
+     * @param string $server
+     * @return World
+     */
+    public static function getAndCheckServerByCode($server){
+        $serverData = Server::getServerByCode($server);
+        abort_if($serverData == null, 404, __("ui.errors.404.noServer", ["server" => $server]));
+        return $serverData;
+    }
+
+    /**
+     * Gibt einen bestimmten Server zurück.
      *
      * @param string $code
      * @return $this
@@ -62,12 +75,24 @@ class Server extends Model
 
     /**
      * Gibt alle Welten eines bestimmten Server's zurück
+     * falls der Server nicht existiert wird ein 404 geworfen
      *
      * @param string $code
      * @return Collection
      */
-    public static function getWorldsByCode($code){
-        $server = Server::where('code', $code)->first();
+    public static function getAndCheckWorldsByCode($code){
+        $server = static::getAndCheckServerByCode();
+        $collect = $server->worlds;
+        return $collect->sortByDesc('id');
+    }
+
+    /**
+     * Gibt alle Welten eines bestimmten Server's zurück
+     *
+     * @param \App\Server $server
+     * @return Collection
+     */
+    public static function getWorlds(Server $server){
         $collect = $server->worlds;
         return $collect->sortByDesc('id');
     }

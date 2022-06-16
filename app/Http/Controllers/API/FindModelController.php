@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Ally;
+use App\AllyTop;
 use App\HistoryIndex;
 use App\Player;
 use App\PlayerTop;
@@ -16,22 +17,23 @@ use App\Http\Resources\Player as PlayerResource;
 use App\Http\Resources\Village as VillageResource;
 use App\Http\Resources\VillageHistory as VillageHistoryResource;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Request;
+
 class FindModelController extends Controller
 {
     public function getVillageByCoord($server, $world, $x, $y){
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
-
+        $worldData = World::getAndCheckWorld($server, $world);
+        $villageModel = new Village($worldData);
         return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
     }
     
     public function getVillagePreviewByCoord($server, $world, $hId, $x, $y){
-        World::existWorld($server, $world);
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        $histIdx = HistoryIndex::find($dbName, $hId);
+        $worldData = World::getAndCheckWorld($server, $world);
+        $histIdx = HistoryIndex::find($worldData, $hId);
         abort_if($histIdx === null, 404);
         
-        $file = gzopen($histIdx->villageFile($dbName), "r");
+        $file = gzopen($histIdx->villageFile($worldData), "r");
         while(! gzeof($file)) {
             $lineOrig = gzgets($file, 4096);
             if($lineOrig === false) continue;
@@ -39,10 +41,8 @@ class FindModelController extends Controller
             if($line[2] == $x && $line[3] == $y) {
                 return new VillageHistoryResource([
                     "line" => $line,
-                    "dbName" => $dbName,
+                    "worldData" => $worldData,
                     "histIdx" => $histIdx,
-                    "server" => $server,
-                    "world" => $world,
                 ]);
             }
         }
@@ -50,22 +50,20 @@ class FindModelController extends Controller
     }
 
     public function getPlayerByName($server, $world, $name){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+        $worldData = World::getAndCheckWorld($server, $world);
+        $playerModel = new Player($worldData);
         return new PlayerResource($playerModel->where('name', urlencode($name))->first());
     }
 
     public function getAllyByName($server, $world, $name){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-
+        $worldData = World::getAndCheckWorld($server, $world);
+        $allyModel = new Ally($worldData);
         return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
     }
 
     public function getSelect2Player($server, $world){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $playerModel = new Player($worldData);
         return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
             return array(
                 'id' => $rawData->playerID,
@@ -75,8 +73,8 @@ class FindModelController extends Controller
     }
 
     public function getSelect2Ally($server, $world){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $allyModel = new Ally($worldData);
         return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
             return array(
                 'id' => $rawData->allyID,
@@ -86,8 +84,8 @@ class FindModelController extends Controller
     }
 
     public function getSelect2PlayerTop($server, $world){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_top');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $playerModel = new PlayerTop($worldData);
         return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
             return array(
                 'id' => $rawData->playerID,
@@ -97,8 +95,8 @@ class FindModelController extends Controller
     }
 
     public function getSelect2AllyTop($server, $world){
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_top');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $allyModel = new AllyTop($worldData);
         return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
             return array(
                 'id' => $rawData->allyID,
@@ -107,8 +105,8 @@ class FindModelController extends Controller
         });
     }
     
-    private function select2return(\Illuminate\Database\Eloquent\Model $model, $searchIn, $idRow, callable $extractOne) {
-        $getArray = \Illuminate\Support\Facades\Request::input();
+    private function select2return(Model $model, $searchIn, $idRow, callable $extractOne) {
+        $getArray = Request::input();
         $perPage = 50;
         $search = (isset($getArray['search']))?('%'.BasicFunctions::likeSaveEscape(urlencode($getArray['search'])).'%'):('%');
         $page = (isset($getArray['page']))?($getArray['page']-1):(0);
@@ -136,10 +134,9 @@ class FindModelController extends Controller
     }
     
     public function getActiveWorldByServer($server){
-        World::existServer($server);
-        $server = Server::getServerByCode($server);
+        $serModel = Server::getAndCheckServerByCode($server);
         
-        $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
+        $worlds = World::where('active', '!=', null)->where('server_id', $serModel->id)->get();
         $array = [];
         foreach ($worlds as $world){
             $array[] = ['id' => $world->name, 'text' => $world->display_name];
@@ -148,7 +145,7 @@ class FindModelController extends Controller
     }
     
     public function getWorldPopup(World $world, $playerId){
-        $playerData = PlayerTop::player($world->server->code, $world->name, $playerId);
+        $playerData = PlayerTop::player($world, $playerId);
         abort_if($playerData == null, 404);
         return "{$world->display_name}<br>" .
                 __('ui.otherWorldsPlayerPopup.rank') . ": " . BasicFunctions::numberConv($playerData->rank_top) . "<br>" .

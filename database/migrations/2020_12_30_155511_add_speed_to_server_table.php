@@ -28,7 +28,7 @@ class AddSpeedToServerTable extends Migration
                 continue;
             }
             
-            $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+            $dbName = BasicFunctions::getWorldDataDatabase($world);
             $worldID = $world->id;
             $world->delete();
             

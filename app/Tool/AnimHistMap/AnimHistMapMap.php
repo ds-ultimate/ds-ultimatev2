@@ -142,8 +142,8 @@ class AnimHistMapMap extends CustomModel
 
             switch($parts[0]) {
                 case 'a':
-                    $ally = AllyTop::ally($world->server->code, $world->name, $parts[1]);
-                    if($ally == null) break;
+                    $ally = AllyTop::ally($world, $parts[1]);
+                    if($ally === null) break;
                     $result[] = [
                         'id' => $ally->allyID,
                         'name' => BasicFunctions::decodeName($ally->name) . ' [' . BasicFunctions::decodeName($ally->tag) . ']',
@@ -153,8 +153,8 @@ class AnimHistMapMap extends CustomModel
                     ];
                     break;
                 case 'p':
-                    $player = PlayerTop::player($world->server->code, $world->name, $parts[1]);
-                    if($player == null) break;
+                    $player = PlayerTop::player($world, $parts[1]);
+                    if($player === null) break;
                     $result[] = [
                         'id' => $player->playerID,
                         'name' => BasicFunctions::decodeName($player->name),
@@ -164,8 +164,8 @@ class AnimHistMapMap extends CustomModel
                     ];
                     break;
                 case 'v':
-                    $vil = Village::village($world->server->code, $world->name, $parts[1]);
-                    if($vil == null) break;
+                    $vil = Village::village($world, $parts[1]);
+                    if($vil === null) break;
                     $result[] = [
                         'id' => $vil->villageID,
                         'x' => $vil->x,
@@ -279,7 +279,7 @@ class AnimHistMapMap extends CustomModel
     }
 
     public function continentNumbersEnabled() {
-        if(!isset($this->continentNumbers) || $this->continentNumbers === null) {
+        if(!isset($this->continentNumbers) || $this->continentNumbers == null) {
             return true;
         }
 
@@ -388,8 +388,7 @@ class AnimHistMapMap extends CustomModel
      * returns preview route for this map
      */
     public function preview() {
-        $dbName = BasicFunctions::getDatabaseName($this->world->server->code, $this->world->name);
-        $histIdx = (new HistoryIndex())->setTable("$dbName.index")->orderBy("id", "desc")->first();
+        $histIdx = (new HistoryIndex($this->world))->orderBy("id", "desc")->first();
         if($histIdx == null) {
             return "";
         }

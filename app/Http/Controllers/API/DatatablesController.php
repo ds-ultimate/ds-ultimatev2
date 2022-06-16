@@ -7,7 +7,6 @@ use App\Player;
 use App\Village;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
-use App\Util\Icon;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -16,10 +15,9 @@ class DatatablesController extends Controller
     public function getPlayers($server, $world)
     {
         static::limitResults(200);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+        $playerModel = new Player($worldData);
         $datas = $playerModel->newQuery();
 
         return DataTables::eloquent($datas)
@@ -38,9 +36,9 @@ class DatatablesController extends Controller
     public function getAllys($server, $world)
     {
         static::limitResults(200);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
+        $allyModel = new Ally($worldData);
 
         $datas = $allyModel->newQuery();
 
@@ -63,10 +61,9 @@ class DatatablesController extends Controller
     public function getAllyPlayer($server, $world, $ally)
     {
         static::limitResults(200);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+        $playerModel = new Player($worldData);
         $querry = $playerModel->newQuery();
         $querry->where('ally_id', $ally);
 
@@ -86,10 +83,9 @@ class DatatablesController extends Controller
     public function getAllyPlayerBashRanking($server, $world, $ally)
     {
         static::limitResults(200);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+        $playerModel = new Player($worldData);
         $querry = $playerModel->newQuery();
         $querry->where('ally_id', $ally);
 
@@ -143,10 +139,9 @@ class DatatablesController extends Controller
     public function getPlayerVillage($server, $world, $player)
     {
         static::limitResults(200);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $villageModel = new Village();
-        $villageModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.village_latest');
-
+        $villageModel = new Village($worldData);
         $query = $villageModel->newQuery();
         $query->where('owner', $player);
 
@@ -171,10 +166,10 @@ class DatatablesController extends Controller
 
     public function getPlayerHistory($server, $world, $player)
     {
-        $tableNr = $player % config('dsUltimate.hash_player');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $tableNr = ((int) $player) % config('dsUltimate.hash_player');
         
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tableNr);
+        $playerModel = new Player($worldData, "player_$tableNr");
         $data = $playerModel->where('playerID', $player)->get();
         
         $newData = [];
@@ -225,10 +220,10 @@ class DatatablesController extends Controller
 
     public function getAllyHistory($server, $world, $ally)
     {
-        $tableNr = $ally % config('dsUltimate.hash_ally');
+        $worldData = World::getAndCheckWorld($server, $world);
+        $tableNr = ((int) $ally) % config('dsUltimate.hash_ally');
         
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_'.$tableNr);
+        $allyModel = new Ally($worldData, "ally_$tableNr");
         $data = $allyModel->where('allyID', $ally)->get();
         
         $newData = [];
@@ -280,11 +275,11 @@ class DatatablesController extends Controller
     public function getPlayersHistory($server, $world, $day)
     {
         static::limitResults(110);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
+        $playerModel = new Player($worldData);
         $datas = $playerModel->newQuery();
 
         return DataTables::eloquent($datas)
@@ -367,12 +362,11 @@ class DatatablesController extends Controller
     public function getAllysHistory($server, $world, $day)
     {
         static::limitResults(110);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         BasicFunctions::local();
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
-        $allyModel = new Ally();
-        $allyModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.ally_latest');
-
+        $allyModel = new Ally($worldData);
         $datas = $allyModel->newQuery();
 
         return DataTables::eloquent($datas)

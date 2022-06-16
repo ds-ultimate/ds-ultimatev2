@@ -116,7 +116,7 @@ function generateMobileMenuEntry($entry, $level=0) {
             </a>
         </li>
         @if (isset($server))
-            <form class="form-inline" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
+            <form class="form-inline" action="{{ route('searchForm', [$server->code]) }}" method="POST" role="search">
                 <li class="nav-item">
                     @csrf
                     <input class="form-control mr-sm-2" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))
@@ -220,7 +220,7 @@ function generateMobileMenuEntry($entry, $level=0) {
     </ul>
     @if (isset($server))
         <nav id="navbar-search-mobile" class="d-lg-none navbar-collapse collapse mt-2 navbar-nav">
-            <form class="form-inline w-100" action="{{ route('searchForm', [$server]) }}" method="POST" role="search">
+            <form class="form-inline w-100" action="{{ route('searchForm', [$server->code]) }}" method="POST" role="search">
                 <li class="nav-item d-flex" style="width: calc(100% - 5rem)">
                     @csrf
                     <input class="form-control mr-sm-2 w-100" name="search" type="search" placeholder="{{ __('ui.titel.search') }}" aria-label="Search" @if (isset($search))

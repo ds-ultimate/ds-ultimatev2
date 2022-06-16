@@ -27,8 +27,8 @@ class ContentController extends Controller
      * */
     public function server($server){
         BasicFunctions::local();
-        World::existServer($server);
-        $worldsArray = World::worldsCollection($server, ['speed' => 'special', 'casual' => 'special', 'classic' => 'special']);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldsArray = World::worldsCollection($serModel, ['speed' => 'special', 'casual' => 'special', 'classic' => 'special']);
         usort($worldsArray['world'], function($a, $b) {
             return -1*strcmp($a->name, $b->name);
         });
@@ -43,11 +43,11 @@ class ContentController extends Controller
      * */
     public function world($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $playerArray = Player::top10Player($server, $world);
-        $allyArray = Ally::top10Ally($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $playerArray = Player::top10Player($worldData);
+        $allyArray = Ally::top10Ally($worldData);
 
         return view('content.world', compact('playerArray', 'allyArray', 'worldData', 'server'));
 
@@ -58,9 +58,8 @@ class ContentController extends Controller
      * */
     public function allys($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         return view('content.worldAlly', compact('worldData', 'server'));
     }
@@ -70,18 +69,16 @@ class ContentController extends Controller
      * */
     public function players($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         return view('content.worldPlayer', compact('worldData', 'server'));
     }
 
     public function conquer($server, $world, $type){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         switch($type) {
             case "all":
@@ -110,11 +107,10 @@ class ContentController extends Controller
 
     public function conquereDaily($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-        $conquer = new Conquer();
-        $conquer->setTable(BasicFunctions::getDatabaseName($server, $world).'.conquer');
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $conquer = new Conquer($worldData);
         $fistconquer = $conquer->first();
 
         return view('content.conquerDaily', compact('server', 'worldData', 'fistconquer'));
@@ -125,7 +121,7 @@ class ContentController extends Controller
         $serverArray = Server::getServer();
 
         foreach($serverArray as $server) {
-            $worldsArray = World::worldsCollection($server->code);
+            $worldsArray = World::worldsCollection($server);
             $servers[$server->code] = [];
 
             if(isset($worldsArray['world']) && count($worldsArray['world']) > 0) {

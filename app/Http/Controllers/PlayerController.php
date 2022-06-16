@@ -15,19 +15,18 @@ class PlayerController extends Controller
 {
     public function player($server, $world, $player){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
-
-        $playerData = Player::player($server, $world, $player);
-        $playerTopData = PlayerTop::player($server, $world, $player);
+        $playerData = Player::player($worldData, $player);
+        $playerTopData = PlayerTop::player($worldData, $player);
         abort_if($playerData == null && $playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
         
         $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
         
-        $conquer = Conquer::playerConquerCounts($server, $world, $player);
-        $allyChanges = AllyChanges::playerAllyChangeCount($server, $world, $player);
+        $conquer = Conquer::playerConquerCounts($worldData, $player);
+        $allyChanges = AllyChanges::playerAllyChangeCount($worldData, $player);
         
         if($playerData == null) {
             return view('content.playerDeleted', compact('playerTopData', 'conquer', 'worldData', 'server', 'allyChanges', 'playerOtherServers'));
@@ -36,7 +35,7 @@ class PlayerController extends Controller
         $statsGeneral = ['points', 'rank', 'village'];
         $statsBash = ['gesBash', 'offBash', 'defBash', 'supBash'];
 
-        $datas = Player::playerDataChart($server, $world, $player);
+        $datas = Player::playerDataChart($worldData, $player);
         if(count($datas) < 1) {
             $datas[] = [
                 "timestamp" => time(),
@@ -63,12 +62,12 @@ class PlayerController extends Controller
     
     public function allyChanges($server, $world, $type, $playerID){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
-        $playerTopData = PlayerTop::player($server, $world, $playerID);
+        $playerTopData = PlayerTop::player($worldData, $playerID);
         abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
 
         switch($type) {
             case "all":
@@ -82,12 +81,12 @@ class PlayerController extends Controller
     
     public function conquer($server, $world, $type, $playerID){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-        $playerTopData = PlayerTop::player($server, $world, $playerID);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $playerTopData = PlayerTop::player($worldData, $playerID);
         abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
-                " auf der Welt '$server$world' vorhanden.");
+                " auf der Welt '{$world->serName()}' vorhanden.");
 
         switch($type) {
             case "all":
@@ -124,10 +123,8 @@ class PlayerController extends Controller
     }
 
     public function rank($server, $world){
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
-
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
         return view('content.rankPlayer', compact('worldData', 'server'));
     }
 }

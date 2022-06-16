@@ -26,9 +26,8 @@ class AttackPlannerController extends BaseController
 {
     public function index($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.attackPlanner.notAvailable'));
         }
@@ -113,7 +112,7 @@ class AttackPlannerController extends BaseController
     public function edit(AttackList $attackList){
         BasicFunctions::local();
         $worldData = $attackList->world;
-        $server = $worldData->server->code;
+        $server = $worldData->server;
 
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
@@ -153,7 +152,7 @@ class AttackPlannerController extends BaseController
     public function show(AttackList $attackList){
         BasicFunctions::local();
         $worldData = $attackList->world;
-        $server = $worldData->server->code;
+        $server = $worldData->server;
 
         $unitConfig = simplexml_load_string($worldData->units);
         $config = simplexml_load_string($worldData->config);
@@ -313,7 +312,7 @@ class AttackPlannerController extends BaseController
     public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time,
             $type, $units, $support_boost=0.0, $tribe_skill=0.0, $ms=0){
         if(static::$villageCache == null) {
-            $tableName = BasicFunctions::getDatabaseName($parList->world->server->code, $parList->world->name).'.village_latest';
+            $tableName = BasicFunctions::getUserWorldDataTable($parList->world, 'village_latest');
             self::$villageCache = [];
             foreach(DB::select("SELECT villageID,x,y FROM $tableName") as $v) {
                 self::$villageCache[$v->villageID] = $v;

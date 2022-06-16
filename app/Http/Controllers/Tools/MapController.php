@@ -26,8 +26,7 @@ class MapController extends BaseController
 
     public function new($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         $mapModel = new Map();
         if(\Auth::check()) {
@@ -146,7 +145,7 @@ class MapController extends BaseController
             "village" => $wantedMap->getMarkersAsDefaults($worldData, 'v'),
         ];
         $mode = 'edit';
-        $server = $worldData->server->code;
+        $server = $worldData->server;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
@@ -166,7 +165,7 @@ class MapController extends BaseController
             "village" => $wantedMap->getMarkersAsDefaults($worldData, 'v'),
         ];
         $mode = 'show';
-        $server = $worldData->server->code;
+        $server = $worldData->server;
         $mapDimensions = MapController::getMapDimension($wantedMap->getDimensions());
         $defMapDimensions = MapController::getMapDimension(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
 
@@ -356,8 +355,7 @@ class MapController extends BaseController
 
     public function getSizedOverviewMap($server, $world, $type, $id, $width, $height, $ext){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
 
         $skin = new \App\Util\Map\SkinSymbols();
         $map = new SQLMapGenerator($worldData, $skin, $this->decodeDimensions($width, $height), $this->debug);
@@ -411,11 +409,9 @@ class MapController extends BaseController
 
     public function mapTop10P($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($worldData->server->code, $worldData->name).'.player_latest');
+        $playerModel = new Player($worldData);
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
         $skin = new \App\Util\Map\SkinSymbols();
@@ -441,11 +437,10 @@ class MapController extends BaseController
     }
 
     public function mapTop10($server, $world){
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
+        $worldData->server;
         
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($worldData->server->code, $worldData->name).'.player_latest');
+        $playerModel = new Player($worldData);
         $players = $playerModel->orderBy('rank')->limit(10)->get();
 
         $skin = new \App\Util\Map\SkinSymbols();

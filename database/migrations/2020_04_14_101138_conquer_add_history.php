@@ -17,7 +17,7 @@ class ConquerAddHistory extends Migration
     {
         $worlds = (new World())->get();
         foreach ($worlds as $world){
-            Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.conquer', function (Blueprint $table) {
+            Schema::table(BasicFunctions::getWorldDataTable($world, '.conquer'), function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('old_owner_name')->nullable()->default(null);
                 $table->string('new_owner_name')->nullable()->default(null);

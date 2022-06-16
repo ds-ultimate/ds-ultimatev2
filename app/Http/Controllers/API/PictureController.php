@@ -27,7 +27,7 @@ class PictureController extends Controller
     {
         BasicFunctions::local();
         static::fixWorldName($server, $world);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(404, "Invalid type");
         }
@@ -38,12 +38,12 @@ class PictureController extends Controller
         $ret = $this->checkCache($dir, $fName, $ext);
         if($ret !== null) return $ret;
         
-        $allyData = Ally::ally($server, $world, $allyID);
+        $allyData = Ally::ally($worldData, $allyID);
         if ($allyData == null) {
             abort(404, "Ally not Found");
         }
         
-        $rawStatData = Ally::allyDataChart($server, $world, $allyID);
+        $rawStatData = Ally::allyDataChart($worldData, $allyID);
         $statData = array();
         foreach ($rawStatData as $rawData){
             $statData[$rawData['timestamp']] = $rawData[$type];
@@ -60,7 +60,7 @@ class PictureController extends Controller
     {
         BasicFunctions::local();
         static::fixWorldName($server, $world);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(404, "Invalid type");
         }
@@ -71,12 +71,12 @@ class PictureController extends Controller
         $ret = $this->checkCache($dir, $fName, $ext);
         if($ret !== null) return $ret;
         
-        $playerData = Player::player($server, $world, $playerID);
+        $playerData = Player::player($worldData, $playerID);
         if ($playerData == null) {
             abort(404, "Player not Found");
         }
         
-        $rawStatData = Player::playerDataChart($server, $world, $playerID);
+        $rawStatData = Player::playerDataChart($worldData, $playerID);
         $statData = array();
         foreach ($rawStatData as $rawData){
             $statData[$rawData['timestamp']] = $rawData[$type];
@@ -92,7 +92,7 @@ class PictureController extends Controller
     {
         BasicFunctions::local();
         static::fixWorldName($server, $world);
-        World::existWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         if (!Chart::validType($type)) {
             abort(404, "Invalid type");
         }
@@ -103,12 +103,12 @@ class PictureController extends Controller
         $ret = $this->checkCache($dir, $fName, $ext);
         if($ret !== null) return $ret;
         
-        $villageData = Village::village($server, $world, $villageID);
+        $villageData = Village::village($worldData, $villageID);
         if ($villageData == null) {
             abort(404, "Village not Found");
         }
         
-        $rawStatData = Village::villageDataChart($server, $world, $villageID);
+        $rawStatData = Village::villageDataChart($worldData, $villageID);
         $statData = array();
         foreach ($rawStatData as $rawData){
             $statData[$rawData['timestamp']] = $rawData[$type];

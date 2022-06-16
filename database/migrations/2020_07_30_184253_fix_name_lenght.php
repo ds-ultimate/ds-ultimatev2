@@ -18,55 +18,62 @@ class FixNameLenght extends Migration
     {
         $worlds = (new World())->get();
         foreach ($worlds as $world){
-            echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_latest\n";
-            Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_latest", function (Blueprint $table) {
+            $playerLatest = BasicFunctions::getWorldDataTable($world, "player_latest");
+            echo "$playerLatest\n";
+            Schema::table($playerLatest, function (Blueprint $table) {
                 $table->string('name', 288)->change();
             });
             for ($num = 0; $num < config('dsUltimate.hash_player'); $num++){
-                if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($world->server->code, $world->name), "player_$num")) {
+                if(!BasicFunctions::hasWorldDataTable($world, "player_$num")) {
                     continue;
                 }
                 
-                echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_$num\n";
-                Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".player_$num", function (Blueprint $table) {
+                $playerHist = BasicFunctions::getWorldDataTable($world, "player_$num");
+                echo "$playerHist\n";
+                Schema::table($playerHist, function (Blueprint $table) {
                     $table->string('name', 288)->change();
                 });
             }
             
-            echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".ally_latest\n";
-            Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".ally_latest", function (Blueprint $table) {
+            $allyLatest = BasicFunctions::getWorldDataTable($world, "ally_latest");
+            echo "$allyLatest\n";
+            Schema::table($allyLatest, function (Blueprint $table) {
                 $table->string('name', 384)->change();
                 $table->string('tag', 72)->change();
             });
             for ($num = 0; $num < config('dsUltimate.hash_ally'); $num++){
-                if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($world->server->code, $world->name), "ally_$num")) {
+                if(!BasicFunctions::hasWorldDataTable($world, "ally_$num")) {
                     continue;
                 }
                 
-                echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".ally_$num\n";
-                Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".ally_$num", function (Blueprint $table) {
+                $allyHist = BasicFunctions::getWorldDataTable($world, "ally_$num");
+                echo "$allyHist\n";
+                Schema::table($allyHist, function (Blueprint $table) {
                     $table->string('name', 384)->change();
                     $table->string('tag', 72)->change();
                 });
             }
             
-            echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".village_latest\n";
-            Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".village_latest", function (Blueprint $table) {
+            $villageLatest = BasicFunctions::getWorldDataTable($world, "village_latest");
+            echo "$villageLatest\n";
+            Schema::table($villageLatest, function (Blueprint $table) {
                 $table->string('name', 384)->change();
             });
             for ($num = 0; $num < config('dsUltimate.hash_village'); $num++){
-                if(!BasicFunctions::existTable(BasicFunctions::getDatabaseName($world->server->code, $world->name), "village_$num")) {
+                if(!BasicFunctions::hasWorldDataTable($world, "village_$num")) {
                     continue;
                 }
                 
-                echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".village_$num\n";
-                Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".village_$num", function (Blueprint $table) {
+                $villageHist = BasicFunctions::getWorldDataTable($world, "village_$num");
+                echo "$villageHist\n";
+                Schema::table($villageHist, function (Blueprint $table) {
                     $table->string('name', 384)->change();
                 });
             }
             
-            echo BasicFunctions::getDatabaseName($world->server->code, $world->name).".conquer\n";
-            Schema::table(BasicFunctions::getDatabaseName($world->server->code, $world->name).".conquer", function (Blueprint $table) {
+            $conquer = BasicFunctions::getWorldDataTable($world, "conquer");
+            echo "$conquer\n";
+            Schema::table($conquer, function (Blueprint $table) {
                 $table->string('old_owner_name', 288)->nullable()->default(null)->change();
                 $table->string('new_owner_name', 288)->nullable()->default(null)->change();
                 $table->string('old_ally_name', 384)->nullable()->default(null)->change();

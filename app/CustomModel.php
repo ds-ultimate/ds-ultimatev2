@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\World;
+use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,9 +14,16 @@ class CustomModel extends Model
 {
     protected $cache = [];
     
-    public function __construct(array $attributes = [])
+    public function __construct($arg1 = [], $arg2 = null)
     {
-        parent::__construct($attributes);
+        if($arg1 instanceof World) {
+            //call with world + tableName
+            parent::__construct();
+            $this->setTable(BasicFunctions::getWorldDataTable($arg1, $arg2));
+        } else {
+            //called with attributeArray
+            parent::__construct($arg1);
+        }
     }
 
     public function myhasMany($related, $foreignKey, $localKey, $table)

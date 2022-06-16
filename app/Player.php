@@ -34,13 +34,13 @@ class Player extends CustomModel
     
     public $timestamps = true;
 
-    /**
-     * Player constructor.
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
+    public function __construct($arg1 = [], $arg2 = null)
     {
-        parent::__construct($attributes);
+        if($arg1 instanceof World && $arg2 == null) {
+            //allow calls without table name
+            $arg2 = "player_latest";
+        }
+        parent::__construct($arg1, $arg2);
 
         $this->hash = config('dsUltimate.hash_player');
     }
@@ -71,55 +71,23 @@ class Player extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
-     * @return Collection
-     */
-    public static function getAllPlayer($server, $world){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
-        return $playerModel->orderBy('rank')->get();
-    }
-
-    /**
-     * @param string $server
-     * @param $world
-     * @param string $order
-     * @param int $page
-     * @return Collection
-     */
-    public static function getAllPlayer20($server, $world, $order, $page){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
-        return $playerModel->where($order, '>', $page*20-20)->orderBy($order)->limit(20)->get();
-    }
-
-    /**
      * Gibt die Top 10 Spieler zurück
      *
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @return Collection
      */
-    public static function top10Player($server, $world){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+    public static function top10Player(World $world){
+        $playerModel = new Player($world);
         return $playerModel->orderBy('rank')->limit(10)->get();
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $player
      * @return $this
      */
-    public static function player($server, $world, $player){
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_latest');
-
+    public static function player(World $world, $player){
+        $playerModel = new Player($world);
         return $playerModel->find($player);
     }
 
@@ -128,16 +96,14 @@ class Player extends CustomModel
     }
 
     /**
-     * @param string $server
-     * @param $world
+     * @param World $world
      * @param int $playerID
      * @return \Illuminate\Support\Collection
      */
-    public static function playerDataChart($server, $world, $playerID, $dayDelta = 30){
+    public static function playerDataChart(World $world, $playerID, $dayDelta = 30){
         $playerID = (int) $playerID;
         $tabelNr = $playerID % config('dsUltimate.hash_player');
-        $playerModel = new Player();
-        $playerModel->setTable(BasicFunctions::getDatabaseName($server, $world).'.player_'.$tabelNr);
+        $playerModel = new Player($world, "player_$tabelNr");
         $playerDataArray = $playerModel
                 ->where('playerID', $playerID)
                 ->orderBy('updated_at', 'ASC')->get();

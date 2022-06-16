@@ -2,6 +2,7 @@
 
 namespace App\Console\DatabaseUpdate;
 
+use App\Ally;
 use App\Conquer;
 use App\Follow;
 use App\Player;
@@ -14,16 +15,12 @@ class DoConquer
     public static function run(World $world){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1500M');
-        $server = $world->server->code;
-        $worldName = $world->name;
-        $dbName = BasicFunctions::getDatabaseName($server, $worldName);
         $minTime = Carbon::now()->subHour()->subMinutes(5);
 
-        if (BasicFunctions::existTable($dbName, 'conquer') === false) {
-            TableGenerator::conquerTable($dbName);
+        if (BasicFunctions::hasWorldDataTable($world, 'conquer') === false) {
+            TableGenerator::conquerTable($world);
         }
-        $conquer = new Conquer();
-        $conquer->setTable($dbName.'.conquer');
+        $conquer = new Conquer($world);
         $first = $conquer->orderBy('timestamp', 'DESC')->first();
         if($first == null)
             $latest = 0;
@@ -31,15 +28,15 @@ class DoConquer
             $latest = $first->timestamp;
 
         if(time() - $latest > 60 * 60 * 23) {
-            $lines = DoWorldData::loadGzippedFile($world, "conquer.txt.gz", $minTime);
+            $lines = DoWorldData::loadGzippedFile($world, "conquer_extended.txt.gz", $minTime);
             if($lines === false) return false;
         } else {
-            $lines = DoWorldData::loadUncompressedFile($world, "/interface.php?func=get_conquer&since=" . ($latest - 1), "interface.php?func=get_conquer");
+            $lines = DoWorldData::loadUncompressedFile($world, "/interface.php?func=get_conquer_extended&since=" . ($latest - 1), "interface.php?func=get_conquer_extended");
             if($lines === false) return false;
         }
 
         $array = array();
-        $databaseConquer = static::prepareConquerDupCheck($dbName);
+        $databaseConquer = static::prepareConquerDupCheck($world);
         $insertTime = Carbon::now();
 
         foreach ($lines as $line) {
@@ -49,67 +46,74 @@ class DoConquer
             if(static::conquerInsideDB($databaseConquer, $exploded)) continue;
 
             $tempArr = array();
-            list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner']) = $exploded;
+            list($tempArr['village_id'], $tempArr['timestamp'], $tempArr['new_owner'], $tempArr['old_owner'],
+                    $tempArr['old_ally'], $tempArr['new_ally'], $tempArr['points']) = $exploded;
+            
             $tempArr['created_at'] = $insertTime;
             $tempArr['updated_at'] = $insertTime;
 
-            $old = Player::player($server, $worldName, $tempArr['old_owner']);
+            $old = Player::player($world, $tempArr['old_owner']);
+            $oldAlly = Ally::ally($world, $tempArr['old_ally']);
             if($tempArr['old_owner'] == 0) {
                 $tempArr['old_owner_name'] = "";
-                $tempArr['old_ally'] = 0;
-                $tempArr['old_ally_name'] = "";
-                $tempArr['old_ally_tag'] = "";
             } else if($old == null) {
                 $tempArr['old_owner_name'] = null;
-                $tempArr['old_ally'] = 0;
+            } else {
+                $tempArr['old_owner_name'] = $old->name;
+            }
+            if($tempArr['old_ally'] == 0) {
+                $tempArr['old_ally_name'] = "";
+                $tempArr['old_ally_tag'] = "";
+            } else if($oldAlly == null) {
                 $tempArr['old_ally_name'] = null;
                 $tempArr['old_ally_tag'] = null;
             } else {
-                $tempArr['old_owner_name'] = $old->name;
-                $tempArr['old_ally'] = $old->ally_id;
-                $tempArr['old_ally_name'] = ($old->allyLatest != null)?$old->allyLatest->name:"";
-                $tempArr['old_ally_tag'] = ($old->allyLatest != null)?$old->allyLatest->tag:"";
+                $tempArr['old_ally_name'] = $oldAlly->name;
+                $tempArr['old_ally_tag'] = $oldAlly->tag;
             }
 
-            $new = Player::player($server, $worldName, $tempArr['new_owner']);
+            $new = Player::player($world, $tempArr['new_owner']);
+            $newAlly = Ally::ally($world, $tempArr['new_ally']);
             if($tempArr['new_owner'] == 0) {
                 $tempArr['new_owner_name'] = "";
-                $tempArr['new_ally'] = 0;
-                $tempArr['new_ally_name'] = "";
-                $tempArr['new_ally_tag'] = "";
             } else if($new == null) {
                 $tempArr['new_owner_name'] = null;
-                $tempArr['new_ally'] = 0;
+            } else {
+                $tempArr['new_owner_name'] = $new->name;
+            }
+            if($tempArr['new_ally'] == 0) {
+                $tempArr['new_ally_name'] = "";
+                $tempArr['new_ally_tag'] = "";
+            } else if($newAlly == null) {
                 $tempArr['new_ally_name'] = null;
                 $tempArr['new_ally_tag'] = null;
             } else {
-                $tempArr['new_owner_name'] = $new->name;
-                $tempArr['new_ally'] = $new->ally_id;
-                $tempArr['new_ally_name'] = ($new->allyLatest != null)?$new->allyLatest->name:"";
-                $tempArr['new_ally_tag'] = ($new->allyLatest != null)?$new->allyLatest->tag:"";
+                $tempArr['new_ally_name'] = $newAlly->name;
+                $tempArr['new_ally_tag'] = $newAlly->tag;
             }
 
             $array[] = $tempArr;
 
-            $follows = Follow::whereIn('followable_id', [$tempArr['new_owner'],$tempArr['old_owner']])
-                    ->where('followable_type', 'App\\Player')
-                    ->where('world_id', $world->id)
-                    ->get();
+            $follows = Follow::where('world_id', $world->id)->where(
+                fn($query) => $query->where(
+                    fn($q2) => $q2->whereIn('followable_id', [$tempArr['new_owner'], $tempArr['old_owner']])
+                        ->where('followable_type', 'App\\Player')
+                )->orWhere(
+                    fn($q2) => $q2->whereIn('followable_id', [$tempArr['new_ally'], $tempArr['old_ally']])
+                        ->where('followable_type', 'App\\Ally')
+                ))->get();
             if ($follows->count() > 0){
                 Follow::conquereNotification($follows, $world, $tempArr);
             }
         }
 
-        $insert = new Conquer();
-        $insert->setTable($dbName . '.conquer');
-
+        $insert = new Conquer($world);
         foreach (array_chunk($array, 3000) as $t) {
             $insert->insert($t);
         }
     }
-    private static function prepareConquerDupCheck($dbName) {
-        $conquerModel = new Conquer();
-        $conquerModel->setTable($dbName . '.conquer');
+    private static function prepareConquerDupCheck(World $world) {
+        $conquerModel = new Conquer($world);
 
         $arrCon = array();
         foreach ($conquerModel->get() as $conquer) {

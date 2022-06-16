@@ -9,7 +9,6 @@ namespace App\Util;
 
 use App;
 use App\World;
-use App\Server;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -31,27 +30,6 @@ class BasicFunctions
      */
     public static function floatConvtoProcent($float){
         return round($float*100);
-    }
-
-    /**
-     * @param $world
-     * @return int
-     */
-    public static function getWorldNum($world) {
-        return (int)preg_replace("/[^0-9]+/", '', $world);
-    }
-
-    /**
-     * @param $world
-     * @return string
-     */
-    public static function getServer($world) {
-        foreach(Server::getServer() as $server) {
-            if(BasicFunctions::startsWith($world, $server->code)) {
-                return $server->code;
-            }
-        }
-        return '';
     }
 
     /**
@@ -277,20 +255,50 @@ class BasicFunctions
         $world = new World();
         return $world->where('active', '=', '1');
     }
-
+    
     /**
-     * @param string $server
-     * @param $world
-     * @return mixed
+     * Returns the raw database name where that world will be stored in
+     * Intended only for creating that database / makting sure it exists
+     * 
+     * The internal behavior is expected to change soon (multi server databases)
+     * !do not rely on knowing what it does internally!
+     * @param World $model
+     * @return type
      */
-    public static function getDatabaseName($server, $world) {
+    public static function getWorldDataDatabase(World $model) {
         $replaceArray = array(
-            '{server}' => $server,
-            '{world}' => $world
+            '{server}' => $model->server->code,
+            '{world}' => $model->name,
         );
         return str_replace(array_keys($replaceArray),
             array_values($replaceArray),
             config('dsUltimate.db_database_world'));
+    }
+
+    /**
+     * @param World $model
+     * @param $tableName
+     * @return string
+     */
+    public static function getWorldDataTable(World $model, $tableName) {
+        return static::getWorldDataDatabase($model) . "." . $tableName;
+    }
+    
+    public static function hasWorldDataTable(World $model, $tableName) {
+        return static::existTable(static::getWorldDataDatabase($model), $tableName);
+    }
+
+    /**
+     * @param World $model
+     * @param $tableName
+     * @return string
+     */
+    public static function getUserWorldDataTable(World $model, $tableName) {
+        return config('dsUltimate.db_database_wData') . ".{$model->server->code}{$model->name}_{$tableName}";
+    }
+    
+    public static function hasUserWorldDataTable(World $model, $tableName) {
+        return static::existTable(config('dsUltimate.db_database_wData'), "{$model->server->code}{$model->name}_{$tableName}");
     }
 
     /**

@@ -18,9 +18,9 @@ class DistanceCalcController extends BaseController
 
     public function index($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
 
-        $worldData = World::getWorld($server, $world);
         if($worldData->config == null || $worldData->units == null) {
             abort(404, __('tool.distCalc.notAvailable'));
         }

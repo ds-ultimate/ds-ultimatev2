@@ -45,12 +45,9 @@ class DoGenerateOtherWorlds
         $toUpdate = [];
         $i = 0;
         foreach($worlds as $world) {
-            $dbName = BasicFunctions::getDatabaseName($server->code, $world['name']);
-            
             //load all current data into memory
-            $model = new PlayerTop();
-            $model->setTable("$dbName.player_top");
-            foreach($model->get() as $elm) {
+            $playerTopModel = new PlayerTop($world);
+            foreach($playerTopModel->get() as $elm) {
                 if(isset($players[$elm->playerID])) {
                     $model = $players[$elm->playerID];
                 } else {
@@ -69,7 +66,7 @@ class DoGenerateOtherWorlds
                 
                 $i++;
                 if($progress && $i % 100 == 0) {
-                    echo "\r$dbName player doing: $i      ";
+                    echo "\r" . $world->serName() . " player doing: $i      ";
                 }
             }
         }

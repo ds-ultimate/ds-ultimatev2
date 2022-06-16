@@ -12,7 +12,8 @@ class Changelog extends Model
 
     protected $fillable = [
         'version',
-        'title',
+        'de',
+        'en',
         'content',
         'repository_html_url',
         'icon',

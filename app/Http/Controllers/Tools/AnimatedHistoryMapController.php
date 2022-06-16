@@ -26,18 +26,15 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public static function isAvailable($world) {
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
-        if(!BasicFunctions::existTable($dbName, "index")) return false;
+        if(!BasicFunctions::hasWorldDataTable($world, "index")) return false;
         
-        $histModel = new HistoryIndex();
-        $histModel->setTable("$dbName.index");
+        $histModel = new HistoryIndex($world);
         return $histModel->first() != null;
     }
     
     public function create($server, $world) {
         BasicFunctions::local();
-        World::existWorld($server, $world);
-        $worldData = World::getWorld($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         abort_unless(static::isAvailable($worldData), 404);
 
         $mapModel = new AnimHistMapMap();
@@ -71,14 +68,13 @@ class AnimatedHistoryMapController extends BaseController
         
         $world = $wantedMap->world;
         abort_unless(static::isAvailable($world), 404);
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         
         $dim = array(
             'width' => 1000,
             'height' => 1000,
         );
         
-        $histModel = HistoryIndex::find($dbName, $histIdx);
+        $histModel = HistoryIndex::find($world, $histIdx);
         
         $skin = new \App\Util\Map\SkinSymbols();
         $map = new HistoryMapGenerator($world, $histModel, $skin, $dim, $this->debug);
@@ -133,8 +129,7 @@ class AnimatedHistoryMapController extends BaseController
         static::updateMapDimensions($wantedMap);
         
         $worldData = $wantedMap->world;
-        $server = $worldData->server->code;
-        $dbName = BasicFunctions::getDatabaseName($server, $worldData->name);
+        $server = $worldData->server;
         
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -150,15 +145,14 @@ class AnimatedHistoryMapController extends BaseController
             $ownMaps = AnimHistMapMap::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
         
-        $histIdxs = (new HistoryIndex())->setTable("$dbName.index")->get();
+        $histIdxs = (new HistoryIndex($worldData))->get();
         
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
     
     public function show(AnimHistMapMap $wantedMap) {
         $worldData = $wantedMap->world;
-        $server = $worldData->server->code;
-        $dbName = BasicFunctions::getDatabaseName($server, $worldData->name);
+        $server = $worldData->server;
         
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -174,7 +168,7 @@ class AnimatedHistoryMapController extends BaseController
             $ownMaps = AnimHistMapMap::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
         
-        $histIdxs = (new HistoryIndex())->setTable("$dbName.index")->get();
+        $histIdxs = (new HistoryIndex($worldData))->get();
         
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
@@ -318,8 +312,7 @@ class AnimatedHistoryMapController extends BaseController
     }
 
     public static function renderJob(AnimHistMapJob $animJob){
-        $world = $animJob->world;
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $worldData = $animJob->world;
         
         static::updateMapDimensions($animJob);
         
@@ -328,8 +321,7 @@ class AnimatedHistoryMapController extends BaseController
             'height' => 1000,
         );
         
-        $histModel = new HistoryIndex();
-        $histModel->setTable($dbName . ".index");
+        $histModel = new HistoryIndex($worldData);
         $histData = $histModel->get();
         $cntHistData = count($histData);
         $animJob->finished_at = null;
@@ -357,7 +349,7 @@ class AnimatedHistoryMapController extends BaseController
             $animJob->setState($num, $maxProgress, "image", $num, $cntHistData);
             
             $skin = new \App\Util\Map\SkinSymbols();
-            $map = new HistoryMapGenerator($world, $histData[$num], $skin, $dim, false);
+            $map = new HistoryMapGenerator($worldData, $histData[$num], $skin, $dim, false);
             $animJob->prepareRendering($map);
             $map->render();
             
@@ -447,21 +439,19 @@ class AnimatedHistoryMapController extends BaseController
     public static function updateMapDimensions(AnimHistMapMap $wantedMap) {
         if(! $wantedMap->autoDimensions) return;
         
-        $world = $wantedMap->world;
-        abort_unless(static::isAvailable($world), 404);
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
+        $worldData = $wantedMap->world;
+        abort_unless(static::isAvailable($worldData), 404);
         
         $dim = array(
             'width' => 1000,
             'height' => 1000,
         );
         
-        $histModel = new HistoryIndex();
-        $histModel->setTable("$dbName.index");
+        $histModel = new HistoryIndex($worldData);
         $hist = $histModel->orderBy('id', 'desc')->first();
         
         $skin = new \App\Util\Map\SkinSymbols();
-        $map = new HistoryMapGenerator($world, $hist, $skin, $dim, false);
+        $map = new HistoryMapGenerator($worldData, $hist, $skin, $dim, false);
         
         $wantedMap->prepareRendering($map);
         $map->setMapDimensions(AbstractMapGenerator::$DEFAULT_DIMENSIONS);

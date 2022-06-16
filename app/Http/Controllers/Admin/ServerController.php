@@ -59,7 +59,7 @@ class ServerController extends Controller
         ($request->speed_active === 'on')? $request->merge(['speed_active' => 1]) : $request->merge(['speed_active' => 0]);
         ($request->classic_active === 'on')? $request->merge(['classic_active' => 1]) : $request->merge(['classic_active' => 0]);
         $server = Server::create($request->all());
-        TableGenerator::otherServersTable($server->code);
+        TableGenerator::otherServersTable($server);
 
         return redirect()->route('admin.server.index');
     }

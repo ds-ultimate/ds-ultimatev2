@@ -24,6 +24,7 @@ class SearchController extends Controller
 
     public function search($server, $type, $search){
         BasicFunctions::local();
+        $server = Server::getAndCheckServerByCode($server);
         switch ($type){
             case 'player':
                 $result = SearchController::searchPlayer($server, $search);
@@ -37,13 +38,13 @@ class SearchController extends Controller
         }
     }
 
-    public static function searchPlayer($server, $search){
-        $worlds = Server::getWorldsByCode($server);
+    public static function searchPlayer(Server $server, $search){
+        $worlds = Server::getWorlds($server);
         $player = new PlayerTop();
         $allPlayer = [];
 
         foreach ($worlds as $world){
-            $player->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.player_top');
+            $player->setTable(BasicFunctions::getWorldDataTable($world, 'player_top'));
             foreach ($player->where('name', 'LIKE', '%'. BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
                 $allPlayer[] = [
                     'world' => $world,
@@ -57,13 +58,13 @@ class SearchController extends Controller
         return $allPlayer;
     }
 
-    public static function searchAlly($server, $search){
-        $worlds = Server::getWorldsByCode($server);
+    public static function searchAlly(Server $server, $search){
+        $worlds = Server::getWorlds($server);
         $ally = new AllyTop();
         $allAlly = [];
 
         foreach ($worlds as $world){
-            $ally->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.ally_top');
+            $ally->setTable(BasicFunctions::getWorldDataTable($world, 'ally_top'));
             foreach ($ally->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
                 $allAlly[] = [
                     'world' => $world,
@@ -77,8 +78,8 @@ class SearchController extends Controller
         return $allAlly;
     }
 
-    public static function searchVillage($server, $search){
-        $worlds = Server::getWorldsByCode($server);
+    public static function searchVillage(Server $server, $search){
+        $worlds = Server::getWorlds($server);
         $village = new Village();
         $allVillage = [];
 
@@ -95,7 +96,7 @@ class SearchController extends Controller
         }
         
         foreach ($worlds as $world){
-            $village->setTable(BasicFunctions::getDatabaseName($world->server->code, $world->name).'.village_latest');
+            $village->setTable(BasicFunctions::getWorldDataTable($world, 'village_latest'));
             foreach ($village->where('name', 'LIKE', '%'.BasicFunctions::likeSaveEscape(urlencode($search)).'%')->get() as $data){
                 $allVillage[] = [
                     'world' => $world,

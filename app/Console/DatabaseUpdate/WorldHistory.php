@@ -6,43 +6,43 @@ use App\Ally;
 use App\HistoryIndex;
 use App\Player;
 use App\Village;
+use App\World;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class WorldHistory
 {
-    public static function run($server, $world, $isSpeed) {
-        $dbName = BasicFunctions::getDatabaseName($server, $world);
-        //echo "For $dbName\n";
+    public static function run(World $world) {
+        $isSpeed = $world->isSpeed();
+//        echo "For " . $world->serName() . "\n";
         if($isSpeed) {
             $date = Carbon::now()->format("Y-m-d_H");
         } else {
             $date = Carbon::now()->format("Y-m-d");
         }
-        $retVal = static::runInternal($dbName, $date, "v", $isSpeed);
-        $retVal &= static::runInternal($dbName, $date, "p", $isSpeed);
-        $retVal &= static::runInternal($dbName, $date, "a", $isSpeed);
+        $retVal = static::runInternal($world, $date, "v", $isSpeed);
+        $retVal &= static::runInternal($world, $date, "p", $isSpeed);
+        $retVal &= static::runInternal($world, $date, "a", $isSpeed);
 
         if($retVal) {
-            $histIdx = new HistoryIndex();
-            $histIdx->setTable($dbName . ".index");
+            $histIdx = new HistoryIndex($world);
             $histIdx->date = $date;
             $histIdx->save();
         }
     }
     
-    private static function runInternal($dbName, $date, $part, $isSpeed) {
-        if(!file_exists(storage_path(config('dsUltimate.history_directory') . $dbName))) {
-            mkdir(storage_path(config('dsUltimate.history_directory') . $dbName), 0777, true);
+    private static function runInternal(World $world, $date, $part, $isSpeed) {
+        $dirName = $world->serName();
+        if(!file_exists(storage_path(config('dsUltimate.history_directory') . $dirName))) {
+            mkdir(storage_path(config('dsUltimate.history_directory') . $dirName), 0777, true);
         }
         
         switch ($part) {
             case "village":
             case "v":
-                $model = new Village();
-                $fromTable = $dbName . ".village_latest";
-                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/village_$date.gz");
+                $model = new Village($world);
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dirName}/village_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->villageID};{$entry->name};{$entry->x};{$entry->y};"
                         . "{$entry->points};{$entry->owner};{$entry->bonus_id};";
@@ -51,9 +51,8 @@ class WorldHistory
 
             case "player":
             case "p":
-                $model = new Player();
-                $fromTable = $dbName . ".player_latest";
-                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/player_$date.gz");
+                $model = new Player($world);
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dirName}/player_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->playerID};{$entry->name};{$entry->ally_id};"
                         . "{$entry->points};{$entry->village_count};{$entry->rank};"
@@ -66,9 +65,8 @@ class WorldHistory
 
             case "ally":
             case "a":
-                $model = new Ally();
-                $fromTable = $dbName . ".ally_latest";
-                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dbName}/ally_$date.gz");
+                $model = new Ally($world);
+                $toFile = storage_path(config('dsUltimate.history_directory') . "{$dirName}/ally_$date.gz");
                 $entryCallback = function($entry) {
                     return "{$entry->allyID};{$entry->name};{$entry->tag};{$entry->member_count};"
                         . "{$entry->points};{$entry->village_count};{$entry->rank};"
@@ -80,10 +78,10 @@ class WorldHistory
         }
         
         //READ
-        $res = DB::select("SELECT * FROM $fromTable");
+        $res = DB::select("SELECT * FROM " . $model->getTable());
         $file = gzopen($toFile, "w9");
         if($file === false ) {
-            echo "Unable to open file for $dbName";
+            echo "Unable to open file for $toFile";
             return false;
         }
         $written = 0;
@@ -99,7 +97,7 @@ class WorldHistory
                 gzwrite($file, $entryCallback($entry) . "\n");
                 $written++;
             } else {
-                echo "Warning wrong date found $dbName $fromTable $part -> $date / $entryDate\n";
+                echo "Warning wrong date found $dirName " . $model->getTable() . " $part -> $date / $entryDate\n";
             }
         }
         gzclose($file);

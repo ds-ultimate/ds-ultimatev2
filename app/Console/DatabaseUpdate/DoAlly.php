@@ -14,12 +14,14 @@ class DoAlly
     public static function run(World $world){
         ini_set('max_execution_time', 1800);
         ini_set('memory_limit', '1800M');
-        $dbName = BasicFunctions::getDatabaseName($world->server->code, $world->name);
         $minTime = Carbon::now()->subHour()->subMinutes(5);
+        
+        $liveTbl = BasicFunctions::getWorldDataTable($world, "ally_latest");
+        $tmpTbl = BasicFunctions::getWorldDataTable($world, "ally_latest_temp");
 
-        Schema::dropIfExists("$dbName.ally_latest_temp");
-        if (BasicFunctions::existTable($dbName, 'ally_latest_temp') === false){
-            TableGenerator::allyLatestTable($dbName, 'latest_temp');
+        Schema::dropIfExists($tmpTbl);
+        if (BasicFunctions::hasWorldDataTable($world, 'ally_latest_temp') === false){
+            TableGenerator::allyLatestTable($world, 'latest_temp');
         }
 
         $lines = DoWorldData::loadGzippedFile($world, "ally.txt.gz", $minTime);
@@ -82,8 +84,7 @@ class DoAlly
             ];
         }
 
-        $insert = new Ally();
-        $insert->setTable($dbName.'.ally_latest_temp');
+        $insert = new Ally($world, 'ally_latest_temp');
         $array = array();
         $insertTime = Carbon::now();
         
@@ -112,18 +113,17 @@ class DoAlly
             $insert->insert($t);
         }
 
-
-        Schema::dropIfExists("$dbName.ally_latest");
-        DB::statement("ALTER TABLE $dbName.ally_latest_temp RENAME TO $dbName.ally_latest");
+        Schema::dropIfExists($liveTbl);
+        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
         $hashAlly = UpdateUtil::hashTable($array, 'a', 'allyID');
 
         for ($i = 0; $i < config('dsUltimate.hash_ally'); $i++){
             if (array_key_exists($i ,$hashAlly)) {
-                if (BasicFunctions::existTable($dbName, 'ally_' . $i) === false) {
-                    TableGenerator::allyTable($dbName, $i);
+                if (BasicFunctions::hasWorldDataTable($world, 'ally_' . $i) === false) {
+                    TableGenerator::allyTable($world, $i);
                 }
-                $insert->setTable($dbName . '.ally_' . $i);
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.ally_' . $i));
                 foreach (array_chunk($hashAlly[$i], 3000) as $t) {
                     $insert->insert($t);
                 }

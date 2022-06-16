@@ -314,9 +314,6 @@ class AttackPlannerItemController extends BaseController
         $attackplaner = AttackList::findorfail($request->id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
 
-        $server = $attackplaner->world->server->code;
-        $world = $attackplaner->world->name;
-
         if ($request->items == null || count($request->items) <= 0) {
             return \Response::json(array(
                 'data' => 'error',
@@ -352,7 +349,7 @@ class AttackPlannerItemController extends BaseController
                     $xStart = intval($request->xStart);
                     $yStart = intval($request->yStart);
                 } else {
-                    $villageStart = Village::village($server, $world, $attackListItem->start_village_id);
+                    $villageStart = Village::village($attackplaner->world, $attackListItem->start_village_id);
                     $xStart = $villageStart->x;
                     $yStart = $villageStart->y;
                 }
@@ -360,7 +357,7 @@ class AttackPlannerItemController extends BaseController
                     $xTarget = intval($request->xTarget);
                     $yTarget = intval($request->yTarget);
                 } else {
-                    $villageTarget = Village::village($server, $world, $attackListItem->target_village_id);
+                    $villageTarget = Village::village($attackplaner->world, $attackListItem->target_village_id);
                     $xTarget = $villageTarget->x;
                     $yTarget = $villageTarget->y;
                 }
