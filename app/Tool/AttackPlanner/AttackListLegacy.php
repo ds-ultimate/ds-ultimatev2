@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: crams
- * Date: 18.08.2019
- * Time: 16:05
- */
 
 namespace App\Tool\AttackPlanner;
 

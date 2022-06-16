@@ -68,7 +68,8 @@ class DoWorldData
     }
     
     public static function loadGzippedFile(World $world, $name, $minTime) {
-        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
+        $url = "$world->url/map/$name";
+        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get($url);
         if(!$response->ok()) {
             BasicFunctions::createLog("ERROR_update[" . $world->serName() . "]", "$name konnte nicht ge&ouml;ffnet werden");
             DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);
@@ -83,7 +84,8 @@ class DoWorldData
     }
     
     public static function loadUncompressedFile(World $world, $urlEnd, $name) {
-        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get("$world->url/map/$name");
+        $url = "$world->url/map/$name";
+        $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get($url);
         if(!$response->ok()) {
             BasicFunctions::createLog("ERROR_update[" . $world->serName() . "]", "$name konnte nicht ge&ouml;ffnet werden");
             DiscordNotificationQueueElement::worldUpdate($world, $name . ' - ' . $response->status(), $url);

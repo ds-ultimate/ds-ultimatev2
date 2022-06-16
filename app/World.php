@@ -34,6 +34,7 @@ class World extends CustomModel
         'buildings',
         'active',
         'display_name',
+        'win_condition',
     ];
     
     protected $cache = [
@@ -247,6 +248,24 @@ class World extends CustomModel
             $this->unitConfCache = simplexml_load_string($this->units);
         }
         return $this->unitConfCache;
+    }
+
+    public function save(array $options = []) {
+        if($this->config == null) {
+            $this->win_condition = -1;
+        } else {
+            $this->win_condition = simplexml_load_string($this->config)->win->check;
+        }
+        return parent::save($options);
+    }
+
+    public function touch($attribute = null) {
+        if($this->config == null) {
+            $this->win_condition = -1;
+        } else {
+            $this->win_condition = simplexml_load_string($this->config)->win->check;
+        }
+        return parent::touch($attribute);
     }
     
     public function serName() {
