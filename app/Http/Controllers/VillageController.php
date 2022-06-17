@@ -19,7 +19,7 @@ class VillageController extends Controller
         abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
                 "auf der Welt '{$world->serName()}' vorhanden.");
         
-        $villageHistData = $villageData->getHistoryData();
+        $villageHistData = $villageData->getHistoryData($worldData);
         $datas = Village::pureVillageDataChart($villageHistData);
         if(count($datas) < 1) {
             $datas[] = [

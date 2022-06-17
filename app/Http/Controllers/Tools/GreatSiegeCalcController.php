@@ -12,9 +12,9 @@ class GreatSiegeCalcController extends BaseController
 
     public function index($server, $world){
         BasicFunctions::local();
-        World::existWorld($server, $world);
-
-        $worldData = World::getWorld($server, $world);
+        $server = Server::getAndCheckServerByCode($server);
+        $worldData = World::getAndCheckWorld($server, $world);
+        
         if($worldData->config == null || $worldData->units == null || $worldData->win_condition != 9) {
             abort(404, __('tool.greatSiegeCalc.notAvailable'));
         }

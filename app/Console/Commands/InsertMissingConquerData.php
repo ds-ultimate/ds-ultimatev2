@@ -50,16 +50,32 @@ class InsertMissingConquerData extends Command
     }
     
     private function insertMissing(World $worldModel) {
-        todo here points
-        
-        todo general:
-        -> move hash stuff into world -> different hash sizes per world
-        -> migration for changing the hash size
-        -> Api changes use internal world id where appropriate
-        -> Move to self hosted captcha
-        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
-        -> disallow access via ds-ultimate.de/index.php/...
-        
+//        todo here points
+//        
+//        todo general:
+//        -> migration for changing the hash size
+//        -> migration for moving to shared db
+//        -> Api changes use internal world id where appropriate
+//        -> Move to self hosted captcha
+//        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
+//        -> disallow access via ds-ultimate.de/index.php/...
+//        -> User table email Nullable
+//        -> Remove possibility to change roles / permissions in admin interface
+//            ['id'=>9, 'title'=>'permission_create'],
+//            ['id'=>10, 'title'=>'permission_edit'],
+//            ['id'=>11, 'title'=>'permission_show'],
+//            ['id'=>12, 'title'=>'permission_delete'],
+//            ['id'=>14, 'title'=>'role_edit'],
+//            ['id'=>15, 'title'=>'role_create'],
+//            ['id'=>16, 'title'=>'role_edit'],
+//            ['id'=>18, 'title'=>'role_delete'],
+//            ['id'=>21, 'title'=>'world_access'],
+//        
+//        Update guide:
+//        -> Move all tables out of the way (all global tables!!)
+//        -> Run migraions
+//        -> Run dsphp artisan migrate:importFromLastVersion
+//        
         if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {
             return;
         }

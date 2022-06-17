@@ -4,10 +4,9 @@ namespace App;
 
 class Village extends CustomModel
 {
-    private $hash = 109;
     protected $primaryKey = 'villageID';
     protected $fillable =[
-            'id', 'name', 'x', 'y', 'points', 'owner', 'bonus_id',
+        'id', 'name', 'x', 'y', 'points', 'owner', 'bonus_id',
     ];
     
     public $timestamps = true;
@@ -19,15 +18,6 @@ class Village extends CustomModel
             $arg2 = "village_latest";
         }
         parent::__construct($arg1, $arg2);
-
-        $this->hash = config('dsUltimate.hash_village');
-    }
-
-    /**
-     *@return int
-     */
-    public function getHash(){
-        return $this->hash;
     }
 
     /**
@@ -56,7 +46,7 @@ class Village extends CustomModel
      */
     public static function villageDataChart(World $world, $villageID){
         $villageID = (int) $villageID;
-        $tabelNr = $villageID % config('dsUltimate.hash_village');
+        $tabelNr = $villageID % $world->hash_village;
         $villageModel = new Village($world, "village_$tabelNr");
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
@@ -79,11 +69,10 @@ class Village extends CustomModel
         return $villageDatas;
     }
     
-    public function getHistoryData() {
+    public function getHistoryData(World $world) {
         $villageID = (int) $this->villageID;
-        $tableNr = $villageID % config('dsUltimate.hash_village');
-        $villageModel = new Village();
-        $villageModel->setTable(str_replace("latest", $tableNr, $this->getTable()));
+        $tableNr = $villageID % $world->hash_village;
+        $villageModel = new Village($world, "village_$tableNr");
         
         $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
         return $villageDataArray;

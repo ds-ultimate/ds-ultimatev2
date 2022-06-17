@@ -54,14 +54,14 @@ class InsertMissingBashData extends Command
     
     private function insertMissing(World $worldModel) {
         $this->doPlayer($worldModel, "latest");
-        for ($num = 0; $num < config('dsUltimate.hash_player'); $num++){
+        for ($num = 0; $num < $worldModel->hash_player; $num++){
             if(!BasicFunctions::hasWorldDataTable($worldModel, "player_$num")) {
                 continue;
             }
             $this->doPlayer($worldModel, "$num");
         }
         $this->doAlly($worldModel, 'latest');
-        for ($num = 0; $num < config('dsUltimate.hash_ally'); $num++){
+        for ($num = 0; $num < $worldModel->hash_ally; $num++){
             if(!BasicFunctions::hasWorldDataTable($worldModel, "ally_$num")) {
                 continue;
             }
@@ -81,7 +81,7 @@ class InsertMissingBashData extends Command
                 ->first()) !== null) {
             echo "Doing: " . $world->serName() . ".$tablePre$tableSuffix {$todo->created_at->timestamp} ";
             
-            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $playerModel, $todo, config('dsUltimate.hash_player'));
+            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $playerModel, $todo, $worldModel->hash_player);
             foreach($similar as $entry) {
                 if($entry->offBash === null) $entry->offBash = 0;
                 if($entry->defBash === null) $entry->defBash = 0;
@@ -126,7 +126,7 @@ class InsertMissingBashData extends Command
                 ->first()) !== null) {
             echo "Doing: " . $world->serName() . ".$tablePre$tableSuffix {$todo->created_at->timestamp} ";
             
-            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $allyModel, $todo, config('dsUltimate.hash_ally'));
+            $similar = $this->getEntriesFromSameTime($worldModel, $tablePre, $tableSuffix, $allyModel, $todo, $worldModel->hash_ally);
             echo $similar->count() . " ";
             foreach($similar as $entry) {
                 if($entry->offBash === null) $entry->offBash = 0;

@@ -234,7 +234,6 @@ return [
         Barryvdh\TranslationManager\ManagerServiceProvider::class,
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Buzz\LaravelGoogleCaptcha\CaptchaServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -298,7 +297,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Captcha' => \Buzz\LaravelGoogleCaptcha\CaptchaFacade::class,
     ],
     
     /*

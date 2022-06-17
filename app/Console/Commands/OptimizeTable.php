@@ -79,19 +79,19 @@ class OptimizeTable extends Command
                 break;
             
             case "ally":
-                for($num = 0; $num < config('dsUltimate.hash_ally'); $num++) {
+                for($num = 0; $num < $world->hash_ally; $num++) {
                     $tables[] = BasicFunctions::getWorldDataTable($world, "ally_{$num}");
                 }
                 break;
             
             case "player":
-                for($num = 0; $num < config('dsUltimate.hash_player'); $num++) {
+                for($num = 0; $num < $world->hash_player; $num++) {
                     $tables[] = BasicFunctions::getWorldDataTable($world, "player_{$num}");
                 }
                 break;
             
             case "village":
-                for ($num = 0; $num < config('dsUltimate.hash_village'); $num++){
+                for ($num = 0; $num < $world->hash_village; $num++){
                     $tables[] = BasicFunctions::getWorldDataTable($world, "village_{$num}");
                 }
                 break;

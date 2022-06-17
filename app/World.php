@@ -35,6 +35,9 @@ class World extends CustomModel
         'active',
         'display_name',
         'win_condition',
+        'hash_ally',
+        'hash_player',
+        'hash_village',
     ];
     
     protected $cache = [

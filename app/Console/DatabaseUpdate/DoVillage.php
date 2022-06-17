@@ -71,8 +71,8 @@ class DoVillage
         Schema::dropIfExists($liveTbl);
         DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
-        $hashVillage = UpdateUtil::hashTable($array, 'v', 'villageID', array(static::class, 'villageSameSinceLast'), $villageDB);
-        for ($i = 0; $i < config('dsUltimate.hash_village'); $i++) {
+        $hashVillage = UpdateUtil::hashTable($array, $world->hash_village, 'villageID', array(static::class, 'villageSameSinceLast'), $villageDB);
+        for ($i = 0; $i < $world->hash_village; $i++) {
             if (array_key_exists($i, $hashVillage)) {
                 if (BasicFunctions::hasWorldDataTable($world, 'village_' . $i) === false) {
                     TableGenerator::villageTable($world, $i);

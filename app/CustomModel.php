@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\World;
 use App\Util\BasicFunctions;
 use Illuminate\Database\Eloquent\Model;
 

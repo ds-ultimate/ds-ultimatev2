@@ -116,6 +116,9 @@ class DoSpeedWorldBackend
                     } else {
                         $worldNew->display_name = $worldNew->generateDisplayName();
                     }
+                    $worldNew->hash_ally = config('dsUltimate.hash_ally');
+                    $worldNew->hash_player = config('dsUltimate.hash_player');
+                    $worldNew->hash_village = config('dsUltimate.hash_village');
                     
                     $world = $serverModel->code . $worldNew->name;
                     if ($worldNew->save() !== true){

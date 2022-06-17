@@ -94,32 +94,32 @@ class DatatablesController extends Controller
             ->editColumn('name', function ($player){
                 return BasicFunctions::decodeName($player->name);
             })
-            ->editColumn('gesBash', function ($player){
-                $playerOld = $player->playerHistory(1);
+            ->editColumn('gesBash', function ($player) use($worldData) {
+                $playerOld = $player->playerHistory(1, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'gesBash', false);
             })
-            ->editColumn('offBash', function ($player){
-                $playerOld = $player->playerHistory(1);
+            ->editColumn('offBash', function ($player) use($worldData) {
+                $playerOld = $player->playerHistory(1, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'offBash', false);
             })
-            ->editColumn('defBash', function ($player){
-                $playerOld = $player->playerHistory(1);
+            ->editColumn('defBash', function ($player) use($worldData) {
+                $playerOld = $player->playerHistory(1, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
             })
-            ->editColumn('supBash', function ($player){
-                $playerOld = $player->playerHistory(1);
+            ->editColumn('supBash', function ($player) use($worldData) {
+                $playerOld = $player->playerHistory(1, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
@@ -167,7 +167,7 @@ class DatatablesController extends Controller
     public function getPlayerHistory($server, $world, $player)
     {
         $worldData = World::getAndCheckWorld($server, $world);
-        $tableNr = ((int) $player) % config('dsUltimate.hash_player');
+        $tableNr = ((int) $player) % $worldData->hash_player;
         
         $playerModel = new Player($worldData, "player_$tableNr");
         $data = $playerModel->where('playerID', $player)->get();
@@ -221,7 +221,7 @@ class DatatablesController extends Controller
     public function getAllyHistory($server, $world, $ally)
     {
         $worldData = World::getAndCheckWorld($server, $world);
-        $tableNr = ((int) $ally) % config('dsUltimate.hash_ally');
+        $tableNr = ((int) $ally) % $worldData->hash_ally;
         
         $allyModel = new Ally($worldData, "ally_$tableNr");
         $data = $allyModel->where('allyID', $ally)->get();
@@ -283,8 +283,8 @@ class DatatablesController extends Controller
         $datas = $playerModel->newQuery();
 
         return DataTables::eloquent($datas)
-            ->editColumn('rank', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('rank', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
@@ -297,24 +297,24 @@ class DatatablesController extends Controller
             ->addColumn('ally', function ($player){
                 return ($player->ally_id != 0 && $player->allyLatest != null)? BasicFunctions::decodeName($player->allyLatest->tag) : '-';
             })
-            ->editColumn('points', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('points', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'points', false);
             })
-            ->editColumn('village_count', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('village_count', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'village_count', false);
             })
-            ->addColumn('village_points', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->addColumn('village_points', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
@@ -323,32 +323,32 @@ class DatatablesController extends Controller
                 $old = ($playerOld->points == 0 || $playerOld->village_count == 0)? 0 : ($playerOld->points/$playerOld->village_count);
                 return BasicFunctions::historyCalc($new, $old, 'village_count', false);
             })
-            ->editColumn('gesBash', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('gesBash', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'gesBash', false);
             })
-            ->editColumn('offBash', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('offBash', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'offBash', false);
             })
-            ->editColumn('defBash', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('defBash', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'defBash', false);
             })
-            ->editColumn('supBash', function ($player) use($days){
-                $playerOld = $player->playerHistory($days);
+            ->editColumn('supBash', function ($player) use($days, $worldData) {
+                $playerOld = $player->playerHistory($days, $worldData);
 
                 if($playerOld == null){
                     return __('ui.old.nodata');
@@ -370,8 +370,8 @@ class DatatablesController extends Controller
         $datas = $allyModel->newQuery();
 
         return DataTables::eloquent($datas)
-            ->editColumn('rank', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('rank', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
@@ -384,32 +384,32 @@ class DatatablesController extends Controller
             ->editColumn('tag', function ($ally){
                 return BasicFunctions::decodeName($ally->tag);
             })
-            ->editColumn('points', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('points', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'points', false);
             })
-            ->editColumn('member_count', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('member_count', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'member_count', false);
             })
-            ->editColumn('village_count', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('village_count', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'village_count', false);
             })
-            ->addColumn('player_points', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->addColumn('player_points', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
@@ -420,24 +420,24 @@ class DatatablesController extends Controller
 
                 return BasicFunctions::historyCalc($new, $old, 'player_points', false);
             })
-            ->editColumn('gesBash', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('gesBash', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'gesBash', false);
             })
-            ->editColumn('offBash', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('offBash', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');
                 }
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'offBash', false);
             })
-            ->editColumn('defBash', function ($ally) use($days){
-                $allyOld = $ally->allyHistory($days);
+            ->editColumn('defBash', function ($ally) use($days, $worldData){
+                $allyOld = $ally->allyHistory($days, $worldData);
 
                 if($allyOld == null){
                     return __('ui.old.nodata');

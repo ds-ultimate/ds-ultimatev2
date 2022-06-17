@@ -19,25 +19,25 @@ class DoClean
         
         switch($type) {
             case 'a':
-                $envHashIndex = 'hash_ally';
+                $hashSize = $world->hash_ally;
                 $tablePrefix = 'ally';
                 $model = new Ally();
                 break;
 
             case 'p':
-                $envHashIndex = 'hash_player';
+                $hashSize = $world->hash_player;
                 $tablePrefix = 'player';
                 $model = new Player();
                 break;
 
             case 'v':
-                $envHashIndex = 'hash_village';
+                $hashSize = $world->hash_village;
                 $tablePrefix = 'village';
                 $model = new Village();
                 break;
         }
 
-        for ($i = 0; $i < config('dsUltimate.'.$envHashIndex); $i++){
+        for ($i = 0; $i < $hashSize; $i++){
             if (BasicFunctions::hasWorldDataTable($world, "{$tablePrefix}_{$i}") === true) {
                 $model->setTable(BasicFunctions::getWorldDataTable($world, "{$tablePrefix}_{$i}"));
                 $delete = $model->where('updated_at', '<', Carbon::now()->subDays($days));

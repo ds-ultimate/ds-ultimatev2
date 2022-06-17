@@ -164,9 +164,9 @@ class DoPlayer
         Schema::dropIfExists($liveTbl);
         DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
-        $hashPlayer = UpdateUtil::hashTable($arrayPlayer, 'p', 'playerID');
+        $hashPlayer = UpdateUtil::hashTable($arrayPlayer, $world->hash_player, 'playerID');
 
-        for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
+        for ($i = 0; $i < $world->hash_player; $i++){
             if (array_key_exists($i ,$hashPlayer)) {
                 if (BasicFunctions::hasWorldDataTable($world, 'player_' . $i) === false) {
                     TableGenerator::playerTable($world, $i);

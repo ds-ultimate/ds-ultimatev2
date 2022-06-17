@@ -22,7 +22,7 @@ class UpdateUtil
                 ->where('active', '=', 1)->count() > 0;
     }
 
-    public static function hashTable($mainArray, $type, $index,callable $cmpFkt = null, $cmpArr = null){
+    public static function hashTable($mainArray, $hashSize, $index, callable $cmpFkt = null, $cmpArr = null){
         $hashArray = array();
         foreach ($mainArray as $main){
             if($cmpFkt != null && $cmpFkt($cmpArr, $main)) {
@@ -30,10 +30,11 @@ class UpdateUtil
                 continue;
             }
             $id = $main[$index];
-            if (! array_key_exists(BasicFunctions::hash($id, $type), $hashArray)) {
-                $hashArray[BasicFunctions::hash($id, $type)] = array();
+            $hashedIndex = $id % $hashSize;
+            if (! array_key_exists($hashedIndex, $hashArray)) {
+                $hashArray[$hashedIndex] = array();
             }
-            $hashArray[BasicFunctions::hash($id, $type)][] = $main;
+            $hashArray[$hashedIndex][] = $main;
         }
 
         return $hashArray;

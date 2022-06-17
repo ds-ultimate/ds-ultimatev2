@@ -37,15 +37,6 @@ class Ally extends CustomModel
             $arg2 = "ally_latest";
         }
         parent::__construct($arg1, $arg2);
-
-        $this->hash = config('dsUltimate.hash_ally');
-    }
-
-    /**
-     *@return int
-     */
-    public function getHash(){
-        return $this->hash;
     }
 
     /**
@@ -103,7 +94,7 @@ class Ally extends CustomModel
      */
     public static function allyDataChart(World $world, $ally){
         $allyID = (int) $ally;
-        $tabelNr = $allyID % config('dsUltimate.hash_ally');
+        $tabelNr = $allyID % ($world->hash_ally);
 
         $allyModel = new Ally($world, 'ally_'.$tabelNr);
 
@@ -140,13 +131,18 @@ class Ally extends CustomModel
         return "{$world->url}/$guestPart.php?screen=info_ally&id={$this->allyID}";
     }
 
-    public function allyHistory($days){
-        $tableNr = $this->allyID % config('dsUltimate.hash_ally');
-        $dbName = explode('.', $this->getTable());
+    private $allyHistCache = [];
+    public function allyHistory($days, World $world){
+        if(! isset($this->allyHistCache[$days])) {
+            $tableNr = $this->allyID % ($world->hash_ally);
 
-        $allyModel = new Ally();
-        $allyModel->setTable($dbName[0].'.ally_'.$tableNr);
-        $timestamp = Carbon::now()->subDays($days);
-        return $allyModel->where('allyID', $this->allyID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
+            $allyModel = new Ally($world, "ally_$tableNr");
+            $timestamp = Carbon::now()->subDays($days);
+            $this->allyHistCache[$days] =  $allyModel->where('allyID', $this->allyID)
+                    ->whereDate('updated_at', $timestamp->toDateString())
+                    ->orderBy('updated_at', 'DESC')
+                    ->first();
+        }
+        return $this->allyHistCache[$days];
     }
 }

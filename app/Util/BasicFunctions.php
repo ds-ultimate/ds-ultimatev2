@@ -171,23 +171,6 @@ class BasicFunctions
         return $result !== false && count($result) > 0;
     }
 
-    /**
-     * @param $input
-     * @param $type
-     * @return bool|int
-     */
-    public static function hash($input ,$type){
-        switch($type) {
-            case 'p': //Player
-                return $input % config('dsUltimate.hash_player');
-            case 'a': //Ally
-                return $input % config('dsUltimate.hash_ally');
-            case 'v': //Village
-                return $input % config('dsUltimate.hash_village');
-        }
-        return false;
-    }
-
     public static function local(){
         $locale = \Session::get('locale');
         if($locale === null) {

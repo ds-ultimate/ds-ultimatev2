@@ -66,6 +66,9 @@ class DoWorld
                 $worldNew->buildings = $txtBuildings;
                 $worldNew->worldCheck_at = Carbon::now();
                 $worldNew->display_name = $worldNew->generateDisplayName();
+                $worldNew->hash_ally = config('dsUltimate.hash_ally');
+                $worldNew->hash_player = config('dsUltimate.hash_player');
+                $worldNew->hash_village = config('dsUltimate.hash_village');
 
                 if ($worldNew->save() !== true){
                     BasicFunctions::createLog('ERROR_insert[World]', "Welt $world konnte nicht der Tabelle 'worlds' hinzugefügt werden.");

@@ -253,7 +253,17 @@ class AttackListItem extends CustomModel
 
     public function calcDistance(){
         if($this->start_village == null || $this->target_village == null) return null;
-        return sqrt(pow($this->start_village->x - $this->target_village->x, 2) + pow($this->start_village->y - $this->target_village->y, 2));
+        
+        if($this->target_village->bonus_id >= 11 && $this->target_village->bonus_id <= 21) {
+            //great siege village always same distance
+            if($this->slowest_unit == 4) {
+                return 3; // spy
+            } else {
+                return 15;
+            }
+        } else {
+            return sqrt(pow($this->start_village->x - $this->target_village->x, 2) + pow($this->start_village->y - $this->target_village->y, 2));
+        }
     }
 
     public function setVillageID($xStart, $yStart, $xTarget, $yTarget){

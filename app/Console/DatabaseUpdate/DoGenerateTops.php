@@ -37,7 +37,7 @@ class DoGenerateTops
                     'tag',
                 ];
                 $typeN = 'ally';
-                $hashSize = config('dsUltimate.hash_ally');
+                $hashSize = $world->hash_ally;
                 $generateCallback = function() use($world) {
                     return new AllyTop($world);
                 };
@@ -61,7 +61,7 @@ class DoGenerateTops
                     'name',
                 ];
                 $typeN = 'player';
-                $hashSize = config('dsUltimate.hash_player');
+                $hashSize = $world->hash_player;
                 $generateCallback = function() use($world) {
                     return new PlayerTop($world);
                 };

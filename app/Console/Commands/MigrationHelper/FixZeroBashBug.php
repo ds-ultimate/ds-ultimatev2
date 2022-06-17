@@ -3,6 +3,7 @@
 namespace App\Console\Commands\MigrationHelper;
 
 use App\Player;
+use App\World;
 use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -49,18 +50,18 @@ class FixZeroBashBug extends Command
                     static::runFix($dbWorld);
                 }
             } else {
-                static::runFix(\App\World::getWorld($server, $world));
+                static::runFix(World::getWorld($server, $world));
             }
         }
         return 0;
     }
     
-    private static function runFix($world) {
+    private static function runFix(World $world) {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '600M');
         
         static::fix(BasicFunctions::getWorldDataTable($world, 'player_latest'));
-        for ($i = 0; $i < config('dsUltimate.hash_player'); $i++){
+        for ($i = 0; $i < $world->hash_player; $i++){
             if (BasicFunctions::hasWorldDataTable($world, "player_$i")) {
                 static::fix(BasicFunctions::getWorldDataTable($world, "player_$i"));
             }

@@ -116,9 +116,9 @@ class DoAlly
         Schema::dropIfExists($liveTbl);
         DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
 
-        $hashAlly = UpdateUtil::hashTable($array, 'a', 'allyID');
+        $hashAlly = UpdateUtil::hashTable($array, $world->hash_ally, 'allyID');
 
-        for ($i = 0; $i < config('dsUltimate.hash_ally'); $i++){
+        for ($i = 0; $i < $world->hash_ally; $i++){
             if (array_key_exists($i ,$hashAlly)) {
                 if (BasicFunctions::hasWorldDataTable($world, 'ally_' . $i) === false) {
                     TableGenerator::allyTable($world, $i);

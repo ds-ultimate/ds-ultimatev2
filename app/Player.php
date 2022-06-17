@@ -41,15 +41,6 @@ class Player extends CustomModel
             $arg2 = "player_latest";
         }
         parent::__construct($arg1, $arg2);
-
-        $this->hash = config('dsUltimate.hash_player');
-    }
-
-    /**
-     *@return int
-     */
-    public function getHash(){
-        return $this->hash;
     }
 
     /**
@@ -102,7 +93,7 @@ class Player extends CustomModel
      */
     public static function playerDataChart(World $world, $playerID, $dayDelta = 30){
         $playerID = (int) $playerID;
-        $tabelNr = $playerID % config('dsUltimate.hash_player');
+        $tabelNr = $playerID % $worldData->hash_player;
         $playerModel = new Player($world, "player_$tabelNr");
         $playerDataArray = $playerModel
                 ->where('playerID', $playerID)
@@ -139,14 +130,19 @@ class Player extends CustomModel
         return "{$world->url}/$guestPart.php?screen=info_player&id={$this->playerID}";
     }
 
-    public function playerHistory($days){
-        $tableNr = $this->playerID % config('dsUltimate.hash_player');
-        $dbName = explode('.', $this->getTable());
-
-        $playerModel = new Player();
-        $playerModel->setTable($dbName[0].'.player_'.$tableNr);
-        $timestamp = Carbon::now()->subDays($days);
-        return $playerModel->where('playerID', $this->playerID)->whereDate('updated_at', $timestamp->toDateString())->orderBy('updated_at', 'DESC')->first();
+    private $playerHistCache = [];
+    public function playerHistory($days, World $world){
+        if(! isset($this->playerHistCache[$days])) {
+            $tableNr = $this->playerID % $world->hash_player;
+            
+            $playerModel = new Player($world, "player_$tableNr");
+            $timestamp = Carbon::now()->subDays($days);
+            $this->playerHistCache[$days] =  $playerModel->where('playerID', $this->playerID)
+                    ->whereDate('updated_at', $timestamp->toDateString())
+                    ->orderBy('updated_at', 'DESC')
+                    ->first();
+        }
+        return $this->playerHistCache[$days];
     }
 
     public function signature() {
