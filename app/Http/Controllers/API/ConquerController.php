@@ -6,20 +6,17 @@ use App\Player;
 use App\Conquer;
 use App\World;
 use App\Http\Controllers\Controller;
-use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ConquerController extends Controller
 {
-    public function getAllyConquer($server, $world, $type, $allyID)
-    {
+    public function getAllyConquer(World $world, $type, $allyID) {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer($worldData);
-        $playerModel = new Player($worldData);
+        $conquerModel = new Conquer($world);
+        $playerModel = new Player($world);
 
         $allyPlayers = array();
         foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
@@ -62,15 +59,13 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
 
-        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_ALLY, $allyID, $filt);
+        return $this->doConquerReturn($query, $world, Conquer::$REFERTO_ALLY, $allyID, $filt);
     }
 
-    public function getPlayerConquer($server, $world, $type, $playerID)
-    {
+    public function getPlayerConquer(World $world, $type, $playerID) {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer($worldData);
+        $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
         $filt = null;
 
@@ -107,15 +102,13 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_PLAYER, $playerID, $filt);
+        return $this->doConquerReturn($query, $world, Conquer::$REFERTO_PLAYER, $playerID, $filt);
     }
 
-    public function getVillageConquer($server, $world, $type, $villageID)
-    {
+    public function getVillageConquer(World $world, $type, $villageID) {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer($worldData);
+        $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
         $filt = null;
 
@@ -131,15 +124,13 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_VILLAGE, $villageID, $filt);
+        return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, $villageID, $filt);
     }
 
-    public function getWorldConquer($server, $world, $type)
-    {
+    public function getWorldConquer(World $world, $type) {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $conquerModel = new Conquer($worldData);
+        $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
 
         switch($type) {
@@ -149,7 +140,7 @@ class ConquerController extends Controller
                 abort(404, "Unknown type");
         }
         
-        return $this->doConquerReturn($query, $worldData, Conquer::$REFERTO_VILLAGE, 0);
+        return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, 0);
     }
     
     private function doConquerReturn($query, $world, $referTO, $id, $filter=null) {
@@ -189,18 +180,16 @@ class ConquerController extends Controller
         return $ret;
     }
 
-    public function getConquerDaily($server, $world, $type, $day=false)
-    {
+    public function getConquerDaily(World $world, $type, $day=false) {
         DatatablesController::limitResults(100);
-        $worldData = World::getAndCheckWorld($server, $world);
 
         switch ($type) {
             case 'player':
-                return $this->getConquerDailyPlayer($worldData, $day);
+                return $this->getConquerDailyPlayer($world, $day);
                 break;
             
             case 'ally':
-                return $this->getConquerDailyAlly($worldData, $day);
+                return $this->getConquerDailyAlly($world, $day);
                 break;
             
             default:

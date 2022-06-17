@@ -51,7 +51,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldPlayerHistory', [$worldData->server->code, $worldData->name, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
+                "ajax": "{{ route('api.worldPlayerHistory', [$worldData->id, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='" + ("{{ route('player', [$worldData->server->code, $worldData->name, "%playerID%"]) }}".replace("%playerID%", row.playerID)) +"'>"+ value +'</a>'}},
@@ -93,7 +93,7 @@
 
             $(document).on('change', '#date_picker', function (e) {
                 $('[data-toggle="popover"]').popover('disable');
-                table.ajax.url('{{ route('api.worldPlayerHistory', [$worldData->server->code,$worldData->name, "%days%"]) }}'.replace("%days%", $(this).val())).load();
+                table.ajax.url('{{ route('api.worldPlayerHistory', [$worldData->id, "%days%"]) }}'.replace("%days%", $(this).val())).load();
             });
 
             $('#table_id_wrapper .row:first').prepend(

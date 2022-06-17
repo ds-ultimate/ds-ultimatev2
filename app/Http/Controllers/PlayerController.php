@@ -8,6 +8,7 @@ use App\PlayerTop;
 use App\PlayerOtherServers;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
+use App\Server;
 use App\World;
 use App\AllyChanges;
 
@@ -21,7 +22,7 @@ class PlayerController extends Controller
         $playerData = Player::player($worldData, $player);
         $playerTopData = PlayerTop::player($worldData, $player);
         abort_if($playerData == null && $playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+                " auf der Welt '{$worldData->serName()}' vorhanden.");
         
         $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
         

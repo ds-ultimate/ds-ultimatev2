@@ -93,7 +93,7 @@ class Player extends CustomModel
      */
     public static function playerDataChart(World $world, $playerID, $dayDelta = 30){
         $playerID = (int) $playerID;
-        $tabelNr = $playerID % $worldData->hash_player;
+        $tabelNr = $playerID % $world->hash_player;
         $playerModel = new Player($world, "player_$tabelNr");
         $playerDataArray = $playerModel
                 ->where('playerID', $playerID)

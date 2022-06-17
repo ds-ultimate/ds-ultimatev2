@@ -51,7 +51,7 @@
                 "processing": true,
                 "serverSide": true,
                 responsive: true,
-                "ajax": "{{ route('api.worldPlayer', [$worldData->server->code, $worldData->name]) }}",
+                "ajax": "{{ route('api.worldPlayer', [$worldData->id]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='" + ("{{ route('player', [$worldData->server->code, $worldData->name, "%playerID%"]) }}".replace("%playerID%", row.playerID)) +"'>"+ value +'</a>'}},

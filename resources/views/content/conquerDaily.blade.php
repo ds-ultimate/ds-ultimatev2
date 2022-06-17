@@ -92,7 +92,7 @@
                 "ordering": false,
                 "searching": false,
                 "info": false,
-                "ajax": "{{ route('api.conquerDaily', [$server, $worldData->name, 'player']) }}/{{ \Illuminate\Support\Carbon::today()->toDateString() }}",
+                "ajax": "{{ route('api.conquerDaily', [$worldData->id, 'player']) }}/{{ \Illuminate\Support\Carbon::today()->toDateString() }}",
                 "columns": [
                     { "data": "DT_RowIndex"},
                     { "data": "name"},
@@ -108,7 +108,7 @@
                 "ordering": false,
                 "searching": false,
                 "info": false,
-                "ajax": "{{ route('api.conquerDaily', [$server, $worldData->name, 'ally']) }}/{{ \Illuminate\Support\Carbon::today()->toDateString() }}",
+                "ajax": "{{ route('api.conquerDaily', [$worldData->id, 'ally']) }}/{{ \Illuminate\Support\Carbon::today()->toDateString() }}",
                 "columns": [
                     { "data": "DT_RowIndex"},
                     { "data": "name"},
@@ -138,8 +138,8 @@
             })
 
             $(document).on('change', '#date_picker', function (e) {
-                dataTablePlayer.ajax.url('{{ route('api.conquerDaily', [$worldData->server->code,$worldData->name,'player']) }}/' + $(this).val()).load();
-                dataTableAlly.ajax.url('{{ route('api.conquerDaily', [$worldData->server->code,$worldData->name,'ally']) }}/' + $(this).val()).load();
+                dataTablePlayer.ajax.url('{{ route('api.conquerDaily', [$worldData->id, 'player']) }}/' + $(this).val()).load();
+                dataTableAlly.ajax.url('{{ route('api.conquerDaily', [$worldData->id, 'ally']) }}/' + $(this).val()).load();
             });
         });
     </script>

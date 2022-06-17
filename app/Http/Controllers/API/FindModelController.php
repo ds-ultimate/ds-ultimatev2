@@ -22,18 +22,16 @@ use Illuminate\Support\Facades\Request;
 
 class FindModelController extends Controller
 {
-    public function getVillageByCoord($server, $world, $x, $y){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $villageModel = new Village($worldData);
+    public function getVillageByCoord(World $world, $x, $y){
+        $villageModel = new Village($world);
         return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
     }
     
-    public function getVillagePreviewByCoord($server, $world, $hId, $x, $y){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $histIdx = HistoryIndex::find($worldData, $hId);
+    public function getVillagePreviewByCoord(World $world, $hId, $x, $y){
+        $histIdx = HistoryIndex::find($world, $hId);
         abort_if($histIdx === null, 404);
         
-        $file = gzopen($histIdx->villageFile($worldData), "r");
+        $file = gzopen($histIdx->villageFile($world), "r");
         while(! gzeof($file)) {
             $lineOrig = gzgets($file, 4096);
             if($lineOrig === false) continue;
@@ -41,7 +39,7 @@ class FindModelController extends Controller
             if($line[2] == $x && $line[3] == $y) {
                 return new VillageHistoryResource([
                     "line" => $line,
-                    "worldData" => $worldData,
+                    "worldData" => $world,
                     "histIdx" => $histIdx,
                 ]);
             }
@@ -49,21 +47,18 @@ class FindModelController extends Controller
         abort(404);
     }
 
-    public function getPlayerByName($server, $world, $name){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $playerModel = new Player($worldData);
+    public function getPlayerByName(World $world, $name){
+        $playerModel = new Player($world);
         return new PlayerResource($playerModel->where('name', urlencode($name))->first());
     }
 
-    public function getAllyByName($server, $world, $name){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $allyModel = new Ally($worldData);
+    public function getAllyByName(World $world, $name){
+        $allyModel = new Ally($world);
         return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
     }
 
-    public function getSelect2Player($server, $world){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $playerModel = new Player($worldData);
+    public function getSelect2Player(World $world){
+        $playerModel = new Player($world);
         return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
             return array(
                 'id' => $rawData->playerID,
@@ -72,9 +67,8 @@ class FindModelController extends Controller
         });
     }
 
-    public function getSelect2Ally($server, $world){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $allyModel = new Ally($worldData);
+    public function getSelect2Ally(World $world){
+        $allyModel = new Ally($world);
         return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
             return array(
                 'id' => $rawData->allyID,
@@ -83,9 +77,8 @@ class FindModelController extends Controller
         });
     }
 
-    public function getSelect2PlayerTop($server, $world){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $playerModel = new PlayerTop($worldData);
+    public function getSelect2PlayerTop(World $world){
+        $playerModel = new PlayerTop($world);
         return $this->select2return($playerModel, array('name'), 'playerID', function($rawData) {
             return array(
                 'id' => $rawData->playerID,
@@ -94,9 +87,8 @@ class FindModelController extends Controller
         });
     }
 
-    public function getSelect2AllyTop($server, $world){
-        $worldData = World::getAndCheckWorld($server, $world);
-        $allyModel = new AllyTop($worldData);
+    public function getSelect2AllyTop(World $world){
+        $allyModel = new AllyTop($world);
         return $this->select2return($allyModel, array('name', 'tag'), 'allyID', function($rawData) {
             return array(
                 'id' => $rawData->allyID,

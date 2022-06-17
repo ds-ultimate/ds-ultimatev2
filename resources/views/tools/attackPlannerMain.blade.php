@@ -379,7 +379,7 @@ $tabList = [
 
         function checkVillage(x, y, parent) {
             if (x != '' && y != '') {
-                var url = '{{ route('api.villageByCoord', [$worldData->server->code, $worldData->name, '%xCoord%', '%yCoord%']) }}';
+                var url = '{{ route('api.villageByCoord', [$worldData->id, '%xCoord%', '%yCoord%']) }}';
                 axios.get(url.replaceAll('%xCoord%', x).replaceAll('%yCoord%', y), {})
                     .then((response) => {
                         $(".coord-input", parent).removeClass("is-invalid");

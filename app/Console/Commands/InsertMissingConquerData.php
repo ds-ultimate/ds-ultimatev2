@@ -55,7 +55,8 @@ class InsertMissingConquerData extends Command
 //        todo general:
 //        -> migration for changing the hash size
 //        -> migration for moving to shared db
-//        -> Api changes use internal world id where appropriate
+//        -> all aborts should use translations
+//        -> translated world displayNames
 //        -> Move to self hosted captcha
 //        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
 //        -> disallow access via ds-ultimate.de/index.php/...
@@ -70,11 +71,13 @@ class InsertMissingConquerData extends Command
 //            ['id'=>16, 'title'=>'role_edit'],
 //            ['id'=>18, 'title'=>'role_delete'],
 //            ['id'=>21, 'title'=>'world_access'],
+//        -> remove discord ifreame from default page (maybe after click?)
 //        
 //        Update guide:
 //        -> Move all tables out of the way (all global tables!!)
 //        -> Run migraions
-//        -> Run dsphp artisan migrate:importFromLastVersion
+//        -> Run dsphp artisan migrate:importFromLastVersion {old DB}
+//        -> Run dsphp artisan migrate:insertMissingConquer  // this will fill entries with points=0
 //        
         if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {
             return;

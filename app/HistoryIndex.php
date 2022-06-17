@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class HistoryIndex extends Model
+class HistoryIndex extends CustomModel
 {
 
     protected $connection = 'mysql';

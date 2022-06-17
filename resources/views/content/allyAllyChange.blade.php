@@ -53,7 +53,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyAllyChanges', [$worldData->server->code, $worldData->name, $type, $allyTopData->allyID]) }}",
+                "ajax": "{{ route('api.allyAllyChanges', [$worldData->id, $type, $allyTopData->allyID]) }}",
                 "columns": [
                     { "data": "created_at" },
                     { "data": "player_name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.player_id +"'>"+ value +'</a>'}, "orderable": false},

@@ -9,7 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AllyChangeController extends Controller
 {
-    public function getAllyAllyChanges($server, $world, $type, $allyID)
+    public function getAllyAllyChanges(World $world, $type, $allyID)
     {
         DatatablesController::limitResults(200);
         $worldData = World::getAndCheckWorld($server, $world);
@@ -34,7 +34,7 @@ class AllyChangeController extends Controller
         return $this->doAllyChangeReturn($query);
     }
 
-    public function getPlayerAllyChanges($server, $world, $type, $playerID)
+    public function getPlayerAllyChanges(World $world, $type, $playerID)
     {
         DatatablesController::limitResults(200);
         $worldData = World::getAndCheckWorld($server, $world);

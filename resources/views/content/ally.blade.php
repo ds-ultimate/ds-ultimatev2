@@ -185,7 +185,7 @@
             initializedHistTable = true
             $('#history_table').DataTable({
                 "order": [[ 0, "desc" ]],
-                "ajax": "{{ route('api.allyHistory', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyHistory', [$worldData->id, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "created_at"},
                     { "data": "tag", "render": function (value, type, row) {
@@ -239,7 +239,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyPlayer', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyPlayer', [$worldData->id, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},

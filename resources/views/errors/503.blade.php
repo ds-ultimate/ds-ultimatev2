@@ -32,7 +32,7 @@
     @endif
 </head>
 <body style="padding-right: 0px; min-height: 100%; margin-bottom: 80px">
-<div class="flex-center position-ref full-height">
+<div class="flex-center main-container">
     @include('nav.down')
     <div class="container mb-5 pb-3">
         <div class="cointainer">

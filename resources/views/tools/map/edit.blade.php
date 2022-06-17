@@ -264,7 +264,7 @@
 
         $('.select2-player', context).select2({
             ajax: {
-                url: '{{ route("api.select2Player$topRoute", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Player$topRoute", [$worldData->id]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,
@@ -282,7 +282,7 @@
         }).on("select2:open", selectAutoFocus);
         $('.select2-ally', context).select2({
             ajax: {
-                url: '{{ route("api.select2Ally$topRoute", [$worldData->server->code, $worldData->name]) }}',
+                url: '{{ route("api.select2Ally$topRoute", [$worldData->id]) }}',
                 data: function (params) {
                     var query = {
                         search: params.term,

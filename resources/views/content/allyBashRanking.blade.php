@@ -62,7 +62,7 @@
                 "processing": true,
                 "pageLength": 100,
                 "serverSide": true,
-                "ajax": "{{ route('api.allyPlayerBashRanking', [$worldData->server->code, $worldData->name, $allyData->allyID]) }}",
+                "ajax": "{{ route('api.allyPlayerBashRanking', [$worldData->id, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "DT_RowIndex" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='{{ route('world', [$worldData->server->code, $worldData->name]) }}/player/"+ row.playerID +"'>"+ value +'</a>'}},

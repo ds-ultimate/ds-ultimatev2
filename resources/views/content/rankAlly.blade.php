@@ -51,7 +51,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.worldAllyHistory', [$worldData->server->code, $worldData->name, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
+                "ajax": "{{ route('api.worldAllyHistory', [$worldData->id, \Illuminate\Support\Carbon::now()->subDay()->toDateString()]) }}",
                 "columns": [
                     { "data": "rank" },
                     { "data": "name", "render": function (value, type, row) {return "<a href='" + ("{{ route('ally', [$worldData->server->code, $worldData->name, "%allyID%"]) }}".replace("%allyID%", row.allyID)) +"'>"+ value +'</a>' }},
@@ -94,7 +94,7 @@
 
             $(document).on('change', '#date_picker', function (e) {
                 $('[data-toggle="popover"]').popover('disable');
-                table.ajax.url('{{ route('api.worldAllyHistory', [$worldData->server->code,$worldData->name, "%days%"]) }}'.replace("%days%", $(this).val())).load();
+                table.ajax.url('{{ route('api.worldAllyHistory', [$worldData->id, "%days%"]) }}'.replace("%days%", $(this).val())).load();
             });
 
             $('#table_id_wrapper .row:first').prepend(

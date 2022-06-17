@@ -160,7 +160,7 @@
             if($('#map-img').length > 0) return;
             $.ajax({
                 type: "GET",
-                url:"{{ route('api.map.overview.sized', [$worldData->server->code, $worldData->name, 'p', $playerData->playerID, '500', '500', 'base64']) }}",
+                url:"{{ route('api.map.overview.sized', [$worldData->id, 'p', $playerData->playerID, '500', '500', 'base64']) }}",
                 contentType: "image/png",
                 success: function(data){
                 $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
@@ -173,7 +173,7 @@
             initializedHistTable = true
             $('#history_table').DataTable({
                 "order": [[ 0, "desc" ]],
-                "ajax": "{{ route('api.playerHistory', [$worldData->server->code, $worldData->name, $playerData->playerID]) }}",
+                "ajax": "{{ route('api.playerHistory', [$worldData->id, $playerData->playerID]) }}",
                 "columns": [
                     { "data": "created_at"},
                     { "data": "name", "render": function (value, type, row) {
@@ -236,7 +236,7 @@
                 ],
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ route('api.playerVillage', [$worldData->server->code, $worldData->name, $playerData->playerID]) }}",
+                "ajax": "{{ route('api.playerVillage', [$worldData->id, $playerData->playerID]) }}",
                 "columns": [
                     { "data": "villageID"},
                     { "data": "name", "render": function (value, type, row) {
