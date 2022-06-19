@@ -55,13 +55,13 @@ class InsertMissingConquerData extends Command
 //        todo general:
 //        -> migration for changing the hash size
 //        -> migration for moving to shared db
-//        -> all aborts should use translations
 //        -> translated world displayNames
 //        -> Move to self hosted captcha
 //        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
 //        -> disallow access via ds-ultimate.de/index.php/...
 //        -> remove discord ifreame from default page (maybe after click?)
 //        -> conquer use point column
+//        -> throotle raus nehmen für dinge mit funktionierendem chache (z.B. maps)
 //        
 //        Update guide:
 //        -> dsphp artisan down --render="errors::503" --secret={random string}
@@ -70,9 +70,11 @@ class InsertMissingConquerData extends Command
 //        -> Move all tables out of the way (all global tables!!)
 //        -> run ./deploy.sh (runs migraions and builds initial db)
 //        -> Run dsphp artisan migrate:importFromLastVersion {old DB}
+//        -> manually move animated Map folders: for i in *;do i=$(sed 's/dsultimate_welt_//g' <<<"$i");mv dsultimate_welt_$i $i;done;
 //        -> go to https://ds-ultimate.de/{secret from before}
 //        -> Check that user permissions are correct
 //        -> basic function check
+//        -> check animateMaps
 //        -> dsphp artisan up
 //        -> Run dsphp artisan migrate:insertMissingConquer  // this will fill entries with points=0
 //        

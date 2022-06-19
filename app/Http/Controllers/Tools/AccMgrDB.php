@@ -144,13 +144,13 @@ class AccMgrDB extends BaseController
     }
     
     public function create() {
-        abort_unless(\Auth::check(), 403, "Please log in to create Templates");
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         
         return $this->showEditForm(null);
     }
     
     public function edit(AccountManagerTemplate $template) {
-        abort_unless(\Auth::check(), 403);
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         abort_unless(\Auth::user()->id == $template->user_id, 403);
         
         return $this->showEditForm($template);
@@ -302,7 +302,7 @@ class AccMgrDB extends BaseController
     }
     
     public function save(Request $request) {
-        abort_unless(\Auth::check(), 403);
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         
         $data = $request->validate([
             'name' => 'required|string',
@@ -346,7 +346,7 @@ class AccMgrDB extends BaseController
         $buildings = [];
         foreach($data['buildings'] as $build) {
             $idx = array_search($build['build_name'], AccountManagerTemplate::$BUILDING_NAMES);
-            abort_if($idx === false, 422, "Illegal building name given " . BasicFunctions::escape($build['build_name']));
+            abort_if($idx === false, 422, __("ui.errors.422.accMgrDB_illegalBuildingName", ["building" => $build['build_name']]));
             
             $buildings[] = [
                 $idx,
@@ -380,7 +380,7 @@ class AccMgrDB extends BaseController
     }
     
     public function import(Request $request) {
-        abort_unless(\Auth::check(), 403);
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         
         $data = $request->validate([
             'data' => 'required|string',
@@ -403,7 +403,7 @@ class AccMgrDB extends BaseController
     }
     
     public function delete(Request $request) {
-        abort_unless(\Auth::check(), 403);
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         
         $data = $request->validate([
             'id' => 'integer',
@@ -417,7 +417,7 @@ class AccMgrDB extends BaseController
     }
     
     public function apiRating(Request $request, AccountManagerTemplate $template) {
-        abort_unless(\Auth::check(), 403);
+        abort_unless(\Auth::check(), 403, __("ui.errors.403.loginRequired"));
         
         $data = $request->validate([
             'rating' => 'integer|required|min:1|max:5',

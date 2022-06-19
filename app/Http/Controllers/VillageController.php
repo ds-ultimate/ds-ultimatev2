@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Conquer;
 use App\Village;
+use App\Server;
+use App\World;
 use App\Util\BasicFunctions;
 use App\Util\Chart;
-use App\World;
 
 class VillageController extends Controller
 {
@@ -16,8 +17,7 @@ class VillageController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $villageData = Village::village($worldData, $village);
-        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$village'" .
-                "auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $village]));
         
         $villageHistData = $villageData->getHistoryData($worldData);
         $datas = Village::pureVillageDataChart($villageHistData);
@@ -66,15 +66,14 @@ class VillageController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $villageData = Village::village($worldData, $villageID);
-        abort_if($villageData == null, 404, "Keine Daten über das Dorf mit der ID '$villageID'" .
-                "auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $villageID]));
 
         switch($type) {
             case "all":
                 $typeName = ucfirst(__('ui.conquer.all'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         $allHighlight = ['s', 'i', 'b', 'd'];

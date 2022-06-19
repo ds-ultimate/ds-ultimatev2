@@ -21,9 +21,7 @@ class DistanceCalcController extends BaseController
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
-        if($worldData->config == null || $worldData->units == null) {
-            abort(404, __('tool.distCalc.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.distCalc"));
 
         $unitConfig = $worldData->unitConfig();
         $config = simplexml_load_string($worldData->config);

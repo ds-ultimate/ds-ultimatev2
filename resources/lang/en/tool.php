@@ -7,7 +7,6 @@ return array (
     'targetVillage' => 'Target village',
     'days' => 'Day(s)',
     'title' => 'Distance Calculator',
-    'notAvailable' => 'The distance calculator is not available for this world',
   ),
   'attackPlanner' => 
   array (
@@ -95,7 +94,6 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'destroyError' => 'The attack plan could not be deleted. If you consider this to be an error please contact the team (using Discord or via report problem on the bottom of the site).',
     'destroySuccess' => 'Attack plan successfully deleted',
     'fastSwitch' => 'own attack plans',
-    'notAvailable' => 'The attack planner is not available for this world',
     'withoutTitle' => 'This attack planner has no title and is therefor used when pressing "attack planner". In order to create a new attack planner you need to give this one a title',
     'errorKoordTitle' => 'Village coordinates',
     'errorUnitCount' => 'number is too large',
@@ -322,7 +320,6 @@ If that problem persists please create a bug-report',
   'pointCalc' => 
   array (
     'title' => 'Points Calculator',
-    'notAvailable' => 'The point calculator is not available for this world',
   ),
   'tableGenerator' => 
   array (
@@ -428,6 +425,5 @@ If that problem persists please create a bug-report',
   'greatSiegeCalc' => 
   array (
     'title' => 'Great siege calculator',
-    'notAvailable' => 'The greate siege calculator is not available for this world',
   ),
 );

@@ -28,9 +28,7 @@ class PictureController extends Controller
         BasicFunctions::local();
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
-        if (!Chart::validType($type)) {
-            abort(404, "Invalid type");
-        }
+        abort_unless(Chart::validType($type), 404, __("ui.errors.404.unknownType", ["type" => $type]));
         
         $dim = $this->decodeDimensions($width, $height);
         $dir = storage_path(config('tools.chart.cacheDir') . "$server$world");
@@ -39,9 +37,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $allyData = Ally::ally($worldData, $allyID);
-        if ($allyData == null) {
-            abort(404, "Ally not Found");
-        }
+        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
         
         $rawStatData = Ally::allyDataChart($worldData, $allyID);
         $statData = array();
@@ -61,9 +57,7 @@ class PictureController extends Controller
         BasicFunctions::local();
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
-        if (!Chart::validType($type)) {
-            abort(404, "Invalid type");
-        }
+        abort_unless(Chart::validType($type), 404, __("ui.errors.404.unknownType", ["type" => $type]));
         
         $dim = $this->decodeDimensions($width, $height);
         $dir = storage_path(config('tools.chart.cacheDir') . "$server$world");
@@ -72,9 +66,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $playerData = Player::player($worldData, $playerID);
-        if ($playerData == null) {
-            abort(404, "Player not Found");
-        }
+        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
         
         $rawStatData = Player::playerDataChart($worldData, $playerID);
         $statData = array();
@@ -94,7 +86,7 @@ class PictureController extends Controller
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
         if (!Chart::validType($type)) {
-            abort(404, "Invalid type");
+            abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         $dim = $this->decodeDimensions($width, $height);
@@ -104,9 +96,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $villageData = Village::village($worldData, $villageID);
-        if ($villageData == null) {
-            abort(404, "Village not Found");
-        }
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $villageID]));
         
         $rawStatData = Village::villageDataChart($worldData, $villageID);
         $statData = array();
@@ -182,13 +172,8 @@ class PictureController extends Controller
             ];
         }
         
-        if(isset($retArr['width']) && $retArr['width'] <= 0) {
-            abort(404, "Width too small");
-        }
-        
-        if(isset($retArr['height']) && $retArr['height'] <= 0) {
-            abort(404, "Height too small");
-        }
+        abort_if($retArr['width'] <= 0, 404, __("ui.errors.404.widthTooSmall"));
+        abort_if($retArr['height'] <= 0, 404, __("ui.errors.404.heightTooSmall"));
         return $retArr;
     }
     
@@ -209,9 +194,7 @@ class PictureController extends Controller
                 ->where("started", 1)
                 ->first();
             
-            if($first == null) {
-                abort(404, "Aktuell läuft auf der Welt '$server$world' keine Runde.");
-            }
+            abort_if($first === null, 404, __("ui.errors.404.noRoundFound", ["world" => "$server$world"]));
             $world = $first->world->name;
         }
     }

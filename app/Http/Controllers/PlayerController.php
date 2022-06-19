@@ -21,8 +21,7 @@ class PlayerController extends Controller
 
         $playerData = Player::player($worldData, $player);
         $playerTopData = PlayerTop::player($worldData, $player);
-        abort_if($playerData == null && $playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$player'" .
-                " auf der Welt '{$worldData->serName()}' vorhanden.");
+        abort_if($playerData == null && $playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $player]));
         
         $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
         
@@ -67,15 +66,14 @@ class PlayerController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $playerTopData = PlayerTop::player($worldData, $playerID);
-        abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
 
         switch($type) {
             case "all":
                 $typeName = ucfirst(__('ui.allyChanges.all'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         return view('content.playerAllyChange', compact('worldData', 'server', 'playerTopData', 'typeName', 'type'));
     }
@@ -86,8 +84,7 @@ class PlayerController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $playerTopData = PlayerTop::player($worldData, $playerID);
-        abort_if($playerTopData == null, 404, "Keine Daten über den Spieler mit der ID '$playerID'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
 
         switch($type) {
             case "all":
@@ -103,7 +100,7 @@ class PlayerController extends Controller
                 $typeName = ucfirst(__('ui.conquer.playerOwn'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         $allHighlight = ['s', 'i', 'b', 'd', 'w', 'l'];
@@ -115,7 +112,7 @@ class PlayerController extends Controller
         }
         
         $who = BasicFunctions::decodeName($playerTopData->name);
-        $routeDatatableAPI = route('api.playerConquer', [$worldData->server->code, $worldData->name, $type, $playerTopData->playerID]);
+        $routeDatatableAPI = route('api.playerConquer', [$worldData->id, $type, $playerTopData->playerID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['player']);
         
         return view('content.conquer', compact('server', 'worldData', 'typeName',

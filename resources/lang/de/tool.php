@@ -7,7 +7,6 @@ return array (
     'targetVillage' => 'Zieldorf',
     'days' => 'Tag(e)',
     'title' => 'Laufzeitrechner',
-    'notAvailable' => 'Der Laufzeitrechner ist auf dieser Welt nicht verfügbar.',
   ),
   'attackPlanner' => 
   array (
@@ -95,7 +94,6 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'destroySuccess' => 'Angriffsplan erfolgreich gelöscht',
     'destroyError' => 'Der Angriffsplan konnte nicht gelöscht werden. Falls du dies für einen Fehler hältst, melde diesen bitte dem Team (entweder via Discord oder unten über Fehler melden)',
     'fastSwitch' => 'Eigene Angriffspläne',
-    'notAvailable' => 'Der Angriffsplaner ist auf dieser Welt nicht verfügbar.',
     'withoutTitle' => 'Dieser Angriffsplaner hat keinen Titel und wird daher immer standardmäßig beim Klick auf "Angriffsplaner" benutzt. Um damit einen neuen Angriffsplaner zu erstellen, muss ein Titel vergeben werden.',
     'errorKoordTitle' => 'Dorf Koordinaten',
     'errorUnitCount' => 'Anzahl ist zu gross',
@@ -322,7 +320,6 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
   'pointCalc' => 
   array (
     'title' => 'Punkterechner',
-    'notAvailable' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
   ),
   'tableGenerator' => 
   array (
@@ -427,7 +424,6 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
   ),
   'greatSiegeCalc' => 
   array (
-    'notAvailable' => 'Der Belagerungsrechner ist auf dieser Welt nicht verfügbar',
     'title' => 'Belagerungsrechner',
   ),
 );

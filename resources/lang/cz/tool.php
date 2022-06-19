@@ -170,7 +170,6 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'multiedit' => 'Vícenásobná úprava',
     'multieditSuccess' => 'Všechny útoky byly úspěšně zpracovány',
     'multieditSuccessTitle' => 'Vícenásobná úprava',
-    'notAvailable' => 'Plánovač útoku není pro tento svět k dispozici.',
     'offensive' => 'Útok',
     'sendTime' => 'Čas odeslání',
     'show' => 'Zobrazit útočný plán',
@@ -208,7 +207,6 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
   'distCalc' => 
   array (
     'days' => 'Den/dny',
-    'notAvailable' => 'Kalkulačka vzdálenosti není pro tento svět k dispozici.',
     'startVillage' => 'Útočící vesnice',
     'targetVillage' => 'Cílová vesnice',
     'title' => 'Kalkulačka vzdálenosti',
@@ -362,7 +360,6 @@ Pokud chyba přetrvává, vytvořte hlášení o chybě.',
   ),
   'pointCalc' => 
   array (
-    'notAvailable' => 'Kalkulačka skóre není v tomto světě k dispozici.',
     'title' => 'Bodová kalkulačka',
   ),
   'tableGenerator' => 

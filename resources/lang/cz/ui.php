@@ -307,4 +307,16 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'normal' => 'Svět',
     'speed' => 'Rychlost',
   ),
+  'errors' => 
+  array (
+    404 => 
+    array (
+      'toolNotAvail' => 
+      array (
+        'attackPlanner' => 'Plánovač útoku není pro tento svět k dispozici.',
+        'distCalc' => 'Kalkulačka vzdálenosti není pro tento svět k dispozici.',
+        'pointCalc' => 'Kalkulačka skóre není v tomto světě k dispozici.',
+      ),
+    ),
+  ),
 );

@@ -28,9 +28,7 @@ class AttackPlannerController extends BaseController
         BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
 
-        if($worldData->config == null || $worldData->units == null) {
-            abort(404, __('tool.attackPlanner.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
 
         if(\Auth::check()) {
             //only allow one attackPlanner without title per user per world
@@ -56,9 +54,7 @@ class AttackPlannerController extends BaseController
 
     public function mode(AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
-        if($worldData->config == null || $worldData->units == null) {
-            abort(404, __('tool.attackPlanner.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
 
         switch ($mode){
             case 'edit':
@@ -82,9 +78,7 @@ class AttackPlannerController extends BaseController
 
     public function modePost(Request $request, AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
-        if($worldData->config == null || $worldData->units == null) {
-            abort(404, __('tool.attackPlanner.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
 
         switch ($mode){
             case 'destroyOutdated':

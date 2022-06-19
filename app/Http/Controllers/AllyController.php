@@ -20,8 +20,7 @@ class AllyController extends Controller
 
         $allyData = Ally::ally($worldData, $ally);
         $allyTopData = AllyTop::ally($worldData, $ally);
-        abort_if($allyData == null && $allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($allyData == null && $allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $ally]));
         
         $conquer = Conquer::allyConquerCounts($worldData, $ally);
         $allyChanges = AllyChanges::allyAllyChangeCounts($worldData, $ally);
@@ -66,8 +65,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $allyData = Ally::ally($worldData, $ally);
-        abort_if($allyData == null, 404, "Keine Daten über den Stamm mit der ID '$ally'" .
-            " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $ally]));
 
         return view('content.allyBashRanking', compact('allyData', 'worldData', 'server'));
     }
@@ -78,8 +76,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $allyTopData = AllyTop::ally($worldData, $allyID);
-        abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
 
         switch($type) {
             case "all":
@@ -92,7 +89,7 @@ class AllyController extends Controller
                 $typeName = ucfirst(__('ui.allyChanges.new'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
 
         return view('content.allyAllyChange', compact('worldData', 'server', 'allyTopData', 'typeName', 'type'));
@@ -104,8 +101,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $allyTopData = AllyTop::ally($worldData, $allyID);
-        abort_if($allyTopData == null, 404, "Keine Daten über den Stamm mit der ID '$allyID'" .
-                " auf der Welt '{$world->serName()}' vorhanden.");
+        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
 
         switch($type) {
             case "all":
@@ -121,7 +117,7 @@ class AllyController extends Controller
                 $typeName = ucfirst(__('ui.conquer.allyOwn'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
 
         $allHighlight = ['s', 'i', 'b', 'd', 'w', 'l'];

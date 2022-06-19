@@ -32,9 +32,7 @@ class AttackPlannerAPIController extends BaseController
         }
 
         $worldData = World::getAndCheckWorld($req['server'], $req['world']);
-        if($worldData->config == null || $worldData->units == null) {
-            abort(404, __('tool.attackPlanner.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
         
         $list = new AttackList();
         $list->world_id = $worldData->id;

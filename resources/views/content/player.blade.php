@@ -160,7 +160,7 @@
             if($('#map-img').length > 0) return;
             $.ajax({
                 type: "GET",
-                url:"{{ route('api.map.overview.sized', [$worldData->id, 'p', $playerData->playerID, '500', '500', 'base64']) }}",
+                url:"{{ route('api.map.overview.sized', [$worldData->server->code, $worldData->name, 'p', $playerData->playerID, '500', '500', 'base64']) }}",
                 contentType: "image/png",
                 success: function(data){
                 $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },

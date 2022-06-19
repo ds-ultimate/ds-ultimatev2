@@ -35,7 +35,7 @@ class AnimatedHistoryMapController extends BaseController
     public function create($server, $world) {
         BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
-        abort_unless(static::isAvailable($worldData), 404);
+        abort_unless(static::isAvailable($worldData), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
 
         $mapModel = new AnimHistMapMap();
         if(\Auth::check()) {
@@ -67,7 +67,7 @@ class AnimatedHistoryMapController extends BaseController
         BasicFunctions::local();
         
         $world = $wantedMap->world;
-        abort_unless(static::isAvailable($world), 404);
+        abort_unless(static::isAvailable($world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         
         $dim = array(
             'width' => 1000,
@@ -88,7 +88,7 @@ class AnimatedHistoryMapController extends BaseController
     
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
-        abort_unless(static::isAvailable($wantedMap->world), 404);
+        abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
 
         switch ($action) {
             case 'edit':
@@ -104,7 +104,7 @@ class AnimatedHistoryMapController extends BaseController
     
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
-        abort_unless(static::isAvailable($wantedMap->world), 404);
+        abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
 
         switch ($action) {
             case 'save':
@@ -440,7 +440,7 @@ class AnimatedHistoryMapController extends BaseController
         if(! $wantedMap->autoDimensions) return;
         
         $worldData = $wantedMap->world;
-        abort_unless(static::isAvailable($worldData), 404);
+        abort_unless(static::isAvailable($worldData), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         
         $dim = array(
             'width' => 1000,

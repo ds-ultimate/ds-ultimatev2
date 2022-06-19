@@ -56,7 +56,7 @@ class ConquerController extends Controller
                 };
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
 
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_ALLY, $allyID, $filt);
@@ -99,7 +99,7 @@ class ConquerController extends Controller
                 };
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_PLAYER, $playerID, $filt);
@@ -121,7 +121,7 @@ class ConquerController extends Controller
                 };
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, $villageID, $filt);
@@ -137,7 +137,7 @@ class ConquerController extends Controller
             case "all":
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, 0);
@@ -193,7 +193,7 @@ class ConquerController extends Controller
                 break;
             
             default:
-                abort(404);
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
     }
     

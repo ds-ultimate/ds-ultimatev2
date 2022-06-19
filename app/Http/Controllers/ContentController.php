@@ -85,7 +85,7 @@ class ContentController extends Controller
                 $typeName = ucfirst(__('ui.conquer.all'));
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
 
         $allHighlight = ['s', 'i', 'b', 'd'];

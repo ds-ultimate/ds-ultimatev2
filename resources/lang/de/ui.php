@@ -321,4 +321,36 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
   'lightmode' => 'Lightmode',
   'darkmode' => 'Darkmode',
   'sigPreview' => 'Vorschau',
+  'errors' => 
+  array (
+    404 => 
+    array (
+      'noServer' => 'Keine Daten über den Server \':server\' vorhanden.',
+      'noWorld' => 'Keine Daten über die Welt \':world\' vorhanden.',
+      'unknownType' => 'Unbekannter typ \':type\'',
+      'illegalHistoryIndex' => 'Der Index \':index\' existiert nicht in den Vergangenheitsdaten',
+      'playerNotFound' => 'Der Spieler mit der id \':player\' konnte auf Welt \':world\' nicht gefunden werden',
+      'allyNotFound' => 'Der Stamm mit der id \':ally\' konnte auf Welt \':world\' nicht gefunden werden',
+      'villageNotFound' => 'Das Dorf mit der id \':village\' konnte auf Welt \':world\' nicht gefunden werden',
+      'widthTooSmall' => 'Die Breite des Bildes ist zu klein',
+      'heightTooSmall' => 'Die Höhe des Bildes ist zu klein',
+      'noRoundFound' => 'Aktuell läuft auf der Welt \':world\' keine Runde.',
+      'toolNotAvail' => 
+      array (
+        'attackPlanner' => 'Der Angriffsplaner ist auf dieser Welt nicht verfügbar.',
+        'animHistMap' => 'Die Animierten Weltkarten sind auf dieser Welt nicht verfügbar',
+        'distCalc' => 'Der Laufzeitrechner ist auf dieser Welt nicht verfügbar.',
+        'greatSiegeCalc' => 'Der Belagerungsrechner ist auf dieser Welt nicht verfügbar',
+        'pointCalc' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
+      ),
+    ),
+    403 => 
+    array (
+      'loginRequired' => 'Um dieses Feature nutzen zu können musst du eingeloggt sein',
+    ),
+    422 => 
+    array (
+      'accMgrDB_illegalBuildingName' => 'Fehlerhafter Gebäudename: \':building\'',
+    ),
+  ),
 );

@@ -29,7 +29,7 @@ class FindModelController extends Controller
     
     public function getVillagePreviewByCoord(World $world, $hId, $x, $y){
         $histIdx = HistoryIndex::find($world, $hId);
-        abort_if($histIdx === null, 404);
+        abort_if($world == null, 404, __("ui.errors.404.illegalHistoryIndex", ["index" => $hId]));
         
         $file = gzopen($histIdx->villageFile($world), "r");
         while(! gzeof($file)) {
@@ -138,7 +138,7 @@ class FindModelController extends Controller
     
     public function getWorldPopup(World $world, $playerId){
         $playerData = PlayerTop::player($world, $playerId);
-        abort_if($playerData == null, 404);
+        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $world->display_name, "player" => $playerId]));
         return "{$world->display_name}<br>" .
                 __('ui.otherWorldsPlayerPopup.rank') . ": " . BasicFunctions::numberConv($playerData->rank_top) . "<br>" .
                 __('ui.otherWorldsPlayerPopup.villages') . ": " . BasicFunctions::numberConv($playerData->village_count_top) . "<br>" .

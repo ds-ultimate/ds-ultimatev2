@@ -370,7 +370,7 @@ class MapController extends BaseController
                 $map->markVillage($id, [255, 255, 255], false, true);
                 break;
             default:
-                abort(404, "Wrong diagram type $type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         $map->setLayerOrder([AbstractMapGenerator::$LAYER_MARK, AbstractMapGenerator::$LAYER_GRID]);
         $map->setMapDimensions([

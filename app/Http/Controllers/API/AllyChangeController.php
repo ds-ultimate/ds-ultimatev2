@@ -28,7 +28,7 @@ class AllyChangeController extends Controller
                 $query->where('new_ally_id', $allyID);
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
 
         return $this->doAllyChangeReturn($query);
@@ -48,7 +48,7 @@ class AllyChangeController extends Controller
                 $query->where('player_id', $playerID);
                 break;
             default:
-                abort(404, "Unknown type");
+                abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
         
         return $this->doAllyChangeReturn($query);

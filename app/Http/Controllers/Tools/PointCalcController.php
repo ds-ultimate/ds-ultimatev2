@@ -21,9 +21,7 @@ class PointCalcController extends BaseController
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
-        if($worldData->config == null || $worldData->buildings == null) {
-            abort(404, __('tool.pointCalc.notAvailable'));
-        }
+        abort_if($worldData->config == null || $worldData->buildings == null, 404, __("ui.errors.404.toolNotAvail.pointCalc"));
 
         $buildConfig = simplexml_load_string($worldData->buildings);
         $config = simplexml_load_string($worldData->config);
