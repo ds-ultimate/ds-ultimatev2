@@ -17,17 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\User::class, 'user_id');
             $table->string('avatar')->nullable();
-            $table->date('birthday')->nullable();
-            $table->boolean('show_birthday')->default(0);
-            $table->string('skype')->nullable();
-            $table->boolean('show_skype')->default(0);
             $table->string('discord_id')->nullable();
             $table->string('discord_private_channel_id')->nullable();
-            $table->boolean('show_discord')->default(0);
             $table->string('github_id')->nullable();
-            $table->string('facebook_id')->nullable();
             $table->string('google_id')->nullable();
-            $table->string('twitter_id')->nullable();
             $table->timestamp('last_seen_changelog')->nullable();
             
             $table->string('map_dimensions')->nullable();
@@ -38,7 +31,6 @@ return new class extends Migration
             $table->string('conquerHightlight_Ally')->default("s:i:b:d:w:l");
             $table->string('conquerHightlight_Player')->default("s:i:b:d:w:l");
             $table->string('conquerHightlight_Village')->default("s:i:b:d");
-            
             
             $table->timestamps();
         });

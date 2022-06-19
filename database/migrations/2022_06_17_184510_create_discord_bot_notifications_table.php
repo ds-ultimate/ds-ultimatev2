@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             
             $table->text('notification_data');
-            $table->foreignIdFor(\App\User::class, 'user_id');
+            $table->foreignIdFor(\App\User::class, 'user_id')->nullable();
             
             $table->timestamps();
         });

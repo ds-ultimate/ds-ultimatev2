@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             
             $table->foreignIdFor(\App\World::class, 'world_id');
-            $table->foreignIdFor(\App\User::class, 'user_id');
+            $table->foreignIdFor(\App\User::class, 'user_id')->nullable();
             $table->string('edit_key');
             $table->string('show_key');
             $table->text('markers')->nullable();
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->id();
             
             $table->foreignIdFor(\App\World::class, 'world_id');
-            $table->foreignIdFor(\App\User::class, 'user_id');
+            $table->foreignIdFor(\App\User::class, 'user_id')->nullable();
             $table->string('edit_key');
             $table->string('show_key');
             $table->text('markers')->nullable();
@@ -64,6 +64,8 @@ return new class extends Migration
             $table->foreignIdFor(\App\Tool\AnimHistMap\AnimHistMapMap::class, 'animHistMapMap_id');
             $table->timestamps();
             $table->softDeletes();
+            
+            $table->index("animHistMapMap_id");
         });
     }
 

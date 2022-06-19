@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('signature', function (Blueprint $table) {
             $table->id();
             
-            $table->foreignIdFor(\App\World::class, 'worlds_id');
+            $table->foreignIdFor(\App\World::class, 'world_id');
             $table->unsignedBigInteger('element_id');
             $table->string('element_type');
             $table->dateTime('cached')->nullable();

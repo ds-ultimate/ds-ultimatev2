@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('total_ally')->default(0);
             $table->integer('total_villages')->default(0);
             $table->integer('total_barbarian_village')->default(0);
-            $table->integer('total_conquere')->default(0);
+            $table->integer('total_conquer')->default(0);
             $table->integer('daily_conquer')->default(0);
             $table->integer('daily_ally_changes')->default(0);
             $table->integer('daily_updates')->default(0);

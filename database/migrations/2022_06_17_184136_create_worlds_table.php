@@ -31,7 +31,7 @@ return new class extends Migration
             $table->integer('hash_player');
             $table->integer('hash_village');
             
-            $table->foreignIdFor(\App\WorldDatabase::class, 'database_id');
+            $table->foreignIdFor(\App\WorldDatabase::class, 'database_id')->nullable();
             $table->boolean('active')->default(1)->nullable();
             $table->boolean('maintananceMode')->default(false);
             

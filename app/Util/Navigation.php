@@ -7,7 +7,7 @@ use App\Http\Controllers\Tools\AnimatedHistoryMapController;
 
 class Navigation
 {
-    public static function generateNavArray(Server $serModel, $worldArg) {
+    public static function generateNavArray($serModel, $worldArg) {
         $retArray = [];
         if($worldArg !== null) {
             $serverCodeName = [$worldArg->server->code, $worldArg->name];
@@ -67,6 +67,9 @@ class Navigation
 
         $tools = [];
         if($worldArg !== null) {
+            if($worldArg->win_condition == 9) {
+                $tools[] = self::navElement('tool.greatSiegeCalc.title', 'tools.greatSiegeCalc', routeArgs: $serverCodeName);
+            }
             if($worldArg->config != null && $worldArg->units != null) {
                 $tools[] = self::navElement('tool.distCalc.title', 'tools.distanceCalc', routeArgs: $serverCodeName);
                 $tools[] = self::navElement('tool.attackPlanner.title', 'tools.attackPlannerNew', routeArgs: $serverCodeName, nofollow: true);
@@ -109,7 +112,7 @@ class Navigation
         return $retArray;
     }
 
-    public static function generateMobileNavArray(Server $serModel, $worldArg) {
+    public static function generateMobileNavArray($serModel, $worldArg) {
         $navArray = self::generateNavArray($serModel, $worldArg);
         $transSub = [];
         foreach(static::getAvailableTranslations() as $trans) {

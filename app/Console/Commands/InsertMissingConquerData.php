@@ -74,9 +74,16 @@ class InsertMissingConquerData extends Command
 //        -> remove discord ifreame from default page (maybe after click?)
 //        
 //        Update guide:
+//        -> dsphp artisan down --render="errors::503" --secret={random string}
+//        -< git pull
+//        -> remove dsphp artisan up from deploy script
 //        -> Move all tables out of the way (all global tables!!)
-//        -> Run migraions
+//        -> run ./deploy.sh (runs migraions and builds initial db)
 //        -> Run dsphp artisan migrate:importFromLastVersion {old DB}
+//        -> go to https://ds-ultimate.de/{secret from before}
+//        -> Check that user permissions are correct
+//        -> basic function check
+//        -> dsphp artisan up
 //        -> Run dsphp artisan migrate:insertMissingConquer  // this will fill entries with points=0
 //        
         if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {

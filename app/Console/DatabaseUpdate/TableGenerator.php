@@ -226,9 +226,9 @@ class TableGenerator
             $table->string('edit_key');
             $table->string('show_key');
             $table->string('title')->nullable();
-            $table->boolean('uvMode')->default(False);
-            $table->integer('api')->default(0);
-            $table->boolean('apiKey')->nullable();
+            $table->boolean('uvMode')->default(false);
+            $table->boolean('api')->default(false);
+            $table->integer('apiKey')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

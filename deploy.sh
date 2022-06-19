@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # activate maintenance mode
-/opt/keyhelp/php/8.0/bin/php artisan down
+/opt/keyhelp/php/8.0/bin/php artisan down --render="errors::503"
 
 # update source code
 git pull
