@@ -48,8 +48,9 @@ Route::get('/setDarkmode/{val}',function($val){
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['dashboard']], function () {
     Route::get('/', [\App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
 
-    Route::delete('roles/destroy', [\App\Http\Controllers\Admin\RolesController::class, 'massDestroy'])->name('roles.massDestroy');
-    Route::resource('roles', \App\Http\Controllers\Admin\RolesController::class);
+    Route::resource('roles', \App\Http\Controllers\Admin\RolesController::class, [
+        'only' => ['index', 'show'],
+    ]);
 
     Route::delete('users/destroy', [\App\Http\Controllers\Admin\UsersController::class,'massDestroy'])->name('users.massDestroy');
     Route::resource('users', \App\Http\Controllers\Admin\UsersController::class);

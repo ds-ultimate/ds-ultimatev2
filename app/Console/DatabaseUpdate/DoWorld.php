@@ -95,7 +95,6 @@ class DoWorld
                 TableGenerator::villageLatestTable($worldNew, 'latest');
                 TableGenerator::playerTopTable($worldNew);
                 TableGenerator::allyTopTable($worldNew);
-                TableGenerator::attackPlannerTables($worldNew);
                 BasicFunctions::createLog("createBD[$world]", "DB '$dbRaw' wurde erfolgreich erstellt.");
             }
         }

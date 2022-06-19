@@ -5,6 +5,7 @@
     <div class="card-header">
         {{ $header }}
 
+        @isset($create)
         @can($create['permission'])
             <div class="float-right">
                 <a class="btn btn-success" href="{{ route($create['route']) }}">
@@ -12,6 +13,7 @@
                 </a>
             </div>
         @endcan
+        @endisset
     </div>
 
     <div class="card-body">

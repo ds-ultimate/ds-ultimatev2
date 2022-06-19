@@ -55,21 +55,6 @@ class AttackListItem extends CustomModel
 
     public static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
 
-    
-    public function __construct($arg1 = [], $arg2 = null) {
-        if($arg1 instanceof World && $arg2 == null) {
-            //allow calls without table name
-            $arg2 = "attack_list_items";
-        }
-        if($arg1 instanceof World) {
-            //call with world + tableName
-            parent::__construct();
-            $this->setTable(BasicFunctions::getUserWorldDataTable($arg1, $arg2));
-        } else {
-            //called with attributeArray
-            parent::__construct($arg1);
-        }
-    }
 
     /**
      * @return AttackList

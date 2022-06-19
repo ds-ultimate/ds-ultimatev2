@@ -60,18 +60,8 @@ class InsertMissingConquerData extends Command
 //        -> Move to self hosted captcha
 //        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
 //        -> disallow access via ds-ultimate.de/index.php/...
-//        -> User table email Nullable
-//        -> Remove possibility to change roles / permissions in admin interface
-//            ['id'=>9, 'title'=>'permission_create'],
-//            ['id'=>10, 'title'=>'permission_edit'],
-//            ['id'=>11, 'title'=>'permission_show'],
-//            ['id'=>12, 'title'=>'permission_delete'],
-//            ['id'=>14, 'title'=>'role_edit'],
-//            ['id'=>15, 'title'=>'role_create'],
-//            ['id'=>16, 'title'=>'role_edit'],
-//            ['id'=>18, 'title'=>'role_delete'],
-//            ['id'=>21, 'title'=>'world_access'],
 //        -> remove discord ifreame from default page (maybe after click?)
+//        -> conquer use point column
 //        
 //        Update guide:
 //        -> dsphp artisan down --render="errors::503" --secret={random string}

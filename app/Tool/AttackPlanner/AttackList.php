@@ -39,21 +39,6 @@ class AttackList extends CustomModel
         'world',
     ];
     
-    
-    public function __construct($arg1 = [], $arg2 = null) {
-        if($arg1 instanceof World && $arg2 == null) {
-            //allow calls without table name
-            $arg2 = "attack_lists";
-        }
-        if($arg1 instanceof World) {
-            //call with world + tableName
-            parent::__construct();
-            $this->setTable(BasicFunctions::getUserWorldDataTable($arg1, $arg2));
-        } else {
-            //called with attributeArray
-            parent::__construct($arg1);
-        }
-    }
 
     /**
      * @return World

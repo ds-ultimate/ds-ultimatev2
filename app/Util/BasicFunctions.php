@@ -270,15 +270,6 @@ class BasicFunctions
     public static function hasWorldDataTable(World $model, $tableName) {
         return static::existTable(static::getWorldDataDatabase($model), $tableName);
     }
-
-    /**
-     * @param World $model
-     * @param $tableName
-     * @return string
-     */
-    public static function getUserWorldDataTable(World $model, $tableName) {
-        return config('dsUltimate.db_database_wData') . ".{$model->server->code}{$model->name}_{$tableName}";
-    }
     
     public static function hasUserWorldDataTable(World $model, $tableName) {
         return static::existTable(config('dsUltimate.db_database_wData'), "{$model->server->code}{$model->name}_{$tableName}");

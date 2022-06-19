@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Permission;
 use App\Role;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
-use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
@@ -15,11 +13,6 @@ class RolesController extends Controller
         abort_unless(\Gate::allows('role_access'), 403);
 
         $header = __('admin.roles.title');
-        $create = [
-            'permission' => 'role_create',
-            'title' => __('admin.roles.create'),
-            'route' => "admin.roles.create",
-        ];
         $tableColumns = [
             BasicFunctions::indexEntry(__('admin.roles.form_title'), "title"),
             BasicFunctions::indexEntry(__('admin.roles.permissions'), "permissions", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
@@ -27,59 +20,7 @@ class RolesController extends Controller
         ];
         $datatableRoute = "admin.api.roles";
 
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
-    }
-
-    public function create()
-    {
-        abort_unless(\Gate::allows('role_create'), 403);
-
-        $formEntries = $this->generateEditFormConfig(null);
-        $route = route("admin.roles.store");
-        $header = __('admin.roles.titleCreate');
-        $method = "POST";
-        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
-    }
-
-    public function store(Request $request)
-    {
-        abort_unless(\Gate::allows('role_create'), 403);
-
-        $request->validate([
-            'title' => 'required',
-            'permissions' => 'array',
-            'permissions.*' => 'integer',
-        ]);
-        $role = Role::create($request->all());
-        $role->permissions()->sync($request->input('permissions', []));
-
-        return redirect()->route('admin.roles.index');
-    }
-
-    public function edit(Role $role)
-    {
-        abort_unless(\Gate::allows('role_edit'), 403);
-
-        $formEntries = $this->generateEditFormConfig($role);
-        $route = route("admin.roles.update", [$role->id]);
-        $header = __('admin.roles.update');
-        $method = "PUT";
-        return view('admin.shared.form_edit', compact('formEntries', 'route', 'header', 'method'));
-    }
-
-    public function update(Request $request, Role $role)
-    {
-        abort_unless(\Gate::allows('role_edit'), 403);
-
-        $request->validate([
-            'title' => 'required',
-            'permissions' => 'array',
-            'permissions.*' => 'integer',
-        ]);
-        $role->update($request->all());
-        $role->permissions()->sync($request->input('permissions', []));
-
-        return redirect()->route('admin.roles.index');
+        return view('admin.shared.index', compact('header', 'tableColumns', 'datatableRoute'));
     }
 
     public function show(Role $role)
@@ -90,38 +31,6 @@ class RolesController extends Controller
         $header = __('admin.roles.show');
         $title = $role->title;
         return view('admin.shared.form_show', compact('formEntries', 'header', 'title'));
-    }
-
-    public function destroy(Role $role)
-    {
-        abort_unless(\Gate::allows('role_delete'), 403);
-
-        $role->delete();
-
-        return back();
-    }
-
-    public function massDestroy(Request $request)
-    {
-        abort_unless(\Gate::allows('role_delete'), 403);
-
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:roles,id',
-        ]);
-        Role::whereIn('id', request('ids'))->delete();
-
-        return response(null, 204);
-    }
-    
-    private function generateEditFormConfig($values) {
-        return [
-            BasicFunctions::formEntryEdit($values, 'text', __('admin.roles.form_title'), 'title', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'select', __('admin.roles.permissions'), 'permissions[]', collect(), false, false, [
-                'options' => Permission::all()->pluck('title', 'id'),
-                'multiple' => true,
-            ])
-        ];
     }
     
     private function generateShowFormConfig($values) {

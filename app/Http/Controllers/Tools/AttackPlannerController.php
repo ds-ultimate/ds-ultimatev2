@@ -312,7 +312,7 @@ class AttackPlannerController extends BaseController
     public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time,
             $type, $units, $support_boost=0.0, $tribe_skill=0.0, $ms=0){
         if(static::$villageCache == null) {
-            $tableName = BasicFunctions::getUserWorldDataTable($parList->world, 'village_latest');
+            $tableName = BasicFunctions::getWorldDataTable($parList->world, 'village_latest');
             self::$villageCache = [];
             foreach(DB::select("SELECT villageID,x,y FROM $tableName") as $v) {
                 self::$villageCache[$v->villageID] = $v;

@@ -2,7 +2,6 @@
 
 return [
     'db_database_world' => env('DB_DATABASE_WORLD', 'dsUltimate_welt_{server}{world}'),
-    'db_database_wData' => env('DB_DATABASE_WDATA', 'dsUltimate_welt_daten'),
 
     'hash_ally' => env('HASH_ALLY', 29),
     'hash_player' => env('HASH_PLAYER', 59),

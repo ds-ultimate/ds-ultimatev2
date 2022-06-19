@@ -252,54 +252,18 @@ class ImportFromLastVersion extends Command
     }
     
     private function migrateAttackLists($copyFrom) {
-        $listCopy = ["user_id", "edit_key", "show_key", "title", "uvMode", "created_at", "updated_at", "deleted_at"];
-        $itemCopy = [
-            "type", "start_village_id", "target_village_id", "slowest_unit",
-            "note", "send_time", "arrival_time", "ms", "send",
-            "support_boost", "tribe_skill", "created_at", "updated_at",
-            
-            "spear", "sword", "axe", "archer", "spy", "light", "marcher",
-            "heavy", "ram", "catapult", "knight", "snob",
-        ];
+        $data = DB::select("SELECT `id`, `world_id`, `user_id`, `edit_key`, `show_key`, ".
+                "`title`, `uvMode`, ".
+                "`created_at`, `updated_at`, `deleted_at` FROM `$copyFrom`.`attack_lists`");
+        DB::table('attack_lists')->insert(static::convertInsertData($data));
         
-        $attackModel = new AttackList();
-        $attackModel->setTable("$copyFrom.attack_lists");
-        
-        $itemModel = new AttackListItem();
-        $itemModel->setTable("$copyFrom.attack_list_items");
-        foreach($attackModel->get() as $model) {
-            $world = $model->world;
-            if(!BasicFunctions::hasUserWorldDataTable($world, "attack_lists")) {
-                TableGenerator::attackPlannerTables($world);
-            }
-        
-            $newList = new AttackList($world);
-            static::copyModelContents($model, $newList, $listCopy);
-            $newList->api = 0;
-            $newList->apiKey = null;
-            $newList->save();
-            
-            foreach($itemModel->where("attack_list_id", $model->id) as $it) {
-                $newItem = new AttackListItem($world);
-                $newItem->attack_list_id = $newList->id;
-                static::copyModelContents($it, $newItem, $itemCopy);
-                $newItem->save();
-            }
-            
-            $legacyLink = new AttackListLegacy();
-            $legacyLink->id = $model->id;
-            $legacyLink->world_id = $model->world_id;
-            $legacyLink->new_id = $newList->id;
-            $legacyLink->save();
-            
-            if($model->user_id != null) {
-                $ownership = new AttackListOwnership();
-                $ownership->world_id = $model->world_id;
-                $ownership->user_id = $model->user_id;
-                $ownership->list_id = $newList->id;
-                $ownership->save();
-            }
-        }
+        $data = DB::select("SELECT `id`, `attack_list_id`, `type`, `start_village_id`, `target_village_id`, ".
+                "`slowest_unit`, `note`, `send_time`, `arrival_time`, `ms`, `send`, ".
+                "`support_boost`, `tribe_skill`, ".
+                "`spear`, `sword`, `axe`, `archer`, `spy`, `light`, `marcher`, ".
+                "`heavy`, `ram`, `catapult`, `knight`, `snob`, ".
+                "`created_at`, `updated_at` FROM `$copyFrom`.`attack_list_items`");
+        DB::table('attack_list_items')->insert(static::convertInsertData($data));
     }
     
     private static function copyModelContents($old, $new, $parts) {

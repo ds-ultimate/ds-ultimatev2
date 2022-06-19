@@ -98,13 +98,9 @@ class APIController extends Controller
         
         $permissions = [
             'show' => 'role_show',
-            'edit' => 'role_edit',
-            'delete' => 'role_delete',
         ];
         $routes = [
             'show' => 'admin.roles.show',
-            'edit' => 'admin.roles.edit',
-            'delete' => 'admin.roles.destroy',
         ];
         
         $model = new Role();
@@ -379,15 +375,15 @@ class APIController extends Controller
     
     public function generateActions($permissions, $routes, $id) {
         $actions = "";
-        if(\Gate::allows($permissions['show'])) {
+        if(isset($permissions['show']) && \Gate::allows($permissions['show'])) {
             $actions.= '<a class="btn btn-xs btn-primary mx-2" href="' .
                 route($routes['show'], $id) . '"><i class="far fa-eye"></i></a>';
         }
-        if(\Gate::allows($permissions['edit'])) {
+        if(isset($permissions['edit']) && \Gate::allows($permissions['edit'])) {
             $actions.= '<a class="btn btn-xs btn-info mx-2" href="' .
                 route($routes['edit'], $id) . '"><i class="far fa-edit"></i></a>';
         }
-        if(\Gate::allows($permissions['delete'])) {
+        if(isset($permissions['delete']) && \Gate::allows($permissions['delete'])) {
             $actions.= '<form action="' . route($routes['delete'], $id) .
                 '" method="POST" onsubmit="return confirm(\''.__('global.areYouSure').
                 '\');" style="display: inline-block;">';
