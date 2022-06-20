@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /*index.php*
 Disallow: /api/
 Disallow: /tools/create/
 Sitemap: https://ds-ultimate.de/sitemap.xml

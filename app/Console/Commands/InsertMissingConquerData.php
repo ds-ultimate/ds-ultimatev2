@@ -57,11 +57,8 @@ class InsertMissingConquerData extends Command
 //        -> migration for moving to shared db
 //        -> translated world displayNames
 //        -> Move to self hosted captcha
-//        -> use $dayDelta in Player::playerDataChart(World $world, $playerID, $dayDelta = 30)
-//        -> disallow access via ds-ultimate.de/index.php/...
 //        -> remove discord ifreame from default page (maybe after click?)
 //        -> conquer use point column
-//        -> throotle raus nehmen für dinge mit funktionierendem chache (z.B. maps)
 //        
 //        Update guide:
 //        -> dsphp artisan down --render="errors::503" --secret={random string}

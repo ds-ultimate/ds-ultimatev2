@@ -54,18 +54,19 @@ Route::group(['middleware' => 'throttle:120,1'], function() {
     Route::get('/{world}/conquerDaily/{type}/{day}', [\App\Http\Controllers\API\ConquerController::class, 'getConquerDaily']);
 });
 
+/*
+ * Picture API:
+ * alternative methods
+ *  can use:
+ *  [**]-{width}-{height}
+ *  [**]-w-{width}
+ *  [**]-h-{height}
+ */
+Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOptionSizedMapByID'])->name('map.options.sized');
+Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedMapByID'])->name('map.show.sized');
+Route::get('/map/{wantedMap}/{token}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getMapByID'])->name('map.show');
+
 Route::group(['middleware' => 'throttle:60,1'], function() {
-    /*
-     * Picture API:
-     * alternative methods
-     *  can use:
-     *  [**]-{width}-{height}
-     *  [**]-w-{width}
-     *  [**]-h-{height}
-     */
-    Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOptionSizedMapByID'])->name('map.options.sized');
-    Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedMapByID'])->name('map.show.sized');
-    Route::get('/map/{wantedMap}/{token}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getMapByID'])->name('map.show');
 
     Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedOverviewMap'])->name('map.overview.sized');
     Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOverviewMap'])->name('map.overview');
