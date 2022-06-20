@@ -18,21 +18,23 @@ Route::group(['middleware' => 'throttle:10,1'], function() {
 });
 
 Route::get('/worldPopup/{world}/{playerId}', [\App\Http\Controllers\API\FindModelController::class, 'getWorldPopup'])->name('worldPopup');
-Route::group(['middleware' => 'throttle:240,1'], function() {
+Route::middleware(['throttle:240,1'])->group(function() {
     Route::get('/{server}/activeWorlds', [\App\Http\Controllers\API\FindModelController::class, 'getActiveWorldByServer'])->name('activeWorldByServer');
 
-    Route::get('/{world}/villageCoordsPreview/{histIdx}/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillagePreviewByCoord'])->name('villagePreviewByCoord');
-    Route::get('/{world}/villageCoords/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillageByCoord'])->name('villageByCoord');
-    Route::get('/{world}/playerName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getPlayerByName'])->name('playerByName');
-    Route::get('/{world}/allyName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getAllyByName'])->name('allyByName');
+    Route::middleware(['worldMaintenance'])->group(function() {
+        Route::get('/{world}/villageCoordsPreview/{histIdx}/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillagePreviewByCoord'])->name('villagePreviewByCoord');
+        Route::get('/{world}/villageCoords/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillageByCoord'])->name('villageByCoord');
+        Route::get('/{world}/playerName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getPlayerByName'])->name('playerByName');
+        Route::get('/{world}/allyName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getAllyByName'])->name('allyByName');
 
-    Route::get('/{world}/select2Player', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Player'])->name('select2Player');
-    Route::get('/{world}/select2Ally', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Ally'])->name('select2Ally');
-    Route::get('/{world}/select2PlayerTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2PlayerTop'])->name('select2PlayerTop');
-    Route::get('/{world}/select2AllyTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2AllyTop'])->name('select2AllyTop');
+        Route::get('/{world}/select2Player', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Player'])->name('select2Player');
+        Route::get('/{world}/select2Ally', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Ally'])->name('select2Ally');
+        Route::get('/{world}/select2PlayerTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2PlayerTop'])->name('select2PlayerTop');
+        Route::get('/{world}/select2AllyTop', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2AllyTop'])->name('select2AllyTop');
+    });
 });
 
-Route::group(['middleware' => 'throttle:120,1'], function() {
+Route::middleware(['throttle:120,1', 'worldMaintenance'])->group(function() {
     Route::get('/{world}/players', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayers'])->name('worldPlayer');
     Route::get('/{world}/players/{days}', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayersHistory'])->name('worldPlayerHistory');
     Route::get('/{world}/allys', [\App\Http\Controllers\API\DatatablesController::class, 'getAllys'])->name('worldAlly');

@@ -61,6 +61,7 @@ class WorldsController extends Controller
             'units' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
+        ($request->maintananceMode === 'on')? $request->merge(['maintananceMode' => 1]) : $request->merge(['maintananceMode' => 0]);
 
         $world = World::create($request->all());
 
@@ -91,6 +92,7 @@ class WorldsController extends Controller
             'units' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
+        ($request->maintananceMode === 'on')? $request->merge(['maintananceMode' => 1]) : $request->merge(['maintananceMode' => 0]);
 
         $world->update($request->all());
 
@@ -142,7 +144,8 @@ class WorldsController extends Controller
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.url'), 'url', '', false, true),
             BasicFunctions::formEntryEdit($values, 'textarea', __('admin.worlds.config'), 'config', '', false, true),
             BasicFunctions::formEntryEdit($values, 'textarea', __('admin.worlds.units'), 'units', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'check', __('admin.server.active'), 'active', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.worlds.active'), 'active', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.worlds.maintananceMode'), 'maintananceMode', '', false, false),
         ];
     }
     
@@ -159,6 +162,9 @@ class WorldsController extends Controller
             BasicFunctions::formEntryShow(__('admin.worlds.url'), $values->url),
             BasicFunctions::formEntryShow(__('admin.worlds.active'),
                     ($values->active == 1)? '<span class="fas fa-check" style="color: green"></span>' :
+                    '<span class="fas fa-times" style="color: red"></span>', false),
+            BasicFunctions::formEntryShow(__('admin.worlds.maintananceMode'),
+                    ($values->maintananceMode == 1)? '<span class="fas fa-check" style="color: green"></span>' :
                     '<span class="fas fa-times" style="color: red"></span>', false),
         ];
     }

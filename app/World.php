@@ -34,6 +34,7 @@ class World extends CustomModel
         'buildings',
         'active',
         'display_name',
+        'maintananceMode',
         'win_condition',
         'hash_ally',
         'hash_player',
@@ -81,6 +82,7 @@ class World extends CustomModel
         }
         $worldData = World::where('name', $world)->where('server_id', $serverData->id)->first();
         abort_if($worldData == null, 404, __("ui.errors.404.noWorld", ["world" => "$server$world"]));
+        abort_if($worldData->maintananceMode, 503);
         return $worldData;
     }
 
@@ -179,7 +181,7 @@ class World extends CustomModel
      */
     public function num()
     {
-        return (int)preg_replace("/[^0-9]+/", '', $world);
+        return (int)preg_replace("/[^0-9]+/", '', $this->name);
     }
 
     /**

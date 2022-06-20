@@ -59,6 +59,7 @@ class MapController extends BaseController
 
     public function mode(Map $wantedMap, $action, $key){
         BasicFunctions::local();
+        abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
             case 'edit':
@@ -113,6 +114,7 @@ class MapController extends BaseController
 
     public function modePost(Map $wantedMap, $action, $key){
         BasicFunctions::local();
+        abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
             case 'save':
@@ -137,7 +139,7 @@ class MapController extends BaseController
         }
     }
 
-    public function edit(Map $wantedMap){
+    private function edit(Map $wantedMap){
         $worldData = $wantedMap->world;
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -157,7 +159,7 @@ class MapController extends BaseController
         return view('tools.mapMain', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
-    public function show(Map $wantedMap){
+    private function show(Map $wantedMap){
         $worldData = $wantedMap->world;
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
@@ -177,7 +179,7 @@ class MapController extends BaseController
         return view('tools.mapMain', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'defMapDimensions'));
     }
 
-    public function save(Map $wantedMap) {
+    private function save(Map $wantedMap) {
         $getArray = $_POST;
 
         if(isset($getArray['mark'])) {
@@ -240,7 +242,7 @@ class MapController extends BaseController
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
 
-    public function saveCanvas(Map $wantedMap) {
+    private function saveCanvas(Map $wantedMap) {
         $getArray = $_POST;
 
         abort_unless(isset($getArray['type']), 404);
@@ -266,7 +268,7 @@ class MapController extends BaseController
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
 
-    public static function saveTitle(Map $wantedMap){
+    private static function saveTitle(Map $wantedMap){
         $getArray = $_POST;
         abort_unless(isset($getArray['title']), 404);
         
@@ -285,6 +287,7 @@ class MapController extends BaseController
     public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
         BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
+        abort_if($wantedMap->world->maintananceMode, 503);
         $wantedMap->touch();
 
         if($options != null) {

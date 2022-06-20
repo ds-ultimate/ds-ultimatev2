@@ -77,7 +77,7 @@ class DoVillage
                 if (BasicFunctions::hasWorldDataTable($world, 'village_' . $i) === false) {
                     TableGenerator::villageTable($world, $i);
                 }
-                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.village_' . $i));
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, 'village_' . $i));
                 foreach (array_chunk($hashVillage[$i], 3000) as $t) {
                     $insert->insert($t);
                 }

@@ -68,6 +68,7 @@ class AnimatedHistoryMapController extends BaseController
         
         $world = $wantedMap->world;
         abort_unless(static::isAvailable($world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
+        abort_if($world->maintananceMode, 503);
         
         $dim = array(
             'width' => 1000,
@@ -89,6 +90,7 @@ class AnimatedHistoryMapController extends BaseController
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
+        abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
             case 'edit':
@@ -105,6 +107,7 @@ class AnimatedHistoryMapController extends BaseController
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
         BasicFunctions::local();
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
+        abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
             case 'save':
@@ -125,7 +128,7 @@ class AnimatedHistoryMapController extends BaseController
         }
     }
     
-    public function edit(AnimHistMapMap $wantedMap) {
+    private function edit(AnimHistMapMap $wantedMap) {
         static::updateMapDimensions($wantedMap);
         
         $worldData = $wantedMap->world;
@@ -150,7 +153,7 @@ class AnimatedHistoryMapController extends BaseController
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
     
-    public function show(AnimHistMapMap $wantedMap) {
+    private function show(AnimHistMapMap $wantedMap) {
         $worldData = $wantedMap->world;
         $server = $worldData->server;
         
@@ -173,7 +176,7 @@ class AnimatedHistoryMapController extends BaseController
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
 
-    public function save(AnimHistMapMap $wantedMap) {
+    private function save(AnimHistMapMap $wantedMap) {
         $getArray = $_POST;
 
         if(isset($getArray['mark'])) {
@@ -243,7 +246,7 @@ class AnimatedHistoryMapController extends BaseController
         $wantedMap->save();
     }
     
-    public function startRendering(AnimHistMapMap $wantedMap) {
+    private function startRendering(AnimHistMapMap $wantedMap) {
         $job = new AnimHistMapJob();
         foreach(AnimHistMapMap::$copyToJob as $elm) {
             $job->$elm = $wantedMap->$elm;
@@ -313,6 +316,7 @@ class AnimatedHistoryMapController extends BaseController
 
     public static function renderJob(AnimHistMapJob $animJob){
         $worldData = $animJob->world;
+        abort_if($worldData->maintananceMode, 503);
         
         static::updateMapDimensions($animJob);
         
@@ -425,7 +429,7 @@ class AnimatedHistoryMapController extends BaseController
         }
     }
     
-    public static function removeRawPngDir($conf, $animJob) {
+    private static function removeRawPngDir($conf, $animJob) {
         if(file_exists("$conf{$animJob->id}/png")) {
             foreach(scandir("$conf{$animJob->id}/png") as $imgFile) {
                 if(BasicFunctions::startsWith($imgFile, "image")) {
@@ -436,7 +440,7 @@ class AnimatedHistoryMapController extends BaseController
         }
     }
     
-    public static function updateMapDimensions(AnimHistMapMap $wantedMap) {
+    private static function updateMapDimensions(AnimHistMapMap $wantedMap) {
         if(! $wantedMap->autoDimensions) return;
         
         $worldData = $wantedMap->world;

@@ -85,7 +85,7 @@ class VillageController extends Controller
         }
         
         $who = BasicFunctions::decodeName($villageData->name);
-        $routeDatatableAPI = route('api.villageConquer', [$worldData->server->code, $worldData->name, $type, $villageData->villageID]);
+        $routeDatatableAPI = route('api.villageConquer', [$worldData->id, $type, $villageData->villageID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['village']);
         
         return view('content.conquer', compact('server', 'worldData', 'typeName',

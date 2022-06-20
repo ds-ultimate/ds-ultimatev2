@@ -55,6 +55,7 @@ class AttackPlannerController extends BaseController
     public function mode(AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
+        abort_if($attackList->world->maintananceMode, 503);
 
         switch ($mode){
             case 'edit':
@@ -79,6 +80,7 @@ class AttackPlannerController extends BaseController
     public function modePost(Request $request, AttackList $attackList, $mode, $key){
         $worldData = $attackList->world;
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
+        abort_if($attackList->world->maintananceMode, 503);
 
         switch ($mode){
             case 'destroyOutdated':
@@ -103,7 +105,7 @@ class AttackPlannerController extends BaseController
         }
     }
 
-    public function edit(AttackList $attackList){
+    private function edit(AttackList $attackList){
         BasicFunctions::local();
         $worldData = $attackList->world;
         $server = $worldData->server;
@@ -143,7 +145,7 @@ class AttackPlannerController extends BaseController
         return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'stats', 'ownPlanners'));
     }
 
-    public function show(AttackList $attackList){
+    private function show(AttackList $attackList){
         BasicFunctions::local();
         $worldData = $attackList->world;
         $server = $worldData->server;
@@ -160,7 +162,7 @@ class AttackPlannerController extends BaseController
         return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
     
-    public function exportAll(AttackList $attackList){
+    private function exportAll(AttackList $attackList){
         BasicFunctions::local();
         $items = $attackList->items()->take(400)->get();
         
@@ -230,7 +232,7 @@ class AttackPlannerController extends BaseController
         return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
     }
 
-    public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
+    private function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
         abort_unless($attackList->edit_key == $request->get('key'), 403);
         $imports = explode(PHP_EOL, $request->import);
         

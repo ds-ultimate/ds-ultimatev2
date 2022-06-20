@@ -74,27 +74,16 @@ class SettingsController extends Controller
 
     public function saveSettingsAccount(Request $request){
         $user = \Auth::user();
-        $validator = Validator::make(['name' => $request->name], [
-            'name' => ['required', 'string', 'max:255'],
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
         ]);
-        if ($validator->valid())
-        {
-            $user->name = $request->name;
-            $profile = $user->profile;
-            $dt = Carbon::parse($request->birthday);
-            $profile->birthday = $dt->format('Y-m-d');
-            $user->save();
-            $profile->save();
-            return \Response::json(array(
-                'data' => 'success',
-                'msg' => __('ui.personalSettings.saveSettingsSuccess'),
-            ));
-        }else{
-            return \Response::json(array(
-                'data' => 'error',
-                'msg' => $validator->errors()->first(),
-            ));
-        }
+        
+        $user->name = $data['name'];
+        $user->save();
+        return \Response::json(array(
+            'data' => 'success',
+            'msg' => __('ui.personalSettings.saveSettingsSuccess'),
+        ));
     }
 
     public function saveMapSettings(Request $request){

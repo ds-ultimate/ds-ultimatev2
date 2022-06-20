@@ -60,6 +60,7 @@ class AttackPlannerAPIController extends BaseController
         
         $list = AttackList::findOrFail($req['id']);
         abort_unless($list->edit_key == $req['edit_key'], 403);
+        abort_if($list->world->maintananceMode, 503);
         return self::apiInternalCreateItems($req, $list);
     }
     
@@ -174,6 +175,7 @@ class AttackPlannerAPIController extends BaseController
             abort(403);
         }
         $list = AttackList::findOrFail($req['id']);
+        abort_if($list->world->maintananceMode, 503);
         
         if(isset($req['edit_key'])) {
             abort_unless($list->edit_key == $req['edit_key'], 403, "Edit key wrong");

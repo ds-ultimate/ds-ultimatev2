@@ -28,6 +28,7 @@ class AttackPlannerItemController extends BaseController
         ], static::generateEditValidation()));
         $attackplaner = AttackList::findOrFail($req['attack_list_id']);
         abort_unless($req['key'] == $attackplaner->edit_key, 403);
+        abort_if($attackplaner->world->maintananceMode, 503);
 
         $err = [];
         $item = new AttackListItem();
@@ -79,11 +80,12 @@ class AttackPlannerItemController extends BaseController
     public function data(AttackList $attackList, $key){
         abort_unless($attackList->show_key == $key, 403);
         \App\Http\Controllers\API\DatatablesController::limitResults(200);
+        abort_if($attackList->world->maintananceMode, 503);
 
 
         $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
 
-        return Datatables::of($query)
+        return DataTables::of($query)
             ->orderColumns(['send_time', 'arrival_time'], '-:column $1')
             ->setRowId(function (AttackListItem $attackListItem) {
                 return $attackListItem->id;
@@ -244,6 +246,7 @@ class AttackPlannerItemController extends BaseController
         $req = $request->validate(static::generateEditValidation());
         $attackplaner = $attackListItem->list;
         abort_unless($req['key'] == $attackplaner->edit_key, 403);
+        abort_if($attackplaner->world->maintananceMode, 503);
 
         $err = [];
         $err = array_merge($err, $attackListItem->setVillageID($req['xStart'], $req['yStart'], $req['xTarget'], $req['yTarget']));
@@ -313,6 +316,7 @@ class AttackPlannerItemController extends BaseController
     public function multiedit(Request $request) {
         $attackplaner = AttackList::findorfail($request->id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
+        abort_if($attackplaner->world->maintananceMode, 503);
 
         if ($request->items == null || count($request->items) <= 0) {
             return \Response::json(array(

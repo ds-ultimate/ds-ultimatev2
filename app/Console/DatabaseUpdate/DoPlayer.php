@@ -171,7 +171,7 @@ class DoPlayer
                 if (BasicFunctions::hasWorldDataTable($world, 'player_' . $i) === false) {
                     TableGenerator::playerTable($world, $i);
                 }
-                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.player_' . $i));
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, 'player_' . $i));
                 foreach (array_chunk($hashPlayer[$i], 3000) as $t) {
                     $insert->insert($t);
                 }

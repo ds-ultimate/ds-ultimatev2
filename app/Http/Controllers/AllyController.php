@@ -130,7 +130,7 @@ class AllyController extends Controller
 
         $who = BasicFunctions::decodeName($allyTopData->name).
                 " [".BasicFunctions::decodeName($allyTopData->tag)."]";
-        $routeDatatableAPI = route('api.allyConquer', [$worldData->server->code, $worldData->name, $type, $allyTopData->allyID]);
+        $routeDatatableAPI = route('api.allyConquer', [$worldData->id, $type, $allyTopData->allyID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['ally']);
 
         return view('content.conquer', compact('server', 'worldData', 'typeName',

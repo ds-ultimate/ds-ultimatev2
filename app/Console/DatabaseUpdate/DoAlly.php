@@ -123,7 +123,7 @@ class DoAlly
                 if (BasicFunctions::hasWorldDataTable($world, 'ally_' . $i) === false) {
                     TableGenerator::allyTable($world, $i);
                 }
-                $insert->setTable(BasicFunctions::getWorldDataTable($world, '.ally_' . $i));
+                $insert->setTable(BasicFunctions::getWorldDataTable($world, 'ally_' . $i));
                 foreach (array_chunk($hashAlly[$i], 3000) as $t) {
                     $insert->insert($t);
                 }

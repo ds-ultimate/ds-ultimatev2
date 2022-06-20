@@ -51,6 +51,7 @@ class InsertMissingConquerData extends Command
     
     private function insertMissing(World $worldModel) {
 //        todo here points
+//        testen: update:insertMissingConquer
 //        
 //        todo general:
 //        -> migration for changing the hash size
@@ -73,6 +74,7 @@ class InsertMissingConquerData extends Command
 //        -> basic function check
 //        -> check animateMaps
 //        -> dsphp artisan up
+//        -> Alle crons testen
 //        -> Run dsphp artisan migrate:insertMissingConquer  // this will fill entries with points=0
 //        
         if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {
