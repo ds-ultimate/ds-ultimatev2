@@ -18,6 +18,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\LocalizeRoutes::class,
     ];
 
     /**
@@ -66,6 +67,7 @@ class Kernel extends HttpKernel
         'dashboard' => \App\Http\Middleware\Dashboard::class,
         'translation' => \App\Http\Middleware\Translation::class,
         'worldMaintenance' => \App\Http\Middleware\CheckWorldMaintenance::class,
+        'localize' => \App\Http\Middleware\LocalizeRoutes::class,
     ];
 
     /**

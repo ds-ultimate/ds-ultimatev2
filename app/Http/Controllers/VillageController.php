@@ -12,7 +12,6 @@ use App\Util\Chart;
 class VillageController extends Controller
 {
     public function village($server, $world, $village){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -61,7 +60,6 @@ class VillageController extends Controller
     }
     
     public function conquer($server, $world, $type, $villageID){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         

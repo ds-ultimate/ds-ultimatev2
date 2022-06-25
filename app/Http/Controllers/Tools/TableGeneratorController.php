@@ -19,7 +19,6 @@ use Illuminate\Routing\Controller as BaseController;
 class TableGeneratorController extends BaseController
 {
     public function index($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         return view('tools.tableGenerator', compact('worldData', 'server'));
@@ -41,7 +40,6 @@ class TableGeneratorController extends BaseController
     }
 
     public function playerByAlly(Request $request){
-        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
@@ -82,7 +80,6 @@ class TableGeneratorController extends BaseController
     }
 
     public function villageByPlayer(Request $request){
-        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $villageModel = new Village($world);
         $villages = $villageModel->where('owner', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
@@ -118,7 +115,6 @@ class TableGeneratorController extends BaseController
     }
 
     public function villageByAlly(Request $request){
-        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->get();
@@ -158,7 +154,6 @@ class TableGeneratorController extends BaseController
     }
 
     public function villageAndPlayerByAlly(Request $request){
-        BasicFunctions::local();
         $world = World::find($request->get('world'));
         $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();

@@ -25,7 +25,6 @@ class MapController extends BaseController
     }
 
     public function new($server, $world){
-        BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
 
         $mapModel = new Map();
@@ -58,7 +57,6 @@ class MapController extends BaseController
     }
 
     public function mode(Map $wantedMap, $action, $key){
-        BasicFunctions::local();
         abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
@@ -113,7 +111,6 @@ class MapController extends BaseController
     }
 
     public function modePost(Map $wantedMap, $action, $key){
-        BasicFunctions::local();
         abort_if($wantedMap->world->maintananceMode, 503);
 
         switch ($action) {
@@ -285,7 +282,6 @@ class MapController extends BaseController
     }
 
     public function getOptionSizedMapByID(Map $wantedMap, $token, $options, $width, $height, $ext){
-        BasicFunctions::local();
         abort_unless($token == $wantedMap->show_key, 403);
         abort_if($wantedMap->world->maintananceMode, 503);
         $wantedMap->touch();
@@ -357,7 +353,6 @@ class MapController extends BaseController
     }
 
     public function getSizedOverviewMap($server, $world, $type, $id, $width, $height, $ext){
-        BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
 
         $skin = new \App\Util\Map\SkinSymbols();
@@ -411,7 +406,6 @@ class MapController extends BaseController
     }
 
     public function mapTop10P($server, $world){
-        BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
         
         $playerModel = new Player($worldData);

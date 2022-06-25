@@ -118,4 +118,5 @@ return array (
       'rule-name' => 'custom-message',
     ),
   ),
+  'custom_captcha' => 'The captcha needs to be solved',
 );

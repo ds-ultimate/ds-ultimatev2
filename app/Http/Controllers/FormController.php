@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Bugreport;
-use App\Http\Requests\BugreportRequest;
 use App\Permission;
 use App\Util\BasicFunctions;
+
+use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
     public function bugreport(){
-        BasicFunctions::local();
         return view('forms.bugreport');
     }
 
-    public function bugreportStore(BugreportRequest $request){
-        $bugreport = Bugreport::create($request->all());
+    public function bugreportStore(Request $request){
+        $validated =  $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'title' => 'required',
+            'priority' => 'required',
+            'description' => 'required',
+            'custom_captcha' => 'required|customCaptcha',
+        ]);
+        
+        $bugreport = Bugreport::create($validated);
         $permission = Permission::where('title', 'bugreport_notification')->first();
         $roles = $permission->roles;
         $users = collect();

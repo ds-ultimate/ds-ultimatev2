@@ -19,7 +19,6 @@ use Yajra\DataTables\Facades\DataTables;
 class SettingsController extends Controller
 {
     public function imgUploade(Request $request){
-        BasicFunctions::local();
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
@@ -212,7 +211,6 @@ class SettingsController extends Controller
     {
         \App\Http\Controllers\API\DatatablesController::limitResults(100);
 
-        BasicFunctions::local();
         $datas = \Auth::user()->dsConnection();
 
         return DataTables::eloquent($datas)

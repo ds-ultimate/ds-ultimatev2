@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\App;
 class ContentController extends Controller
 {
     public function index(){
-        BasicFunctions::local();
         $serverArray = Server::getServer();
         $news = News::orderBy('order')->get();
         return view('content.index', compact('serverArray', 'news'));
@@ -26,7 +25,6 @@ class ContentController extends Controller
      * https://ds-ultimate.de/de
      * */
     public function server($server){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldsArray = World::worldsCollection($server, ['speed' => 'special', 'casual' => 'special', 'classic' => 'special']);
         usort($worldsArray['world'], function($a, $b) {
@@ -42,7 +40,6 @@ class ContentController extends Controller
      * https://ds-ultimate.de/de/164
      * */
     public function world($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -57,7 +54,6 @@ class ContentController extends Controller
      * https://ds-ultimate.de/de/164/allys
      * */
     public function allys($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -68,7 +64,6 @@ class ContentController extends Controller
      * https://ds-ultimate.de/de/164/players
      * */
     public function players($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -76,7 +71,6 @@ class ContentController extends Controller
     }
 
     public function conquer($server, $world, $type){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -106,7 +100,6 @@ class ContentController extends Controller
     }
 
     public function conquereDaily($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         
@@ -142,7 +135,6 @@ class ContentController extends Controller
     }
 
     public function changelog(){
-        BasicFunctions::local();
         $changelogModel = new Changelog();
 
         $changelogs = $changelogModel->orderBy('created_at', 'DESC')->get();

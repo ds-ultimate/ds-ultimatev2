@@ -12,7 +12,7 @@
         "php": "^8.0.0",
         "barryvdh/laravel-translation-manager": "^0.6.1",
         "doctrine/dbal": "dev-dev-3.x.x",
-        "google/recaptcha": "^1.2",
+        "dsultimate/click-captcha-laravel": "@dev",
         "guzzlehttp/guzzle": "^7.4",
         "khill/lavacharts": "3.1.*",
         "laravel-notification-channels/discord": "^1.1",
@@ -31,6 +31,10 @@
         "phpunit/phpunit": "^9.0"
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ds-ultimate/click-captcha-laravel.git"
+        },
         {
             "type": "vcs",
             "url": "https://github.com/ds-ultimate/dbal.git"

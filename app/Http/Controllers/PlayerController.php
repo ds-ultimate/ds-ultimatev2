@@ -15,7 +15,6 @@ use App\AllyChanges;
 class PlayerController extends Controller
 {
     public function player($server, $world, $player){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -61,7 +60,6 @@ class PlayerController extends Controller
     }
     
     public function allyChanges($server, $world, $type, $playerID){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -79,7 +77,6 @@ class PlayerController extends Controller
     }
     
     public function conquer($server, $world, $type, $playerID){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         

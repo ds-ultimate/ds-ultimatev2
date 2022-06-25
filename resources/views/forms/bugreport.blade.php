@@ -73,13 +73,15 @@
                             <small id="urlHelp" class="form-text text-muted">{{ __('user.bugreport.url_help') }}</small>
                         </div>
                         @csrf
-                        <div class="form-group">
-                            {!! Captcha::display() !!}
-                            @if($errors->has('g-recaptcha-response'))
-                                <div class="text-danger">
-                                    {{ $errors->first('g-recaptcha-response') }}
-                                </div>
-                            @endif
+                        <div class="form-group row text-center">
+                            <div class="d-inline-block ml-auto mr-auto">
+                                <x-captcha::elm/>
+                                @if($errors->has('custom_captcha'))
+                                    <div class="text-danger">
+                                        {{ $errors->first('custom_captcha') }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">{{ __('global.submit') }}</button>
                     </form>

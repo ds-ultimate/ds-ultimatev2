@@ -33,7 +33,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function create($server, $world) {
-        BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
         abort_unless(static::isAvailable($worldData), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
 
@@ -64,7 +63,6 @@ class AnimatedHistoryMapController extends BaseController
     
     public function preview(AnimHistMapMap $wantedMap, $key, $histIdx, $ext) {
         abort_unless($key == $wantedMap->show_key, 403);
-        BasicFunctions::local();
         
         $world = $wantedMap->world;
         abort_unless(static::isAvailable($world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
@@ -88,7 +86,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
-        BasicFunctions::local();
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($wantedMap->world->maintananceMode, 503);
 
@@ -105,7 +102,6 @@ class AnimatedHistoryMapController extends BaseController
     }
     
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
-        BasicFunctions::local();
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($wantedMap->world->maintananceMode, 503);
 
@@ -260,7 +256,6 @@ class AnimatedHistoryMapController extends BaseController
     
     public function renderStatus(AnimHistMapJob $wantedJob, $key) {
         abort_unless($key == $wantedJob->edit_key, 403);
-        BasicFunctions::local();
         
         $worldData = $wantedJob->world;
         
@@ -279,7 +274,6 @@ class AnimatedHistoryMapController extends BaseController
     
     public function apiRenderStatus(AnimHistMapJob $wantedJob, $key) {
         abort_unless($key == $wantedJob->edit_key, 403);
-        BasicFunctions::local();
         
         $retArr = $wantedJob->getStateAsArray();
         if($retArr['finished']) {

@@ -25,7 +25,6 @@ use Illuminate\Http\Request;
 class AttackPlannerController extends BaseController
 {
     public function index($server, $world){
-        BasicFunctions::local();
         $worldData = World::getAndCheckWorld($server, $world);
 
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
@@ -106,7 +105,6 @@ class AttackPlannerController extends BaseController
     }
 
     private function edit(AttackList $attackList){
-        BasicFunctions::local();
         $worldData = $attackList->world;
         $server = $worldData->server;
 
@@ -146,7 +144,6 @@ class AttackPlannerController extends BaseController
     }
 
     private function show(AttackList $attackList){
-        BasicFunctions::local();
         $worldData = $attackList->world;
         $server = $worldData->server;
 
@@ -163,7 +160,6 @@ class AttackPlannerController extends BaseController
     }
     
     private function exportAll(AttackList $attackList){
-        BasicFunctions::local();
         $items = $attackList->items()->take(400)->get();
         
         // Workbench

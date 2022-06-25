@@ -151,4 +151,5 @@ return array (
     'size' => 'Größe',
   ),
   'recaptcha' => 'Bitte bestätigen',
+  'custom_captcha' => 'Das Captcha muss gelöst werden',
 );

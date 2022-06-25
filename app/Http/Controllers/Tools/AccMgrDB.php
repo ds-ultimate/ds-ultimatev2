@@ -16,7 +16,6 @@ use Yajra\DataTables\Facades\DataTables;
 class AccMgrDB extends BaseController
 {
     public function index(){
-        BasicFunctions::local();
         
         $hasSetting = [];
         $hasSetting['watchtower'] = true;
@@ -27,7 +26,6 @@ class AccMgrDB extends BaseController
     }
     
     public function index_world($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         
@@ -49,7 +47,6 @@ class AccMgrDB extends BaseController
             'statue' => 'required|boolean',
         ]);
         
-        BasicFunctions::local();
         
         $model = new AccountManagerTemplate();
         

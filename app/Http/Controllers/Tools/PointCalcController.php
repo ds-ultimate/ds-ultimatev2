@@ -17,7 +17,6 @@ class PointCalcController extends BaseController
 {
 
     public function index($server, $world){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 

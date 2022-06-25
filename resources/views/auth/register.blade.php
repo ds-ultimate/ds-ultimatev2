@@ -63,10 +63,10 @@
                         
                         <div class="form-group row text-center">
                             <div class="d-inline-block ml-auto mr-auto">
-                                {!! Captcha::display() !!}
-                                @if($errors->has('g-recaptcha-response'))
+                                <x-captcha::elm/>
+                                @if($errors->has('custom_captcha'))
                                     <div class="text-danger">
-                                        {{ $errors->first('g-recaptcha-response') }}
+                                        {{ $errors->first('custom_captcha') }}
                                     </div>
                                 @endif
                             </div>

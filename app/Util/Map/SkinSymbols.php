@@ -154,7 +154,6 @@ class SkinSymbols extends AbstractSkinRenderer {
             imagesavealpha($drawing_img, true);
             imagecopyresampled($this->image, $drawing_img, 0, 0, 0, 0, $this->imgW, $this->imgH, imagesx($drawing_img), imagesy($drawing_img));
         } catch (\ErrorException $ex) {
-            BasicFunctions::local();
             $fg = imagecolorallocate($this->image, 255, 255, 255);
             $this->renderCenteredText($this->imgW / 2, $this->imgH / 2, __('tool.map.drawingErr'), $fg, $this->imgW / 45);
         }

@@ -23,7 +23,6 @@ class SearchController extends Controller
     }
 
     public function search($server, $type, $search){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         switch ($type){
             case 'player':

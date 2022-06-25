@@ -25,7 +25,6 @@ class PictureController extends Controller
     
     public function getAllySizedPic($server, $world, $allyID, $type, $width, $height, $ext)
     {
-        BasicFunctions::local();
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
         abort_unless(Chart::validType($type), 404, __("ui.errors.404.unknownType", ["type" => $type]));
@@ -54,7 +53,6 @@ class PictureController extends Controller
 
     public function getPlayerSizedPic($server, $world, $playerID, $type, $width, $height, $ext)
     {
-        BasicFunctions::local();
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
         abort_unless(Chart::validType($type), 404, __("ui.errors.404.unknownType", ["type" => $type]));
@@ -82,7 +80,6 @@ class PictureController extends Controller
 
     public function getVillageSizedPic($server, $world, $villageID, $type, $width, $height, $ext)
     {
-        BasicFunctions::local();
         static::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
         if (!Chart::validType($type)) {

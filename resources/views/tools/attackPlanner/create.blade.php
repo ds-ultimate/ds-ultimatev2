@@ -69,7 +69,7 @@
                         </div>
                         <input name="time_type" type="hidden" class="time-type" value="0">
                     </div>
-                    <input name="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}"/>
+                    <input name="time" type="time" step=".001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}"/>
                 </div>
             </div>
             <div class="col-md-4">

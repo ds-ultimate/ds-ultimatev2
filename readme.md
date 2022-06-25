@@ -32,3 +32,4 @@ Die Seite basiert auf dem Framework [Laravel](https://github.com/laravel/laravel
 - The GIF-Generator uses [lvandeve/lodepng](https://github.com/lvandeve/lodepng)
 - JQuery UI [jquery/jquery-ui](https://github.com/jquery/jquery-ui) with UI lightness / UI darkness
 - The Changelog is based on [bootstrap-timeline](https://bootstrapthemes.co/item/bootstrap-timeline/)
+- Captcha based on [Lokno/click-captcha](https://github.com/Lokno/click-captcha)

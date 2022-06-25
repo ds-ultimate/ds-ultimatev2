@@ -29,8 +29,6 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view)
         {
-            BasicFunctions::local();
-
             $changelog = Changelog::orderBy('created_at', 'desc')->first();
             if ($changelog == null) {
                 $newChangelog = false;

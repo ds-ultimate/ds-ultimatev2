@@ -14,7 +14,6 @@ use App\AllyChanges;
 class AllyController extends Controller
 {
     public function ally($server, $world, $ally){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -60,7 +59,6 @@ class AllyController extends Controller
 
     public function allyBashRanking($server, $world, $ally)
     {
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
 
@@ -71,7 +69,6 @@ class AllyController extends Controller
     }
 
     public function allyChanges($server, $world, $type, $allyID){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         
@@ -96,7 +93,6 @@ class AllyController extends Controller
     }
 
     public function conquer($server, $world, $type, $allyID){
-        BasicFunctions::local();
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
         
