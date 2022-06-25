@@ -784,12 +784,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ds-ultimate/click-captcha-laravel.git",
-                "reference": "8e1b72b8d4c7a4b36de4bbe0343e2f130c6b0332"
+                "reference": "33f67783a3d08d4c4eaeb00f670acd7774cf5b81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ds-ultimate/click-captcha-laravel/zipball/8e1b72b8d4c7a4b36de4bbe0343e2f130c6b0332",
-                "reference": "8e1b72b8d4c7a4b36de4bbe0343e2f130c6b0332",
+                "url": "https://api.github.com/repos/ds-ultimate/click-captcha-laravel/zipball/33f67783a3d08d4c4eaeb00f670acd7774cf5b81",
+                "reference": "33f67783a3d08d4c4eaeb00f670acd7774cf5b81",
                 "shasum": ""
             },
             "require": {
@@ -826,7 +826,7 @@
             "support": {
                 "source": "https://github.com/ds-ultimate/click-captcha-laravel/tree/master"
             },
-            "time": "2022-06-25T19:50:44+00:00"
+            "time": "2022-06-25T21:50:21+00:00"
         },
         {
             "name": "egulias/email-validator",

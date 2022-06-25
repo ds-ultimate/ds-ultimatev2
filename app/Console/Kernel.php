@@ -100,6 +100,10 @@ class Kernel extends ConsoleKernel
             ->everyFifteenMinutes()
             ->runInBackground();
         
+        $schedule->command('captcha:gc')
+            ->everyFifteenMinutes()
+            ->runInBackground();
+        
         /*
          * Generate next animatedWorldMap
          */
