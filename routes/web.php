@@ -18,10 +18,6 @@ Auth::routes(['verify' => true]);
 //Route::get('/test', function () {
 //});
 
-Route::get('/userskripte/verlaufe_und_karten.js', function() {
-    return Redirect::to('/userskripte/verlaufe_und_karten.user.js', 301);
-});
-
 Route::post('/api/time', function (){
     return response()->json([
         'time' => \Carbon\Carbon::now()->timestamp,
