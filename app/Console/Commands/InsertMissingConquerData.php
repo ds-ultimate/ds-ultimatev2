@@ -50,30 +50,6 @@ class InsertMissingConquerData extends Command
     }
     
     private function insertMissing(World $worldModel) {
-//        todo general:
-//        -> migration for changing the hash size
-//        -> migration for moving to shared db
-//        -> translated world displayNames
-//        -> remove discord ifreame from default page (maybe after click?)
-//        -> conquer use point column
-//        
-//        Update guide:
-//        -> dsphp artisan down --render="errors::503" --secret={random string}
-//        -< git pull
-//        -> remove dsphp artisan up from deploy script
-//        -> Move all tables out of the way (all global tables!!)
-//        -> run ./deploy.sh (runs migraions and builds initial db)
-//        -> Run dsphp artisan migrate:importFromLastVersion {old DB}
-//        -> manually move animated Map folders: for i in *;do i=$(sed 's/dsultimate_welt_//g' <<<"$i");mv dsultimate_welt_$i $i;done;
-//        -> go to https://ds-ultimate.de/{secret from before}
-//        -> Check that user permissions are correct
-//        -> basic function check
-//        -> check animateMaps
-//        -> dsphp artisan up
-//        -> Alle crons testen
-//        -> Run dsphp artisan migrate:insertMissingConquerPoints active // this will fill entries with points=0
-//        -> Run dsphp artisan migrate:insertMissingConquerPoints \* // this will fill entries with points=0
-//        
         if(! BasicFunctions::hasWorldDataTable($worldModel, 'conquer')) {
             return;
         }
