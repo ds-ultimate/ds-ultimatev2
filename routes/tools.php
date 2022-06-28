@@ -84,11 +84,5 @@ Route::delete('/tools/animHistMap/{wantedMap}/delete/{key}', [\App\Http\Controll
 Route::delete('/tools/animHistJob/{wantedJob}/delete/{key}', [\App\Http\Controllers\Tools\AnimatedHistoryMapController::class, 'destroyAnimHistMapJob'])->name('animHistMap.destroyAnimHistMapJob');
 
 
-//Data Collection
-Route::get('/tools/datacollectionHQ/index', [\App\Http\Controllers\Tools\CollectDataController::class, 'index'])->name('collectData');
-Route::get('/tools/datacollectionHQ/stats', [\App\Http\Controllers\Tools\CollectDataController::class, 'stats'])->name('collectDataStats');
-Route::post('/tools/datacollectionHQ/post/{pServer}', [\App\Http\Controllers\Tools\CollectDataController::class, 'post'])->name('collectData.post');
-
-
 //The great siege calculator
 Route::get('/{server}/{world}/tools/greatSiegeCalc', [\App\Http\Controllers\Tools\GreatSiegeCalcController::class, 'index'])->name('greatSiegeCalc');

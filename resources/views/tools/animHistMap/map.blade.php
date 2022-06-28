@@ -252,11 +252,11 @@
         }
         
         var histIdx = historyIds[parseInt($("#previewSelect").val())][0];
-        var url = '{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoordsPreview/'+ histIdx + '/'+ mapX + '/' + mapY;
-        axios.get(url, {
-        })
+        var url = '{{ route('api.villagePreviewByCoord', [$worldData->id, "%histID%", "%x%", "%y%"]) }}'
+        url = url.replace("%histID%", histIdx).replace("%x%", mapX).replace("%y%", mapY)
+        axios.get(url, {})
             .then((response) => {
-                const data = response.data.data;
+                const data = response.data;
                 var xRel = e.pageX - $($('#previewContainer')[0].parentElement.parentElement).offset().left;
                 var yRel = e.pageY - $($('#previewContainer')[0].parentElement.parentElement).offset().top;
 

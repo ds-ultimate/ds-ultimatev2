@@ -10,37 +10,12 @@ use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class SettingsController extends Controller
 {
-    public function imgUploade(Request $request){
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-        $img = $request->file;
-        $imgNewName = time().\Auth::user()->name.'.'.$img->extension();
-        $path = Storage::putFileAs('avatar', $img, $imgNewName);
-        self::existProfile();
-        \Auth::user()->profile()->update(['avatar' => $path]);
-        return response()->json([
-            'img' => $path,
-        ], 201);
-    }
-
-    public function imgDestroy(){
-        $avatar = \Auth::user()->profile->avatar;
-        self::existProfile();
-        if (Storage::disk('local')->exists($avatar)) {
-            Storage::disk('local')->delete($avatar);
-        }
-        \Auth::user()->profile()->update(['avatar' => null]);
-    }
-
     public static function existProfile(){
         $user = \Auth::user();
         if ($user->profile()->count() == 0){
@@ -51,17 +26,14 @@ class SettingsController extends Controller
     }
 
     public function addConnection(Request $request){
-        $serverId = intval($request->get('server'));
-        $request->validate([
+        $data = $request->validate([
             'player' => 'required|integer',
-            'server' => 'required|integer|exists:App\Server,id',
-            'world' => "required|integer|exists:App\World,name,server_id,{$serverId}",
+            'world' => "required|integer|exists:App\World,id",
         ]);
         
-        $worldModel = new World();
-        $world = $worldModel->where('server_id', $request->get('server'))->where('name', $request->get('world'))->first();
+        $world = World::findOrFail($data['world']);
         
-        if (DsConnection::where('user_id', \Auth::user()->id)->where('world_id', $world->id)->where('player_id', $request->get('player'))->count() == 0) {
+        if (DsConnection::where('user_id', \Auth::user()->id)->where('world_id', $world->id)->where('player_id', $data['player'])->count() == 0) {
             DsConnection::create([
                 'user_id' => \Auth::user()->id,
                 'world_id' => $world->id,

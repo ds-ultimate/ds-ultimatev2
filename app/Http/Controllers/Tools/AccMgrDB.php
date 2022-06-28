@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tools;
 
+use App\Server;
 use App\World;
 use App\Util\BasicFunctions;
 use App\Util\BuildingUtils;
@@ -16,7 +17,6 @@ use Yajra\DataTables\Facades\DataTables;
 class AccMgrDB extends BaseController
 {
     public function index(){
-        
         $hasSetting = [];
         $hasSetting['watchtower'] = true;
         $hasSetting['church'] = true;

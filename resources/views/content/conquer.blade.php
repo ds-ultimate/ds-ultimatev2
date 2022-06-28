@@ -68,13 +68,17 @@
             "processing": true,
             "serverSide": true,
             "order": [[ 3, "desc" ]],
-            "searching": false,
+            "searching": true,
             "ajax": "{{ $routeDatatableAPI }}",
             "columns": [
-                { "data": "village", "orderable": false},
-                { "data": "old_owner_name"},
-                { "data": "new_owner_name"},
-                { "data": "timestamp"},
+                { "data": "village", "orderable": false, "searchable": false},
+                { "data": "old_owner_name", "name": "old_owner_name"},
+                { "data": "new_owner_name", "name": "new_owner_name"},
+                { "data": "timestamp", "searchable": false},
+                { "data": "old_ally_name", visible: false},
+                { "data": "new_ally_name", visible: false},
+                { "data": "old_ally_tag", visible: false},
+                { "data": "new_ally_tag", visible: false},
             ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian

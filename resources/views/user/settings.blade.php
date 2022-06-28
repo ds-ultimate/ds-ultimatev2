@@ -34,7 +34,7 @@
                     <div class="nav flex-column nav-pills" id="settings-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link {{ ($page == 'settings-profile')? 'active' : '' }}" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">{{ __('ui.personalSettings.profile') }}</a>
                         <a class="nav-link {{ ($page == 'settings-account')? 'active' : '' }}" id="settings-account-tab" data-toggle="pill" href="#settings-account" role="tab" aria-controls="settings-account" aria-selected="false">{{ __('ui.personalSettings.account') }}</a>
-                        @can('anim_hist_map_beta')
+                        @can('discord_bot_beta')
                         <a class="nav-link {{ ($page == 'settings-connection')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
                         @endcan
                         <a class="nav-link {{ ($page == 'settings-map')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-map" role="tab" aria-controls="settings-map" aria-selected="false">{{ __('ui.personalSettings.map') }}</a>
@@ -51,25 +51,6 @@
                     <div class="tab-content" id="settings-tabContent">
                         <!-- START settings-profile -->
                         <div class="tab-pane fade {{ ($page == 'settings-profile')? 'show active' : '' }}" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab" data-title="{{ __('ui.personalSettings.profile') }}">
-                            {{ __('ui.personalSettings.profile') }}
-                            <div class="text-center">
-                                <div class="btn-group position-absolute p-1" role="group">
-                                    <button id="btnGroupDrop1" type="button" class="btn btn-dark dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-user-edit"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <a class="dropdown-item" href="#">
-                                            {{ __('ui.personalSettings.uploadeImage') }}
-                                            <input id="imgUpload" type="file" name="file" style="position: absolute;font-size: 20px;opacity: 0;right: 0;top: 0; width: 265px"/>
-                                        </a>
-                                        <a class="dropdown-item" href="#" onclick="destroy()">
-                                            {{ __('ui.personalSettings.deleteImage') }}
-                                        </a>
-                                    </div>
-                                </div>
-                                <img id="avatarImage" src="{{ Auth::user()->avatarPath() }}" class="rounded img-thumbnail" alt="" style="max-width: 200px; max-height: 200px">
-                                <div id="avatar-errors" class="text-danger"></div>
-                            </div>
                             <form id="settings-account-form">
                                 <div class="form-group">
                                     <label for="name">{{ __('user.name') }}</label>
@@ -122,7 +103,7 @@
                             </table>
                         </div>
                         <!-- ENDE settings-account -->
-                        @can('anim_hist_map_beta')
+                        @can('discord_bot_beta')
                         <!-- START settings-connection -->
                         <div class="tab-pane fade {{ ($page == 'settings-connection')? 'show active' : '' }}" id="settings-connection" role="tabpanel" aria-labelledby="settings-connection-tab" data-title="{{ __('ui.personalSettings.connection') }}">
                             <p class="col-12 text-center">
@@ -299,7 +280,8 @@
             });
 
             $('#server').on('select2:select', function (e) {
-                axios.get('{{ route('index') }}/api/' + $('#server')[0].selectedOptions[0].title + '/activeWorlds')
+                var url = "{{ route('api.activeWorldByServer', ['%server%']) }}";
+                axios.get(url.replace('%server%', $('#server').val()))
                     .then(function (response) {
                         worldTable.empty().trigger("change");
                         var option1 = new Option('{{ __('ui.table.world') }}', 0, false, false);
@@ -317,12 +299,11 @@
             });
 
             $('#world').on('select2:select', function (e) {
-                var server = $('#server').find(':selected');
-                var world = $('#world').find(':selected');
+                var dataUrl = "{{ route('api.select2Player', ['%world%']) }}";
                 playerTable.val(null).trigger('change');
                 playerTable.select2({
                     ajax: {
-                        url: '{{ route('index') }}/api/' + server[0].text.toLowerCase() + '/' + world[0].value + '/select2Player',
+                        url: dataUrl.replace("%world%", $('#world').val()),
                         data: function (params) {
                             var query = {
                                 search: params.term,
@@ -373,39 +354,9 @@
             $('#settings-card-title').html($($(this).attr('href')).data('title'))
         });
 
-        $(document).on('change','#imgUpload' , function(){
-            const file = this.files[0];
-
-            var formData = new FormData();
-            formData.append("file", file);
-            axios.post('{{ route('user.uploadeImage') }}', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then((response) => {
-                    $('#avatarImage').attr('src', '/storage/app/' + response.data.img);
-                    $('#avatar-errors').html('');
-                })
-                .catch((error) => {
-                    var errors = error.response.data.errors['file'];
-                    $('#avatar-errors').html(errors[0].replace('file', '{{ __('global.file') }}'));
-                });
-        });
-
-        function destroy() {
-            axios.post('{{ route('user.destroyImage') }}')
-                .then((response) => {
-                    $('#avatarImage').attr('src', '{{ asset('images/default/user.png') }}')
-                })
-                .catch((error) => {
-                });
-        }
-
         $(document).on('submit', '#connectionForm', function (e) {
             e.preventDefault();
             axios.post('{{ route('user.addConnection') }}', {
-                'server': $('#server').val(),
                 'world': $('#world').val(),
                 'player': $('#player').val(),
             })

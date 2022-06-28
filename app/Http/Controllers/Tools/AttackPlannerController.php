@@ -228,7 +228,7 @@ class AttackPlannerController extends BaseController
         return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
     }
 
-    private function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
+    public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
         abort_unless($attackList->edit_key == $request->get('key'), 403);
         $imports = explode(PHP_EOL, $request->import);
         
@@ -306,7 +306,7 @@ class AttackPlannerController extends BaseController
         if(static::$villageCache == null) {
             $tableName = BasicFunctions::getWorldDataTable($parList->world, 'village_latest');
             self::$villageCache = [];
-            foreach(DB::select("SELECT villageID,x,y FROM $tableName") as $v) {
+            foreach(DB::select("SELECT villageID,x,y,bonus_id FROM $tableName") as $v) {
                 self::$villageCache[$v->villageID] = $v;
             }
         }
@@ -338,6 +338,16 @@ class AttackPlannerController extends BaseController
         if(count($curErr) == 0) {
             $unitConfig = $parList->world->unitConfig();
             $dist = sqrt(pow($sVillage->x - $tVillage->x, 2) + pow($sVillage->y - $tVillage->y, 2));
+            
+            if($tVillage->bonus_id >= 11 && $tVillage->bonus_id <= 21) {
+                //great siege village always same distance
+                if($item->slowest_unit == 4) {
+                    $dist = 3; // spy
+                } else {
+                    $dist = 15;
+                }
+            }
+            
             $unit = AttackListItem::$units[$item->slowest_unit];
             $boost = 1 + ($item->support_boost ?? 0.0) + ($item->tribe_skill ?? 0.0);
             $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Ally;
 use App\AllyTop;
+use App\Conquer;
 use App\HistoryIndex;
 use App\Player;
 use App\PlayerTop;
@@ -12,10 +13,6 @@ use App\Village;
 use App\World;
 use App\Util\BasicFunctions;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Ally as AllyResource;
-use App\Http\Resources\Player as PlayerResource;
-use App\Http\Resources\Village as VillageResource;
-use App\Http\Resources\VillageHistory as VillageHistoryResource;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
@@ -24,7 +21,9 @@ class FindModelController extends Controller
 {
     public function getVillageByCoord(World $world, $x, $y){
         $villageModel = new Village($world);
-        return new VillageResource($villageModel->where(['x' => $x, 'y' => $y])->first());
+        $result = $villageModel->where(['x' => $x, 'y' => $y])->first();
+        abort_if($result == null, 404, __("ui.errors.404.villageNotFound", ["world" => $world->display_name, "village" => "$x|$y"]));
+        return $this->villageToJSON($world, $result);
     }
     
     public function getVillagePreviewByCoord(World $world, $hId, $x, $y){
@@ -37,24 +36,10 @@ class FindModelController extends Controller
             if($lineOrig === false) continue;
             $line = explode(";", str_replace("\n", "", $lineOrig));
             if($line[2] == $x && $line[3] == $y) {
-                return new VillageHistoryResource([
-                    "line" => $line,
-                    "worldData" => $world,
-                    "histIdx" => $histIdx,
-                ]);
+                return $this->villageHistToJSON($world, $line, $histIdx);
             }
         }
-        abort(404);
-    }
-
-    public function getPlayerByName(World $world, $name){
-        $playerModel = new Player($world);
-        return new PlayerResource($playerModel->where('name', urlencode($name))->first());
-    }
-
-    public function getAllyByName(World $world, $name){
-        $allyModel = new Ally($world);
-        return new AllyResource($allyModel->where('name', urlencode($name))->orWhere('tag', urlencode($name))->first());
+        abort(404, __("ui.errors.404.villageNotFound", ["world" => $world->display_name, "village" => "$x|$y"]));
     }
 
     public function getSelect2Player(World $world){
@@ -125,13 +110,11 @@ class FindModelController extends Controller
         return response()->json($converted);
     }
     
-    public function getActiveWorldByServer($server){
-        $serModel = Server::getAndCheckServerByCode($server);
-        
-        $worlds = World::where('active', '!=', null)->where('server_id', $serModel->id)->get();
+    public function getActiveWorldByServer(Server $server){
+        $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
         $array = [];
         foreach ($worlds as $world){
-            $array[] = ['id' => $world->name, 'text' => $world->display_name];
+            $array[] = ['id' => $world->id, 'name' => $world->name, 'text' => $world->display_name];
         }
         return $array;
     }
@@ -144,5 +127,136 @@ class FindModelController extends Controller
                 __('ui.otherWorldsPlayerPopup.villages') . ": " . BasicFunctions::numberConv($playerData->village_count_top) . "<br>" .
                 __('ui.otherWorldsPlayerPopup.points') . ": " . BasicFunctions::numberConv($playerData->points_top) . "<br>" .
                 __('ui.otherWorldsPlayerPopup.bashGes') . ": " . BasicFunctions::numberConv($playerData->gesBash_top);
+    }
+    
+    private function villageToJSON(World $world, $result) {
+        $conquer = Conquer::villageConquerCounts($world, $result->villageID);
+        
+        $ownerAlly = 0;
+        $ownerAllyName = '-';
+        $ownerAllyNameRaw = '-';
+        $ownerAllyTag = '-';
+        $ownerAllyTagRaw = '-';
+        $ownerLink = "";
+        $ownerAllyLink = "";
+        if($result->owner == 0) {
+            $ownerName = ucfirst(__('ui.player.barbarian'));
+            $ownerNameRaw = ucfirst(__('ui.player.barbarian'));
+        } else if($result->playerLatest == null) {
+            $ownerName = ucfirst(__('ui.player.deleted'));
+            $ownerNameRaw = ucfirst(__('ui.player.deleted'));
+        } else {
+            $ownerName = BasicFunctions::outputName($result->playerLatest->name);
+            $ownerNameRaw = BasicFunctions::decodeName($result->playerLatest->name);
+            $ownerAlly = $result->playerLatest->ally_id;
+            $ownerLink = route('player',[$world->server->code, $world->name, $result->owner]);
+            
+            if($result->playerLatest->ally_id != 0 && $result->playerLatest->allyLatest != null) {
+                $ownerAllyName = BasicFunctions::outputName($result->playerLatest->allyLatest->name);
+                $ownerAllyNameRaw = BasicFunctions::decodeName($result->playerLatest->allyLatest->name);
+                $ownerAllyTag = BasicFunctions::outputName($result->playerLatest->allyLatest->tag);
+                $ownerAllyTagRaw = BasicFunctions::decodeName($result->playerLatest->allyLatest->tag);
+                $ownerAllyLink = route('ally',[$world->server->code, $world->name, $result->playerLatest->ally_id]);
+            }
+        }
+        
+        return response()->json([
+            'villageID' => $result->villageID,
+            'name' => BasicFunctions::outputName($result->name),
+            'nameRaw' => BasicFunctions::decodeName($result->name),
+            'x' => $result->x,
+            'y' => $result->y,
+            'points' => $result->points,
+            'owner' => $result->owner,
+            'ownerName' => $ownerName,
+            'ownerNameRaw' => $ownerNameRaw,
+            'ownerAlly' => $ownerAlly,
+            'ownerAllyName' => $ownerAllyName,
+            'ownerAllyNameRaw' => $ownerAllyNameRaw,
+            'ownerAllyTag' => $ownerAllyTag,
+            'ownerAllyTagRaw' => $ownerAllyTagRaw,
+            'bonus_id' => $result->bonus_id,
+            'bonus' => $result->bonusText(),
+            'continent' => $result->continentString(),
+            'coordinates' => $result->coordinates(),
+            'conquer' => BasicFunctions::linkWinLoose($world, $result->villageID, $conquer, 'villageConquer', '', true),
+            'selfLink' => route('village',[$world->server->code, $world->name, $result->villageID]),
+            'ownerLink' => $ownerLink,
+            'ownerAllyLink' => $ownerAllyLink,
+        ]);
+    }
+    
+    private function villageHistToJSON(World $world, $line, $histIdx) {
+        $conquer = Conquer::villageConquerCounts($world, $line[0]);
+        
+        $ownerAlly = 0;
+        $ownerAllyName = '-';
+        $ownerAllyNameRaw = '-';
+        $ownerAllyTag = '-';
+        $ownerAllyTagRaw = '-';
+        $ownerLink = "";
+        $ownerAllyLink = "";
+        if($line[5] == 0) {
+            $ownerName = ucfirst(__('ui.player.barbarian'));
+            $ownerNameRaw = ucfirst(__('ui.player.barbarian'));
+        } else {
+            $playerTop = PlayerTop::player($world, $line[5]);
+            if($playerTop == null) {
+                $ownerName = ucfirst(__('ui.player.deleted'));
+                $ownerNameRaw = ucfirst(__('ui.player.deleted'));
+            } else {
+                $ownerName = BasicFunctions::outputName($playerTop->name);
+                $ownerNameRaw = BasicFunctions::decodeName($playerTop->name);
+                $ownerLink = route('player',[$world->server->code, $world->name, $line[5]]);
+                $ownerAlly = $this->historyAllyFromPlayer($line[5], $histIdx, $world);
+                $ownerAllyElm = AllyTop::ally($world, $ownerAlly);
+                
+                if($ownerAlly != 0 && $ownerAllyElm != null) {
+                    $ownerAllyName = BasicFunctions::outputName($ownerAllyElm->name);
+                    $ownerAllyNameRaw = BasicFunctions::decodeName($ownerAllyElm->name);
+                    $ownerAllyTag = BasicFunctions::outputName($ownerAllyElm->tag);
+                    $ownerAllyTagRaw = BasicFunctions::decodeName($ownerAllyElm->tag);
+                    $ownerAllyLink = route('ally',[$world->server->code, $world->name, $ownerAlly]);
+                }
+            }
+        }
+        
+        //return parent::toArray($request);
+        return response()->json([
+            'villageID' => $line[0],
+            'name' => BasicFunctions::outputName($line[1]),
+            'nameRaw' => BasicFunctions::decodeName($line[1]),
+            'x' => $line[2],
+            'y' => $line[3],
+            'points' => $line[4],
+            'owner' => $line[5],
+            'ownerName' => $ownerName,
+            'ownerNameRaw' => $ownerNameRaw,
+            'ownerAlly' => $ownerAlly,
+            'ownerAllyName' => $ownerAllyName,
+            'ownerAllyNameRaw' => $ownerAllyNameRaw,
+            'ownerAllyTag' => $ownerAllyTag,
+            'ownerAllyTagRaw' => $ownerAllyTagRaw,
+            'bonus_id' => $line[6],
+            'bonus' => Village::bonusTextStat($line[6]),
+            'continent' => Village::continentStringStat($line[2], $line[3]),
+            'coordinates' => Village::coordinatesStat($line[2], $line[3]),
+            'conquer' => BasicFunctions::linkWinLoose($world, $line[0], $conquer, 'villageConquer', '', true),
+            'selfLink' => route('village',[$world->server->code, $world->name, $line[0]]),
+            'ownerLink' => $ownerLink,
+            'ownerAllyLink' => $ownerAllyLink,
+        ]);
+    }
+    
+    private function historyAllyFromPlayer($playerId, $histIdx, $worldData) {
+        $file = gzopen($histIdx->playerFile($worldData), "r");
+        while(! gzeof($file)) {
+            $lineOrig = gzgets($file, 4096);
+            if($lineOrig === false) continue;
+            $line = explode(";", str_replace("\n", "", $lineOrig));
+            if($line[0] == $playerId) {
+                return $line[2];
+            }
+        }
     }
 }

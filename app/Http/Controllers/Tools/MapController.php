@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Tools;
 
 use App\Player;
+use App\Server;
 use App\World;
 use App\Tool\Map\Map;
-use App\Util\BasicFunctions;
 use App\Util\CacheLogger;
 use App\Util\ImageCached;
 use App\Util\Map\AbstractMapGenerator;
@@ -434,8 +434,8 @@ class MapController extends BaseController
     }
 
     public function mapTop10($server, $world){
+        $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
-        $worldData->server;
         
         $playerModel = new Player($worldData);
         $players = $playerModel->orderBy('rank')->limit(10)->get();

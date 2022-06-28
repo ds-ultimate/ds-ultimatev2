@@ -152,24 +152,6 @@
 @push('js')
     <script src="{{ \App\Util\BasicFunctions::asset('plugin/select2/select2.full.min.js') }}"></script>
     <script>
-        $("#ally").select2({
-            ajax: {
-                url: '{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/select2Ally',
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    }
-
-                    // Query parameters will be ?search=[term]&type=public
-                    return query;
-                }
-            },
-            allowClear: true,
-            placeholder: '{{ ucfirst(__('tool.map.allySelectPlaceholder')) }}',
-            theme: "bootstrap4"
-        });
-
         $(document).on('change', 'input', function () {
             if($(this).attr('type') != 'radio'){
                 $('#table-form').submit();
@@ -183,6 +165,7 @@
         $(document).on("change", 'input[type=radio]', function (e) {
             var data = $(this).data('input');
             var select = $("select[name='selectType']");
+            
             if($(this).val() == 'villageByAlly'){
                 $('#sorting').prop("disabled", true)
             }else{
@@ -195,10 +178,19 @@
             }
             select.attr('id', data).val(null);
             $('#tableOutput').val('');
-            select.select2("destroy");
+            if (select.hasClass("select2-hidden-accessible")) {
+                select.select2("destroy");
+            }
+            
+            var dataUrl
+            if(data == "ally") {
+                dataUrl = "{{ route('api.select2Ally', [$worldData->id]) }}";
+            } else if(data == "player") {
+                dataUrl = "{{ route('api.select2Player', [$worldData->id]) }}";
+            }
             select.select2({
                 ajax: {
-                    url: '{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/select2' + data.substr(0,1).toUpperCase()+data.substr(1),
+                    url: dataUrl,
                     data: function (params) {
                         var query = {
                             search: params.term,
@@ -214,6 +206,8 @@
                 theme: "bootstrap4"
             });
         });
+        
+        $('input[type=radio]:checked').trigger('change')
 
         $(document).on('submit', '#table-form', function (e) {
             e.preventDefault();

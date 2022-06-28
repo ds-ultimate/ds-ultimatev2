@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\User::class, 'user_id');
-            $table->string('avatar')->nullable();
             $table->string('discord_id')->nullable();
             $table->string('discord_private_channel_id')->nullable();
             $table->string('github_id')->nullable();

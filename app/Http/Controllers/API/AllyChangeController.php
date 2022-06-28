@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\AllyChanges;
+use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Yajra\DataTables\Facades\DataTables;
@@ -12,9 +13,8 @@ class AllyChangeController extends Controller
     public function getAllyAllyChanges(World $world, $type, $allyID)
     {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $allyChangesModel = new AllyChanges($worldData);
+        $allyChangesModel = new AllyChanges($world);
         $query = $allyChangesModel->newQuery();
         
         switch($type) {
@@ -37,9 +37,8 @@ class AllyChangeController extends Controller
     public function getPlayerAllyChanges(World $world, $type, $playerID)
     {
         DatatablesController::limitResults(200);
-        $worldData = World::getAndCheckWorld($server, $world);
         
-        $allyChangesModel = new AllyChanges($worldData);
+        $allyChangesModel = new AllyChanges($world);
 
         $query = $allyChangesModel->newQuery();
 

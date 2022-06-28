@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tools;
 
 
-use App\Util\BasicFunctions;
+use App\Server;
 use App\World;
 use Illuminate\Routing\Controller as BaseController;
 

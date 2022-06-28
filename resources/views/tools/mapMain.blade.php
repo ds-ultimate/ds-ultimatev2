@@ -293,10 +293,10 @@
             $('#map-popup').remove();
         }
 
-        axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ mapX + '/' + mapY, {
+        axios.get('{{ route('api.villageByCoord', [$worldData->id, "%x%", "%y%"]) }}'.replace("%x%", mapX).replace("%y%", mapY), {
         })
             .then((response) => {
-                const data = response.data.data;
+                const data = response.data;
                 var xRel = e.pageX - $($('#size-1')[0].parentElement.parentElement).offset().left;
                 var yRel = e.pageY - $($('#size-1')[0].parentElement.parentElement).offset().top;
 

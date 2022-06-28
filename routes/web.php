@@ -99,8 +99,6 @@ Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], fun
 Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['verified']], function () {
     Route::get('overview/{page}', [\App\Http\Controllers\User\HomeController::class, 'overview'])->name('overview');
     Route::get('settings/{page}', [\App\Http\Controllers\User\HomeController::class, 'settings'])->name('settings');
-    Route::post('uploadeImage', [\App\Http\Controllers\User\SettingsController::class, 'imgUploade'])->name('uploadeImage');
-    Route::post('destroyImage', [\App\Http\Controllers\User\SettingsController::class, 'imgDestroy'])->name('destroyImage');
     Route::post('addConnection', [\App\Http\Controllers\User\SettingsController::class, 'addConnection'])->name('addConnection');
     Route::post('saveSettingsAccount', [\App\Http\Controllers\User\SettingsController::class, 'saveSettingsAccount'])->name('saveSettingsAccount');
     Route::post('saveMapSettings', [\App\Http\Controllers\User\SettingsController::class, 'saveMapSettings'])->name('saveMapSettings');
@@ -137,8 +135,8 @@ Route::get('/{server}/{world}/allys', [\App\Http\Controllers\ContentController::
 Route::get('/{server}/{world}/allys/ranks', [\App\Http\Controllers\AllyController::class, 'rank'])->name('rankAlly');
 Route::get('/{server}/{world}/players', [\App\Http\Controllers\ContentController::class, 'players'])->name('worldPlayer');
 Route::get('/{server}/{world}/players/ranks', [\App\Http\Controllers\PlayerController::class, 'rank'])->name('rankPlayer');
-Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
 Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\AllyController::class, 'ally'])->name('ally');
+Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
 Route::get('/{server}/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\AllyController::class, 'allyBashRanking'])->name('allyBashRanking');
 Route::get('/{server}/{world}/village/{village}', [\App\Http\Controllers\VillageController::class, 'village'])->name('village');
 

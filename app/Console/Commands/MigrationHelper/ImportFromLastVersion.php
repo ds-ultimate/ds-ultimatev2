@@ -152,7 +152,7 @@ class ImportFromLastVersion extends Command
     }
     
     private function copyProfiles($copyFrom) {
-        $data = DB::select("SELECT `id`, `user_id`, `avatar`, `discord_id`, `discord_private_channel_id`, ".
+        $data = DB::select("SELECT `id`, `user_id`, `discord_id`, `discord_private_channel_id`, ".
                 "`github_id`, `google_id`, `last_seen_changelog`, `map_dimensions`, ".
                 "`map_defaultColours`, `map_markerFactor`, `conquerHightlight_World`, ".
                 "`conquerHightlight_Ally`, `conquerHightlight_Player`, `conquerHightlight_Village`, ".

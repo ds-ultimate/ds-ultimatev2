@@ -32,7 +32,7 @@ class FollowController extends Controller
         $world = World::find($request->get('world'));
         $class = 'App\\'.$model;
         $classFunktion = lcfirst($request->get('model'));
-        $item = $class::$classFunktion($world->server->code, $world->name, $request->get('id'));
+        $item = $class::$classFunktion($world, $request->get('id'));
 
         $follow = $item->follows()->where(['user_id' => \Auth::user()->id, 'world_id' => $world->id])->first();
 

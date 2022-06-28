@@ -169,8 +169,8 @@ class ConquerController extends Controller
                 return $conquer->getWinLoose($referTO, $id);
             })
             ->rawColumns(['timestamp', 'village', 'old_owner_name', 'new_owner_name'])
-            ->removeColumn(['created_at', 'updated_at', 'old_owner', 'new_owner', 'old_ally_name', 'new_ally_name',
-                'old_ally', 'new_ally', 'old_ally_tag', 'new_ally_tag'])
+            ->removeColumn(['created_at', 'updated_at', 'old_owner', 'new_owner',
+                'old_ally', 'new_ally'])
             ->toJson();
     }
     

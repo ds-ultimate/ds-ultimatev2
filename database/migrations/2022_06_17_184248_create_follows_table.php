@@ -19,7 +19,7 @@ return new class extends Migration
             
             $table->unsignedBigInteger('followable_id');
             $table->string('followable_type');
-            $table->foreignIdFor(\App\World::class, 'world_id');
+            $table->foreignIdFor(\App\World::class, 'world_id')->nullable();
             
             $table->timestamps();
         });

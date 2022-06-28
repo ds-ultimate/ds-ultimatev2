@@ -24,8 +24,6 @@ Route::middleware(['throttle:240,1'])->group(function() {
     Route::middleware(['worldMaintenance'])->group(function() {
         Route::get('/{world}/villageCoordsPreview/{histIdx}/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillagePreviewByCoord'])->name('villagePreviewByCoord');
         Route::get('/{world}/villageCoords/{x}/{y}', [\App\Http\Controllers\API\FindModelController::class, 'getVillageByCoord'])->name('villageByCoord');
-        Route::get('/{world}/playerName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getPlayerByName'])->name('playerByName');
-        Route::get('/{world}/allyName/{name}', [\App\Http\Controllers\API\FindModelController::class, 'getAllyByName'])->name('allyByName');
 
         Route::get('/{world}/select2Player', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Player'])->name('select2Player');
         Route::get('/{world}/select2Ally', [\App\Http\Controllers\API\FindModelController::class, 'getSelect2Ally'])->name('select2Ally');
@@ -69,7 +67,6 @@ Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', [\App\Http\Control
 Route::get('/map/{wantedMap}/{token}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getMapByID'])->name('map.show');
 
 Route::group(['middleware' => 'throttle:60,1'], function() {
-
     Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedOverviewMap'])->name('map.overview.sized');
     Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOverviewMap'])->name('map.overview');
 });

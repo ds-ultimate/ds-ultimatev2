@@ -30,7 +30,7 @@
             <li class="nav-item">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark dropdown-toggle mr-sm-2" type="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ Auth::user()->avatarPath() }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
+                        <img src="{{ asset('images/default/user.png') }}" class="rounded-circle" alt="" style="height: 20px; width: 20px">
                         {{ Auth::user()->name }} <span class="caret"></span>
                     </button>
 

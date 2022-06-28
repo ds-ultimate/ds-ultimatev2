@@ -224,7 +224,7 @@
                         $(".coord-input", parent).removeClass("is-invalid");
                         $(".coord-input", parent).addClass("is-valid");
                         
-                        const data = response.data.data;
+                        const data = response.data;
                         writeResultTo.find('tr:nth-child(1) td').html(data.name.trunc(25) + ' <b>' + data.x + '|' + data.y + '</b>  [' + data.continent + ']');
                         writeResultTo.find('tr:nth-child(2) td').html(numeral(data.points).format('0,0'));
                         writeResultTo.find('tr:nth-child(3) td').html(data.ownerName);

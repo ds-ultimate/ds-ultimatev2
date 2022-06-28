@@ -235,10 +235,10 @@
         var parts = that.id.split("-");
         var x = $('#village-mark-'+parts[2]+'-x').val();
         var y = $('#village-mark-'+parts[2]+'-y').val();
-        axios.get('{{ route('index') }}/api/{{ $worldData->server->code }}/{{ $worldData->name }}/villageCoords/'+ x + '/' + y, {
-        })
+        axios.get('{{ route('api.villageByCoord', [$worldData->id, "%x%", "%y%"]) }}'
+                .replace("%x%", x).replace("%y%", y), {})
             .then((response) =>{
-                const data = response.data.data;
+                const data = response.data;
                 $('#village-mark-'+parts[2]+'-x').removeClass('is-invalid').addClass('is-valid');
                 $('#village-mark-'+parts[2]+'-y').removeClass('is-invalid').addClass('is-valid');
                 $('#'+parts[0]+'-'+parts[1]+'-'+parts[2]+'-id').val(data['villageID']);
