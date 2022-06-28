@@ -90,7 +90,7 @@ $tabList = [
                         <thead>
                             <tr>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 25px">&nbsp;</th>
+                                    <th style="min-width: 25px"><input type="checkbox" class="selectAll"/></th>
                                 @endif
                                 <th>{{ __('tool.attackPlanner.startVillage') }}</th>
                                 <th>{{ __('tool.attackPlanner.attacker') }}</th>
@@ -104,7 +104,9 @@ $tabList = [
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 50px">&nbsp;</th>
+                                    <th style="min-width: 50px">
+                                        <h4 class="mb-0 text-center" style="line-height: 1;"><a class="text-danger massDestroy"><i class="fas fa-times"></i></a></h4>
+                                    </th>
                                 @endif
                             </tr>
                         </thead>
@@ -134,113 +136,143 @@ $tabList = [
         var muteaudio = false;
         var audioTiming = 60;
         var maxAudioTiming = 300;
-        var table =
-            $('#data1').DataTable({
-                ordering: true,
-                processing: true,
-                serverSide: true,
-                pageLength: 25,
-                searching: false,
+        var table = $('#data1').DataTable({
+            ordering: true,
+            processing: true,
+            serverSide: true,
+            pageLength: 25,
+            searching: false,
+            @if($mode == 'edit')
+            select: {
+                style: 'multi+shift'
+            },
+            @endif
+            order:[[{{ ($mode == 'edit')?'7':'6' }}, 'desc']],
+            ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
+            columns: [
                 @if($mode == 'edit')
-                select: true,
+                { data: 'select', name: 'select'},
                 @endif
-                order:[[{{ ($mode == 'edit')?'7':'6' }}, 'desc']],
-                ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
-                columns: [
+                { data: 'start_village_id', name: 'start_village_id'},
+                { data: 'attacker', name: 'attacker'},
+                { data: 'target_village_id', name: 'target_village_id'},
+                { data: 'defender', name: 'defender'},
+                { data: 'slowest_unit', name: 'slowest_unit'},
+                { data: 'type', name: 'type'},
+                { data: 'send_time', name: 'send_time', orderSequence:["desc", "asc"]},
+                { data: 'arrival_time', name: 'arrival_time'},
+                { data: 'time', name: 'send_time', orderSequence:["desc", "asc"]},
+                { data: 'info', name: 'info'},
+                { data: 'action', name: 'action'},
+                @if($mode == 'edit')
+                { data: 'delete', name: 'delete' },
+                @endif
+            ],
+            columnDefs: [
+                {
+                    'orderable': false,
                     @if($mode == 'edit')
-                    { data: 'select', name: 'select'},
+                    'targets': [2,4,10,11,12]
+                    @else
+                    'targets': [1,3,9,10]
                     @endif
-                    { data: 'start_village_id', name: 'start_village_id'},
-                    { data: 'attacker', name: 'attacker'},
-                    { data: 'target_village_id', name: 'target_village_id'},
-                    { data: 'defender', name: 'defender'},
-                    { data: 'slowest_unit', name: 'slowest_unit'},
-                    { data: 'type', name: 'type'},
-                    { data: 'send_time', name: 'send_time', orderSequence:["desc", "asc"]},
-                    { data: 'arrival_time', name: 'arrival_time'},
-                    { data: 'time', name: 'send_time', orderSequence:["desc", "asc"]},
-                    { data: 'info', name: 'info'},
-                    { data: 'action', name: 'action'},
-                    @if($mode == 'edit')
-                    { data: 'delete', name: 'delete' },
-                    @endif
-                ],
-                columnDefs: [
-                    {
-                        'orderable': false,
-                        @if($mode == 'edit')
-                        'targets': [2,4,10,11,12]
-                        @else
-                        'targets': [1,3,9,10]
-                        @endif
-                    },
-                    @if($mode == 'edit')
-                    {
-                        orderable: false,
-                        className: 'select-checkbox',
-                        targets:   0
-                    }
-                    @endif
-                ],
-                "drawCallback": function(settings, json) {
-                    countdown();
-                    popover();
-                    if(firstDraw) {
-                        @if($mode == 'edit')
-                        if(typeof updateExports !== 'undefined')
-                            updateExports();
-                        @endif
-                        $('#data1_wrapper div.row:first-child').addClass("justify-content-between")
-                        $('#data1_wrapper div.row:first-child > div').removeClass("col-md-6 col-sm-12")
-                        $('#data1_wrapper div.row:first-child > div:eq(1)').html('<div class="form-inline d-print-none">' +
-                            '<div>' +
-                                '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1 text-right" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                                '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
-                            '</div>' +
-                            '<div class="pl-3">' +
-                                '<h5>' +
-                                    '<a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">' +
-                                        '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
-                                    '</a>' +
-                                '</h5>' +
-                            '</div>' +
-                            @auth
-                                @if($attackList->user_id != Auth::user()->id)
-                                    @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
-                                        '<div class="col-1">' +
-                                            '<h5>' +
-                                                '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
-                                            '</h5>' +
-                                        '</div>' +
-                                    @else
-                                        '<div class="col-1">' +
-                                            '<h5>' +
-                                                '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
-                                            '</h5>' +
-                                        '</div>' +
-                                    @endif
-                                @endif
-                            @endauth
-                            '</div>')
-                        $('#data1_wrapper div.row:first-child').append(
-                            '<div data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">'+
-                                '<input type="checkbox" id="checkAsUV" class="mr-1" @checked($attackList->uvMode) >'+
-                                '<label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>'+
-                            '</div>')
-                        $('#audioTimingInput').val(audioTiming)
-                        $('#checkAsUV').on('change', function() {
-                            axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'saveAsUV', $attackList->show_key]) }}", {
-                                'value': $('#checkAsUV').is(':checked'),
-                            })
-                                .then((response) => {
-                                    reloadData(false);
-                                });
-                        });
-                        firstDraw = false
-                    }
                 },
-                {!! \App\Util\Datatable::language() !!}
-            });
+                @if($mode == 'edit')
+                {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                }
+                @endif
+            ],
+            "drawCallback": function(settings, json) {
+                countdown();
+                popover();
+                if(firstDraw) {
+                    @if($mode == 'edit')
+                    if(typeof updateExports !== 'undefined')
+                        updateExports();
+                    @endif
+                    $('#data1_wrapper div.row:first-child').addClass("justify-content-between")
+                    $('#data1_wrapper div.row:first-child > div').removeClass("col-md-6 col-sm-12")
+                    $('#data1_wrapper div.row:first-child > div:eq(1)').html('<div class="form-inline d-print-none">' +
+                        '<div>' +
+                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1 text-right" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
+                            '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
+                        '</div>' +
+                        '<div class="pl-3">' +
+                            '<h5>' +
+                                '<a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">' +
+                                    '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
+                                '</a>' +
+                            '</h5>' +
+                        '</div>' +
+                        @auth
+                            @if($attackList->user_id != Auth::user()->id)
+                                @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                                    '<div class="col-1">' +
+                                        '<h5>' +
+                                            '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
+                                        '</h5>' +
+                                    '</div>' +
+                                @else
+                                    '<div class="col-1">' +
+                                        '<h5>' +
+                                            '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
+                                        '</h5>' +
+                                    '</div>' +
+                                @endif
+                            @endif
+                        @endauth
+                        '</div>')
+                    $('#data1_wrapper div.row:first-child').append(
+                        '<div data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">'+
+                            '<input type="checkbox" id="checkAsUV" class="mr-1" @checked($attackList->uvMode) >'+
+                            '<label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>'+
+                        '</div>')
+                    $('#audioTimingInput').val(audioTiming)
+                    $('#checkAsUV').on('change', function() {
+                        axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'saveAsUV', $attackList->show_key]) }}", {
+                            'value': $('#checkAsUV').is(':checked'),
+                        })
+                            .then((response) => {
+                                reloadData(false);
+                            });
+                    });
+                    firstDraw = false
+                }
+            },
+            {!! \App\Util\Datatable::language() !!}
+        });
+        
+        @if($mode == 'edit')
+            $("#data1 .selectAll").on("click", function() {
+                if ($(this).prop('checked')) {
+                    table.rows().select()
+                }
+                else {
+                    table.rows().deselect()
+                }
+            })
+            $("#data1 .selectAll").prop('checked', false)
+
+            $("#data1 .massDestroy").on("click", function() {
+                var ids = []
+                table.rows({ selected: true }).data().each(function(e) {
+                    ids.push(e.id);
+                })
+                axios.delete("{{ route('tools.attackListItem.massDestroy') }}", {
+                    data: {
+                        "id": "{{ $attackList->id }}",
+                        "key": "{{ $attackList->edit_key }}",
+                        "ids": ids,
+                    }
+                })
+                    .then((response) => {
+                        reloadData(true);
+                    });
+            })
+        @endif
 
         function reloadData(upExp) {
             table.ajax.reload(null, false);

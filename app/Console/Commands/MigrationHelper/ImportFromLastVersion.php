@@ -263,7 +263,25 @@ class ImportFromLastVersion extends Command
                 "`spear`, `sword`, `axe`, `archer`, `spy`, `light`, `marcher`, ".
                 "`heavy`, `ram`, `catapult`, `knight`, `snob`, ".
                 "`created_at`, `updated_at` FROM `$copyFrom`.`attack_list_items`");
-        DB::table('attack_list_items')->insert(static::convertInsertData($data));
+        
+        $arr = [];
+        foreach($data as $d) {
+            $a = (array) $d;
+            $a['spear'] = ($a['spear'] == 0)?(null):($a['spear']);
+            $a['sword'] = ($a['sword'] == 0)?(null):($a['sword']);
+            $a['axe'] = ($a['axe'] == 0)?(null):($a['axe']);
+            $a['archer'] = ($a['archer'] == 0)?(null):($a['archer']);
+            $a['spy'] = ($a['spy'] == 0)?(null):($a['spy']);
+            $a['light'] = ($a['light'] == 0)?(null):($a['light']);
+            $a['marcher'] = ($a['marcher'] == 0)?(null):($a['marcher']);
+            $a['heavy'] = ($a['heavy'] == 0)?(null):($a['heavy']);
+            $a['ram'] = ($a['ram'] == 0)?(null):($a['ram']);
+            $a['catapult'] = ($a['catapult'] == 0)?(null):($a['catapult']);
+            $a['knight'] = ($a['knight'] == 0)?(null):($a['knight']);
+            $a['snob'] = ($a['snob'] == 0)?(null):($a['snob']);
+            $arr[] = $a;
+        }
+        DB::table('attack_list_items')->insert($arr);
     }
     
     private static function copyModelContents($old, $new, $parts) {

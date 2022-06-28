@@ -277,14 +277,9 @@ class AttackListItem extends CustomModel
             if(!$forceAllow && !isset($data->checkboxes[$unit])) continue;
 
             if ($data->{$unit} == null){
-                $this->{$unit} = 0;
+                $this->{$unit} = null;
             }else{
-                $value = intval($data->{$unit});
-                if ($value <= 2147483648){
-                    $this->{$unit} = $value;
-                }else{
-                    $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
-                }
+                $this->{$unit} = mb_strimwidth($data->{$unit}, 0, 200, "...");
             }
         }
         return $err;
@@ -297,14 +292,9 @@ class AttackListItem extends CustomModel
             if(!$forceAllow && !isset($data['checkboxes'][$unit])) continue;
             
             if (!isset($data[$unit]) || $data[$unit] == null){
-                $this[$unit] = 0;
+                $this->{$unit} = null;
             } else {
-                $value = intval($data[$unit]);
-                if ($value <= 2147483648){
-                    $this[$unit] = $value;
-                }else{
-                    $err[] = __('ui.unit.'.$unit).' '.__('tool.attackPlanner.errorUnitCount');
-                }
+                $this->{$unit} = mb_strimwidth($data[$unit], 0, 200, "...");
             }
         }
         return $err;
@@ -313,14 +303,14 @@ class AttackListItem extends CustomModel
 
     public function setEmptyUnits() {
         foreach (self::$units as $unit){
-            $this[$unit] = 0;
+            $this->{$unit} = null;
         }
     }
     
     public static function unitVerifyArray() {
         $ret = [];
         foreach (self::$units as $unit) {
-            $ret[$unit] = 'integer';
+            $ret[$unit] = '';
         }
         return $ret;
     }

@@ -17,6 +17,7 @@ Route::get('/{server}/{world}/tools/distanceCalc', [\App\Http\Controllers\Tools\
 //Attack planner
 Route::get('/tools/create/attackPlanner/{server}/{world}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
 
+Route::delete('/tools/attackPlanner/attackListItem/massDestroy', [\App\Http\Controllers\Tools\AttackPlannerItemController::class, 'massDestroy'])->name('attackListItem.massDestroy');
 Route::resource('/tools/attackPlanner/attackListItem',\App\Http\Controllers\Tools\AttackPlannerItemController::class, [
     'only' => ['store', 'destroy', 'update'],
 ]);

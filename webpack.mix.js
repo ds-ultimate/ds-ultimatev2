@@ -34,6 +34,7 @@ let safelist =
     /fa-.*/,
     "pull-left",
     "dataTables_wrapper",
+    "selectAll",
 ];
 mix.js('resources/js/app.js', 'public/js');
 mix.sass('resources/sass/app.scss', 'public/css')

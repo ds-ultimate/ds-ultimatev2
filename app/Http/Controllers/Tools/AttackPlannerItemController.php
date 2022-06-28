@@ -190,8 +190,13 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('info', function (AttackListItem $attackListItem){
                 $unitCount = '';
                 foreach (AttackListItem::$units as $unit){
-                    if ($attackListItem->$unit != 0){
-                        $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>".BasicFunctions::numberConv($attackListItem->$unit)."</b>".(($unit != 'snob')? '<br>':'');
+                    if ($attackListItem->$unit != null){
+                        if(is_numeric($attackListItem->$unit)) {
+                            $cntFormat = BasicFunctions::numberConv($attackListItem->$unit);
+                        } else {
+                            $cntFormat = BasicFunctions::escape($attackListItem->$unit);
+                        }
+                        $unitCount .= "<img class='pr-3' src='".asset('images/ds_images/unit/'.$unit.'.png')."' height='15px'> <b>$cntFormat</b>".(($unit != 'snob')? '<br>':'');
                     }
                 }
                 $speedBoost = "";
@@ -418,5 +423,18 @@ class AttackPlannerItemController extends BaseController
         abort_unless($request->key == $attackListItem->list->show_key, 403);
         $attackListItem->send = 1;
         $attackListItem->update();
+    }
+
+    public function massDestroy(Request $request)
+    {
+        $attackplaner = AttackList::findorfail($request->id);
+        abort_unless($request->key == $attackplaner->edit_key, 403);
+        abort_if($attackplaner->world->maintananceMode, 503);
+        
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:attack_list_items,id',
+        ]);
+        AttackListItem::whereIn('id', $request->input('ids'))->where('attack_list_id', $request->id)->delete();
     }
 }

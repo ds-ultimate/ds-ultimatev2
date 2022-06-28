@@ -46,18 +46,18 @@ return new class extends Migration
             $table->float('support_boost')->default(0.00);
             $table->float('tribe_skill')->default(0.00);
             
-            $table->integer('spear')->default(0);
-            $table->integer('sword')->default(0);
-            $table->integer('axe')->default(0);
-            $table->integer('archer')->default(0);
-            $table->integer('spy')->default(0);
-            $table->integer('light')->default(0);
-            $table->integer('marcher')->default(0);
-            $table->integer('heavy')->default(0);
-            $table->integer('ram')->default(0);
-            $table->integer('catapult')->default(0);
-            $table->integer('knight')->default(0);
-            $table->integer('snob')->default(0);
+            $table->tinyText('spear')->nullable();
+            $table->tinyText('sword')->nullable();
+            $table->tinyText('axe')->nullable();
+            $table->tinyText('archer')->nullable();
+            $table->tinyText('spy')->nullable();
+            $table->tinyText('light')->nullable();
+            $table->tinyText('marcher')->nullable();
+            $table->tinyText('heavy')->nullable();
+            $table->tinyText('ram')->nullable();
+            $table->tinyText('catapult')->nullable();
+            $table->tinyText('knight')->nullable();
+            $table->tinyText('snob')->nullable();
             
             $table->timestamps();
         });

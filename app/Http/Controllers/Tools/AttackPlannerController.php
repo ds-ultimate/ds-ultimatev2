@@ -166,7 +166,12 @@ class AttackPlannerController extends BaseController
         $exportWB = "";
         foreach ($items as $item){
             $arrTimestamp = (strtotime($item->arrival_time)*1000) + $item->ms;
-            $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName()."&$arrTimestamp&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword)."/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy)."/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy)."/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight)."/snob=".base64_encode($item->snob)."/militia=MA==\n";
+            $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName().
+                    "&$arrTimestamp&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword).
+                    "/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy).
+                    "/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy).
+                    "/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight).
+                    "/snob=".base64_encode($item->snob)."/militia=MA==\n";
         }
         
         //BB-Code
@@ -253,7 +258,7 @@ class AttackPlannerController extends BaseController
                 foreach ($units as $unit) {
                     $unitSplit = explode('=', $unit, 2);
                     if(count($unitSplit) < 2) continue;
-                    $unitArray[$unitSplit[0]] = intval(base64_decode(str_replace('/', '', $unitSplit[1])));
+                    $unitArray[$unitSplit[0]] = base64_decode(str_replace('/', '', $unitSplit[1]));
                 }
             }
             $it = self::newItem($err, $attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
