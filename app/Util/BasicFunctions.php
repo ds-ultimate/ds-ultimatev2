@@ -171,7 +171,7 @@ class BasicFunctions
         return $result !== false && count($result) > 0;
     }
 
-    public static function local(){
+    public static function local() {
         $locale = \Session::get('locale');
         if($locale === null) {
             $replacements = ["cs" => "cz"];

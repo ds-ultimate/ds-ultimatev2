@@ -325,23 +325,23 @@ It is not specified which village you have to give the name to, but it must belo
   array (
     404 => 
     array (
-      'unknownType' => 'Unknown type \':type\'',
       'noServer' => 'We couldn\'t find any data about the server \':server\'',
       'noWorld' => 'We couldn\'t find any data about the world \':world\'',
-      'illegalHistoryIndex' => 'The index \':index\' does not exist in the history data',
-      'playerNotFound' => 'The player with the id \':player\' could not be found at world \':world\'',
+      'unknownType' => 'Unknown type \':type\'',
       'allyNotFound' => 'The tribe with the id \':ally\' could not be found at world \':world\'',
+      'playerNotFound' => 'The player with the id \':player\' could not be found at world \':world\'',
       'villageNotFound' => 'The village with the id \':village\' could not be found at world \':world\'',
-      'heightTooSmall' => 'The height of the image is too small',
       'widthTooSmall' => 'The width of the image is too small',
+      'heightTooSmall' => 'The height of the image is too small',
       'noRoundFound' => 'There doesn\'t seem to be an active round currently on \':world\'',
+      'illegalHistoryIndex' => 'The index \':index\' does not exist in the history data',
       'toolNotAvail' => 
       array (
         'attackPlanner' => 'The attack planner is not available for this world',
-        'animHistMap' => 'The animated maps are not available at that world',
-        'distCalc' => 'The distance calculator is not available for this world',
         'greatSiegeCalc' => 'The greate siege calculator is not available for this world',
+        'animHistMap' => 'The animated maps are not available at that world',
         'pointCalc' => 'The point calculator is not available for this world',
+        'distCalc' => 'The distance calculator is not available for this world',
       ),
     ),
     403 => 

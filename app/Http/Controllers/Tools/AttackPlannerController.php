@@ -86,6 +86,10 @@ class AttackPlannerController extends BaseController
                 abort_unless($attackList->edit_key == $key, 403);
                 $attackList->touch();
                 return static::destroyOutdated($attackList);
+            case 'destroySent':
+                abort_unless($attackList->edit_key == $key, 403);
+                $attackList->touch();
+                return static::destroySent($attackList);
             case 'clear':
                 abort_unless($attackList->edit_key == $key, 403);
                 $attackList->touch();
@@ -293,6 +297,14 @@ class AttackPlannerController extends BaseController
     public static function destroyOutdated(AttackList $attackList){
         AttackListItem::where([
             ['send_time', '<', Carbon::createFromTimestamp(time())],
+            ['attack_list_id', $attackList->id]
+        ])->delete();
+        return ['success' => true, 'message' => 'destroy !!'];
+    }
+
+    public static function destroySent(AttackList $attackList){
+        AttackListItem::where([
+            ['send', 1],
             ['attack_list_id', $attackList->id]
         ])->delete();
         return ['success' => true, 'message' => 'destroy !!'];

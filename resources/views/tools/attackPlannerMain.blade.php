@@ -90,7 +90,7 @@ $tabList = [
                         <thead>
                             <tr>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 25px"><input type="checkbox" class="selectAll"/></th>
+                                <th style="min-width: 25px"><input type="checkbox" class="selectAll"/></th>
                                 @endif
                                 <th>{{ __('tool.attackPlanner.startVillage') }}</th>
                                 <th>{{ __('tool.attackPlanner.attacker') }}</th>
@@ -104,9 +104,11 @@ $tabList = [
                                 <th style="min-width: 25px">&nbsp;</th>
                                 <th style="min-width: 25px">&nbsp;</th>
                                 @if($mode == 'edit')
-                                    <th style="min-width: 50px">
-                                        <h4 class="mb-0 text-center" style="line-height: 1;"><a class="text-danger massDestroy"><i class="fas fa-times"></i></a></h4>
-                                    </th>
+                                <th style="min-width: 50px">
+                                    <h4 class="mb-0 text-center" style="line-height: 1;">
+                                        <a class="text-danger confirm-massDestroy" data-toggle="confirmation" data-content="{{ __('tool.attackPlanner.confirm.massDelete') }}" style="cursor: pointer"><i class="fas fa-times"></i></a>
+                                    </h4>
+                                </th>
                                 @endif
                             </tr>
                         </thead>
@@ -256,11 +258,13 @@ $tabList = [
             })
             $("#data1 .selectAll").prop('checked', false)
 
-            $("#data1 .massDestroy").on("click", function() {
+            $("#data1 .confirm-massDestroy").on('confirmed.bs.confirmation', function() {
                 var ids = []
                 table.rows({ selected: true }).data().each(function(e) {
-                    ids.push(e.id);
+                    ids.push(e.id)
                 })
+                if(ids.length < 1) return
+                
                 axios.delete("{{ route('tools.attackListItem.massDestroy') }}", {
                     data: {
                         "id": "{{ $attackList->id }}",
@@ -269,8 +273,8 @@ $tabList = [
                     }
                 })
                     .then((response) => {
-                        reloadData(true);
-                    });
+                        reloadData(true)
+                    })
             })
         @endif
 
@@ -332,6 +336,13 @@ $tabList = [
 
         function destroyOutdated() {
             axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'destroyOutdated', $attackList->edit_key]) }}")
+                .then((response) => {
+                    reloadData(true);
+                });
+        }
+
+        function destroySent() {
+            axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'destroySent', $attackList->edit_key]) }}")
                 .then((response) => {
                     reloadData(true);
                 });

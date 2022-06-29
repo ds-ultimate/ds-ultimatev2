@@ -18,7 +18,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\LocalizeRoutes::class,
     ];
 
     /**
@@ -38,12 +37,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\AuthGates::class,
             \App\Http\Middleware\RecordUserLastVisited::class,
             'bindings',
+            'localize',
         ],
 
         'api' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Session\Middleware\StartSession::class,
             'bindings',
+            'localize',
         ],
     ];
 

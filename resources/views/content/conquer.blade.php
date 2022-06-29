@@ -49,6 +49,7 @@
                         <th>{{ ucfirst(__('ui.table.villageName')) }}</th>
                         <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.owner')) }}</th>
                         <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.owner')) }}</th>
+                        <th>{{ ucfirst(__('ui.table.points')) }}</th>
                         <th>{{ ucfirst(__('ui.table.date')) }}</th>
                     </tr></thead>
                     <tbody></tbody>
@@ -74,6 +75,7 @@
                 { "data": "village", "orderable": false, "searchable": false},
                 { "data": "old_owner_name", "name": "old_owner_name"},
                 { "data": "new_owner_name", "name": "new_owner_name"},
+                { "data": "points", "searchable": false},
                 { "data": "timestamp", "searchable": false},
                 { "data": "old_ally_name", visible: false},
                 { "data": "new_ally_name", visible: false},

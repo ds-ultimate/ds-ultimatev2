@@ -116,6 +116,7 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'confirm' => 
     array (
       'clear' => 'Es werden ALLE Angriffe gelöscht',
+      'massDelete' => 'Die ausgewählten Angriffe werden gelöscht',
     ),
     'deleteAll' => 'Angriffsplan leeren',
     'errorKoordEmpty' => 'Start- und Zieldorf dürfen nicht leer sein',
@@ -169,6 +170,7 @@ Erstellt am %CREATE_AT% mit [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     ),
     'otherUnits' => 'Andere Einheiten',
     'iconsTitle' => 'Icons',
+    'deleteSent' => 'abgeschickte Angriffe löschen',
   ),
   'map' => 
   array (

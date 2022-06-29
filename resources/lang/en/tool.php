@@ -117,6 +117,7 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     'confirm' => 
     array (
       'clear' => 'all attacks will be deleted',
+      'massDelete' => 'The selected attacks will be deleted',
     ),
     'errorKoordEmpty' => 'Start- and Targetvillage must not be empty',
     'uvMode' => 'Sitter-Mode',
@@ -169,6 +170,7 @@ Created at %CREATE_AT% with [url=%CREATE_WITHL%]%CREATE_WITH%[/url]',
     ),
     'otherUnits' => 'other units',
     'iconsTitle' => 'Icons',
+    'deleteSent' => 'delete already sent attacks',
   ),
   'map' => 
   array (
