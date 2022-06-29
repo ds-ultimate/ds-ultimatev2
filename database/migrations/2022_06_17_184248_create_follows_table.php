@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\World::class, 'world_id')->nullable();
             
             $table->timestamps();
+            $table->index('user_id');
         });
     }
 

@@ -100,6 +100,10 @@ class Player extends CustomModel
                 ->orderBy('updated_at', 'ASC')->get();
 
         $playerDatas = [];
+        if(count($playerDataArray) < 1) {
+            return $playerDatas;
+        }
+        
         $earliestDate = $playerDataArray[count($playerDataArray) - 1]->updated_at->subDays($dayDelta);
         foreach ($playerDataArray as $player){
             if($player->updated_at->lt($earliestDate)) continue;
