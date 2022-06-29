@@ -44,7 +44,7 @@ class InsertMissingConquerPoints extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', '1800M');
+        ini_set('memory_limit', '18000M');
         $worlds = $this->argument('world');
         foreach($worlds as $w) {
             if($w == "*") {
