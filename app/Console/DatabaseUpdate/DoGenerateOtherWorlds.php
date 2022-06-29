@@ -18,10 +18,7 @@ class DoGenerateOtherWorlds
                 ];
             }
             
-            $servers[$model->server->code]['w'][] = [
-                "name" => $model->name,
-                "id" => $model->id,
-            ];
+            $servers[$model->server->code]['w'][] = $model;
         }
         
         foreach($servers as $entry) {
@@ -57,7 +54,7 @@ class DoGenerateOtherWorlds
                 }
                 
                 //that function contains a dup check
-                $model->addWorld($world['id']);
+                $model->addWorld($world->id);
                 $model->name = $elm->name;
                 
                 if($model->isDirty()) {
