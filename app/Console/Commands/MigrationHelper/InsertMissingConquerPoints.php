@@ -95,9 +95,9 @@ class InsertMissingConquerPoints extends Command
             $conq->save();
             $curConq++;
             
-            if($curConq % 100 == 0) {
+            if($curConq % 10 == 0) {
                 
-                echo "\r" . $worldModel->serName() . " at: $i / $allConq      ";
+                echo "\r" . $worldModel->serName() . " at: $curConq / $allConq      ";
             }
         }
         echo "\n";
