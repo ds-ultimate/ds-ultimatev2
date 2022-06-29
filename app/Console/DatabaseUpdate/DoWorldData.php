@@ -84,7 +84,7 @@ class DoWorldData
     }
     
     public static function loadUncompressedFile(World $world, $urlEnd, $name) {
-        $url = "$world->url/map/$name";
+        $url = "$world->url/$urlEnd";
         $response = Http::retry(3, 1000, throw: false)->withoutRedirecting()->get($url);
         if(!$response->ok()) {
             BasicFunctions::createLog("ERROR_update[" . $world->serName() . "]", "$name konnte nicht ge&ouml;ffnet werden");
