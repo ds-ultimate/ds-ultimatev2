@@ -106,6 +106,9 @@ class InsertMissingConquerPoints extends Command
     private function loadVillageHistory(World $worldModel, $villID) {
         $tbl = $villID % $worldModel->hash_village;
         $hist = [];
+        if(! BasicFunctions::hasWorldDataTable($worldModel, "village_$tbl")) {
+            return $hist;
+        }
         
         $data = DB::select("SELECT villageID, points, updated_at FROM " . BasicFunctions::getWorldDataTable($worldModel, "village_$tbl") .
                 " WHERE villageID='". (intval($villID)) ."'");
