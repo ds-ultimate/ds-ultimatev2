@@ -68,7 +68,7 @@
         dataTable = $('#table_id').DataTable({
             "processing": true,
             "serverSide": true,
-            "order": [[ 3, "desc" ]],
+            "order": [[ 4, "desc" ]],
             "searching": true,
             "ajax": "{{ $routeDatatableAPI }}",
             "columns": [
