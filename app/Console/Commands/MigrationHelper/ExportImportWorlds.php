@@ -69,11 +69,13 @@ class ExportImportWorlds extends Command
             $wData.= "|" . base64_encode($world->config);
             $wData.= "|" . base64_encode($world->units);
             $wData.= "|" . base64_encode($world->buildings);
-            $wData.= "|" . $world->active;
             $wData.= "|" . $world->worldCheck_at;
             $wData.= "|" . $world->worldCleaned_at;
             $wData.= "|" . $world->worldTop_at;
-            $wData.= "|" . $world->display_name . "\n";
+            $wData.= "|" . $world->display_name;
+            $wData.= "|" . $world->hash_ally;
+            $wData.= "|" . $world->hash_player;
+            $wData.= "|" . $world->hash_village . "\n";
             fwrite($file, $wData);
         }
         fclose($file);
@@ -119,15 +121,16 @@ class ExportImportWorlds extends Command
         $world->config = base64_decode($data[6]);
         $world->units = base64_decode($data[7]);
         $world->buildings = base64_decode($data[8]);
-        if($data[9] != "") {
-            $world->active = $data[9];
+        $world->active = null;
+        $world->worldCheck_at = $data[9];
+        $world->worldCleaned_at = $data[10];
+        if($data[11] != "") {
+            $world->worldTop_at = $data[11];
         }
-        $world->worldCheck_at = $data[10];
-        $world->worldCleaned_at = $data[11];
-        if($data[12] != "") {
-            $world->worldTop_at = $data[12];
-        }
-        $world->display_name = $data[13];
+        $world->display_name = $data[12];
+        $world->hash_ally = $data[13];
+        $world->hash_player = $data[14];
+        $world->hash_village = $data[15];
         $world->save();
     }
     
