@@ -112,26 +112,23 @@ class ChangeHashSize extends Command
     }
         
     private function doChangeHash(World $worldModel, $tblPrefix, $oldHash, $newHash, $idCol, Callable $createCallback) {
-        //Step 1 load data into ram
-        $allEntries = [];
+        echo "Doing {$worldModel->serName()} $idCol";
+        //Step 1 determine new hash size
         $dataSize = 0;
         for($i = 0; $i < $oldHash; $i++) {
             if (BasicFunctions::hasWorldDataTable($worldModel, "$tblPrefix$i") === false) {
                 continue;
             }
-            $data = DB::select("SELECT * FROM " . BasicFunctions::getWorldDataTable($worldModel, "$tblPrefix$i"));
-            
-            foreach($data as $r) {
-                $allEntries[] = (array) $r;
-                $dataSize++;
-            }
+            $data = DB::select("SELECT COUNT(*) AS c FROM " . BasicFunctions::getWorldDataTable($worldModel, "$tblPrefix$i"));
+            $dataSize += $data[0]->c;
+            echo ".";
         }
         
-        //Step 1.1 determine new hash size
         if($newHash <= 0) {
             $newHash = intval($dataSize / static::$TARGET_TABLE_SIZE) + 1;
         }
         if($newHash == $oldHash) {
+            echo "\n";
             return $oldHash;
         }
         
@@ -146,28 +143,36 @@ class ChangeHashSize extends Command
         }
         
         //Step 3 Create new tables
-        $sorted = [];
         for($i = 0; $i < $newHash; $i++) {
             $createCallback($worldModel, $i);
-            $sorted[$i] = [];
         }
         
         //Step 4 Insert data
-        $keys = array_keys($allEntries);
-        foreach($keys as $k) {
-            $entry = $allEntries[$k];
-            unset($allEntries[$k]);
-            $sorted[$entry[$idCol] % $newHash][] = $entry;
-        }
-        for($i = 0; $i < $newHash; $i++) {
-            if(count($sorted[$i]) <= 0) {
+        echo "!";
+        for($i = 0; $i < $oldHash; $i++) {
+            $allEntries = [];
+            for($j = 0; $j < $newHash; $j++) {
+                $allEntries[$j] = [];
+            }
+            if (BasicFunctions::hasWorldDataTable($worldModel, "{$tblPrefix}old_$i") === false) {
                 continue;
             }
-            
-            $tbl = BasicFunctions::getWorldDataTable($worldModel, "$tblPrefix$i");
-            foreach (array_chunk($sorted[$i], 3000) as $t) {
-                DB::table($tbl)->insert($t);
+            $data = DB::select("SELECT * FROM " . BasicFunctions::getWorldDataTable($worldModel, "{$tblPrefix}old_$i"));
+            foreach($data as $entry) {
+                $allEntries[$entry->$idCol % $newHash][] = (array) $entry;
             }
+            
+            for($j = 0; $j < $newHash; $j++) {
+                if(count($allEntries[$j]) <= 0) {
+                    continue;
+                }
+
+                $tbl = BasicFunctions::getWorldDataTable($worldModel, "$tblPrefix$j");
+                foreach (array_chunk($allEntries[$j], 3000) as $t) {
+                    DB::table($tbl)->insert($t);
+                }
+            }
+            echo ".";
         }
         
         //Step 5 delete old tables
@@ -178,6 +183,7 @@ class ChangeHashSize extends Command
             $tblTmp = BasicFunctions::getWorldDataTable($worldModel, "{$tblPrefix}old_$i");
             Schema::dropIfExists($tblTmp);
         }
+        echo "\n";
         return $newHash;
     }
 }
