@@ -55,8 +55,8 @@ class ChangeHashSize extends Command
                     $diff+= $this->changeHashes($wInner, $hash);
                 }
             } else if($w == "inactive") {
-                $world = (new World())->where('active', 0)->get();
-                foreach ($world as $wInner){
+                $world = (new World())->where('active', NULL)->orWhere('active', 0)->get();
+                foreach ($world as $wInner) {
                     $diff+= $this->changeHashes($wInner, $hash);
                 }
             } else {
