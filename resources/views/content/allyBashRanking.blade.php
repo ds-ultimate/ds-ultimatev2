@@ -58,6 +58,10 @@
                     {"targets": 6, "className": 'text-right', 'orderable': false},
                     {"targets": 7, "className": 'text-right', 'orderable': false},
                 ],
+                dom: "<'row'<'col-sm-12 col-md-6'<'d-inline-flex mr-2'B><'d-inline-flex'l>><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'print'
+                ],
                 "order": [[ 2, "desc" ]],
                 "processing": true,
                 "pageLength": 100,
