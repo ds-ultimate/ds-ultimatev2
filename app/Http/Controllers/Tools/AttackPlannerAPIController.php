@@ -27,11 +27,13 @@ class AttackPlannerAPIController extends BaseController
             'API_KEY' => 'required',
         ], static::itemVerificationArray()));
         
-        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
+        $apiKeyPos = array_search($req['API_KEY'], explode(";", config("app.API_KEYS")));
+        if($apiKeyPos === false) {
             abort(403);
         }
 
         $worldData = World::getAndCheckWorld($req['server'], $req['world']);
+        abort_if($worldData->maintananceMode, 503);
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
         
         $list = new AttackList();
@@ -43,6 +45,7 @@ class AttackPlannerAPIController extends BaseController
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
         $list->api = true;
+        $list->apiKey = $apiKeyPos;
         $list->save();
         return self::apiInternalCreateItems($req, $list);
     }
