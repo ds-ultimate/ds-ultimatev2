@@ -280,7 +280,7 @@ class APIController extends Controller
         
         $model = new SpeedWorld();
         return DataTables::eloquent($model->newQuery())
-            ->editColumn("server", function ($data) {
+            ->editColumn("server_id", function ($data) {
                 return "<span class='flag-icon flag-icon-".BasicFunctions::escape($data->server->flag)."'></span>"
                         . " [".BasicFunctions::escape($data->server->code)."]";
             })
@@ -306,7 +306,7 @@ class APIController extends Controller
             ->addColumn('actions', function ($data) use($permissions, $routes) {
                 return $this->generateActions($permissions, $routes, $data->id);
             })
-            ->rawColumns(['server', 'url', 'started', 'actions'])
+            ->rawColumns(['server_id', 'url', 'started', 'actions'])
             ->toJson();
     }
     

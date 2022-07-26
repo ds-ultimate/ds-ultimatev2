@@ -17,8 +17,8 @@
     </div>
 
     <div class="card-body">
-        <div class="table-responsive">
-            <table id="table_id" class="table table-bordered table-striped table-hover datatable w-100">
+        <div class="cust-responsive">
+            <table id="table_id" class="table table-bordered table-striped table-hover datatable w-100 nowrap">
                 <thead>
                     <tr>
                         @foreach($tableColumns as $col)
@@ -44,6 +44,9 @@
                 {"targets": {{ $loop->index }}, "className": '{{ $col['class'] }}'},
             @endforeach
         ],
+        @isset($defaultOrder)
+        "order": [{!! $defaultOrder !!}],
+        @endif
         "processing": true,
         "serverSide": true,
         "ajax": "{{ route($datatableRoute) }}",

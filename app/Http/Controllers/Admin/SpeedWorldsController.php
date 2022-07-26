@@ -22,19 +22,20 @@ class SpeedWorldsController extends Controller
         ];
         $tableColumns = [
             BasicFunctions::indexEntry(__('admin.speedWorlds.id'), "id"),
-            BasicFunctions::indexEntry(__('admin.speedWorlds.server'), "server", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(__('admin.speedWorlds.server'), "server_id", "", "", ['dataAdditional' => ', "searchable": false']),
             BasicFunctions::indexEntry(__('admin.speedWorlds.name'), "name"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.display_name'), "display_name"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.plannedStart'), "planned_start"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.plannedEnd'), "planned_end"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.instance'), "instance"),
-            BasicFunctions::indexEntry(__('admin.speedWorlds.url'), "url"),
+            BasicFunctions::indexEntry(__('admin.speedWorlds.url'), "url", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
             BasicFunctions::indexEntry(__('admin.speedWorlds.started'), "started"),
-            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
+            BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false, "searchable": false']),
         ];
         $datatableRoute = "admin.api.speedWorlds";
+        $defaultOrder = "0, 'desc'";
 
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'defaultOrder'));
     }
 
     public function create()
