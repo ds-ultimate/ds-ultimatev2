@@ -72,7 +72,7 @@ class ExportImportWorlds extends Command
             $wData.= "|" . $world->worldCheck_at;
             $wData.= "|" . $world->worldCleaned_at;
             $wData.= "|" . $world->worldTop_at;
-            $wData.= "|" . $world->display_name;
+            $wData.= "|" . base64_encode($world->display_name);
             $wData.= "|" . $world->hash_ally;
             $wData.= "|" . $world->hash_player;
             $wData.= "|" . $world->hash_village . "\n";
@@ -127,7 +127,7 @@ class ExportImportWorlds extends Command
         if($data[11] != "") {
             $world->worldTop_at = $data[11];
         }
-        $world->display_name = $data[12];
+        $world->display_name = base64_decode($data[12]);
         $world->hash_ally = $data[13];
         $world->hash_player = $data[14];
         $world->hash_village = $data[15];
