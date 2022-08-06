@@ -64,9 +64,8 @@ class SpeedToSharedDB extends Command
         foreach($speedWorlds as $server => $worlds) {
             foreach($worlds as $w) {
                 $sharedDB = static::findNextFreeSharedDB($w->server);
-                if($dryRun) {
-                    echo "Moving " . $w->serName() . " to " . $sharedDB->name . " (or simmilar if full)\n";
-                } else {
+                echo "Moving " . $w->serName() . " to " . $sharedDB->name . " ";
+                if(!$dryRun) {
                     ToSharedDB::moveToSharedDB($w, $sharedDB);
                 }
             }
