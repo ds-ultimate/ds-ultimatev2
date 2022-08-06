@@ -27,8 +27,7 @@ class Village extends CustomModel
      */
     public function playerLatest()
     {
-        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
-        return $this->mybelongsTo('App\Player', 'owner', 'playerID', $table);
+        return $this->mybelongsTo('App\Player', 'owner', 'playerID', $this->getRelativeTable("player_latest"));
     }
 
     /**

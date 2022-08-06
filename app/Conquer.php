@@ -48,8 +48,7 @@ class Conquer extends CustomModel
      */
     public function oldPlayer()
     {
-        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
-        return $this->mybelongsTo('App\Player', 'old_owner', 'playerID', $table);
+        return $this->mybelongsTo('App\Player', 'old_owner', 'playerID', $this->getRelativeTable("player_latest"));
     }
 
     /**
@@ -57,8 +56,7 @@ class Conquer extends CustomModel
      */
     public function newPlayer()
     {
-        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
-        return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table);
+        return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $this->getRelativeTable("player_latest"));
     }
 
     /**
@@ -66,8 +64,7 @@ class Conquer extends CustomModel
      */
     public function oldAlly()
     {
-        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
-        return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $table);
+        return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $this->getRelativeTable("ally_latest"));
     }
 
     /**
@@ -75,8 +72,7 @@ class Conquer extends CustomModel
      */
     public function newAlly()
     {
-        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
-        return $this->mybelongsTo('App\Ally', 'new_ally', 'allyID', $table);
+        return $this->mybelongsTo('App\Ally', 'new_ally', 'allyID', $this->getRelativeTable("ally_latest"));
     }
 
     /**
@@ -84,8 +80,7 @@ class Conquer extends CustomModel
      */
     public function village()
     {
-        $table = str_replace($this->defaultTableName, "village_latest", $this->table);
-        return $this->mybelongsTo('App\Village', 'village_id', 'villageID', $table);
+        return $this->mybelongsTo('App\Village', 'village_id', 'villageID', $this->getRelativeTable("village_latest"));
     }
 
     /**

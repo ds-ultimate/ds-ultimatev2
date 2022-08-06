@@ -78,4 +78,19 @@ class CustomModel extends Model
         }
         return parent::getRelationValue($key);
     }
+    
+    public function getRelativeTable($table) {
+        $tableNames = [
+            "ally_",
+            "player_",
+            "village_",
+            "conquer",
+        ];
+        foreach($tableNames as $tblName) {
+            $p = strrpos($this->table, $tblName);
+            if($p !== false) {
+                return substr($this->table, 0, $p) . $table;
+            }
+        }
+    }
 }

@@ -21,8 +21,7 @@ class AllyChanges extends CustomModel
      */
     public function oldAlly()
     {
-        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
-        return $this->mybelongsTo('App\Ally', 'old_ally_id', 'allyID', $table);
+        return $this->mybelongsTo('App\Ally', 'old_ally_id', 'allyID', $this->getRelativeTable("ally_latest"));
     }
 
     /**
@@ -30,8 +29,7 @@ class AllyChanges extends CustomModel
      */
     public function newAlly()
     {
-        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
-        return $this->mybelongsTo('App\Ally', 'new_ally_id', 'allyID', $table);
+        return $this->mybelongsTo('App\Ally', 'new_ally_id', 'allyID', $this->getRelativeTable("ally_latest"));
     }
 
     /**
@@ -39,8 +37,7 @@ class AllyChanges extends CustomModel
      */
     public function player()
     {
-        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
-        return $this->mybelongsTo('App\Player', 'player_id', 'playerID', $table);
+        return $this->mybelongsTo('App\Player', 'player_id', 'playerID', $this->getRelativeTable("player_latest"));
     }
     
     /**
@@ -48,8 +45,7 @@ class AllyChanges extends CustomModel
      */
     public function oldAllyTop()
     {
-        $table = str_replace($this->defaultTableName, "ally_top", $this->table);
-        return $this->mybelongsTo('App\AllyTop', 'old_ally_id', 'allyID', $table);
+        return $this->mybelongsTo('App\AllyTop', 'old_ally_id', 'allyID', $this->getRelativeTable("ally_top"));
     }
 
     /**
@@ -57,8 +53,7 @@ class AllyChanges extends CustomModel
      */
     public function newAllyTop()
     {
-        $table = str_replace($this->defaultTableName, "ally_top", $this->table);
-        return $this->mybelongsTo('App\AllyTop', 'new_ally_id', 'allyID', $table);
+        return $this->mybelongsTo('App\AllyTop', 'new_ally_id', 'allyID', $this->getRelativeTable("ally_top"));
     }
 
     /**
@@ -66,8 +61,7 @@ class AllyChanges extends CustomModel
      */
     public function playerTop()
     {
-        $table = str_replace($this->defaultTableName, "player_top", $this->table);
-        return $this->mybelongsTo('App\PlayerTop', 'player_id', 'playerID', $table);
+        return $this->mybelongsTo('App\PlayerTop', 'player_id', 'playerID', $this->getRelativeTable("player_top"));
     }
 
     /**

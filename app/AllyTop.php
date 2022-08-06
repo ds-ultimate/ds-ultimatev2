@@ -62,8 +62,7 @@ class AllyTop extends CustomModel
      */
     public function allyLatest()
     {
-        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
-        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $table);
+        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $this->getRelativeTable("ally_latest"));
     }
 
     /**
@@ -71,8 +70,7 @@ class AllyTop extends CustomModel
      */
     public function allyChangesOld()
     {
-        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
-        return $this->myhasMany('App\AllyChanges', 'old_ally_id', 'allyID', $table);
+        return $this->myhasMany('App\AllyChanges', 'old_ally_id', 'allyID', $this->getRelativeTable("ally_changes"));
     }
 
     /**
@@ -80,8 +78,7 @@ class AllyTop extends CustomModel
      */
     public function allyChangesNew()
     {
-        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
-        return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $table);
+        return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $this->getRelativeTable("ally_changes"));
     }
 
     /**
