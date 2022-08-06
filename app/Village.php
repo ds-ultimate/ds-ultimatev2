@@ -10,12 +10,14 @@ class Village extends CustomModel
     ];
     
     public $timestamps = true;
+    
+    protected $defaultTableName = "village_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
     {
         if($arg1 instanceof World && $arg2 == null) {
             //allow calls without table name
-            $arg2 = "village_latest";
+            $arg2 = $this->defaultTableName;
         }
         parent::__construct($arg1, $arg2);
     }
@@ -25,8 +27,8 @@ class Village extends CustomModel
      */
     public function playerLatest()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Player', 'owner', 'playerID', $table[0].'.player_latest');
+        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
+        return $this->mybelongsTo('App\Player', 'owner', 'playerID', $table);
     }
 
     /**

@@ -50,11 +50,7 @@ class ChangeHashSize extends Command
         $diff = 0;
         foreach($worlds as $w) {
             if($w == "*") {
-                $world = (new World())->get();
-                foreach ($world as $wInner){
-                    $diff+= $this->changeHashes($wInner, $hash);
-                }
-            } else if($w == "inactive") {
+                echo "This tool can only be used on worlds were the updates have been disabled. Running through inactive worlds\n";
                 $world = (new World())->where('active', NULL)->orWhere('active', 0)->get();
                 foreach ($world as $wInner) {
                     $diff+= $this->changeHashes($wInner, $hash);
@@ -62,7 +58,11 @@ class ChangeHashSize extends Command
             } else {
                 $world = World::getWorld(substr($w, 0, 2), substr($w, 2));
                 if($world != null) {
-                    $diff+= $this->changeHashes($world, $hash);
+                    if($world->active === null || $world->active == 0) {
+                        $diff+= $this->changeHashes($world, $hash);
+                    } else {
+                        echo "This tool can only be used on worlds were the updates have been disabled\n";
+                    }
                 } else {
                     echo "World $w not found\n";
                 }

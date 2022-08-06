@@ -31,12 +31,14 @@ class Conquer extends CustomModel
         'updated_at',
         'created_at',
     ];
+    
+    protected $defaultTableName = "conquer";
 
     public function __construct($arg1 = [], $arg2 = null)
     {
         if($arg1 instanceof World && $arg2 == null) {
             //allow calls without table name
-            $arg2 = "conquer";
+            $arg2 = $this->defaultTableName;
         }
         parent::__construct($arg1, $arg2);
     }
@@ -46,8 +48,8 @@ class Conquer extends CustomModel
      */
     public function oldPlayer()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Player', 'old_owner', 'playerID', $table[0].'.player_latest');
+        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
+        return $this->mybelongsTo('App\Player', 'old_owner', 'playerID', $table);
     }
 
     /**
@@ -55,8 +57,8 @@ class Conquer extends CustomModel
      */
     public function newPlayer()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table[0].'.player_latest');
+        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
+        return $this->mybelongsTo('App\Player', 'new_owner', 'playerID', $table);
     }
 
     /**
@@ -64,8 +66,8 @@ class Conquer extends CustomModel
      */
     public function oldAlly()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $table[0].'.ally_latest');
+        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
+        return $this->mybelongsTo('App\Ally', 'old_ally', 'allyID', $table);
     }
 
     /**
@@ -73,8 +75,8 @@ class Conquer extends CustomModel
      */
     public function newAlly()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Ally', 'new_ally', 'allyID', $table[0].'.ally_latest');
+        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
+        return $this->mybelongsTo('App\Ally', 'new_ally', 'allyID', $table);
     }
 
     /**
@@ -82,8 +84,8 @@ class Conquer extends CustomModel
      */
     public function village()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Village', 'village_id', 'villageID', $table[0].'.village_latest');
+        $table = str_replace($this->defaultTableName, "village_latest", $this->table);
+        return $this->mybelongsTo('App\Village', 'village_id', 'villageID', $table);
     }
 
     /**

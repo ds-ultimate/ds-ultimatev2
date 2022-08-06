@@ -220,7 +220,7 @@ class World extends CustomModel
     }
     
     public static function isSpeedName($name) {
-        return BasicFunctions::startsWith($name, 's');
+        return BasicFunctions::startsWith($name, 's') && is_numeric(substr($name, 1));
     }
     
     public function isClassicServer() {
@@ -236,7 +236,7 @@ class World extends CustomModel
     }
     
     public static function isCasualName($name) {
-        return BasicFunctions::startsWith($name, 'p');
+        return BasicFunctions::startsWith($name, 'p') && is_numeric(substr($name, 1));
     }
     
     public function isNormalServer() {
@@ -275,5 +275,9 @@ class World extends CustomModel
     
     public function serName() {
         return $this->server->code . $this->name;
+    }
+    
+    public function database() {
+        return $this->hasOne('App\WorldDatabase', 'id', 'database_id');
     }
 }

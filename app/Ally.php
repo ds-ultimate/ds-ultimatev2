@@ -29,12 +29,14 @@ class Ally extends CustomModel
         'updated_at',
         'created_at',
     ];
+    
+    protected $defaultTableName = "ally_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
     {
         if($arg1 instanceof World && $arg2 == null) {
             //allow calls without table name
-            $arg2 = "ally_latest";
+            $arg2 = $this->defaultTableName;
         }
         parent::__construct($arg1, $arg2);
     }
@@ -44,8 +46,8 @@ class Ally extends CustomModel
      */
     public function playerLatest()
     {
-        $table = explode('.', $this->table);
-        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $table[0].'.ally_changes');
+        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
+        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $table);
     }
 
     /**
@@ -53,8 +55,8 @@ class Ally extends CustomModel
      */
     public function allyChangesOld()
     {
-        $table = explode('.', $this->table);
-        return $this->myhasMany('App\AllyChanges', 'old_ally_id', 'allyID', $table[0].'.ally_changes');
+        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
+        return $this->myhasMany('App\AllyChanges', 'old_ally_id', 'allyID', $table);
     }
 
     /**
@@ -62,8 +64,8 @@ class Ally extends CustomModel
      */
     public function allyChangesNew()
     {
-        $table = explode('.', $this->table);
-        return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $table[0].'.ally_changes');
+        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
+        return $this->myhasMany('App\AllyChanges', 'new_ally_id', 'allyID', $table);
     }
 
     /**

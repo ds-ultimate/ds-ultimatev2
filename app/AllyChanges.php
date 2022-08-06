@@ -4,12 +4,14 @@ namespace App;
 
 class AllyChanges extends CustomModel
 {
+    
+    protected $defaultTableName = "ally_changes";
 
     public function __construct($arg1 = [], $arg2 = null)
     {
         if($arg1 instanceof World && $arg2 == null) {
             //allow calls without table name
-            $arg2 = "ally_changes";
+            $arg2 = $this->defaultTableName;
         }
         parent::__construct($arg1, $arg2);
     }
@@ -19,8 +21,8 @@ class AllyChanges extends CustomModel
      */
     public function oldAlly()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Ally', 'old_ally_id', 'allyID', $table[0].'.ally_latest');
+        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
+        return $this->mybelongsTo('App\Ally', 'old_ally_id', 'allyID', $table);
     }
 
     /**
@@ -28,8 +30,8 @@ class AllyChanges extends CustomModel
      */
     public function newAlly()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Ally', 'new_ally_id', 'allyID', $table[0].'.ally_latest');
+        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
+        return $this->mybelongsTo('App\Ally', 'new_ally_id', 'allyID', $table);
     }
 
     /**
@@ -37,8 +39,8 @@ class AllyChanges extends CustomModel
      */
     public function player()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Player', 'player_id', 'playerID', $table[0].'.player_latest');
+        $table = str_replace($this->defaultTableName, "player_latest", $this->table);
+        return $this->mybelongsTo('App\Player', 'player_id', 'playerID', $table);
     }
     
     /**
@@ -46,8 +48,8 @@ class AllyChanges extends CustomModel
      */
     public function oldAllyTop()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\AllyTop', 'old_ally_id', 'allyID', $table[0].'.ally_top');
+        $table = str_replace($this->defaultTableName, "ally_top", $this->table);
+        return $this->mybelongsTo('App\AllyTop', 'old_ally_id', 'allyID', $table);
     }
 
     /**
@@ -55,8 +57,8 @@ class AllyChanges extends CustomModel
      */
     public function newAllyTop()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\AllyTop', 'new_ally_id', 'allyID', $table[0].'.ally_top');
+        $table = str_replace($this->defaultTableName, "ally_top", $this->table);
+        return $this->mybelongsTo('App\AllyTop', 'new_ally_id', 'allyID', $table);
     }
 
     /**
@@ -64,8 +66,8 @@ class AllyChanges extends CustomModel
      */
     public function playerTop()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\PlayerTop', 'player_id', 'playerID', $table[0].'.player_top');
+        $table = str_replace($this->defaultTableName, "player_top", $this->table);
+        return $this->mybelongsTo('App\PlayerTop', 'player_id', 'playerID', $table);
     }
 
     /**

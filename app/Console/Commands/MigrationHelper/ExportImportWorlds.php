@@ -4,6 +4,7 @@ namespace App\Console\Commands\MigrationHelper;
 
 use App\Server;
 use App\World;
+use App\WorldDatabase;
 use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 
@@ -75,7 +76,13 @@ class ExportImportWorlds extends Command
             $wData.= "|" . base64_encode($world->display_name);
             $wData.= "|" . $world->hash_ally;
             $wData.= "|" . $world->hash_player;
-            $wData.= "|" . $world->hash_village . "\n";
+            $wData.= "|" . $world->hash_village;
+            if($world->database_id != null) {
+                $wData.= "|" . $world->database->name;
+            } else {
+                $wData.= "|" . "-";
+            }
+            $wData.= "\n";
             fwrite($file, $wData);
         }
         fclose($file);
@@ -91,27 +98,29 @@ class ExportImportWorlds extends Command
             if(! isset($found[$world->server->code])) {
                 $found[$world->server->code] = [];
             }
-            $found[$world->server->code][] = $world->name;
+            $found[$world->server->code][$world->name] = $world;
         }
         
         foreach(file($fName) as $line) {
             $w = explode("|", trim($line));
             
-            if(! isset($found[$w[0]]) ||
-                    !in_array($w[1], $found[$w[0]])) {
-                $this->insertWorld($w);
+            if(isset($found[$w[0]]) && isset($found[$w[0]][$w[1]])) {
+                $model = $found[$w[0]][$w[1]];
+            } else {
+                $model = new World();
             }
+            
+            $this->insertWorld($w, $model);
         }
     }
     
-    private function insertWorld($data) {
+    private function insertWorld($data, World $world) {
         $s = Server::getServerByCode($data[0]);
         if($s == null) {
             echo "Unable to find server {$data[0]}\n";
             return;
         }
         echo "Inserting {$data[0]} / {$data[1]} / {$s->id} \n";
-        $world = new World();
         $world->server_id = $s->id;
         $world->name = $data[1];
         $world->ally_count = $data[2];
@@ -131,6 +140,19 @@ class ExportImportWorlds extends Command
         $world->hash_ally = $data[13];
         $world->hash_player = $data[14];
         $world->hash_village = $data[15];
+        
+        if($data[16] == "-") {
+            $world->database_id = null;
+        } else {
+            $sharedDB = (new WorldDatabase())->where("name", $data[16])->first();
+            if($sharedDB == null) {
+                $sharedDB = new WorldDatabase();
+                $sharedDB->name = $data[16];
+                $sharedDB->save();
+            }
+            $world->database_id = $sharedDB->id;
+        }
+        
         $world->save();
     }
     

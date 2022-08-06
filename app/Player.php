@@ -33,12 +33,14 @@ class Player extends CustomModel
     ];
     
     public $timestamps = true;
+    
+    protected $defaultTableName = "player_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
     {
         if($arg1 instanceof World && $arg2 == null) {
             //allow calls without table name
-            $arg2 = "player_latest";
+            $arg2 = $this->defaultTableName;
         }
         parent::__construct($arg1, $arg2);
     }
@@ -48,8 +50,8 @@ class Player extends CustomModel
      */
     public function allyLatest()
     {
-        $table = explode('.', $this->table);
-        return $this->mybelongsTo('App\Ally', 'ally_id', 'allyID', $table[0].'.ally_latest');
+        $table = str_replace($this->defaultTableName, "ally_latest", $this->table);
+        return $this->mybelongsTo('App\Ally', 'ally_id', 'allyID', $table);
     }
 
     /**
@@ -57,8 +59,8 @@ class Player extends CustomModel
      */
     public function allyChanges()
     {
-        $table = explode('.', $this->table);
-        return $this->myhasMany('App\AllyChanges', 'player_id', 'playerID', $table[0].'.ally_changes');
+        $table = str_replace($this->defaultTableName, "ally_changes", $this->table);
+        return $this->myhasMany('App\AllyChanges', 'player_id', 'playerID', $table);
     }
 
     /**

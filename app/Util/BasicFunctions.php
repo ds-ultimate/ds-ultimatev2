@@ -243,16 +243,25 @@ class BasicFunctions
      * Returns the raw database name where that world will be stored in
      * Intended only for creating that database / makting sure it exists
      * 
-     * The internal behavior is expected to change soon (multi server databases)
-     * !do not rely on knowing what it does internally!
+     * If a shared database is beeing used the returned database will be
+     * the same for multiple worlds
+     * 
      * @param World $model
      * @return type
      */
     public static function getWorldDataDatabase(World $model) {
-        $replaceArray = array(
-            '{server}' => $model->server->code,
-            '{world}' => $model->name,
-        );
+        if($model->database_id != null) {
+            //shared db
+            $replaceArray = array(
+                '{server}' => $model->database->name,
+                '{world}' => '',
+            );
+        } else {
+            $replaceArray = array(
+                '{server}' => $model->server->code,
+                '{world}' => $model->name,
+            );
+        }
         return str_replace(array_keys($replaceArray),
             array_values($replaceArray),
             config('dsUltimate.db_database_world'));
@@ -264,11 +273,28 @@ class BasicFunctions
      * @return string
      */
     public static function getWorldDataTable(World $model, $tableName) {
+        if($model->database_id != null) {
+            //shared db
+            return static::getWorldDataDatabase($model) . ".{$model->server->code}{$model->name}_{$tableName}";
+        }
         return static::getWorldDataDatabase($model) . "." . $tableName;
     }
     
     public static function hasWorldDataTable(World $model, $tableName) {
+        if($model->database_id != null) {
+            //shared db
+            return static::existTable(static::getWorldDataDatabase($model), "{$model->server->code}{$model->name}_{$tableName}");
+        }
         return static::existTable(static::getWorldDataDatabase($model), $tableName);
+    }
+    
+    /**
+     * @param World $model
+     * @param $tableName
+     * @return string
+     */
+    public static function getUserWorldDataTable(World $model, $tableName) {
+        return config('dsUltimate.db_database_wData') . ".{$model->server->code}{$model->name}_{$tableName}";
     }
     
     public static function hasUserWorldDataTable(World $model, $tableName) {
