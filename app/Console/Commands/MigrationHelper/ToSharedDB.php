@@ -80,11 +80,11 @@ class ToSharedDB extends Command
         $oldSharedId = $worldModel->database_id;
         $newSharedId = ($sharedDB == null)?(null):($sharedDB->id);
         
-        if($oldSharedId != null && $newSharedId == null) {
+        $worldModel->database_id = $newSharedId;
+        $dbRaw = BasicFunctions::getWorldDataDatabase($worldModel);
+        $worldModel->database_id = $oldSharedId;
+        if(!BasicFunctions::existDatabase($dbRaw)) {
             //create needed
-            $worldModel->database_id = $newSharedId;
-            $dbRaw = BasicFunctions::getWorldDataDatabase($worldModel);
-            $worldModel->database_id = $oldSharedId;
             DB::statement('CREATE DATABASE ' . $dbRaw);
         }
         
