@@ -68,8 +68,7 @@ class DoVillage
         }
 
         $villageDB = static::prepareVillageChangeCheck($world);
-        Schema::dropIfExists($liveTbl);
-        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
+        DoWorldData::moveTableData($tmpTbl, $liveTbl);
 
         $hashVillage = UpdateUtil::hashTable($array, $world->hash_village, 'villageID', array(static::class, 'villageSameSinceLast'), $villageDB);
         for ($i = 0; $i < $world->hash_village; $i++) {

@@ -161,8 +161,7 @@ class DoPlayer
             $allyChangeModel->insert($t);
         }
 
-        Schema::dropIfExists($liveTbl);
-        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
+        DoWorldData::moveTableData($tmpTbl, $liveTbl);
 
         $hashPlayer = UpdateUtil::hashTable($arrayPlayer, $world->hash_player, 'playerID');
 

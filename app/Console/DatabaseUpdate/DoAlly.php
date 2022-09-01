@@ -6,7 +6,6 @@ use App\Ally;
 use App\Util\BasicFunctions;
 use App\World;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class DoAlly
@@ -41,7 +40,7 @@ class DoAlly
                 'name' => $name,
                 'tag' => $tag,
                 'member_count' => (int)$members,
-                'points' => (int)$points_all,
+                'points' => min((int)$points_all, 2147483647),
                 'village_count' => (int)$villages,
                 'rank' => (int)$rank,
             ];
@@ -112,10 +111,8 @@ class DoAlly
         foreach (array_chunk($array,3000) as $t){
             $insert->insert($t);
         }
-
-        Schema::dropIfExists($liveTbl);
-        DB::statement("ALTER TABLE $tmpTbl RENAME TO $liveTbl");
-
+        DoWorldData::moveTableData($tmpTbl, $liveTbl);
+        
         $hashAlly = UpdateUtil::hashTable($array, $world->hash_ally, 'allyID');
 
         for ($i = 0; $i < $world->hash_ally; $i++){

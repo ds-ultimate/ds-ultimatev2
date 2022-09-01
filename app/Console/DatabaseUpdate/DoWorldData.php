@@ -11,7 +11,9 @@ use App\Console\DatabaseUpdate\DoConquer;
 use App\Console\DatabaseUpdate\DoPlayer;
 use App\Console\DatabaseUpdate\DoVillage;
 use App\Console\DatabaseUpdate\WorldHistory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 /**
@@ -92,5 +94,17 @@ class DoWorldData
             return false;
         }
         return explode("\n", $response->body());
+    }
+    
+    public static function moveTableData($tmpTbl, $liveTbl) {
+        $tmpTbl = preg_replace("/[^a-zA-Z0-9\\_\\.]/", "", $tmpTbl);
+        $liveTbl = preg_replace("/[^a-zA-Z0-9\\_\\.]/", "", $liveTbl);
+        
+        DB::statement("LOCK TABLES $liveTbl WRITE, $tmpTbl READ;"
+                . "TRUNCATE TABLE $liveTbl;"
+                . "INSERT INTO $liveTbl SELECT * FROM $tmpTbl;"
+                . "UNLOCK TABLES;");
+        
+        Schema::dropIfExists($tmpTbl);
     }
 }
