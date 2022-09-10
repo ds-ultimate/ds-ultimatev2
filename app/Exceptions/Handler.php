@@ -44,6 +44,8 @@ class Handler extends ExceptionHandler
             "Illuminate\\Database\\Eloquent\\ModelNotFoundException",
             "Illuminate\\Validation\\ValidationException",
             "NotificationChannels\\Discord\\Exceptions\\CouldNotSendNotification",
+            "Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException",
+            "Illuminate\\Http\\Exceptions\\ThrottleRequestsException",
         ];
 
         try {

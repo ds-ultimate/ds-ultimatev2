@@ -93,7 +93,9 @@ class PictureRender {
     
     public static function base64ToPng($base64) {
         if($base64 == "") return "";
-        $partial_raw = explode(",", $base64, 2)[1];
+        $expl = explode(",", $base64, 2);
+        if(count($expl) < 2) return "";
+        $partial_raw = $expl[1];
         return base64_decode($partial_raw);
     }
 }

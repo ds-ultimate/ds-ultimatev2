@@ -174,7 +174,7 @@ class AnimatedHistoryMapController extends BaseController
 
     private function save(Request $request, AnimHistMapMap $wantedMap) {
         $data = $request->validate([
-            'mark' => 'array',
+            'mark' => 'array|max:200',
             'mark.ally' => 'array',
             'mark.player' => 'array',
             'mark.village' => 'array',
@@ -259,7 +259,7 @@ class AnimatedHistoryMapController extends BaseController
     
     public function titleSave(Request $request, AnimHistMapMap $wantedMap) {
         $data = $request->validate([
-            'title' => 'required',
+            'title' => 'required|string',
         ]);
         $wantedMap->title = $data['title'];
         $wantedMap->save();

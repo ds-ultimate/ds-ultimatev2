@@ -179,7 +179,7 @@ class MapController extends BaseController
 
     private function save(Request $request, Map $wantedMap) {
         $data = $request->validate([
-            'mark' => 'array',
+            'mark' => 'array|max:200',
             'mark.ally' => 'array',
             'mark.player' => 'array',
             'mark.village' => 'array',
@@ -294,7 +294,7 @@ class MapController extends BaseController
 
     private static function saveTitle(Request $request, Map $wantedMap){
         $data = $request->validate([
-            'title' => 'required',
+            'title' => 'required|string',
         ]);
         
         $wantedMap->title = $data['title'];

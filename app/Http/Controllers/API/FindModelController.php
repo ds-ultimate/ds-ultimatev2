@@ -83,7 +83,10 @@ class FindModelController extends Controller
     }
     
     private function select2return(Model $model, $searchIn, $idRow, callable $extractOne) {
-        $getArray = Request::input();
+        $getArray = Request::validate([
+            'search' => 'string',
+            'page' => 'numeric|integer',
+        ]);
         $perPage = 50;
         $search = (isset($getArray['search']))?('%'.BasicFunctions::likeSaveEscape(urlencode($getArray['search'])).'%'):('%');
         $page = (isset($getArray['page']))?($getArray['page']-1):(0);
