@@ -11,7 +11,7 @@
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
-            <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
+            <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="1" />
             <input id="checkbox-show-player" name="showPlayer" type="checkbox" defVal="{{ $wantedMap->playerEnabledDefault() }}" class="form-check-input resetable" @checked($wantedMap->playerEnabled()) />
             <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
         </div>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-auto ml-auto">
-            <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
+            <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="1" />
             <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" defVal="{{ $wantedMap->barbarianEnabledDefault() }}" class="form-check-input resetable" @checked($wantedMap->barbarianEnabled()) />
             <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
         </div>
@@ -45,7 +45,7 @@
     </div>
     <div class="form-inline mb-2">
         <div class="col-lg-3 input-group">
-            <input id="map-zoom-auto-hid" name="zoomAutoHere" type="hidden" value="true" />
+            <input id="map-zoom-auto-hid" name="zoomAutoHere" type="hidden" value="1" />
             <input id="map-zoom-auto" name="zoomAuto" type="checkbox" defVal="true" class="form-check-input resetable" @checked($wantedMap->autoDimensions) />
             <label for="map-zoom-auto">{{ __('tool.map.autoZoom') }}</label>
         </div>
@@ -77,13 +77,13 @@
     </div>
     <div class="form-inline mb-2">
         <div class="form-check col-lg-4">
-            <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="true" />
+            <input id="checkbox-continent-numbers-hid" name="continentNumbersHere" type="hidden" value="1" />
             <input id="checkbox-continent-numbers" name="continentNumbers" type="checkbox" class="form-check-input resetable" defVal="true" @checked($wantedMap->continentNumbersEnabled()) />
             <label class="form-check-label" for="checkbox-continent-numbers">{{ __('tool.map.showContinentNumbers') }}</label>
         </div>
         @if($mapType == "map")
             <div id="checkbox-auto-update-container" class="form-check col-lg-4 position-relative">
-                <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="true" />
+                <input id="checkbox-auto-update-hid" name="autoUpdateHere" type="hidden" value="1" />
                 <input id="checkbox-auto-update" name="autoUpdate" type="checkbox" class="form-check-input resetable" defVal="false" @checked($wantedMap->shouldUpdate) />
                 <label class="form-check-label" for="checkbox-auto-update" data-toggle="tooltip" title="{{ __('tool.map.autoUpdateHelp') }}" data-container="checkbox-auto-update-container">{{ __('tool.map.autoUpdate') }}</label>
             </div>

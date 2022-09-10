@@ -108,10 +108,10 @@ class AnimatedHistoryMapController extends BaseController
         switch ($action) {
             case 'save':
                 abort_unless($key == $wantedMap->edit_key, 403);
-                return $this->save($wantedMap);
+                return $this->save($request, $wantedMap);
             case 'saveEdit':
                 abort_unless($key == $wantedMap->edit_key, 403);
-                $this->save($wantedMap);
+                $this->save($request, $wantedMap);
                 return $this->edit($wantedMap);
             case 'title':
                 abort_unless($key == $wantedMap->edit_key, 403);
@@ -172,57 +172,80 @@ class AnimatedHistoryMapController extends BaseController
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
 
-    private function save(AnimHistMapMap $wantedMap) {
-        $getArray = $_POST;
+    private function save(Request $request, AnimHistMapMap $wantedMap) {
+        $data = $request->validate([
+            'mark' => 'array',
+            'mark.ally' => 'array',
+            'mark.player' => 'array',
+            'mark.village' => 'array',
+            'mark.*.*.id' => 'numeric|integer|nullable',
+            'mark.*.*.colour' => 'string|size:6',
+            'mark.*.*.textHere' => 'boolean',
+            'mark.*.*.text' => 'string|max:3',
+            'mark.*.*.hLightHere' => 'boolean',
+            'mark.*.*.hLight' => 'string|max:3',
+            'default' => 'array',
+            'default.background' => 'string|size:6',
+            'default.player' => 'string|size:6',
+            'default.barbarian' => 'string|size:6',
+            'showBarbarianHere' => 'boolean',
+            'showBarbarian' => 'string|max:3',
+            'showPlayerHere' => 'boolean',
+            'showPlayer' => 'string|max:3',
+            'zoomValue' => 'required|numeric|integer',
+            'centerX' => 'required|numeric|integer',
+            'centerY' => 'required|numeric|integer',
+            'markerFactor' => 'required|numeric|min:0|max:1',
+            'continentNumbersHere' => 'boolean',
+            'continentNumbers' => 'string|max:3',
+            'zoomAutoHere' => 'boolean',
+            'zoomAuto' => 'string|max:3',
+        ]);
 
-        if(isset($getArray['mark'])) {
-            $wantedMap->setMarkers($getArray['mark']);
+        if(isset($data['mark'])) {
+            $wantedMap->setMarkers($data['mark']);
         }
-        if(isset($getArray['default'])) {
+        if(isset($data['default'])) {
             $wantedMap->setDefaultColours(
-                    (isset($getArray['default']['background']))?($getArray['default']['background']):(null),
-                    (isset($getArray['default']['player']))?($getArray['default']['player']):(null),
-                    (isset($getArray['default']['barbarian']))?($getArray['default']['barbarian']):(null)
+                    (isset($data['default']['background']))?($data['default']['background']):(null),
+                    (isset($data['default']['player']))?($data['default']['player']):(null),
+                    (isset($data['default']['barbarian']))?($data['default']['barbarian']):(null)
             );
         }
         //do this after setting Default Colours as it modifies the same Property
-        if(isset($getArray['showBarbarianHere'])) {
-            if(!isset($getArray['showBarbarian'])) {
+        if(isset($data['showBarbarianHere'])) {
+            if(!isset($data['showBarbarian'])) {
                 $wantedMap->disableBarbarian();
             }
         }
-        if(isset($getArray['showPlayerHere'])) {
-            if(!isset($getArray['showPlayer'])) {
+        if(isset($data['showPlayerHere'])) {
+            if(!isset($data['showPlayer'])) {
                 $wantedMap->disablePlayer();
             }
         }
 
-        if(isset($getArray['zoomValue']) &&
-                isset($getArray['centerX']) &&
-                isset($getArray['centerY'])) {
-            $zoom = (int) $getArray['zoomValue'];
-            $cX = (int) $getArray['centerX'];
-            $cY = (int) $getArray['centerY'];
+        $zoom = (int) $data['zoomValue'];
+        $cX = (int) $data['centerX'];
+        $cY = (int) $data['centerY'];
 
-            $wantedMap->setDimensions([
-                'xs' => ceil($cX - $zoom / 2),
-                'xe' => ceil($cX + $zoom / 2),
-                'ys' => ceil($cY - $zoom / 2),
-                'ye' => ceil($cY + $zoom / 2),
-            ]);
+        $wantedMap->setDimensions([
+            'xs' => ceil($cX - $zoom / 2),
+            'xe' => ceil($cX + $zoom / 2),
+            'ys' => ceil($cY - $zoom / 2),
+            'ye' => ceil($cY + $zoom / 2),
+        ]);
+
+        if(isset($data['markerFactor'])) {
+            $wantedMap->markerFactor = $data['markerFactor'];
         }
 
-        if(isset($getArray['markerFactor'])) {
-            $wantedMap->markerFactor = $getArray['markerFactor'];
+        if(isset($data['continentNumbersHere'])) {
+            $wantedMap->continentNumbers = (isset($data['continentNumbers']))?(1):(0);
         }
 
-        if(isset($getArray['continentNumbersHere'])) {
-            $wantedMap->continentNumbers = (isset($getArray['continentNumbers']))?(1):(0);
-        }
-
-        if(isset($getArray['zoomAutoHere'])) {
+        if(isset($data['zoomAutoHere'])) {
             $oldDim = $wantedMap->autoDimensions;
-            $wantedMap->autoDimensions = (isset($getArray['zoomAuto']))?(1):(0);
+            $wantedMap->autoDimensions = (isset($data['zoomAuto']))?(1):(0);
             
             if($oldDim !== $wantedMap->autoDimensions) {
                 static::updateMapDimensions($wantedMap);

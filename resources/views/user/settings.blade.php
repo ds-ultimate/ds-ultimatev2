@@ -168,7 +168,7 @@
                             </div>
                             <div class="form-inline mb-2">
                                 <div class="form-check col-lg-auto ml-auto">
-                                    <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="true" />
+                                    <input id="checkbox-show-player-hid" name="showPlayerHere" type="hidden" value="1" />
                                     <input id="checkbox-show-player" name="showPlayer" type="checkbox" class="form-check-input map-settings-input" @checked(Auth::user()->profile->playerEnabled()) />
                                     <label class="form-check-label" for="checkbox-show-player">{{ __('tool.map.showPlayer') }}</label>
                                 </div>
@@ -182,7 +182,7 @@
                             </div>
                             <div class="form-inline mb-2">
                                 <div class="form-check col-lg-auto ml-auto">
-                                    <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="true" />
+                                    <input id="checkbox-show-barbarian-hid" name="showBarbarianHere" type="hidden" value="1" />
                                     <input id="checkbox-show-barbarian" name="showBarbarian" type="checkbox" class="form-check-input map-settings-input" @checked(Auth::user()->profile->barbarianEnabled()) />
                                     <label class="form-check-label" for="checkbox-show-barbarian">{{ __('tool.map.showBarbarian') }}</label>
                                 </div>
@@ -509,11 +509,12 @@
                     createToast(data['msg'], "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
                 })
                 .catch((error) => {
+                    storingMap = false;
                     if(error.response.status == 422) {
                         var errors = error.response.data.errors;
                         $.each(errors, function(i, item) {
                             var data = item[0].charAt(0).toUpperCase()+item[0].substr(1)
-                            createToast(data, "{{ __('ui.personalSettings.connection') }}", "{{ __('global.now') }}");
+                            createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
                         });
                     }
                 });

@@ -61,42 +61,53 @@ class SettingsController extends Controller
         $user = \Auth::user();
         $profile = $user->profile;
         
-        if(isset($request->default)) {
+        $data = $request->validate([
+            'default' => 'array',
+            'default.background' => 'string|size:6',
+            'default.player' => 'string|size:6',
+            'default.barbarian' => 'string|size:6',
+            'showBarbarianHere' => 'boolean',
+            'showBarbarian' => 'string|max:3',
+            'showPlayerHere' => 'boolean',
+            'showPlayer' => 'string|max:3',
+            'zoomValue' => 'required|numeric|integer',
+            'centerX' => 'required|numeric|integer',
+            'centerY' => 'required|numeric|integer',
+            'markerFactor' => 'required|numeric|min:0|max:1',
+        ]);
+        
+        if(isset($data['default'])) {
             $profile->setDefaultColours(
-                    (isset($request->default['background']))?($request->default['background']):(null),
-                    (isset($request->default['player']))?($request->default['player']):(null),
-                    (isset($request->default['barbarian']))?($request->default['barbarian']):(null)
+                    (isset($data['default']['background']))?($data['default']['background']):(null),
+                    (isset($data['default']['player']))?($data['default']['player']):(null),
+                    (isset($data['default']['barbarian']))?($data['default']['barbarian']):(null)
             );
         }
         //do this after setting Default Colours as it modifies the same Property
-        if(isset($request->showBarbarianHere)) {
-            if(!isset($request->showBarbarian)) {
+        if(isset($data['showBarbarianHere'])) {
+            if(!isset($data['showBarbarian'])) {
                 $profile->disableBarbarian();
             }
         }
-        if(isset($request->showPlayerHere)) {
-            if(!isset($request->showPlayer)) {
+        if(isset($data['showPlayerHere'])) {
+            if(!isset($data['showPlayer'])) {
                 $profile->disablePlayer();
             }
         }
         
-        if(isset($request->zoomValue) &&
-                isset($request->centerX) &&
-                isset($request->centerY)) {
-            $zoom = (int) $request->zoomValue;
-            $cX = (int) $request->centerX;
-            $cY = (int) $request->centerY;
-            
-            $profile->setDimensions([
-                'xs' => ceil($cX - $zoom / 2),
-                'xe' => ceil($cX + $zoom / 2),
-                'ys' => ceil($cY - $zoom / 2),
-                'ye' => ceil($cY + $zoom / 2),
-            ]);
-        }
+        $zoom = (int) $data['zoomValue'];
+        $cX = (int) $data['centerX'];
+        $cY = (int) $data['centerY'];
+
+        $profile->setDimensions([
+            'xs' => ceil($cX - $zoom / 2),
+            'xe' => ceil($cX + $zoom / 2),
+            'ys' => ceil($cY - $zoom / 2),
+            'ye' => ceil($cY + $zoom / 2),
+        ]);
         
-        if(isset($request->markerFactor)) {
-            $profile->map_markerFactor = $request->markerFactor;
+        if(isset($data['markerFactor'])) {
+            $profile->map_markerFactor = $data['markerFactor'];
         }
         $profile->save();
         
@@ -107,8 +118,13 @@ class SettingsController extends Controller
     }
 
     public function destroyConnection(Request $request){
-        $connection = DsConnection::find($request->get('id'));
-        if ($connection->key == $request->get('key')){
+        $data = $request->validate([
+            'id' => 'required|numeric|integer',
+            'key' => 'required|string',
+        ]);
+        
+        $connection = DsConnection::find($data['id']);
+        if ($connection->key == $data['key']){
             $connection->delete();
             return \Response::json(array(
                 'data' => 'success',
@@ -124,7 +140,11 @@ class SettingsController extends Controller
     }
 
     public function checkConnection(Request $request){
-        $connection = DsConnection::find($request->get('id'));
+        $data = $request->validate([
+            'id' => 'required|numeric|integer',
+        ]);
+        
+        $connection = DsConnection::find($data['id']);
         $world = $connection->world;
         $villageModel = new Village($world);
         $villageCount = $villageModel->where(['owner' => $connection->player_id, 'name' => $connection->key])->count();
@@ -151,12 +171,18 @@ class SettingsController extends Controller
     }
 
     public function saveConquerHighlighting(Request $request, $type){
+        $valid = [];
+        foreach(Profile::$CONQUER_HIGHLIGHT_MAPPING as $value) {
+            $valid[$value] = 'boolean';
+        }
+        $data = $request->validate($valid);
+        
         $user = \Auth::user();
         $profile = $user->profile;
         
         $profileStr = "";
         foreach(Profile::$CONQUER_HIGHLIGHT_MAPPING as $key => $value) {
-            if($request->get($value)) {
+            if(isset($data[$value]) && $data[$value]) {
                 if(strlen($profileStr) > 0) $profileStr .= ":";
                 $profileStr .= $key;
             }

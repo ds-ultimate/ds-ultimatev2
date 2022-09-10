@@ -24,12 +24,12 @@
                     @endif
                 </select>
                 <div class="form-check ml-2 mt-2">
-                    <input name="{{ "mark[$type][$id][textHere]" }}" type="hidden" value="true" />
+                    <input name="{{ "mark[$type][$id][textHere]" }}" type="hidden" value="1" />
                     <input type="checkbox" class="form-check-input position-static showText-{{ $type }} showTextBox" name="{{ "mark[$type][$id][text]" }}"
                            data-toggle="tooltip" title="{{ ucfirst(__('tool.map.showText')) }}" {{$defShowText}}>
                 </div>
                 <div class="form-check ml-2 mt-2">
-                    <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
+                    <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="1" />
                     <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
                            data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlight')) }}" {{$defHighLight}}>
                 </div>
@@ -56,7 +56,7 @@
                 <input id="{{ "$type-mark-$id-x" }}" name="{{ "mark[$type][$id][x]" }}" class="form-control mr-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="text" inputmode="numeric" min="0" max="1000" value="{{ $defX }}"/>|
                 <input id="{{ "$type-mark-$id-y" }}" name="{{ "mark[$type][$id][y]" }}" class="form-control ml-1 coord-data-input checked-data-input-map data-input-map" placeholder="500" type="text" inputmode="numeric" min="0" max="1000" value="{{ $defY }}"/>
                 <div class="form-check ml-2 mt-2">
-                    <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="true" />
+                    <input name="{{ "mark[$type][$id][hLightHere]" }}" type="hidden" value="1" />
                     <input type="checkbox" class="form-check-input position-static highlight-{{ $type }} showTextBox" name="{{ "mark[$type][$id][hLight]" }}"
                            data-toggle="tooltip" title="{{ ucfirst(__('tool.map.highlight')) }}" {{$defHighLight}}>
                 </div>

@@ -178,10 +178,10 @@ class Map extends CustomModel
                 return $parts[1];
             }
         }
-        return $this->getDefResetPlayerColour();
+        return static::getDefResetPlayerColour();
     }
 
-    public function getDefResetPlayerColour() {
+    public static function getDefResetPlayerColour() {
         return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_PLAYER_COLOUR);
     }
 
@@ -192,10 +192,10 @@ class Map extends CustomModel
                 return $parts[2];
             }
         }
-        return $this->getDefResetBarbarianColour();
+        return static::getDefResetBarbarianColour();
     }
 
-    public function getDefResetBarbarianColour() {
+    public static function getDefResetBarbarianColour() {
         return Map::RGBToHex(AbstractMapGenerator::$DEFAULT_BARBARIAN_COLOUR);
     }
 
@@ -231,14 +231,14 @@ class Map extends CustomModel
 
     public function barbarianEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return $this->barbarianEnabledDefault();
+            return static::barbarianEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
         return $parts[2] != "null";
     }
 
-    public function barbarianEnabledDefault() {
+    public static function barbarianEnabledDefault() {
         return true;
     }
 
@@ -253,14 +253,14 @@ class Map extends CustomModel
 
     public function playerEnabled() {
         if(!isset($this->defaultColours) || $this->defaultColours == null) {
-            return $this->playerEnabledDefault();
+            return static::playerEnabledDefault();
         }
 
         $parts = explode(";", $this->defaultColours);
         return $parts[1] != "null";
     }
 
-    public function playerEnabledDefault() {
+    public static function playerEnabledDefault() {
         return true;
     }
 
@@ -396,7 +396,7 @@ class Map extends CustomModel
         return $layers;
     }
     
-    public function makerFactorDefault() {
+    public static function makerFactorDefault() {
         return 0.2;
     }
 

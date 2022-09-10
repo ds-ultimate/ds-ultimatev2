@@ -158,6 +158,13 @@
             })
             .catch((error) => {
                 storing = false;
+                if(error.response.status == 422) {
+                    var errors = error.response.data.errors;
+                    $.each(errors, function(i, item) {
+                        var data = item[0].charAt(0).toUpperCase()+item[0].substr(1)
+                        createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
+                    });
+                }
             });
     }
 </script>
