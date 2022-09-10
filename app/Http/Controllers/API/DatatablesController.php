@@ -9,6 +9,7 @@ use App\World;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class DatatablesController extends Controller
@@ -259,9 +260,12 @@ class DatatablesController extends Controller
     }
 
     public function getPlayersHistory(World $world, $day) {
+        $datValid = Validator::validate(['day' => $day], [
+            'day' => 'date_format:Y-m-d',
+        ]);
         static::limitResults(110);
 
-        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
+        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $playerModel = new Player($world);
         $datas = $playerModel->newQuery();
 
@@ -343,9 +347,12 @@ class DatatablesController extends Controller
     }
 
     public function getAllysHistory(World $world, $day) {
+        $datValid = Validator::validate(['day' => $day], [
+            'day' => 'date_format:Y-m-d',
+        ]);
         static::limitResults(110);
 
-        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $day));
+        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $allyModel = new Ally($world);
         $datas = $allyModel->newQuery();
 
