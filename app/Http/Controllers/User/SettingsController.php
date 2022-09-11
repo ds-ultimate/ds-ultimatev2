@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\DsConnection;
+use App\Http\Controllers\API\DatatablesController;
 use App\Http\Controllers\Controller;
 use App\Player;
 use App\Profile;
@@ -10,7 +11,6 @@ use App\Util\BasicFunctions;
 use App\Village;
 use App\World;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -207,7 +207,8 @@ class SettingsController extends Controller
     
     public function getDsConnection()
     {
-        \App\Http\Controllers\API\DatatablesController::limitResults(100);
+        $whitelist = ['server', 'world', 'player', 'key', 'action'];
+        DatatablesController::limitResults(100,$whitelist);
 
         $datas = \Auth::user()->dsConnection();
 
@@ -243,6 +244,7 @@ class SettingsController extends Controller
                 return $button;
             })
             ->rawColumns(['server', 'action','key', 'player'])
+            ->whitelist($whitelist)
             ->toJson();
     }
 }

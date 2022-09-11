@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Tools;
 
 
+use App\Http\Controllers\API\DatatablesController;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\Util\BasicFunctions;
@@ -79,9 +80,10 @@ class AttackPlannerItemController extends BaseController
 
     public function data(AttackList $attackList, $key){
         abort_unless($attackList->show_key == $key, 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(200);
+        $whitelist = ['select', 'start_village_id', 'attacker', 'target_village_id', 'defender', 'slowest_unit',
+            'type', 'send_time', 'arrival_time', 'time', 'info', 'action', 'delete'];
+        DatatablesController::limitResults(200, $whitelist);
         abort_if($attackList->world->maintananceMode, 503);
-
 
         $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
 
@@ -233,6 +235,7 @@ class AttackPlannerItemController extends BaseController
                         '<a class="text-danger" onclick="destroy('.$attackListItem->id.')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
             ->rawColumns(['type', 'start_village_id', 'target_village_id', 'attacker', 'defender', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
+            ->whitelist($whitelist)
             ->make(true);
     }
 

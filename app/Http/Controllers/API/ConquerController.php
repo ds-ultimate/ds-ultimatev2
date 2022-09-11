@@ -12,8 +12,10 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ConquerController extends Controller
 {
+    private static $whitelist = ['village', 'old_owner_name', 'new_owner_name', 'points', 'timestamp', 'old_ally_name', 'new_ally_name', 'old_ally_tag', 'new_ally_tag'];
+    
     public function getAllyConquer(World $world, $type, $allyID) {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $conquerModel = new Conquer($world);
         $playerModel = new Player($world);
@@ -63,7 +65,7 @@ class ConquerController extends Controller
     }
 
     public function getPlayerConquer(World $world, $type, $playerID) {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
@@ -106,7 +108,7 @@ class ConquerController extends Controller
     }
 
     public function getVillageConquer(World $world, $type, $villageID) {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
@@ -128,7 +130,7 @@ class ConquerController extends Controller
     }
 
     public function getWorldConquer(World $world, $type) {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
@@ -171,6 +173,7 @@ class ConquerController extends Controller
             ->rawColumns(['timestamp', 'village', 'old_owner_name', 'new_owner_name'])
             ->removeColumn(['created_at', 'updated_at', 'old_owner', 'new_owner',
                 'old_ally', 'new_ally'])
+            ->whitelist(static::$whitelist)
             ->toJson();
     }
     
@@ -181,15 +184,17 @@ class ConquerController extends Controller
     }
 
     public function getConquerDaily(World $world, $type, $day=false) {
-        DatatablesController::limitResults(100);
-
         switch ($type) {
             case 'player':
-                return $this->getConquerDailyPlayer($world, $day);
+                $wl = ['DT_RowIndex', 'name', 'ally', 'total'];
+                DatatablesController::limitResults(200, $wl);
+                return $this->getConquerDailyPlayer($world, $day, $wl);
                 break;
             
             case 'ally':
-                return $this->getConquerDailyAlly($world, $day);
+                $wl = ['DT_RowIndex', 'name', 'tag', 'total'];
+                DatatablesController::limitResults(200, $wl);
+                return $this->getConquerDailyAlly($world, $day, $wl);
                 break;
             
             default:
@@ -197,7 +202,7 @@ class ConquerController extends Controller
         }
     }
     
-    private function getConquerDailyPlayer(World $worldData, $day) {
+    private function getConquerDailyPlayer(World $worldData, $day, $wl) {
         $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
         
@@ -233,10 +238,11 @@ class ConquerController extends Controller
                 return $conquer->total;
             })
             ->rawColumns(['name', 'ally'])
+            ->whitelist($wl)
             ->toJson();
     }
     
-    private function getConquerDailyAlly(World $worldData, $day) {
+    private function getConquerDailyAlly(World $worldData, $day, $wl) {
         $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
         
@@ -273,6 +279,7 @@ class ConquerController extends Controller
                 return $conquer->total;
             })
             ->rawColumns(['name', 'tag'])
+            ->whitelist($wl)
             ->toJson();
     }
 }

@@ -21,16 +21,20 @@ class UsersController extends Controller
             'title' => __('admin.users.create'),
             'route' => "admin.users.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.users";
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('admin.users.name'), "name"),
             BasicFunctions::indexEntry(__('admin.users.email'), "email"),
             BasicFunctions::indexEntry(__('admin.users.email_verified_at'), "email_verified_at"),
             BasicFunctions::indexEntry(__('admin.users.roles'), "roles", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.users";
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

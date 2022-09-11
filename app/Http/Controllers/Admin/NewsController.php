@@ -20,7 +20,15 @@ class NewsController extends Controller
             'title' => __('admin.news.create'),
             'route' => "admin.news.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.news";
+        $handle = true;
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'handle'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry('', 'handle', '', 'align-middle text-center handle'),
             BasicFunctions::indexEntry(__('admin.news.id'), "id", "width:20px;", "text-center"),
             BasicFunctions::indexEntry(__('admin.news.content')." DE", "content_de"),
@@ -28,10 +36,6 @@ class NewsController extends Controller
             BasicFunctions::indexEntry(__('admin.news.updated_at'), "updated_at"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.news";
-        $handle = true;
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'handle'));
     }
 
     public function create()

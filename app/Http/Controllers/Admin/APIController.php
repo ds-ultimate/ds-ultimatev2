@@ -10,6 +10,7 @@ use App\Server;
 use App\SpeedWorld;
 use App\User;
 use App\World;
+use App\Http\Controllers\API\DatatablesController;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
@@ -21,7 +22,8 @@ class APIController extends Controller
     public function news()
     {
         abort_unless(\Gate::allows('news_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(NewsController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'news_show',
@@ -51,13 +53,15 @@ class APIController extends Controller
                 return $data->updated_at->isoFormat("L LT");
             })
             ->rawColumns(['handle', 'content_de', 'content_en', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function changelog()
     {
         abort_unless(\Gate::allows('changelog_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(ChangelogsController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'changelog_show',
@@ -88,13 +92,15 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['repository_html_url', 'icon', 'color', 'updated_at', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function roles()
     {
         abort_unless(\Gate::allows('role_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(RolesController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'role_show',
@@ -107,8 +113,11 @@ class APIController extends Controller
         return DataTables::eloquent($model->newQuery())
             ->editColumn('permissions', function($data) {
                 $retval = "";
+                $i = 0;
                 foreach($data->permissions as $elm) {
                     $retval .= "<span class='badge badge-info'>".BasicFunctions::escape($elm->title)."</span> ";
+                    if($i % 10 == 9) $retval .= "<br>";
+                    $i++;
                 }
                 return $retval;
             })
@@ -116,13 +125,15 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['permissions', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function users()
     {
         abort_unless(\Gate::allows('user_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(UsersController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'user_show',
@@ -152,13 +163,15 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['roles', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function servers()
     {
         abort_unless(\Gate::allows('server_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(ServerController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'server_show',
@@ -200,13 +213,15 @@ class APIController extends Controller
                 return '<span class="fas fa-times" style="color: red"></span>';
             })
             ->rawColumns(['flag', 'speed_active', 'classic_active', 'active', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function worlds()
     {
         abort_unless(\Gate::allows('world_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(WorldsController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'world_show',
@@ -258,13 +273,15 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['server', 'url', 'worldUpdated_at', 'worldCleaned_at', 'active', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function speedWorlds()
     {
         abort_unless(\Gate::allows('speed_world_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(SpeedWorldsController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'speed_world_show',
@@ -307,13 +324,15 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['server_id', 'url', 'started', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
     public function bugreports(Request $request)
     {
         abort_unless(\Gate::allows('bugreport_access'), 403);
-        \App\Http\Controllers\API\DatatablesController::limitResults(500);
+        $whitelist = $this->getColumnNamesForIndex(BugreportsController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
         
         $permissions = [
             'show' => 'bugreport_show',
@@ -370,6 +389,7 @@ class APIController extends Controller
                 return $this->generateActions($permissions, $routes, $data->id);
             })
             ->rawColumns(['priority', 'title', 'status', 'actions'])
+            ->whitelist($whitelist)
             ->toJson();
     }
     
@@ -393,5 +413,13 @@ class APIController extends Controller
             $actions.= '</form>';
         }
         return $actions;
+    }
+    
+    private function getColumnNamesForIndex($indexCols) {
+        $names = [];
+        foreach($indexCols as $idxCol) {
+            $names[] = $idxCol['data'];
+        }
+        return $names;
     }
 }

@@ -10,9 +10,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AllyChangeController extends Controller
 {
+    private static $whitelist = ['created_at', 'player_name', 'new_ally_name', 'old_ally_name', 'points'];
+    
     public function getAllyAllyChanges(World $world, $type, $allyID)
     {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $allyChangesModel = new AllyChanges($world);
         $query = $allyChangesModel->newQuery();
@@ -36,7 +38,7 @@ class AllyChangeController extends Controller
 
     public function getPlayerAllyChanges(World $world, $type, $playerID)
     {
-        DatatablesController::limitResults(200);
+        DatatablesController::limitResults(200, static::$whitelist);
         
         $allyChangesModel = new AllyChanges($world);
 
@@ -79,6 +81,7 @@ class AllyChangeController extends Controller
                 }
                 return BasicFunctions::decodeName($allyChange->newAlly->name);
             })
+            ->whitelist(static::$whitelist)
             ->toJson();
     }
 }

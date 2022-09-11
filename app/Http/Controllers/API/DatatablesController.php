@@ -15,7 +15,8 @@ use Yajra\DataTables\Facades\DataTables;
 class DatatablesController extends Controller
 {
     public function getPlayers(World $world) {
-        static::limitResults(200);
+        $whitelist = ['rank', 'name', 'points', 'village_count', 'gesBash', 'offBash', 'defBash', 'supBash', 'ally_id', 'ally', 'village_points'];
+        static::limitResults(200, $whitelist);
 
         $playerModel = new Player($world);
         $datas = $playerModel->newQuery();
@@ -30,11 +31,13 @@ class DatatablesController extends Controller
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
             })
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function getAllys(World $world) {
-        static::limitResults(200);
+        $whitelist = ['rank', 'name', 'tag', 'points', 'member_count', 'village_count', 'player_points', 'gesBash', 'offBash', 'defBash'];
+        static::limitResults(200, $whitelist);
 
         $allyModel = new Ally($world);
         $datas = $allyModel->newQuery();
@@ -52,11 +55,13 @@ class DatatablesController extends Controller
             ->addColumn('village_points', function ($ally){
                 return ($ally->points == 0 || $ally->village_count == 0)? 0 : ($ally->points/$ally->village_count);
             })
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function getAllyPlayer(World $world, $ally) {
-        static::limitResults(200);
+        $whitelist = ['rank', 'name', 'points', 'village_count', 'village_points', 'gesBash', 'offBash', 'defBash', 'supBash'];
+        static::limitResults(200, $whitelist);
 
         $playerModel = new Player($world);
         $querry = $playerModel->newQuery();
@@ -72,12 +77,14 @@ class DatatablesController extends Controller
             ->addColumn('village_points', function ($player){
                 return ($player->points == 0 || $player->village_count == 0)? 0 : ($player->points/$player->village_count);
             })
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function getAllyPlayerBashRanking(World $world, $ally) {
-        static::limitResults(200);
-
+        $whitelist = ['DT_RowIndex', 'name', 'gesBash', 'offBash', 'defBash', 'supBash', 'allyKillsPercent', 'playerPointPercent'];
+        static::limitResults(200, $whitelist);
+        
         $playerModel = new Player($world);
         $querry = $playerModel->newQuery();
         $querry->where('ally_id', $ally);
@@ -126,12 +133,14 @@ class DatatablesController extends Controller
                 return ($player->points == 0 || $player->gesBash == 0) ? 0 .'%' : round(($player->gesBash/$player->points)*100, 1).'%';
             })
             ->rawColumns(['gesBash','offBash','defBash','supBash'])
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function getPlayerVillage(World $world, $player) {
-        static::limitResults(200);
-
+        $whitelist = ['villageID', 'name', 'points', 'coordinates', 'continent', 'bonus_id'];
+        static::limitResults(200, $whitelist);
+        
         $villageModel = new Village($world);
         $query = $villageModel->newQuery();
         $query->where('owner', $player);
@@ -152,11 +161,20 @@ class DatatablesController extends Controller
             ->addColumn('bonus', function ($village){
                 return $village->bonusText();
             })
+            ->whitelist($whitelist)
             ->toJson();
     }
 
     public function getPlayerHistory(World $world, $player) {
-        $tableNr = ((int) $player) % $world->hash_player;
+        validator(request()->except('_'), [
+            '*' => 'prohibited',
+        ])->validate();
+        
+        $player = validator(['p' => $player], [
+            'p' => 'required|numeric|integer',
+        ])->validate()['p'];
+        
+        $tableNr = $player % $world->hash_player;
         
         $playerModel = new Player($world, "player_$tableNr");
         $data = $playerModel->where('playerID', $player)->get();
@@ -208,7 +226,15 @@ class DatatablesController extends Controller
     }
 
     public function getAllyHistory(World $world, $ally) {
-        $tableNr = ((int) $ally) % $world->hash_ally;
+        validator(request()->except('_'), [
+            '*' => 'prohibited',
+        ])->validate();
+        
+        $ally = validator(['a' => $ally], [
+            'a' => 'required|numeric|integer',
+        ])->validate()['a'];
+        
+        $tableNr = $ally % $world->hash_ally;
         
         $allyModel = new Ally($world, "ally_$tableNr");
         $data = $allyModel->where('allyID', $ally)->get();
@@ -263,8 +289,9 @@ class DatatablesController extends Controller
         $datValid = Validator::validate(['day' => $day], [
             'day' => 'date_format:Y-m-d',
         ]);
-        static::limitResults(110);
-
+        $whitelist = ['rank', 'name', 'ally', 'ally_id', 'points', 'village_count', 'village_points', 'gesBash', 'offBash', 'defBash', 'supBash'];
+        static::limitResults(110, $whitelist);
+        
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $playerModel = new Player($world);
         $datas = $playerModel->newQuery();
@@ -343,6 +370,7 @@ class DatatablesController extends Controller
                 return BasicFunctions::modelHistoryCalc($player, $playerOld, 'supBash', false);
             })
             ->rawColumns(['rank','points','village_count','village_points','gesBash','offBash','defBash','supBash'])
+            ->whitelist($whitelist)
             ->toJson();
     }
 
@@ -350,8 +378,9 @@ class DatatablesController extends Controller
         $datValid = Validator::validate(['day' => $day], [
             'day' => 'date_format:Y-m-d',
         ]);
-        static::limitResults(110);
-
+        $whitelist = ['rank', 'name', 'tag', 'points', 'member_count', 'village_count', 'player_points', 'gesBash', 'offBash', 'defBash'];
+        static::limitResults(110, $whitelist);
+        
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $allyModel = new Ally($world);
         $datas = $allyModel->newQuery();
@@ -432,13 +461,41 @@ class DatatablesController extends Controller
                 return BasicFunctions::modelHistoryCalc($ally, $allyOld, 'defBash', false);
             })
             ->rawColumns(['rank','points','member_count','village_count','player_points','gesBash','offBash','defBash'])
+            ->whitelist($whitelist)
             ->toJson();
     }
-
-    public static function limitResults($amount) {
+    
+    /**
+     * This function performs a basic validation of the parameters given to the Datatables Plugin
+     * 
+     * @param type $amount The maximum amount of rows that can be fetched at once
+     * @param type $whitelistColumns what columns might be used by front-end
+     *                               (dynamic columns will be filtered by plugin)
+     */
+    public static function limitResults($amount, $whitelistColumns) {
+        $dat = request()->validate([
+            'length' => 'required|numeric|integer|min:1|max:'.$amount,
+            'start' => 'required|numeric|integer',
+            'columns' => 'required|array',
+            'columns.*.searchable' => ['required', new \App\Rules\BooleanText],
+            'columns.*.orderable' => ['required', new \App\Rules\BooleanText],
+            'columns.*.search.value' => '', //string ??
+            'columns.*.search.regex' => ['required', new \App\Rules\BooleanText],
+            'columns.*.name' => ['nullable', \Illuminate\Validation\Rule::in($whitelistColumns)],
+            'columns.*.data' => ['required', \Illuminate\Validation\Rule::in($whitelistColumns)],
+            'order' => 'array',
+            'order.*.column' => 'required|integer',
+            'order.*.dir' => ['required', \Illuminate\Validation\Rule::in(['asc', 'desc'])],
+            'search.value' => 'string|nullable',
+            'search.regex' => [new \App\Rules\BooleanText],
+        ]);
+        
+        $colKeys = validator(array_keys($dat['columns']), [
+            '*' => 'numeric|integer',
+        ])->validate();
+        
         request()->validate([
-            'length' => 'required|integer|min:1|max:'.$amount,
-            'start' => 'required|integer'
+            'order.*.column' => ['required', 'integer', \Illuminate\Validation\Rule::in($colKeys)]
         ]);
     }
 }

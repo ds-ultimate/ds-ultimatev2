@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tools;
 
 use App\Server;
 use App\World;
+use App\Http\Controllers\API\DatatablesController;
 use App\Util\BasicFunctions;
 use App\Util\BuildingUtils;
 use App\Tool\AccMgrDB\AccountManagerRating;
@@ -46,7 +47,8 @@ class AccMgrDB extends BaseController
             'church' => 'required|boolean',
             'statue' => 'required|boolean',
         ]);
-        
+        $whitelist = ['name', 'rating', 'type', 'user_id', 'actions', 'public'];
+        DatatablesController::limitResults(200, $whitelist);
         
         $model = new AccountManagerTemplate();
         
@@ -137,6 +139,8 @@ class AccMgrDB extends BaseController
                 }
             })
             ->rawColumns(['actions', 'type', 'rating', 'public'])
+            ->whitelist($whitelist)
+            ->setTotalRecords(0)
             ->toJson();
     }
     

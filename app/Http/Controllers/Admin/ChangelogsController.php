@@ -19,7 +19,14 @@ class ChangelogsController extends Controller
             'title' => __('admin.changelogs.create'),
             'route' => "admin.changelogs.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.changelog";
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('admin.changelogs.id'), "id", "width:20px;", "text-center"),
             BasicFunctions::indexEntry(__('admin.changelogs.version'), "version"),
             BasicFunctions::indexEntry(__('admin.changelogs.form_title'), "version"),
@@ -29,9 +36,6 @@ class ChangelogsController extends Controller
             BasicFunctions::indexEntry(__('admin.changelogs.created'), "updated_at"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.changelog";
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
 

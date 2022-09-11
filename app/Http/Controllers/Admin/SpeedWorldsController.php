@@ -20,7 +20,15 @@ class SpeedWorldsController extends Controller
             'title' => __('admin.speedWorlds.create'),
             'route' => "admin.speedWorlds.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.speedWorlds";
+        $defaultOrder = "0, 'desc'";
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'defaultOrder'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('admin.speedWorlds.id'), "id"),
             BasicFunctions::indexEntry(__('admin.speedWorlds.server'), "server_id", "", "", ['dataAdditional' => ', "searchable": false']),
             BasicFunctions::indexEntry(__('admin.speedWorlds.name'), "name"),
@@ -32,10 +40,6 @@ class SpeedWorldsController extends Controller
             BasicFunctions::indexEntry(__('admin.speedWorlds.started'), "started"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false, "searchable": false']),
         ];
-        $datatableRoute = "admin.api.speedWorlds";
-        $defaultOrder = "0, 'desc'";
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute', 'defaultOrder'));
     }
 
     public function create()

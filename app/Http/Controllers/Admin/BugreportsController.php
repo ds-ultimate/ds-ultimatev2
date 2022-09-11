@@ -21,7 +21,14 @@ class BugreportsController extends Controller
             'title' => __('admin.bugreport.new'),
             'route' => "admin.bugreports.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.bugreports";
+
+        return view('admin.bugreports.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('user.bugreport.priority'), "priority", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
             BasicFunctions::indexEntry(__('user.bugreport.form_title'), "title"),
             BasicFunctions::indexEntry(__('user.bugreport.name'), "name"),
@@ -30,9 +37,6 @@ class BugreportsController extends Controller
             BasicFunctions::indexEntry(__('admin.bugreport.created_at'), "created_at"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.bugreports";
-
-        return view('admin.bugreports.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function indexPriority($priority)

@@ -20,7 +20,14 @@ class ServerController extends Controller
             'title' => __('admin.server.create'),
             'route' => "admin.server.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.servers";
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('admin.server.id'), "id"),
             BasicFunctions::indexEntry(__('admin.server.code'), "code"),
             BasicFunctions::indexEntry(__('admin.server.flag'), "flag"),
@@ -30,9 +37,6 @@ class ServerController extends Controller
             BasicFunctions::indexEntry(__('admin.server.active'), "active"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.servers";
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()

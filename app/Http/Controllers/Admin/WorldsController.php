@@ -19,7 +19,14 @@ class WorldsController extends Controller
             'title' => __('admin.worlds.create'),
             'route' => "admin.worlds.create",
         ];
-        $tableColumns = [
+        $tableColumns = static::getIndexColumns();
+        $datatableRoute = "admin.api.worlds";
+
+        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
+    }
+    
+    public static function getIndexColumns() {
+        return [
             BasicFunctions::indexEntry(__('admin.worlds.id'), "id"),
             BasicFunctions::indexEntry(__('admin.worlds.server'), "server", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
             BasicFunctions::indexEntry(__('admin.worlds.name'), "name"),
@@ -32,9 +39,6 @@ class WorldsController extends Controller
             BasicFunctions::indexEntry(__('admin.worlds.clean'), "worldCleaned_at"),
             BasicFunctions::indexEntry(" ", "actions", "width:180px;", "align-middle", ['dataAdditional' => ', "orderable": false']),
         ];
-        $datatableRoute = "admin.api.worlds";
-
-        return view('admin.shared.index', compact('header', 'create', 'tableColumns', 'datatableRoute'));
     }
 
     public function create()
