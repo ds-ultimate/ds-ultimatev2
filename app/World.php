@@ -274,6 +274,7 @@ class World extends CustomModel
     }
     
     public function serName() {
+        BasicFunctions::ensureValidWorldName($this);
         return $this->server->code . $this->name;
     }
     

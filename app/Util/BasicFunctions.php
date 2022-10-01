@@ -273,6 +273,7 @@ class BasicFunctions
      * @return string
      */
     public static function getWorldDataTable(World $model, $tableName) {
+        static::ensureValidWorldName($model);
         if($model->database_id != null) {
             //shared db
             return static::getWorldDataDatabase($model) . ".{$model->server->code}{$model->name}_{$tableName}";
@@ -281,6 +282,7 @@ class BasicFunctions
     }
     
     public static function hasWorldDataTable(World $model, $tableName) {
+        static::ensureValidWorldName($model);
         if($model->database_id != null) {
             //shared db
             return static::existTable(static::getWorldDataDatabase($model), "{$model->server->code}{$model->name}_{$tableName}");
@@ -294,11 +296,20 @@ class BasicFunctions
      * @return string
      */
     public static function getUserWorldDataTable(World $model, $tableName) {
+        static::ensureValidWorldName($model);
         return config('dsUltimate.db_database_wData') . ".{$model->server->code}{$model->name}_{$tableName}";
     }
     
     public static function hasUserWorldDataTable(World $model, $tableName) {
+        static::ensureValidWorldName($model);
         return static::existTable(config('dsUltimate.db_database_wData'), "{$model->server->code}{$model->name}_{$tableName}");
+    }
+    
+    public static function ensureValidWorldName(World $model) {
+        if(! ctype_alnum($model->name)) {
+            //this should never happen
+            throw new \InvalidArgumentException("World name is not allowed");
+        }
     }
 
     /**

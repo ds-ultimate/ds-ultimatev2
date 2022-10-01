@@ -63,6 +63,9 @@ class WorldsController extends Controller
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
+            'hash_ally' => 'required',
+            'hash_player' => 'required',
+            'hash_village' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
         ($request->maintananceMode === 'on')? $request->merge(['maintananceMode' => 1]) : $request->merge(['maintananceMode' => 0]);
@@ -94,6 +97,9 @@ class WorldsController extends Controller
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
+            'hash_ally' => 'required',
+            'hash_player' => 'required',
+            'hash_village' => 'required',
         ]);
         ($request->active === 'on')? $request->merge(['active' => 1]) : $request->merge(['active' => 0]);
         ($request->maintananceMode === 'on')? $request->merge(['maintananceMode' => 1]) : $request->merge(['maintananceMode' => 0]);
@@ -148,6 +154,9 @@ class WorldsController extends Controller
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.url'), 'url', '', false, true),
             BasicFunctions::formEntryEdit($values, 'textarea', __('admin.worlds.config'), 'config', '', false, true),
             BasicFunctions::formEntryEdit($values, 'textarea', __('admin.worlds.units'), 'units', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', "Hash ally", 'hash_ally', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', "Hash player", 'hash_player', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', "Hash village", 'hash_village', '', false, true),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.worlds.active'), 'active', '', false, false),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.worlds.maintananceMode'), 'maintananceMode', '', false, false),
         ];
