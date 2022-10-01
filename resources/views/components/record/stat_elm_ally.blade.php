@@ -55,15 +55,17 @@
                 <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashOff') }})</th>
                 <th>{{ ucfirst(__('ui.table.rank')) }} ({{__('ui.table.bashDeff') }})</th>
                 <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.bashDeff') }})</th>
+                <th>{{ ucfirst(__('ui.table.points')) }} ({{__('ui.table.supDeff') }})</th>
             </tr></thead>
             <tbody><tr>
                 <th>{{ \App\Util\BasicFunctions::numberConv( $data->gesBashRank) }}</th>
                 <td>{{ \App\Util\BasicFunctions::numberConv( $data->gesBash) }}</td>
                 <td>{{ ( $data->points != 0)?(\App\Util\BasicFunctions::numberConv(( $data->gesBash/ $data->points)*100)):('-') }}%</td>
                 <th>{{ \App\Util\BasicFunctions::numberConv( $data->offBashRank) }}</th>
-                <td>{{ \App\Util\BasicFunctions::numberConv( $data->offBash) }}</td>
+                <td>{{ \App\Util\BasicFunctions::numberConv( $data->offBash) }} - {{ \App\Util\BasicFunctions::numberConv( $data->offBash($worldData)) }}</td>
                 <th>{{ \App\Util\BasicFunctions::numberConv( $data->defBashRank) }}</th>
-                <td>{{ \App\Util\BasicFunctions::numberConv( $data->defBash) }}</td>
+                <td>{{ \App\Util\BasicFunctions::numberConv( $data->defBash) }} - {{ \App\Util\BasicFunctions::numberConv( $data->deffBash($worldData)) }}</td>
+                <td>{{ \App\Util\BasicFunctions::numberConv( $data->supBash($worldData)) }}</td>
             </tr></tbody>
         </table>
     </div>

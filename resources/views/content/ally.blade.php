@@ -22,6 +22,32 @@
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Informationen -->
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <table id="history_table" class="table table-hover table-sm w-100 nowrap">
+                        <thead>
+                        <tr>
+                            <th class="all">{{ ucfirst(__('ui.tabletitel.player')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.bashOff')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.bashDeff')) }}</th>
+                            <th class="all">{{ ucfirst(__('ui.table.bashSup')) }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(\App\AllySupport::getForAlly($worldData, $allyData->allyID) as $sup)
+                            <tr>
+                                <td>{!! \App\Util\BasicFunctions::linkPlayer($worldData, $sup->player_id, \App\Util\BasicFunctions::outputName($sup->playerTop->name)) !!}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($sup->offBash) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($sup->deffBash) }}</td>
+                                <td>{{ \App\Util\BasicFunctions::numberConv($sup->supBash) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <div class="col-12">
             <div class="card">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

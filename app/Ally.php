@@ -136,4 +136,32 @@ class Ally extends CustomModel
         }
         return $this->allyHistCache[$days];
     }
+    
+    public function offBash($worldData) {
+        $gesSup = 0;
+        foreach(AllySupport::getForAlly($worldData, $this->allyID) as $sup) {
+            $gesSup += $sup->offBash;
+        }
+        return $gesSup;
+    }
+    
+    public function deffBash($worldData) {
+        $gesSup = 0;
+        foreach(AllySupport::getForAlly($worldData, $this->allyID) as $sup) {
+            $gesSup += $sup->deffBash;
+        }
+        return $gesSup;
+    }
+    
+    public function supBash($worldData) {
+        $gesSup = 0;
+        foreach(AllySupport::getForAlly($worldData, $this->allyID) as $sup) {
+            $gesSup += $sup->supBash;
+        }
+        return $gesSup;
+    }
+    
+    public function getPlayers() {
+        return $this->myhasMany('App\Player', 'ally_id', 'allyID', $this->getRelativeTable("player_latest"));
+    }
 }

@@ -65,6 +65,8 @@ class TableGenerator
             $table->integer('offBashRank')->nullable();
             $table->bigInteger('defBash')->nullable();
             $table->integer('defBashRank')->nullable();
+            $table->bigInteger('supBash')->nullable();
+            $table->integer('supBashRank')->nullable();
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
@@ -85,6 +87,8 @@ class TableGenerator
             $table->integer('offBashRank')->nullable();
             $table->bigInteger('defBash')->nullable();
             $table->integer('defBashRank')->nullable();
+            $table->bigInteger('supBash')->nullable();
+            $table->integer('supBashRank')->nullable();
             $table->bigInteger('gesBash')->nullable();
             $table->integer('gesBashRank')->nullable();
             $table->timestamps();
@@ -125,8 +129,26 @@ class TableGenerator
             $table->integer('player_id');
             $table->integer('old_ally_id');
             $table->integer('new_ally_id');
+            $table->bigInteger('offBash');
+            $table->bigInteger('deffBash');
+            $table->bigInteger('supBash');
             $table->integer('points');
             $table->timestamps();
+        });
+    }
+
+    public static function allySupportTable(World $model) {
+        Schema::create(BasicFunctions::getWorldDataTable($model, 'ally_support'), function (Blueprint $table) {
+            $table->integer('ally_id');
+            $table->integer('player_id');
+            $table->bigInteger('offBash');
+            $table->bigInteger('deffBash');
+            $table->bigInteger('supBash');
+            $table->timestamps();
+            
+            $table->index('ally_id');
+            $table->index('player_id');
+            $table->primary(['ally_id', 'player_Id']);
         });
     }
 

@@ -88,6 +88,7 @@ class DoWorld
                     continue;
                 }
                 TableGenerator::allyChangeTable($worldNew);
+                TableGenerator::allySupportTable($worldNew);
                 TableGenerator::allyLatestTable($worldNew, 'latest');
                 TableGenerator::conquerTable($worldNew);
                 TableGenerator::historyIndexTable($worldNew);
