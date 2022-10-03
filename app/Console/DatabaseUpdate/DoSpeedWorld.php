@@ -26,7 +26,7 @@ class DoSpeedWorld
         ],
         'en' => [
             'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*End:</td> <td>(?<end>.*?)</td>]",
-            'date' => "M d, H:i",
+            'date' => ["M d, H:i", "M d,Y H:i"],
             'dateTimeFix' => true,
             'locale' => 'Europe/London',
         ],
@@ -48,6 +48,7 @@ class DoSpeedWorld
     private static $REPLACEMENTS = [
         //support for CH / (de)
         "Mai" => "May",
+        "Okt" => "Oct",
         "Dez" => "Dec",
     ];
     
@@ -60,11 +61,9 @@ class DoSpeedWorld
                 continue;
             }
             
-            $speedFile = file_get_contents($serverModel->url.'/page/speed/rounds/future');
-            $speedFile = str_replace("\n", "", $speedFile);
-            $speedFile = preg_replace("[<script.*?>.*?</script>]", "", $speedFile);
+            $speedRounds = static::getAllSpeedRounds($serverModel->url.'/page/speed/rounds');
+            $speedRounds = array_merge($speedRounds, static::getAllSpeedRounds($serverModel->url.'/page/speed/rounds/future'));
             
-            $speedRounds = static::getAllSpeedRounds($speedFile);
             if(count($speedRounds) > 0) {
                 $foundSomething = true;
             }
@@ -103,6 +102,10 @@ class DoSpeedWorld
                     }
                 }
                 
+                //Uncomment for testing speed round reading
+//                echo "{$serverModel->code} $name $displayName $start $end\n";
+//                continue;
+              
                 //update existing rounds
                 //use number as unique identifier
                 $model = null;
@@ -143,7 +146,10 @@ class DoSpeedWorld
         }
     }
     
-    private static function getAllSpeedRounds($speedFile) {
+    private static function getAllSpeedRounds($url) {
+        $speedFile = file_get_contents($url);
+        $speedFile = str_replace("\n", "", $speedFile);
+        $speedFile = preg_replace("[<script.*?>.*?</script>]", "", $speedFile);
         //find all div class speed-round -> throw an error if there are none!!
         //need to implement that case later
         $cursor = 0;
@@ -215,7 +221,11 @@ class DoSpeedWorld
     
     private static function customDateParse($dateStr, $formats, $locale) {
         if(!is_array($formats)) {
-            return Carbon::createFromFormat($formats, $dateStr, $locale);
+            try {
+                return Carbon::createFromFormat($formats, $dateStr, $locale);
+            } catch (InvalidFormatException $ex) {
+                throw new InvalidFormatException("Unable to decode " . $dateStr . " with " . $formats);
+            }
         } else {
             foreach($formats as $format) {
                 try {
@@ -224,7 +234,7 @@ class DoSpeedWorld
                     //ignore and use nex format
                 }
             }
-            throw new InvalidFormatException("Unable to decode " . $dateStr);
+            throw new InvalidFormatException("Unable to decode " . $dateStr . " with " . $formats[0]);
         }
     }
 }
