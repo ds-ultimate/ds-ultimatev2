@@ -94,11 +94,11 @@ class DoSpeedWorld
                 $end = self::customDateParse(str_replace($repS, $repR, $matches['end']), $dateFormat, $dateLocale);
                 if($dateTimeFix) {
                     // some dates don't have a year assigned. If they are in the past it is likely that the next year is meant
-                    if($start->isPast()) {
-                        $start = $start->addYear();
-                    }
-                    if($end->isPast()) {
+                    if($end->addDay()->isPast()) {
                         $end = $end->addYear();
+                    }
+                    if($start->gt($end)) {
+                        $start = $start->addYear();
                     }
                 }
                 
