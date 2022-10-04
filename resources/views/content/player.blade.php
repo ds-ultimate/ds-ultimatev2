@@ -194,6 +194,8 @@
                     { "data": "defBash"},
                 ],
                 responsive: true,
+                stateSave: true,
+                customName: "playerHistory",
                 {!! \App\Util\Datatable::language() !!}
             });
         });
@@ -249,6 +251,8 @@
                     { "data": "continent", "orderable": false},
                     { "data": "bonus_id", "render": function (value, type, row) {return row.bonus}},
                 ],
+                stateSave: true,
+                customName: "playerVillage",
                 {!! \App\Util\Datatable::language() !!}
             });
         });

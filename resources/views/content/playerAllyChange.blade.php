@@ -61,6 +61,8 @@
                     { "data": "points", "render": function (value) {return numeral(value).format('0,0')}},
                 ],
                 "order": [[ 0, "desc" ]],
+                stateSave: true,
+                customName: "playerAllyChanges",
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

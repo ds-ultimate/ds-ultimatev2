@@ -244,6 +244,8 @@ $tabList = [
                     firstDraw = false
                 }
             },
+            stateSave: true,
+            customName: "attackListItemData",
             {!! \App\Util\Datatable::language() !!}
         });
         

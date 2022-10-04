@@ -95,6 +95,8 @@
                     $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['l'][1] }}'); //Red
                 }
             },
+            stateSave: true,
+            customName: "{{ $tableStateName }}",
             {!! \App\Util\Datatable::language() !!}
         });
         

@@ -64,6 +64,8 @@
                     { "data": "offBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                     { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                 ],
+                stateSave: true,
+                customName: "worldAlly",
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

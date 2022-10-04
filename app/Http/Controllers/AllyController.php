@@ -128,10 +128,11 @@ class AllyController extends Controller
                 " [".BasicFunctions::decodeName($allyTopData->tag)."]";
         $routeDatatableAPI = route('api.allyConquer', [$worldData->id, $type, $allyTopData->allyID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['ally']);
+        $tableStateName = "tableStateName";
 
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
-                'allHighlight', 'userHighlight'));
+                'allHighlight', 'userHighlight', 'tableStateName'));
     }
 
     public function rank($server, $world){

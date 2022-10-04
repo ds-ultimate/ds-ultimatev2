@@ -61,6 +61,7 @@
 <script src="{{ \App\Util\BasicFunctions::asset('js/app.js') }}"></script>
 <script src="{{ \App\Util\BasicFunctions::asset('plugin/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ \App\Util\BasicFunctions::asset('js/datatables.min.js') }}"></script>
+<script src="{{ \App\Util\BasicFunctions::asset('js/customCode.js') }}"></script>
 @stack('js')
 </body>
 </html>

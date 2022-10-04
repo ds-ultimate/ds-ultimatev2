@@ -99,6 +99,8 @@
                     { "data": "ally"},
                     { "data": "total"},
                 ],
+                stateSave: true,
+                customName: "conquerDailyPlayer",
                 {!! \App\Util\Datatable::language() !!}
             });
 
@@ -115,6 +117,8 @@
                     { "data": "tag"},
                     { "data": "total"},
                 ],
+                stateSave: true,
+                customName: "conquerDailyAlly",
                 {!! \App\Util\Datatable::language() !!}
             });
 

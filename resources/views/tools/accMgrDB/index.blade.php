@@ -116,6 +116,8 @@
                 { "data": "public", "searchable": false},
             ],
             responsive: true,
+            stateSave: true,
+            customName: "accMgrDBIndex_api",
             {!! \App\Util\Datatable::language() !!}
         });
 

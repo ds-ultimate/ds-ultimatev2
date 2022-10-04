@@ -1,5 +1,6 @@
 {
     "/js/app.js": "/js/app.js",
+    "/js/customCode.js": "/js/customCode.js",
     "/css/dark.css": "/css/dark.css",
     "/css/app.css": "/css/app.css",
     "/css/fontawesome.css": "/css/fontawesome.css",

@@ -111,10 +111,11 @@ class PlayerController extends Controller
         $who = BasicFunctions::decodeName($playerTopData->name);
         $routeDatatableAPI = route('api.playerConquer', [$worldData->id, $type, $playerTopData->playerID]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['player']);
+        $tableStateName = "tableStateName";
         
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
-                'allHighlight', 'userHighlight'));
+                'allHighlight', 'userHighlight', 'tableStateName'));
     }
 
     public function rank($server, $world){

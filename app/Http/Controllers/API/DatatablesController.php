@@ -82,8 +82,13 @@ class DatatablesController extends Controller
     }
 
     public function getAllyPlayerBashRanking(World $world, $ally) {
-        $whitelist = ['DT_RowIndex', 'name', 'gesBash', 'offBash', 'defBash', 'supBash', 'allyKillsPercent', 'playerPointPercent'];
-        static::limitResults(200, $whitelist);
+        validator(request()->except('_'), [
+            '*' => 'prohibited',
+        ])->validate();
+        
+        $ally = validator(['a' => $ally], [
+            'a' => 'required|numeric|integer',
+        ])->validate()['a'];
         
         $playerModel = new Player($world);
         $querry = $playerModel->newQuery();
@@ -133,7 +138,6 @@ class DatatablesController extends Controller
                 return ($player->points == 0 || $player->gesBash == 0) ? 0 .'%' : round(($player->gesBash/$player->points)*100, 1).'%';
             })
             ->rawColumns(['gesBash','offBash','defBash','supBash'])
-            ->whitelist($whitelist)
             ->toJson();
     }
 

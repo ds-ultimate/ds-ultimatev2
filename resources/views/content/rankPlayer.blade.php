@@ -77,6 +77,8 @@
                         weekStart:1,
                     })
                 },
+                stateSave: true,
+                customName: "worldPlayerHistory",
                 {!! \App\Util\Datatable::language() !!}
             });
 

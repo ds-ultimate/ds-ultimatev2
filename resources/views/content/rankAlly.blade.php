@@ -78,6 +78,8 @@
                         weekStart:1,
                     })
                 },
+                stateSave: true,
+                customName: "worldAllyHistory",
                 {!! \App\Util\Datatable::language() !!}
             });
 

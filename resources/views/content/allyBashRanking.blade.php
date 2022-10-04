@@ -63,9 +63,7 @@
                     'copy', 'csv', 'print'
                 ],
                 "order": [[ 2, "desc" ]],
-                "processing": true,
                 "pageLength": 100,
-                "serverSide": true,
                 "ajax": "{{ route('api.allyPlayerBashRanking', [$worldData->id, $allyData->allyID]) }}",
                 "columns": [
                     { "data": "DT_RowIndex" },
@@ -82,6 +80,8 @@
                         html : true,
                     });
                 },
+                stateSave: true,
+                customName: "allyPlayerBashRanking",
                 {!! \App\Util\Datatable::language() !!}
             });
         } );

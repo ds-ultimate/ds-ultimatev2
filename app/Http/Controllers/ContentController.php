@@ -93,10 +93,11 @@ class ContentController extends Controller
         $who = $worldData->display_name;
         $routeDatatableAPI = route('api.worldConquer', [$worldData->id, $type]);
         $routeHighlightSaving = route('user.saveConquerHighlighting', ['world']);
+        $tableStateName = "tableStateName";
 
         return view('content.conquer', compact('server', 'worldData', 'typeName',
                 'who', 'routeDatatableAPI', 'routeHighlightSaving',
-                'allHighlight', 'userHighlight'));
+                'allHighlight', 'userHighlight', 'tableStateName'));
     }
 
     public function conquereDaily($server, $world){

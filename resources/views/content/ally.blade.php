@@ -202,6 +202,8 @@
                     { "data": "defBash"},
                 ],
                 responsive: true,
+                stateSave: true,
+                customName: "allyHistory",
                 {!! \App\Util\Datatable::language() !!}
             });
         });
@@ -251,6 +253,8 @@
                     { "data": "defBash", "render": function (value) {return numeral(value).format('0.[00] a')} },
                     { "data": "supBash", "render": function (value) {return numeral(value).format('0.[00] a')}},
                 ],
+                stateSave: true,
+                customName: "allyPlayer",
                 {!! \App\Util\Datatable::language() !!}
             });
         });
