@@ -5,6 +5,7 @@ namespace App\Console\Commands\MigrationHelper;
 use App\World;
 use App\Console\DatabaseUpdate\TableGenerator;
 use App\Util\BasicFunctions;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -48,6 +49,21 @@ class ChangeHashSize extends Command
         $worlds = $this->option('world');
         $hash = $this->option('hash');
         $diff = 0;
+        
+        if(count($worlds) == 1 && $worlds[0] == "*" &&
+                count($hash) == 1 && $hash[0] == "*") {
+            echo "Perfoming automated finishing of worlds\n";
+            $world = (new World())->where(function($query) {
+                return $query->where('active', NULL)->orWhere('active', 0);
+            })->where('world_finalized_at', NULL)->get();
+            foreach ($world as $wInner) {
+                $diff+= $this->changeHashes($wInner, ["a", "p", "v"]);
+                $wInner->world_finalized_at = Carbon::now();
+                $wInner->save();
+            }
+            return 0;
+        }
+        
         foreach($worlds as $w) {
             if($w == "*") {
                 echo "This tool can only be used on worlds were the updates have been disabled. Running through inactive worlds\n";
@@ -107,6 +123,7 @@ class ChangeHashSize extends Command
             $diff+= $oldHash - $newHash;
         }
         $worldModel->maintananceMode = false;
+        $worldModel->world_finalized_at = null;
         $worldModel->save();
         return $diff;
     }

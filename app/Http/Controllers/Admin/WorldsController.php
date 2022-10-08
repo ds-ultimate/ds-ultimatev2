@@ -60,7 +60,7 @@ class WorldsController extends Controller
         $request->validate([
             'server_id' => 'required',
             'name' => 'required',
-            'display_name' => 'required',
+            'display_name' => 'nullable|alpha_num',
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
@@ -94,7 +94,7 @@ class WorldsController extends Controller
         $request->validate([
             'server_id' => 'required',
             'name' => 'required',
-            'display_name' => 'required',
+            'display_name' => 'nullable|alpha_num',
             'url' => 'required',
             'config' => 'required',
             'units' => 'required',
@@ -148,7 +148,7 @@ class WorldsController extends Controller
                 'multiple' => false,
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.name'), 'name', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.display_name'), 'display_name', '', false, true),
+            BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.display_name'), 'display_name', '', false, false),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.ally_count'), 'ally_count', 0, false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.player_count'), 'player_count', 0, false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.worlds.village_count'), 'village_count', 0, false, true),
