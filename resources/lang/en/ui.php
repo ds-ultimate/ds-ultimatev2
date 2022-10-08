@@ -242,6 +242,12 @@ Once the connection is in the list, DS-Ultimate generates a random string.
 This string must then be set as the village name.
 <br>
 It is not specified which village you have to give the name to, but it must belong to the added player. After the next update of the world you can have the connection confirmed.',
+    'attplannerUpload' => 
+    array (
+      'description' => 'You can upload custom attackplanner sounds here',
+      'tableTitle' => 'Currently uploaded sounds',
+      'title' => 'Attackplanner sound',
+    ),
   ),
   'follow' => 
   array (

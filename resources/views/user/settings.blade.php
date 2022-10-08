@@ -37,7 +37,8 @@
                         @can('discord_bot_beta')
                         <a class="nav-link {{ ($page == 'settings-connection')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-connection" role="tab" aria-controls="settings-connection" aria-selected="false">{{ __('ui.personalSettings.connection') }}</a>
                         @endcan
-                        <a class="nav-link {{ ($page == 'settings-map')? 'active' : '' }}" id="settings-connection-tab" data-toggle="pill" href="#settings-map" role="tab" aria-controls="settings-map" aria-selected="false">{{ __('ui.personalSettings.map') }}</a>
+                        <a class="nav-link {{ ($page == 'settings-map')? 'active' : '' }}" id="settings-map-tab" data-toggle="pill" href="#settings-map" role="tab" aria-controls="settings-map" aria-selected="false">{{ __('ui.personalSettings.map') }}</a>
+                        <a class="nav-link {{ ($page == 'settings-attplanner-upload')? 'active' : '' }}" id="settings-attplanner-upload-tab" data-toggle="pill" href="#settings-attplanner-upload" role="tab" aria-controls="settings-attplanner-upload" aria-selected="false">{{ __('ui.personalSettings.attplannerUpload.title') }}</a>
                     </div>
                 </div>
             </div>
@@ -227,6 +228,54 @@
                         </form>
                         </div>
                         <!-- ENDE settings-map -->
+                        <!-- START settings-attackPlanner-upload -->
+                        <div class="tab-pane fade {{ ($page == 'settings-attplanner-upload')? 'show active' : '' }}" id="settings-attplanner-upload" role="tabpanel" aria-labelledby="settings-map-tab" data-title="{{ __('ui.personalSettings.attplannerUpload.title') }}">
+                            <div class="col-12 col-md-6">
+                                <form id="attackPlannerFileUpload">
+                                <label class="form-label" for="attackPlannerUpload">{{ __('ui.personalSettings.attplannerUpload.description') }}</label>
+                                <input type="file" class="form-control" name="file" />
+                                <div class="form-group mt-3">
+                                    <label for="name">{{ __('user.name') }}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="name" value="">
+                                        <div id="name-errors" class="text-danger"></div>
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-sm btn-success mt-2" value="{{ __('global.save') }}">
+                                </form>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <h4>{{ __('ui.personalSettings.attplannerUpload.tableTitle') }}</h4>
+                                <table class="table">
+                                @foreach(Auth::user()->profile->customSounds as $sound)
+                                    <tr data-target="{{ $sound->id }}">
+                                        <td>
+                                            <h4>
+                                                <div class="sound-edit-name">
+                                                    <a class="text-success" style="cursor: pointer;"><i class="fas fa-edit"></i></a>
+                                                    <div class="name-show-wrapper d-inline">{{ $sound->name }}</div>
+                                                </div>
+                                                <div class="d-none name-edit-wrapper"><input type="text" class="form-control w-auto d-inline">
+                                                    <a class="text-success" style="cursor: pointer;"><i class="far fa-save"></i></a>
+                                                </div>
+                                            </h4>
+                                        </td>
+                                        <td>
+                                            <h4 class="mb-0">
+                                                <a class="text-success sound-play" style="cursor: pointer;">
+                                                    <i class="fas fa-play"></i>
+                                                </a>
+                                                <a class="text-danger sound-delete" style="cursor: pointer;">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </table>
+                            </div>
+                        </div>
+                        <!-- ENDE settings-attackPlanner-upload -->
                     </div>
                 </div>
             </div>
@@ -294,7 +343,6 @@
                         })
                     })
                     .catch((error) => {
-                        console.log(error);
                     });
             });
 
@@ -351,7 +399,11 @@
         });
 
         $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+            var loc = window.location.href
+            var url = loc.substring(0, loc.lastIndexOf('/') + 1) + $(this).attr('href').substring(1)
             $('#settings-card-title').html($($(this).attr('href')).data('title'))
+            
+            window.history.pushState(null, $($(this).attr('href')).data('title'), url)
         });
 
         $(document).on('submit', '#connectionForm', function (e) {
@@ -519,5 +571,96 @@
                     }
                 });
         }
+    </script>
+    <audio id="audio-elm">
+        <source type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        $(document).on('submit', '#attackPlannerFileUpload', function (e) {
+            e.preventDefault();
+            let selectedFile = $('#attackPlannerFileUpload input[name=file]')[0].files[0]
+            let formData = new FormData();
+            formData.append("file", selectedFile);
+            formData.append("name", $('#attackPlannerFileUpload input[name=name]').val());
+
+            axios.post('{{ route("tools.attackPlannerSound.upload") }}', formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                }
+            })
+                .then((response) => {
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    if(error.response.status == 422) {
+                        var errors = error.response.data.errors;
+                        $.each(errors, function(i, item) {
+                            var data = item[0].charAt(0).toUpperCase()+item[0].substr(1)
+                            createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
+                        });
+                    }
+                });
+        });
+        
+        $(function() {
+            $('#attackPlannerFileUpload input[name=file]').on('change', function() {
+                var fName = $(this).val().split('\\').pop()
+                fName = fName.substring(0, fName.lastIndexOf("."))
+                $('#attackPlannerFileUpload input[name=name]').val(fName)
+            })
+            $('.sound-edit-name').on('click', function() {
+                $(this).addClass("d-none")
+                var inpWrapper = $('.name-edit-wrapper', $(this).parent())
+                inpWrapper.removeClass('d-none')
+                $('input', inpWrapper).val($('.name-show-wrapper', $(this)).text())
+            })
+            $('.name-edit-wrapper .fa-save').on('click', function() {
+                var name = $('input', $(this).closest('.name-edit-wrapper')).val()
+                var data = {
+                    name: name
+                }
+                axios.post('{{ route("tools.attackPlannerSound.editName", ["%SOUND_ID%"]) }}'
+                        .replace('%SOUND_ID%', $(this).closest('tr').attr("data-target")), data)
+                    .then((response) => {
+                        $(this).closest('.name-edit-wrapper').addClass("d-none")
+                        var showWrapper = $('.sound-edit-name', $(this).closest('tr'))
+                        showWrapper.removeClass('d-none')
+                        $('.name-show-wrapper', showWrapper).html(name)
+                    })
+                    .catch((error) => {
+                        if(error.response.status == 422) {
+                            var errors = error.response.data.errors;
+                            $.each(errors, function(i, item) {
+                                var data = item[0].charAt(0).toUpperCase()+item[0].substr(1)
+                                createToast(data, "{{ __('ui.personalSettings.map') }}", "{{ __('global.now') }}");
+                            });
+                        }
+                    });
+            })
+            $('.sound-play').on('click', function() {
+                var audio = $('#audio-elm')[0]
+                var selected = '{{ route("tools.attackPlannerSound.fetch", ["%SOUND_ID%"]) }}'
+                        .replace('%SOUND_ID%', $(this).closest('tr').attr("data-target"))
+                if($('#audio-elm source')[0].src != selected) {
+                    //changed source
+                    $('#audio-elm source')[0].src = selected
+                    audio.load()
+                }
+                audio.volume = 0.5
+                audio.play()
+                setTimeout(function () {
+                    audio.pause()
+                    audio.currentTime = 0
+                }, 2000)
+            })
+            $('.sound-delete').on('click', function() {
+                axios.post('{{ route("tools.attackPlannerSound.delete", ["%SOUND_ID%"]) }}'
+                        .replace('%SOUND_ID%', $(this).closest('tr').attr("data-target")), [])
+                .then((response) => {
+                    $(this).closest('tr').remove()
+                })
+            })
+        })
     </script>
 @endpush

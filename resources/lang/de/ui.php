@@ -242,6 +242,12 @@ Diese Zeichenkette muss dann als Dorfname gesetzt werden.
 Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zum dem hinzugefügten Spieler gehören. Nach dem nächsten Aktualisieren der Welt, kannst du die Verbindung bestätigen lassen.',
     'noPassword' => 'Es muss ein Passwort gesetzt werden, bevor sie die Verbindung trennen.',
     'map' => 'Welkartenvorlage',
+    'attplannerUpload' => 
+    array (
+      'description' => 'Hier können eigene Benachrichtigungstöne für den Angriffsplaner hochgeladen werden',
+      'tableTitle' => 'Aktuell hochgeladene Sounds',
+      'title' => 'Angriffsplaner Sounds',
+    ),
   ),
   'follow' => 
   array (

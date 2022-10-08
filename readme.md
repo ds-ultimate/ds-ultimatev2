@@ -33,3 +33,6 @@ Die Seite basiert auf dem Framework [Laravel](https://github.com/laravel/laravel
 - JQuery UI [jquery/jquery-ui](https://github.com/jquery/jquery-ui) with UI lightness / UI darkness
 - The Changelog is based on [bootstrap-timeline](https://bootstrapthemes.co/item/bootstrap-timeline/)
 - Captcha based on [Lokno/click-captcha](https://github.com/Lokno/click-captcha)
+- AttackPlanner Sounds by [wavsource](https://www.wavsource.com/)
+
+The list above might not be complete if I missed something that should be mentioned here please contact me (e.g. via Issue)

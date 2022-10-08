@@ -30,6 +30,12 @@ Route::post('/tools/attackPlanner/{attackList}/title/{key}/{title}', [\App\Http\
 Route::get('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'mode'])->name('attackPlannerMode');
 Route::post('/tools/attackPlanner/{attackList}/{mode}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'modePost'])->name('attackPlannerModePost');
 Route::delete('/tools/attackPlanner/{attackList}/{key}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'destroy'])->name('attackPlannerDestroy');
+Route::middleware('auth')->group(function() {
+    Route::post('/tools/attackPlannerSound/upload', [\App\Http\Controllers\Tools\AttackPlannerSoundController::class, 'uploadSound'])->name('attackPlannerSound.upload');
+    Route::get('/tools/attackPlannerSound/fetch/{sound}', [\App\Http\Controllers\Tools\AttackPlannerSoundController::class, 'getSound'])->name('attackPlannerSound.fetch');
+    Route::post('/tools/attackPlannerSound/name/{sound}', [\App\Http\Controllers\Tools\AttackPlannerSoundController::class, 'editName'])->name('attackPlannerSound.editName');
+    Route::post('/tools/attackPlannerSound/delete/{sound}', [\App\Http\Controllers\Tools\AttackPlannerSoundController::class, 'deleteSound'])->name('attackPlannerSound.delete');
+});
 
 Route::withoutMiddleware('localize')->group(function() {
     Route::post('/toolAPI/attackPlanner/create', [\App\Http\Controllers\Tools\AttackPlannerAPIController::class, 'create'])->name('attackPlannerAPICreate');

@@ -18,4 +18,5 @@ return [
     ],
     
     'history_directory' => env('HISTORY_DIRECTORY', 'app/history/'),
+    'attackPlannerSoundDirectory' => env('ATTACKPLANNER_SOUND_DIRECTORY', 'app/attackPlannerSounds/'),
 ];

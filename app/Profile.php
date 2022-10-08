@@ -178,4 +178,16 @@ class Profile extends Model
             'rgba(226, 54, 71, 0.2)',
         ],
     ];
+    
+    public function customSounds() {
+        return $this->hasMany('App\Tool\AttackPlanner\CustomSound', 'user_id', 'user_id');
+    }
+    
+    public function getCustomSoundInfo() {
+        $retArr = [];
+        foreach($this->customSounds as $sound) {
+            $retArr[$sound->name] = $sound->generateURL();
+        }
+        return $retArr;
+    }
 }

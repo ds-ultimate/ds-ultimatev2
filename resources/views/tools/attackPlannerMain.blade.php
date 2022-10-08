@@ -85,6 +85,62 @@ $tabList = [
                 <b>{{ __('tool.attackPlanner.warnSending') }}</b>
             </div>
             <div class="card">
+                <div class="d-none">
+                    <div id="datatablesHeader1" class="form-inline d-print-none">
+                        <div>
+                            <label id="audioTimingText" for="audioTiming">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1 text-right" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>
+                            <input type="range" class="custom-range" min="0" max="300" id="audioTiming" value="60">
+                        </div>
+                        <div class="pl-3">
+                            <select id="audioTypeSelection">
+                            @foreach(App\Http\Controllers\Tools\AttackPlannerSoundController::getAlarmData() as $name => $url)
+                                <option value="{{ asset($url) }}">{{ $name }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                        <div class="audioVolumeContainer pl-3 position-relative">
+                            <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">
+                                <i id="audioMuteIcon" class="fas fa-volume-up"></i>
+                            </a></h5>
+                            <div class="tooltip-audio popover fade bs-popover-right nowrap show" style="left: 100%">
+                                <div class="arrow" style="top: 5px;"></div>
+                                <h3 class="popover-header"></h3>
+                                <div class="popover-body">
+                                    <div id="audioVolumeLabel" class="d-inline pr-2" style="vertical-align:top"></div>
+                                    <input type="range" class="custom-range w-auto" min="0" max="1" step="0.01" id="audioVolume" value="0.2">
+                                </div>
+                            </div>
+                        </div>
+                        <style>.tooltip-audio {display: none}.audioVolumeContainer:hover .tooltip-audio {display: block}</style>
+                        <div class="pl-3">
+                            <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="audio()" role="button">
+                                <i id="audioPlayIcon" class="fas fa-play"></i>
+                            </a></h5>
+                        </div>
+                        @auth
+                        <div class="pl-3">
+                            <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" href="{{ route("user.settings", ["settings-attplanner-upload"]) }}" target="_blank" role="button">
+                                <i class="fas fa-upload"></i>
+                            </a></h5>
+                        </div>
+                        @if($attackList->user_id != Auth::user()->id)
+                            @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                                <div class="col-1">
+                                    <h5><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i></h5>
+                                </div>
+                            @else
+                                <div class="col-1">
+                                    <h5><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star h4 text-muted mt-2"></i></h5>
+                                </div>
+                            @endif
+                        @endif
+                        @endauth
+                    </div>
+                    <div id="datatablesHeader2" data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">
+                        <input type="checkbox" id="checkAsUV" class="mr-1" @checked($attackList->uvMode) >
+                        <label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>
+                    </div>
+                </div>
                 <div class="card-body table-responsive">
                     <table id="data1" class="table table-bordered table-striped nowrap w-100">
                         <thead>
@@ -129,15 +185,15 @@ $tabList = [
 
 @push('js')
     <script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
-    <audio id="audio-elm" controls class="d-none">
-        <source src="{{ asset('sounds/attackplanner/420661__kinoton__alarm-siren-fast-oscillations.mp3') }}" type="audio/mpeg">
+    <audio id="audio-elm">
+        <source type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     <script>
         var firstDraw = true;
         var muteaudio = false;
-        var audioTiming = 60;
-        var maxAudioTiming = 300;
+        var audioTiming;
+        var maxAudioTiming = $('#audioTiming')[0].max - 0;
         var table = $('#data1').DataTable({
             ordering: true,
             processing: true,
@@ -197,42 +253,17 @@ $tabList = [
                     @endif
                     $('#data1_wrapper div.row:first-child').addClass("justify-content-between")
                     $('#data1_wrapper div.row:first-child > div').removeClass("col-md-6 col-sm-12")
-                    $('#data1_wrapper div.row:first-child > div:eq(1)').html('<div class="form-inline d-print-none">' +
-                        '<div>' +
-                            '<label id="audioTimingText" for="customRange2">{!! str_replace('%S%', '<input id="audioTimingInput" class="form-control form-control-sm mx-1 text-right" style="width: 50px;" type="text" value="">', __('tool.attackPlanner.audioTiming')) !!}</label>' +
-                            '<input type="range" class="custom-range" min="0" max="' + maxAudioTiming + '" id="audioTiming" value="' + audioTiming + '">' +
-                        '</div>' +
-                        '<div class="pl-3">' +
-                            '<h5>' +
-                                '<a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">' +
-                                    '<i id="audioMuteIcon" class="fas fa-volume-up"></i>' +
-                                '</a>' +
-                            '</h5>' +
-                        '</div>' +
-                        @auth
-                            @if($attackList->user_id != Auth::user()->id)
-                                @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
-                                    '<div class="col-1">' +
-                                        '<h5>' +
-                                            '<i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i>' +
-                                        '</h5>' +
-                                    '</div>' +
-                                @else
-                                    '<div class="col-1">' +
-                                        '<h5>' +
-                                            '<i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far text-muted fa-star h4 text-muted mt-2"></i>' +
-                                        '</h5>' +
-                                    '</div>' +
-                                @endif
-                            @endif
-                        @endauth
-                        '</div>')
-                    $('#data1_wrapper div.row:first-child').append(
-                        '<div data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">'+
-                            '<input type="checkbox" id="checkAsUV" class="mr-1" @checked($attackList->uvMode) >'+
-                            '<label for="checkAsUV">{{ __('tool.attackPlanner.uvMode') }}</label>'+
-                        '</div>')
-                    $('#audioTimingInput').val(audioTiming)
+                    $('#data1_wrapper div.row:first-child > div:eq(1)').append($('#datatablesHeader1'))
+                    $('#data1_wrapper div.row:first-child').append($('#datatablesHeader2'))
+                    loadAudioUIState();
+                    $('#audioTiming').trigger('input')
+                    $('#audioVolume').on('input', () => {$('#audioVolumeLabel').text(($('#audioVolume').val()-0).toFixed(2))})
+                    $('#audioVolume').trigger('input')
+                    $('#audioVolume').on('input', saveAudioUIState)
+                    $('#audioTypeSelection').on('input', saveAudioUIState)
+                    $('#audioTiming').on('input', saveAudioUIState)
+                    $('#audioTimingInput').on('keyup', saveAudioUIState)
+                    
                     $('#checkAsUV').on('change', function() {
                         axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'saveAsUV', $attackList->show_key]) }}", {
                             'value': $('#checkAsUV').is(':checked'),
@@ -521,13 +552,40 @@ $tabList = [
         }
 
         function muteAudio() {
+            muteaudio = !muteaudio
+            updateAudioUI()
+            saveAudioUIState();
+        }
+        
+        function updateAudioUI() {
             if(muteaudio){
-                $('#audioMuteIcon').removeClass('fa-volume-mute').addClass('fa-volume-up');
-                muteaudio = false;
-            }else{
-                $('#audioMuteIcon').removeClass('fa-volume-up').addClass('fa-volume-mute');
-                muteaudio = true;
+                $('#audioMuteIcon').removeClass('fa-volume-up').addClass('fa-volume-mute')
+                $('.audioVolumeContainer .tooltip-audio').addClass("d-none")
+            } else{
+                $('#audioMuteIcon').removeClass('fa-volume-mute').addClass('fa-volume-up')
+                $('.audioVolumeContainer .tooltip-audio').removeClass("d-none")
             }
+        }
+        
+        function saveAudioUIState() {
+            var data = {
+                delay: $('#audioTiming').val(),
+                sound: $('#audioTypeSelection').val(),
+                volume: $('#audioVolume').val(),
+                muted: muteaudio,
+            }
+            localStorage.setItem('attackPlannerSound', JSON.stringify(data))
+        }
+        
+        function loadAudioUIState() {
+            var data = JSON.parse(localStorage.getItem('attackPlannerSound'))
+            if(data) {
+                if(typeof(data.delay) !== "undefined") $('#audioTiming').val(data.delay)
+                if(typeof(data.sound) !== "undefined") $('#audioTypeSelection').val(data.sound)
+                if(typeof(data.volume) !== "undefined") $('#audioVolume').val(data.volume)
+                if(typeof(data.muted) !== "undefined") muteaudio = data.muted
+            }
+            updateAudioUI()
         }
 
         function countdown(){
@@ -607,9 +665,13 @@ $tabList = [
 
         function audio(){
             if(!muteaudio){
-                var $audio = $('#audio-elm');
-                var audio = $audio[0];
-                audio.volume = 0.2;
+                var audio = $('#audio-elm')[0];
+                if($('#audio-elm source')[0].src != $('#audioTypeSelection').val()) {
+                    //changed source
+                    $('#audio-elm source')[0].src = $('#audioTypeSelection').val()
+                    audio.load();
+                }
+                audio.volume = $('#audioVolume').val();
                 audio.play();
                 setTimeout(function () {
                     audio.pause();
