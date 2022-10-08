@@ -10,7 +10,7 @@
     <tbody>
     @foreach($data as $world)
         <tr>
-            <td class="server-truncate"><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->display_name) !!}
+            <td class="server-truncate"><span class="flag-icon flag-icon-{{ $world->server->flag }}"></span> {!! \App\Util\BasicFunctions::linkWorld($world, $world->getDistplayName()) !!}
                 <small class="text-muted">({{ $world->server->code.$world->name }})</small>
                 @auth
                     @can('world_access')

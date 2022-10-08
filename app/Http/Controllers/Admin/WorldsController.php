@@ -29,6 +29,7 @@ class WorldsController extends Controller
         return [
             BasicFunctions::indexEntry(__('admin.worlds.id'), "id"),
             BasicFunctions::indexEntry(__('admin.worlds.server'), "server", "", "", ['dataAdditional' => ', "orderable": false, "searchable": false']),
+            BasicFunctions::indexEntry(__('admin.worlds.name'), "display_name"),
             BasicFunctions::indexEntry(__('admin.worlds.name'), "name"),
             BasicFunctions::indexEntry(__('admin.worlds.ally_count'), "ally_count"),
             BasicFunctions::indexEntry(__('admin.worlds.player_count'), "player_count"),

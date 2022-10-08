@@ -16,7 +16,7 @@ class VillageController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $villageData = Village::village($worldData, $village);
-        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $village]));
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->getDistplayName(), "village" => $village]));
         
         $villageHistData = $villageData->getHistoryData($worldData);
         $datas = Village::pureVillageDataChart($villageHistData);
@@ -64,7 +64,7 @@ class VillageController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $villageData = Village::village($worldData, $villageID);
-        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $villageID]));
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->getDistplayName(), "village" => $villageID]));
 
         switch($type) {
             case "all":

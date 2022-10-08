@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('titel', $worldData->display_name,': '.__('tool.distCalc.title'))
+@section('titel', $worldData->getDistplayName(),': '.__('tool.distCalc.title'))
 
 @section('content')
     <div class="row justify-content-center">
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
-            <h1 class="font-weight-normal">{{ ucfirst(__('tool.greatSiegeCalc.title')).' ['.$worldData->display_name.']' }}</h1>
+            <h1 class="font-weight-normal">{{ ucfirst(__('tool.greatSiegeCalc.title')).' ['.$worldData->getDistplayName().']' }}</h1>
         </div>
         <!-- ENDE Titel für Tablet | PC -->
         <!-- Titel für Mobile Geräte -->
@@ -15,7 +15,7 @@
                 {{ ucfirst(__('tool.greatSiegeCalc.title')).' ' }}
             </h1>
             <h4>
-                {{ '['.$worldData->display_name.']' }}
+                {{ '['.$worldData->getDistplayName().']' }}
             </h4>
         </div>
         <!-- ENDE Titel für Mobile Geräte -->

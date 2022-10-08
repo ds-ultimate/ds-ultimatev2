@@ -36,7 +36,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $allyData = Ally::ally($worldData, $allyID);
-        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
+        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->getDistplayName(), "ally" => $allyID]));
         
         $rawStatData = Ally::allyDataChart($worldData, $allyID);
         $statData = array();
@@ -64,7 +64,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $playerData = Player::player($worldData, $playerID);
-        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
+        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->getDistplayName(), "player" => $playerID]));
         
         $rawStatData = Player::playerDataChart($worldData, $playerID);
         $statData = array();
@@ -93,7 +93,7 @@ class PictureController extends Controller
         if($ret !== null) return $ret;
         
         $villageData = Village::village($worldData, $villageID);
-        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->display_name, "village" => $villageID]));
+        abort_if($villageData == null, 404, __("ui.errors.404.villageNotFound", ["world" => $worldData->getDistplayName(), "village" => $villageID]));
         
         $rawStatData = Village::villageDataChart($worldData, $villageID);
         $statData = array();

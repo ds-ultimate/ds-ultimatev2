@@ -6,7 +6,7 @@
             <div class="list-group" id="ownAnimatedMap" role="tablist">
                 @foreach($animatedMaps as $map)
                     <a class="list-group-item list-group-item-action {{ ($animatedMaps->get(0)->id === $map->id)? 'active ': '' }}" id="animatedMap-{{ $map->id }}" data-toggle="list" onclick="switchAnimatedMap('{{ $map->id }}')" href="#previewAnimatedMap" role="tab" aria-controls="home">
-                        <b>{{ $map->world->display_name }}</b>
+                        <b>{{ $map->world->getDistplayName() }}</b>
                         <span class="float-right">{{ ($map->title === null)? __('ui.noTitle'): $map->title }}</span>
                     </a>
                 @endforeach

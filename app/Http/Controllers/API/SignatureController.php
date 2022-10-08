@@ -80,6 +80,7 @@ class SignatureController extends Controller
     }
     
     private static function createPlayerSignature($targetFile, World $world, $id) {
+        \App::setLocale($world->server->locale);
         // Content type
         $playerData = Player::player($world, $id);
         
@@ -88,9 +89,9 @@ class SignatureController extends Controller
         
         $img->setFont(public_path("/fonts/arial_b.ttf"));
         if (strpos($world->name, 'p') !== false || strpos($world->name, 'c') !== false) {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->getDistplayName(), static::$cBlack, 90);
         } else {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->getDistplayName(), static::$cBlack, 90);
         }
         $img->insertPubImage("images/default/signature/{$world->server->flag}.png", 27, 3, 16, 12);
         
@@ -156,6 +157,7 @@ class SignatureController extends Controller
     }
     
     private static function createTopPlayerSignature($targetFile, World $world, $id){
+        \App::setLocale($world->server->locale);
         // Content type
         $playerData = PlayerTop::player($world, $id);
         
@@ -163,9 +165,9 @@ class SignatureController extends Controller
         imagefill($img->getRawImage(), 0, 0, $img->colAllocate(static::$cBG));
         
         if (strpos($world->name, 'p') !== false || strpos($world->name, 'c') !== false) {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 9, $world->getDistplayName(), static::$cBlack, 90);
         } else {
-            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->display_name, static::$cBlack, 90);
+            $img->renderAlignedText(TextImageRenderer::$ANCHOR_MID_LEFT, 6, $img->h() / 2, 10, $world->getDistplayName(), static::$cBlack, 90);
         }
         $img->insertPubImage("images/default/signature/{$world->server->flag}.png", 27, 3, 16, 12);
         

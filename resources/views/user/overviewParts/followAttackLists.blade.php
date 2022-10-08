@@ -27,7 +27,7 @@
                         <a class="list-group-item list-group-item-action {{ ($attackListsFollow->get(0)->id === $attackList->id)? 'active ': '' }}" id="attackList-{{ $attackList->id }}" onclick="switchAttackPlanner('{{ $attackList->id }}', null, '{{ $attackList->show_key }}', true)" data-toggle="list" role="tab" aria-controls="home">
                             <div class="row">
                                 <div class="col-2">
-                                    <b>{{ $attackList->world->display_name }}</b>
+                                    <b>{{ $attackList->world->getDistplayName() }}</b>
                                 </div>
                                 <div class="col-6">
                                     <span>{{ ($attackList->title === null)? __('ui.noTitle'): $attackList->title }}</span>

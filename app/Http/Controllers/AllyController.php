@@ -19,7 +19,7 @@ class AllyController extends Controller
 
         $allyData = Ally::ally($worldData, $ally);
         $allyTopData = AllyTop::ally($worldData, $ally);
-        abort_if($allyData == null && $allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $ally]));
+        abort_if($allyData == null && $allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->getDistplayName(), "ally" => $ally]));
         
         $conquer = Conquer::allyConquerCounts($worldData, $ally);
         $allyChanges = AllyChanges::allyAllyChangeCounts($worldData, $ally);
@@ -63,7 +63,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $allyData = Ally::ally($worldData, $ally);
-        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $ally]));
+        abort_if($allyData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->getDistplayName(), "ally" => $ally]));
 
         return view('content.allyBashRanking', compact('allyData', 'worldData', 'server'));
     }
@@ -73,7 +73,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $allyTopData = AllyTop::ally($worldData, $allyID);
-        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
+        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->getDistplayName(), "ally" => $allyID]));
 
         switch($type) {
             case "all":
@@ -97,7 +97,7 @@ class AllyController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $allyTopData = AllyTop::ally($worldData, $allyID);
-        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->display_name, "ally" => $allyID]));
+        abort_if($allyTopData == null, 404, __("ui.errors.404.allyNotFound", ["world" => $worldData->getDistplayName(), "ally" => $allyID]));
 
         switch($type) {
             case "all":

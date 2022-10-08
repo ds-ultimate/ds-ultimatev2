@@ -21,13 +21,13 @@ class Server extends Model
     ];
 
     protected $fillable = [
-        'id',
         'code',
         'flag',
         'url',
+        'active',
         'speed_active',
         'classic_active',
-        'active',
+        'locale',
     ];
 
     /**

@@ -22,7 +22,7 @@ class FindModelController extends Controller
     public function getVillageByCoord(World $world, $x, $y){
         $villageModel = new Village($world);
         $result = $villageModel->where(['x' => $x, 'y' => $y])->first();
-        abort_if($result == null, 404, __("ui.errors.404.villageNotFound", ["world" => $world->display_name, "village" => "$x|$y"]));
+        abort_if($result == null, 404, __("ui.errors.404.villageNotFound", ["world" => $world->getDistplayName(), "village" => "$x|$y"]));
         return $this->villageToJSON($world, $result);
     }
     
@@ -39,7 +39,7 @@ class FindModelController extends Controller
                 return $this->villageHistToJSON($world, $line, $histIdx);
             }
         }
-        abort(404, __("ui.errors.404.villageNotFound", ["world" => $world->display_name, "village" => "$x|$y"]));
+        abort(404, __("ui.errors.404.villageNotFound", ["world" => $world->getDistplayName(), "village" => "$x|$y"]));
     }
 
     public function getSelect2Player(World $world){
@@ -117,15 +117,15 @@ class FindModelController extends Controller
         $worlds = World::where('active', '!=', null)->where('server_id', $server->id)->get();
         $array = [];
         foreach ($worlds as $world){
-            $array[] = ['id' => $world->id, 'name' => $world->name, 'text' => $world->display_name];
+            $array[] = ['id' => $world->id, 'name' => $world->name, 'text' => $world->getDistplayName()];
         }
         return $array;
     }
     
     public function getWorldPopup(World $world, $playerId){
         $playerData = PlayerTop::player($world, $playerId);
-        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $world->display_name, "player" => $playerId]));
-        return "{$world->display_name}<br>" .
+        abort_if($playerData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $world->getDistplayName(), "player" => $playerId]));
+        return "{$world->getDistplayName()}<br>" .
                 __('ui.otherWorldsPlayerPopup.rank') . ": " . BasicFunctions::numberConv($playerData->rank_top) . "<br>" .
                 __('ui.otherWorldsPlayerPopup.villages') . ": " . BasicFunctions::numberConv($playerData->village_count_top) . "<br>" .
                 __('ui.otherWorldsPlayerPopup.points') . ": " . BasicFunctions::numberConv($playerData->points_top) . "<br>" .

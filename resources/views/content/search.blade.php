@@ -28,7 +28,7 @@
                             <tbody>
                             @foreach($result as $player)
                                 <tr>
-                                    <th class="text-truncate" style="max-width: 130px">{{$player['world']->display_name}}</th>
+                                    <th class="text-truncate" style="max-width: 130px">{{$player['world']->getDistplayName()}}</th>
                                     <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkPlayer($player['world'],$player['player']->playerID,\App\Util\BasicFunctions::outputName($player['player']->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player['player']->points_top)}}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($player['player']->village_count_top)}}</td>
@@ -49,7 +49,7 @@
                             <tbody>
                             @foreach($result as $ally)
                                 <tr>
-                                    <th class="text-truncate" style="max-width: 130px">{{$ally['world']->display_name}}</th>
+                                    <th class="text-truncate" style="max-width: 130px">{{$ally['world']->getDistplayName()}}</th>
                                     <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkAlly($ally['world'],$ally['ally']->allyID,\App\Util\BasicFunctions::outputName($ally['ally']->name)) !!}</td>
                                     <td>{!! \App\Util\BasicFunctions::linkAlly($ally['world'],$ally['ally']->allyID,\App\Util\BasicFunctions::outputName($ally['ally']->tag)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($ally['ally']->points_top)}}</td>
@@ -72,7 +72,7 @@
                             <tbody>
                             @foreach($result as $village)
                                 <tr>
-                                    <th class="text-truncate" style="max-width: 130px">{{$village['world']->display_name}}</th>
+                                    <th class="text-truncate" style="max-width: 130px">{{$village['world']->getDistplayName()}}</th>
                                     <td class="text-truncate" style="max-width: 130px">{!! \App\Util\BasicFunctions::linkVillage($village['world'],$village['village']->villageID,\App\Util\BasicFunctions::outputName($village['village']->name)) !!}</td>
                                     <td>{{\App\Util\BasicFunctions::numberConv($village['village']->points)}}</td>
                                     <td>{{$village['village']->continentString()}}</td>

@@ -217,7 +217,7 @@ class SettingsController extends Controller
                 return "<span><span class=\"flag-icon flag-icon-" . $connection->world->server->flag . "\"></span>" . ucwords($connection->world->server->code) . "</span>";
             })
             ->addColumn('world', function ($connection) {
-                return $connection->world->display_name;
+                return $connection->world->getDistplayName();
             })
             ->addColumn('player', function ($connection) {
                 $player = Player::player($connection->world, $connection->player_id);

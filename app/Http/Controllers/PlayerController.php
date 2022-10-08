@@ -20,7 +20,7 @@ class PlayerController extends Controller
 
         $playerData = Player::player($worldData, $player);
         $playerTopData = PlayerTop::player($worldData, $player);
-        abort_if($playerData == null && $playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $player]));
+        abort_if($playerData == null && $playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->getDistplayName(), "player" => $player]));
         
         $playerOtherServers = PlayerOtherServers::player($worldData->server, $player);
         
@@ -64,7 +64,7 @@ class PlayerController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
 
         $playerTopData = PlayerTop::player($worldData, $playerID);
-        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
+        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->getDistplayName(), "player" => $playerID]));
 
         switch($type) {
             case "all":
@@ -81,7 +81,7 @@ class PlayerController extends Controller
         $worldData = World::getAndCheckWorld($server, $world);
         
         $playerTopData = PlayerTop::player($worldData, $playerID);
-        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->display_name, "player" => $playerID]));
+        abort_if($playerTopData == null, 404, __("ui.errors.404.playerNotFound", ["world" => $worldData->getDistplayName(), "player" => $playerID]));
 
         switch($type) {
             case "all":

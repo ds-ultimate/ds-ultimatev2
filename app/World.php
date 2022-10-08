@@ -173,7 +173,14 @@ class World extends CustomModel
         if($this->isSpeed()) {
             return $this->generateDisplayName();
         }
-        return $this->display_name;
+        return $this->getDistplayName();
+    }
+    
+    public function getDistplayName() {
+        if($this->display_name !== null) {
+            return $this->display_name;
+        }
+        return $this->generateDisplayName();
     }
 
     /**

@@ -32,6 +32,7 @@ class ServerController extends Controller
             BasicFunctions::indexEntry(__('admin.server.code'), "code"),
             BasicFunctions::indexEntry(__('admin.server.flag'), "flag"),
             BasicFunctions::indexEntry(__('admin.server.url'), "url"),
+            BasicFunctions::indexEntry(__('admin.server.locale'), "locale"),
             BasicFunctions::indexEntry(__('admin.server.speed_active'), "speed_active"),
             BasicFunctions::indexEntry(__('admin.server.classic_active'), "classic_active"),
             BasicFunctions::indexEntry(__('admin.server.active'), "active"),
@@ -135,9 +136,13 @@ class ServerController extends Controller
                 'multiple' => false,
                 'raw' => true,
             ]),
+            BasicFunctions::formEntryEdit($values, 'select', __('admin.worlds.locale'), 'locale', '', false, true, [
+                'options' => \App\Util\Navigation::getAvailableLocalesForEdit(),
+                'multiple' => false,
+            ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.server.url'), 'url', '', false, true),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.server.active'), 'active', '', false, false),
-            BasicFunctions::formEntryEdit($values, 'check', __('admin.server.speed_active'), 'speed_active', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'chcek', __('admin.server.speed_active'), 'speed_active', '', false, false),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.server.classic_active'), 'classic_active', '', false, false),
         ];
     }
@@ -147,6 +152,7 @@ class ServerController extends Controller
             BasicFunctions::formEntryShow(__('admin.server.code'), $values->code),
             BasicFunctions::formEntryShow(__('admin.server.flag'), '<span class="flag-icon flag-icon-'. htmlentities($values->flag).
                     '"></span> ['. htmlentities($values->flag). ']', false),
+            BasicFunctions::formEntryShow(__('admin.server.locale'), $values->locale),
             BasicFunctions::formEntryShow(__('admin.server.url'), $values->url),
             BasicFunctions::formEntryShow(__('admin.server.active'),
                     ($values->active == 1)? '<span class="fas fa-check" style="color: green"></span>' :
