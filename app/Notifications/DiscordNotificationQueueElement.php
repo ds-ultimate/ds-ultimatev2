@@ -9,6 +9,7 @@ use App\World;
 use App\Util\BasicFunctions;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 
@@ -197,6 +198,7 @@ class DiscordNotificationQueueElement extends Model
             $first = false;
         }
         
+        DB::statement("UNLOCK TABLES;");
         $model = new DiscordNotificationQueueElement();
         $model->notification_data = $asData;
         $model->user_id = $user_id;
