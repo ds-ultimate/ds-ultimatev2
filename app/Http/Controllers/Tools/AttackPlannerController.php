@@ -67,10 +67,18 @@ class AttackPlannerController extends BaseController
                 $attackList->api = false;
                 $attackList->touch();
                 return $this->show($attackList);
-            case 'exportAll':
+            case 'exportWB':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
                 $attackList->touch();
-                return $this->exportAll($attackList);
+                return $this->exportWB($attackList);
+            case 'exportBB':
+                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
+                return $this->exportBB($attackList);
+            case 'exportIGM':
+                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
+                return $this->exportIGM($attackList);
             default:
                 abort(404);
         }
@@ -163,8 +171,8 @@ class AttackPlannerController extends BaseController
         return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
     
-    private function exportAll(AttackList $attackList){
-        $items = $attackList->items()->take(400)->get();
+    private function exportWB(AttackList $attackList){
+        $items = $attackList->items()->get();
         
         // Workbench
         $exportWB = "";
@@ -178,18 +186,32 @@ class AttackPlannerController extends BaseController
                     "/snob=".base64_encode($item->snob)."/militia=MA==\n";
         }
         
+        return response()->json([
+            "data" => $exportWB,
+        ]);
+    }
+    
+    private function exportBB(AttackList $attackList){
+        $items = $attackList->items()->take(400)->get();
+        
         //BB-Code
         $exportBB = $this->exportTemplated($attackList, $items,
                 __('tool.attackPlanner.export.BB.default.row'), __('tool.attackPlanner.export.BB.default.body'));
+        
+        return response()->json([
+            "data" => $exportBB,
+        ]);
+    }
+    
+    private function exportIGM(AttackList $attackList){
+        $items = $attackList->items()->take(400)->get();
         
         //IGM-BB-Code
         $exportIGM = $this->exportTemplated($attackList, $items,
                 __('tool.attackPlanner.export.IGM.default.row'), __('tool.attackPlanner.export.IGM.default.body'));
         
         return response()->json([
-            "wb" => $exportWB,
-            "bb" => $exportBB,
-            "igm" => $exportIGM,
+            "data" => $exportIGM,
         ]);
     }
     

@@ -2,18 +2,39 @@
     <div class="row pt-3">
         <div class="col-12">
             <div class="form-group">
-                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportWB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportWB')">{{ __('global.datatables.copy') }}</button>
-                <textarea id="exportWB" class="form-control form-control-sm" rows="1"></textarea>
+                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportWB') }}</label>
+                <div class="export-show-field d-none">
+                    <button class="btn btn-primary btn-sm" onclick="copy('exportWB')">{{ __('global.datatables.copy') }}</button>
+                    <textarea id="exportWB" class="form-control form-control-sm" style="height: 300px" rows="1"></textarea>
+                </div>
+                <div class="export-show-control">
+                    <button class="btn btn-primary btn-sm" data-target="exportWB">{{ __('global.show') }}</button>
+                    <h1 class="loading"><i class="fas fa-spinner fa-spin"></i></h1>
+                </div>
                 <small class="form-control-feedback">{{ __('tool.attackPlanner.exportWBDesc') }}</small>
             </div>
             <div class="form-group">
-                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportBB') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportBB')">{{ __('global.datatables.copy') }}</button>
-                <textarea id="exportBB" class="form-control form-control-sm" rows="1"></textarea>
+                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportBB') }}</label>
+                <div class="export-show-field d-none">
+                    <button class="btn btn-primary btn-sm" onclick="copy('exportBB')">{{ __('global.datatables.copy') }}</button>
+                    <textarea id="exportBB" class="form-control form-control-sm" style="height: 300px" rows="1"></textarea>
+                </div>
+                <div class="export-show-control">
+                    <button class="btn btn-primary btn-sm" data-target="exportBB">{{ __('global.show') }}</button>
+                    <h1 class="loading"><i class="fas fa-spinner fa-spin"></i></h1>
+                </div>
                 <small class="form-control-feedback">{{ __('tool.attackPlanner.exportBBDesc') }}</small>
             </div>
             <div class="form-group">
-                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportIGM') }}</label> <button class="btn btn-primary btn-sm" onclick="copy('exportIGM')">{{ __('global.datatables.copy') }}</button>
-                <textarea id="exportIGM" class="form-control form-control-sm" rows="1"></textarea>
+                <label class="control-label mr-3">{{ __('tool.attackPlanner.exportIGM') }}</label>
+                <div class="export-show-field d-none">
+                    <button class="btn btn-primary btn-sm" onclick="copy('exportIGM')">{{ __('global.datatables.copy') }}</button>
+                    <textarea id="exportIGM" class="form-control form-control-sm" style="height: 300px" rows="1"></textarea>
+                </div>
+                <div class="export-show-control">
+                    <button class="btn btn-primary btn-sm" data-target="exportIGM">{{ __('global.show') }}</button>
+                    <h1 class="loading"><i class="fas fa-spinner fa-spin"></i></h1>
+                </div>
                 <small class="form-control-feedback">{{ __('tool.attackPlanner.exportIGMDesc') }}</small>
             </div>
             <form id="importItemsForm">
@@ -53,16 +74,32 @@
     });
 
     function updateExports() {
-        axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, 'exportAll', $attackList->edit_key]) }}', {
-        })
-            .then((response) => {
-                $('#exportWB').val(response.data.wb);
-                $('#exportBB').val(response.data.bb);
-                $('#exportIGM').val(response.data.igm);
-            })
-            .catch((error) => {
-
-            });
+        $('.export-show-control').removeClass('d-none')
+        $('.export-show-control .btn').removeClass('d-none')
+        $('.export-show-control .loading').addClass('d-none')
+        $('.export-show-field').removeClass('d-inline')
+        $('.export-show-field').addClass('d-none')
     }
+    
+    $(function () {
+        $('.export-show-control .btn').on('click', function() {
+            $(this).addClass('d-none')
+            $(".loading", $(this).parent()).removeClass('d-none')
+            
+            var target = $(this).attr('data-target')
+            axios.get('{{ route('tools.attackPlannerMode', [$attackList->id, '%TYPE%', $attackList->edit_key]) }}'
+                    .replace('%TYPE%', target))
+                .then((response) => {
+                    $('#' + target).val(response.data.data);
+                    $(this).parent().addClass('d-none')
+                    var showField = $('.export-show-field', $(this).parent().parent())
+                    showField.removeClass('d-none')
+                    showField.addClass('d-inline')
+                })
+                .catch((error) => {
+
+                });
+        })
+    })
 </script>
 @endpush
