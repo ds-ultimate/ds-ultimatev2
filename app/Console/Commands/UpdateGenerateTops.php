@@ -44,14 +44,14 @@ class UpdateGenerateTops extends Command
         static::updateGenerateTops($this->argument('server'), $this->argument('world'), $this->output);
         return 0;
     }
-    
+
     public static function updateGenerateTops($server, $world, $output) {
         $progress = true;
         if($server == "no-progress") {
             $progress = false;
             $server = null;
         }
-        
+
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             $now = Carbon::now()->subMinutes(5);
             $worldMod = World::getWorld($server, $world);
@@ -59,11 +59,11 @@ class UpdateGenerateTops extends Command
             DoGenerateTops::run($worldMod, 'a', $progress);
             $worldMod->worldTop_at = $now;
             $worldMod->save();
-            
-            DoGenerateOtherWorlds::run([$worldMod]);
+
+            DoGenerateOtherWorlds::run([$worldMod], $progress);
         } else {
             $worlds = (new World())->whereColumn("worldTop_at", "<", "worldUpdated_at")->orWhereNull('worldTop_at')->get();
-            
+
             foreach ($worlds as $world){
                 $now = Carbon::now()->subMinutes(5);
                 DoGenerateTops::run($world, 'p', $progress);
@@ -71,8 +71,8 @@ class UpdateGenerateTops extends Command
                 $world->worldTop_at = $now;
                 $world->save();
             }
-            
-            DoGenerateOtherWorlds::run($worlds);
+
+            DoGenerateOtherWorlds::run($worlds, $progress);
         }
     }
 }

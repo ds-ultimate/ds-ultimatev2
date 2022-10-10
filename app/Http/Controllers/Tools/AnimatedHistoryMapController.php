@@ -24,14 +24,14 @@ class AnimatedHistoryMapController extends BaseController
     {
         $this->debug = config('app.debug');
     }
-    
+
     public static function isAvailable($world) {
         if(!BasicFunctions::hasWorldDataTable($world, "index")) return false;
-        
+
         $histModel = new HistoryIndex($world);
         return $histModel->first() != null;
     }
-    
+
     public function create($server, $world) {
         $worldData = World::getAndCheckWorld($server, $world);
         abort_unless(static::isAvailable($worldData), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
@@ -60,31 +60,31 @@ class AnimatedHistoryMapController extends BaseController
         $mapModel->save();
         return redirect()->route('tools.animHistMap.mode', [$mapModel->id, 'edit', $mapModel->edit_key]);
     }
-    
+
     public function preview(AnimHistMapMap $wantedMap, $key, $histIdx, $ext) {
         abort_unless($key == $wantedMap->show_key, 403);
-        
+
         $world = $wantedMap->world;
         abort_unless(static::isAvailable($world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($world->maintananceMode, 503);
-        
+
         $dim = array(
             'width' => 1000,
             'height' => 1000,
         );
-        
+
         $histModel = HistoryIndex::find($world, $histIdx);
-        
+
         $skin = new \App\Util\Map\SkinSymbols();
         $map = new HistoryMapGenerator($world, $histModel, $skin, $dim, $this->debug);
-        
+
         $wantedMap->prepareRendering($map);
-        
+
         $map->render();
         $map->renderAlignedText(AbstractMapGenerator::$ANCHOR_TOP_LEFT, 100, 20, 10, "Zeit " . $histModel->date, [255, 255, 255]);
         return $map->output($ext);
     }
-    
+
     public function mode(AnimHistMapMap $wantedMap, $action, $key) {
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($wantedMap->world->maintananceMode, 503);
@@ -100,7 +100,7 @@ class AnimatedHistoryMapController extends BaseController
                 abort(404);
         }
     }
-    
+
     public function modePost(Request $request, AnimHistMapMap $wantedMap, $action, $key) {
         abort_unless(static::isAvailable($wantedMap->world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($wantedMap->world->maintananceMode, 503);
@@ -123,13 +123,13 @@ class AnimatedHistoryMapController extends BaseController
                 abort(404);
         }
     }
-    
+
     private function edit(AnimHistMapMap $wantedMap) {
         static::updateMapDimensions($wantedMap);
-        
+
         $worldData = $wantedMap->world;
         $server = $worldData->server;
-        
+
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
             "player" => $wantedMap->getMarkersAsDefaults($worldData, 'p'),
@@ -143,16 +143,16 @@ class AnimatedHistoryMapController extends BaseController
         if(\Auth::check()) {
             $ownMaps = AnimHistMapMap::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        
+
         $histIdxs = (new HistoryIndex($worldData))->get();
-        
+
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
-    
+
     private function show(AnimHistMapMap $wantedMap) {
         $worldData = $wantedMap->world;
         $server = $worldData->server;
-        
+
         $defaults = [
             "ally" => $wantedMap->getMarkersAsDefaults($worldData, 'a'),
             "player" => $wantedMap->getMarkersAsDefaults($worldData, 'p'),
@@ -166,9 +166,9 @@ class AnimatedHistoryMapController extends BaseController
         if(\Auth::check()) {
             $ownMaps = AnimHistMapMap::where('user_id', \Auth::user()->id)->orderBy('world_id')->get();
         }
-        
+
         $histIdxs = (new HistoryIndex($worldData))->get();
-        
+
         return view('tools.animHistMap.map', compact('server', 'worldData', 'wantedMap', 'mode', 'defaults', 'mapDimensions', 'ownMaps', 'histIdxs', 'defMapDimensions'));
     }
 
@@ -246,17 +246,17 @@ class AnimatedHistoryMapController extends BaseController
         if(isset($data['zoomAutoHere'])) {
             $oldDim = $wantedMap->autoDimensions;
             $wantedMap->autoDimensions = (isset($data['zoomAuto']))?(1):(0);
-            
+
             if($oldDim !== $wantedMap->autoDimensions) {
                 static::updateMapDimensions($wantedMap);
             }
         }
-        
+
         $wantedMap->save();
 
         return response()->json(MapController::getMapDimension($wantedMap->getDimensions()));
     }
-    
+
     public function titleSave(Request $request, AnimHistMapMap $wantedMap) {
         $data = $request->validate([
             'title' => 'required|string',
@@ -264,7 +264,7 @@ class AnimatedHistoryMapController extends BaseController
         $wantedMap->title = $data['title'];
         $wantedMap->save();
     }
-    
+
     private function startRendering(AnimHistMapMap $wantedMap) {
         $job = new AnimHistMapJob();
         foreach(AnimHistMapMap::$copyToJob as $elm) {
@@ -276,78 +276,81 @@ class AnimatedHistoryMapController extends BaseController
         $job->save();
         return redirect()->route('tools.animHistMap.renderStatus', [$job->id, $job->edit_key]);
     }
-    
+
     public function renderStatus(AnimHistMapJob $wantedJob, $key) {
         abort_unless($key == $wantedJob->edit_key, 403);
-        
+
         $worldData = $wantedJob->world;
-        
+
         return view('tools.animHistMap.renderStatus', compact('worldData', 'wantedJob'));
     }
-    
+
     public function renderRerun(AnimHistMapJob $wantedJob, $key) {
         abort_unless($key == $wantedJob->edit_key, 403);
-        
+
         $wantedJob->finished_at = null;
         $wantedJob->state = null;
         $wantedJob->save();
-        
+
         return redirect()->route('tools.animHistMap.renderStatus', [$wantedJob->id, $wantedJob->edit_key]);
     }
-    
+
     public function apiRenderStatus(AnimHistMapJob $wantedJob, $key) {
         abort_unless($key == $wantedJob->edit_key, 403);
-        
+
         $retArr = $wantedJob->getStateAsArray();
         if($retArr['finished']) {
             //inject download Links
             $retArr['downloadMP4'] = route('tools.animHistMap.download', [$wantedJob->id, $wantedJob->show_key, 'mp4']);
-            $retArr['downloadZIP'] = route('tools.animHistMap.download', [$wantedJob->id, $wantedJob->show_key, 'zip']);
             $retArr['downloadGIF'] = route('tools.animHistMap.download', [$wantedJob->id, $wantedJob->show_key, 'gif']);
+            if(is_file(static::getFilePathByType($wantedJob, 'zip'))) {
+                $retArr['downloadZIP'] = route('tools.animHistMap.download', [$wantedJob->id, $wantedJob->show_key, 'zip']);
+            }
         }
         return response()->json($retArr);
     }
-    
+
     public function download(AnimHistMapJob $wantedJob, $key, $format) {
         abort_unless($key == $wantedJob->show_key, 403);
-        
-        switch($format) {
-            case "mp4":
-                $fileName = storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/render.mp4");
-                break;
-            case "zip":
-                $fileName = storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/src.zip");
-                break;
-            case "gif":
-                $fileName = storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/animated.gif");
-                break;
-            default:
-                abort(404);
+
+        $fileName = static::getFilePathByType($wantedJob, $format);
+        if($fileName == null) {
+            abort(404);
         }
+
         if(!file_exists($fileName)) {
             abort(404);
         }
-        
+
         return response()->file($fileName);
+    }
+
+    public static function getFilePathByType(AnimHistMapJob $wantedJob, $format) {
+        return match ($format) {
+            "mp4" => storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/render.mp4"),
+            "zip" => storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/src.zip"),
+            "gif" => storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}/animated.gif"),
+            default => null,
+        };
     }
 
     public static function renderJob(AnimHistMapJob $animJob){
         $worldData = $animJob->world;
         abort_if($worldData->maintananceMode, 503);
-        
+
         static::updateMapDimensions($animJob);
-        
+
         $dim = array(
             'width' => 1000,
             'height' => 1000,
         );
-        
+
         $histModel = new HistoryIndex($worldData);
         $histData = $histModel->get();
         $cntHistData = count($histData);
         $animJob->finished_at = null;
         $conf = storage_path(config('tools.animHistMap.renderDir'));
-        
+
         if(file_exists("$conf{$animJob->id}")) {
             static::removeRawPngDir($conf, $animJob);
             if(file_exists("$conf{$animJob->id}/render.mp4")) {
@@ -361,35 +364,35 @@ class AnimatedHistoryMapController extends BaseController
             }
             rmdir("$conf{$animJob->id}");
         }
-        
+
         mkdir("$conf{$animJob->id}/png/", 0777, true);
         $maxProgress = $cntHistData * 3 + 2;
-        
+
         for($num = 0; $num < $cntHistData; $num++) {
             // +3 because gif / mp4 / zip
             $animJob->setState($num, $maxProgress, "image", $num, $cntHistData);
-            
+
             $skin = new \App\Util\Map\SkinSymbols();
             $map = new HistoryMapGenerator($worldData, $histData[$num], $skin, $dim, false);
             $animJob->prepareRendering($map);
             $map->render();
-            
+
             $map->renderAlignedText(AbstractMapGenerator::$ANCHOR_TOP_LEFT, 100, 20, 10, "Zeit " . $histData[$num]->date, [255, 255, 255]);
-            
+
             $map->saveTo("$conf{$animJob->id}/png/image-" . str_pad($num, 4, "0", STR_PAD_LEFT), 'png');
         }
-        
+
         //mp4
         $animJob->setState($cntHistData, $maxProgress, "mp4", 0, 0);
         $imgPath = escapeshellarg("$conf{$animJob->id}/png/image-%04d.png");
         $outPath = escapeshellarg("$conf{$animJob->id}/render.mp4");
         shell_exec("ffmpeg -r 5 -f image2 -i $imgPath -vcodec libx264 -crf 25 -pix_fmt yuv420p $outPath 2>&1");
-        
+
         //gif
         $imgPath = escapeshellarg("$conf{$animJob->id}/png/image-%04d.png");
         $outPath = escapeshellarg("$conf{$animJob->id}/animated.gif");
         $fPointer = popen("./GifEncoder $imgPath $outPath $cntHistData 200", "r");
-        
+
         while(!feof($fPointer)) {
             $line = trim(fgets($fPointer));
             if(BasicFunctions::startsWith($line, "Add")) {
@@ -400,7 +403,7 @@ class AnimatedHistoryMapController extends BaseController
                 $animJob->setState($cntHistData + 1 + $cntHistData + $at, $maxProgress, "gifWrite", $at, $cntHistData);
             }
         }
-        
+
         //zip
         $animJob->setState($cntHistData * 3 + 2, $maxProgress, "zip", 0, 0);
         $zip = new ZipArchive();
@@ -411,7 +414,7 @@ class AnimatedHistoryMapController extends BaseController
         }
         $zip->close();
         static::removeRawPngDir($conf, $animJob);
-        
+
         $animJob->finished_at = Carbon::now();
         $animJob->save();
     }
@@ -445,7 +448,7 @@ class AnimatedHistoryMapController extends BaseController
             ));
         }
     }
-    
+
     private static function removeRawPngDir($conf, $animJob) {
         if(file_exists("$conf{$animJob->id}/png")) {
             foreach(scandir("$conf{$animJob->id}/png") as $imgFile) {
@@ -456,28 +459,28 @@ class AnimatedHistoryMapController extends BaseController
             rmdir("$conf{$animJob->id}/png");
         }
     }
-    
+
     private static function updateMapDimensions(AnimHistMapMap $wantedMap) {
         if(! $wantedMap->autoDimensions) return;
-        
+
         $worldData = $wantedMap->world;
         abort_unless(static::isAvailable($worldData), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
-        
+
         $dim = array(
             'width' => 1000,
             'height' => 1000,
         );
-        
+
         $histModel = new HistoryIndex($worldData);
         $hist = $histModel->orderBy('id', 'desc')->first();
-        
+
         $skin = new \App\Util\Map\SkinSymbols();
         $map = new HistoryMapGenerator($worldData, $hist, $skin, $dim, false);
-        
+
         $wantedMap->prepareRendering($map);
         $map->setMapDimensions(AbstractMapGenerator::$DEFAULT_DIMENSIONS);
         $map->setAutoResize(true);
-        
+
         $map->render();
         $wantedMap->setDimensions($map->getMapDimensions());
         $wantedMap->save();

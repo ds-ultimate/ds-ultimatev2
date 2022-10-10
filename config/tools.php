@@ -10,6 +10,7 @@ return [
     ],
     'animHistMap' => [
         'renderDir' => 'app/animatedMaps/',
+        'zipSaveDuration' => 7 * 24 * 60 * 60,
     ],
     'chart' => [
         'cacheDir' => 'app/chartCache/',

@@ -36,8 +36,8 @@
                     <a id="rerunRender" class="btn btn-warning float-right" href="{{ route('tools.animHistMap.renderRerun', [$wantedJob->id, $wantedJob->edit_key]) }}">{{ __('tool.animHistMap.rerun') }}</a>
                 </div>
                 <div id="download-div" class="card-body" style="display: none">
-                    <a id="mp4Download" href="" target="_blank">{{ __('tool.animHistMap.download.mp4') }}</a><br>
-                    <a id="zipDownload" href="" target="_blank">{{ __('tool.animHistMap.download.zip') }}</a><br>
+                    <a id="mp4Download" href="" target="_blank">{{ __('tool.animHistMap.download.mp4') }}<br></a>
+                    <a id="zipDownload" href="" target="_blank">{{ __('tool.animHistMap.download.zip') }}<br></a>
                     <a id="gifDownload" href="" target="_blank">{{ __('tool.animHistMap.download.gif') }}</a>
                 </div>
             </div>
@@ -58,15 +58,19 @@
             type: "GET",
             url: "{{ route('tools.animHistMap.apiRenderStatus', [$wantedJob->id, $wantedJob->edit_key]) }}?" + Math.floor(Math.random() * 9000000 + 1000000),
             success: function(data){
-                console.log(data);
                 $('#progress-text').html(data.text);
                 if(data.finished == 1) {
                     clearInterval(reloadTimeout);
                     $('#progress-div')[0].style.width = 100 + "%";
                     $('#download-div').show();
                     $('#mp4Download')[0].href = data.downloadMP4;
-                    $('#zipDownload')[0].href = data.downloadZIP;
                     $('#gifDownload')[0].href = data.downloadGIF;
+                    if(typeof(data.downloadZIP) !== "undefined") {
+                        $('#zipDownload')[0].href = data.downloadZIP;
+                        $('#zipDownload').removeClass("d-none")
+                    } else {
+                        $('#zipDownload').addClass("d-none")
+                    }
                 } else {
                     var w = data.cur / data.max
                     $('#progress-div')[0].style.width = Math.round(w * 100) + "%";
