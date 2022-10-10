@@ -83,27 +83,27 @@ class Kernel extends ConsoleKernel
         $schedule->command('update:worldHistory')
             ->dailyAt('3:05')
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
 
         //speed servers
         //loads the upcoming speed worlds into the database
         $schedule->command('update:speedWorld')
             ->everySixHours()
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
         $schedule->command('update:speedWorldBackend')
             ->hourly()
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
-        
+
+
         $schedule->command('session:gc')
             ->everyFifteenMinutes()
             ->runInBackground();
-        
+
         $schedule->command('captcha:gc')
             ->everyFifteenMinutes()
             ->runInBackground();
-        
+
         /*
          * Generate next animatedWorldMap
          */
@@ -111,6 +111,19 @@ class Kernel extends ConsoleKernel
             ->everyMinute()
             ->withoutOverlapping()
             ->skip(! RenderAnimatedMaps::renderNeeded())
+            ->onSuccess(function (){
+                Log::info('Render -> Success');
+            })
+            ->onFailure(function (){
+                Log::critical('Render -> Failture');
+            })
+            ->appendOutputTo("storage/logs/cron-critical.log");
+
+        /*
+         * Clean animated world maps
+         */
+        $schedule->command("animHistMap:clean")
+            ->dailyAt('02:07')
             ->onSuccess(function (){
                 Log::info('Render -> Success');
             })
@@ -131,7 +144,7 @@ class Kernel extends ConsoleKernel
                 Log::critical('ConquerData -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
         /*
          * Update Top values
          */
@@ -144,7 +157,7 @@ class Kernel extends ConsoleKernel
                 Log::critical('generateTops -> Failture');
             })
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
         /*
          * Send out Discord notifications
          */
@@ -152,7 +165,7 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes()
             ->withoutOverlapping()
             ->appendOutputTo("storage/logs/cron-critical.log");
-        
+
         /*
          * Update the cache statistics
          */
