@@ -128,7 +128,7 @@ function generateMobileMenuEntry($entry, $level=0) {
                         <button class="btn @toDarkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ __('ui.titel.search') }}
                         </button>
-                        <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                        <div class="dropdown-menu dropdown-menu-xl-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
                             <button class="dropdown-item" name="submit" type="submit"  value="player"><i class="p-1 fas fa-user"></i>{{ ucfirst(__('ui.table.player')) }}</button>
                             <button class="dropdown-item" name="submit" type="submit" value="ally"><i class="p-1 fas fa-users"></i>{{ ucfirst(__('ui.table.ally')) }}</button>
                             <button class="dropdown-item" name="submit" type="submit" value="village"><i class="p-1 fab fa-fort-awesome"></i>{{ ucfirst(__('ui.table.village')) }}</button>
@@ -142,7 +142,7 @@ function generateMobileMenuEntry($entry, $level=0) {
                     <button class="btn @toDarkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('ui.language') }}
                     </button>
-                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
+                    <div class="dropdown-menu dropdown-menu-xl-right" aria-labelledby="dropdownMenuButton" style="width: 100px">
                         @foreach(\App\Util\Navigation::getAvailableTranslations() as $trans)
                         <a class="dropdown-item" href="{{ route('locale', $trans['s']) }}"><span class="flag-icon {{ $trans['f'] }}"></span> {{ $trans['n'] }}</a>
                         @endforeach
@@ -155,7 +155,7 @@ function generateMobileMenuEntry($entry, $level=0) {
                     <button class="btn @toDarkmode(btn-outline-dark) dropdown-toggle mr-sm-2" type="button" id="dropdownLoginButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('user.login') }}
                     </button>
-                    <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
+                    <div class="dropdown-menu dropdown-menu-xl-right" aria-labelledby="dropdownLoginButton" style="width: 100px">
                         <a class="dropdown-item" href="{{ route('login') }}">{{ __('user.login') }}</a>
                         @if (Route::has('register'))
                             <a class="dropdown-item" href="{{ route('register') }}">{{ __('user.register') }}</a>
@@ -213,13 +213,13 @@ function generateMobileMenuEntry($entry, $level=0) {
             <i class="p-1 fas fa-bars"></i>
         </button>
     </div>
-    <ul id="navbar-mobile" class="navbar-nav d-lg-none navbar-collapse collapse">
+    <ul id="navbar-mobile" class="navbar-nav d-xl-none navbar-collapse collapse">
         @foreach(\App\Util\Navigation::generateMobileNavArray($server, $worldData) as $item)
             <?php generateMobileMenuEntry($item) ?>
         @endforeach
     </ul>
     @if (isset($server))
-        <nav id="navbar-search-mobile" class="d-lg-none navbar-collapse collapse mt-2 navbar-nav">
+        <nav id="navbar-search-mobile" class="d-xl-none navbar-collapse collapse mt-2 navbar-nav">
             <form class="form-inline w-100" action="{{ route('searchForm', [$server->code]) }}" method="POST" role="search">
                 <li class="nav-item d-flex" style="width: calc(100% - 5rem)">
                     @csrf
