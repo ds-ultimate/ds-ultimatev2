@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 class AttackPlannerController extends BaseController
 {
     public function index($server, $world){
+        \App\Http\Controllers\API\PictureController::fixWorldName($server, $world);
         $worldData = World::getAndCheckWorld($server, $world);
 
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));

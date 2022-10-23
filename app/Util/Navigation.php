@@ -20,19 +20,19 @@ class Navigation
                 foreach($worlds as $world) {
                     switch(\Request::route()->getName()) {
                         case 'tools.distanceCalc':
-                            $worldNav[] = self::navElement($world->display_name, 'tools.distanceCalc', routeArgs: [$world->server->code, $world->name], translated: false);
+                            $worldNav[] = self::navElement($world->getDistplayName(), 'tools.distanceCalc', routeArgs: [$world->server->code, $world->name], translated: false);
                             break;
                         case 'tools.pointCalc':
-                            $worldNav[] = self::navElement($world->display_name, 'tools.pointCalc', routeArgs: [$world->server->code, $world->name], translated: false);
+                            $worldNav[] = self::navElement($world->getDistplayName(), 'tools.pointCalc', routeArgs: [$world->server->code, $world->name], translated: false);
                             break;
                         case 'tools.tableGenerator':
-                            $worldNav[] = self::navElement($world->display_name, 'tools.tableGenerator', routeArgs: [$world->server->code, $world->name], translated: false);
+                            $worldNav[] = self::navElement($world->getDistplayName(), 'tools.tableGenerator', routeArgs: [$world->server->code, $world->name], translated: false);
                             break;
                         case 'tools.accMgrDB.index_world':
-                            $worldNav[] = self::navElement($world->display_name, 'tools.accMgrDB.index_world', routeArgs: [$world->server->code, $world->name], translated: false);
+                            $worldNav[] = self::navElement($world->getDistplayName(), 'tools.accMgrDB.index_world', routeArgs: [$world->server->code, $world->name], translated: false);
                             break;
                         default:
-                            $worldNav[] = self::navElement($world->display_name, 'world', routeArgs: [$world->server->code, $world->name], translated: false);
+                            $worldNav[] = self::navElement($world->getDistplayName(), 'world', routeArgs: [$world->server->code, $world->name], translated: false);
                             break;
                     }
                 }
@@ -165,6 +165,14 @@ class Navigation
             $loc[] = 'empty';
         }
         return $loc;
+    }
+    
+    public static function getAvailableLocalesForEdit() {
+        $ret = [];
+        foreach(static::getAvailableLocales() as $loc) {
+            $ret[$loc] = $loc;
+        }
+        return $ret;
     }
 
     public static function navElement($title, $route, $routeArgs=null, $translated=true, $icon=null, $nofollow=false) {

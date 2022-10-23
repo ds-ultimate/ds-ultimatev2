@@ -183,7 +183,7 @@ class PictureController extends Controller
         
         if(World::isSpecialServerName($world)) {
             //find first speed world with correct update url and use that?
-            $serverData = Server::getServerByCode($server);
+            $serverData = Server::getAndCheckServerByCode($server);
             $model = new SpeedWorld();
             $first = $model
                 ->where("server_id", $serverData->id)
