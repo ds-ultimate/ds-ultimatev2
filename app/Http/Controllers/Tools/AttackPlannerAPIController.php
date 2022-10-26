@@ -31,8 +31,11 @@ class AttackPlannerAPIController extends BaseController
         if($apiKeyPos === false) {
             abort(403);
         }
-
-        $worldData = World::getAndCheckWorld($req['server'], $req['world']);
+        
+        $server = $req['server'];
+        $world = $req['world'];
+        \App\Http\Controllers\API\PictureController::fixWorldName($server, $world);
+        $worldData = World::getAndCheckWorld($server, $world);
         abort_if($worldData->maintananceMode, 503);
         abort_if($worldData->config == null || $worldData->units == null, 404, __("ui.errors.404.toolNotAvail.attackPlanner"));
         
