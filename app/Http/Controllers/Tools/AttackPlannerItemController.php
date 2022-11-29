@@ -228,6 +228,7 @@ class AttackPlannerItemController extends BaseController
                     $uv = "t={$attackListItem->start_village->owner}&";
                 }
                 $href = "{$attackListItem->list->world->url}/game.php?{$uv}village={$attackListItem->start_village_id}&screen=place&target={$attackListItem->target_village_id}";
+                $href .= '&spear='.$attackListItem->spear.'&sword='.$attackListItem->sword.'&axe='.$attackListItem->axe.'&archer='.$attackListItem->archer.'&spy='.$attackListItem->spy.'&light='.$attackListItem->light.'&marcher='.$attackListItem->marcher.'&heavy='.$attackListItem->heavy.'&ram='.$attackListItem->ram.'&catapult='.$attackListItem->catapult.'&knight='.$attackListItem->knight.'&snob='.$attackListItem->snob;
                 return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$href.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){

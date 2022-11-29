@@ -229,6 +229,7 @@ class AttackPlannerController extends BaseController
                 $uv = "t={$item->start_village->owner}&";
             }
             $placeURL = "{$item->list->world->url}/game.php?{$uv}village={$item->start_village_id}&screen=place&target={$item->target_village_id}";
+            $placeURL .= '&spear='.$item->spear.'&sword='.$item->sword.'&axe='.$item->axe.'&archer='.$item->archer.'&spy='.$item->spy.'&light='.$item->light.'&marcher='.$item->marcher.'&heavy='.$item->heavy.'&ram='.$item->ram.'&catapult='.$item->catapult.'&knight='.$item->knight.'&snob='.$item->snob;
             $searchReplaceArrayRow = array(
                 '%ELEMENT_ID%' => $i,
                 '%TYPE%' => $item->typeIDToName(),
