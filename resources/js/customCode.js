@@ -34,7 +34,9 @@ $.extend(true, $.fn.dataTable.defaults, {
             saveName = settings.oInit.customName
         }
         var data = JSON.parse( localStorage.getItem( 'DataTables_' + saveName) )
-        delete data['start']
+        if (data) {
+            delete data['start']
+        }
         return data
     },
     stateDuration: 0,
