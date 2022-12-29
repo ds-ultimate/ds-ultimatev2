@@ -38,7 +38,7 @@ class DoSpeedWorld
         ],
         'pl' => [
             'regex' => "[<h3>#(?<id>\\d*) (?<name>.*?)</h3>.*Start:</td> <td>(?<start>.*?)</td>.*Koniec:</td> <td>(?<end>.*?)</td>]",
-            'date' => "d.m. H:i",
+            'date' => ["d.m. H:i", "d.m.y H:i"],
             'dateTimeFix' => true,
             'locale' => 'Europe/Warsaw',
         ],
