@@ -71,7 +71,11 @@ class AttackPlannerAPIController extends BaseController
     }
     
     private static function itemVerificationArray() {
-        return [
+        $troopVerify = [];
+        foreach(AttackListItem::$units as $unit) {
+            $troopVerify["items.*.$unit"] = 'integer';
+        }
+        return array_merge([
             'items' => 'array',
             'items.*' => 'array',
             'items.*.source' => 'required|integer',
@@ -82,7 +86,7 @@ class AttackPlannerAPIController extends BaseController
             'items.*.tribe_skill' => 'numeric',
             'items.*.arrival_time' => 'required|integer',
             'items.*.ms' => 'integer',
-        ];
+        ], $troopVerify);
     }
     
     private static function apiInternalCreateItems($req, AttackList $list) {
