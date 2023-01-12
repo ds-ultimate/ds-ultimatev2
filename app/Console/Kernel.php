@@ -92,7 +92,7 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo("storage/logs/cron-critical.log");
 
         $schedule->command('update:speedWorldBackend')
-            ->hourly()
+            ->hourlyAt(10)
             ->appendOutputTo("storage/logs/cron-critical.log");
 
 

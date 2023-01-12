@@ -93,6 +93,14 @@ class DoSpeedWorldBackend
                     if($worldNew->active == null) {
                         $worldNew->active = 1;
                     }
+                    if(date("H") == "1") {
+                        $txtConf = file_get_contents("$link/interface.php?func=get_config");
+                        $worldNew->config = $txtConf;
+                        $txtUnits = file_get_contents("$link/interface.php?func=get_unit_info");
+                        $worldNew->units = $txtUnits;
+                        $txtBuildings = file_get_contents("$link/interface.php?func=get_building_info");
+                        $worldNew->buildings = $txtBuildings;
+                    }
                     $worldNew->worldCheck_at = Carbon::now();
                     $worldNew->update();
                 } else {
