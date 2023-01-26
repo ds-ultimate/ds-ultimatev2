@@ -77,6 +77,7 @@ class ExportImportWorlds extends Command
             $wData.= "|" . $world->hash_ally;
             $wData.= "|" . $world->hash_player;
             $wData.= "|" . $world->hash_village;
+            $wData.= "|" . ($world->active ?? "null");
             if($world->database_id != null) {
                 $wData.= "|" . $world->database->name;
             } else {
@@ -130,7 +131,7 @@ class ExportImportWorlds extends Command
         $world->config = base64_decode($data[6]);
         $world->units = base64_decode($data[7]);
         $world->buildings = base64_decode($data[8]);
-        $world->active = null;
+        $world->active = ($data[16] == "null")?null:0;
         $world->worldCheck_at = $data[9];
         $world->worldCleaned_at = $data[10];
         if($data[11] != "") {
@@ -141,13 +142,17 @@ class ExportImportWorlds extends Command
         $world->hash_player = $data[14];
         $world->hash_village = $data[15];
         
-        if($data[16] == "-") {
+        if($world->display_name == "") {
+            $world->display_name = null;
+        }
+        
+        if($data[17] == "-") {
             $world->database_id = null;
         } else {
-            $sharedDB = (new WorldDatabase())->where("name", $data[16])->first();
+            $sharedDB = (new WorldDatabase())->where("name", $data[17])->first();
             if($sharedDB == null) {
                 $sharedDB = new WorldDatabase();
-                $sharedDB->name = $data[16];
+                $sharedDB->name = $data[17];
                 $sharedDB->save();
             }
             $world->database_id = $sharedDB->id;

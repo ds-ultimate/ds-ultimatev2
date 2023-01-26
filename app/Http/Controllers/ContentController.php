@@ -47,7 +47,6 @@ class ContentController extends Controller
         $allyArray = Ally::top10Ally($worldData);
 
         return view('content.world', compact('playerArray', 'allyArray', 'worldData', 'server'));
-
     }
 
     /*
