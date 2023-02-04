@@ -75,6 +75,14 @@ Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}',
 Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
 Route::get('/picture/{server}-{world}-v-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
 
+Route::get('/picture/{server}-{world}-ally-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
+Route::get('/picture/{server}-{world}-player-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
+Route::get('/picture/{server}-{world}-village-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
+
 Route::get('/picture/{server}-{world}-a-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
 Route::get('/picture/{server}-{world}-p-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
 Route::get('/picture/{server}-{world}-v-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
+
+Route::get('/picture/{server}-{world}-ally-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
+Route::get('/picture/{server}-{world}-player-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
+Route::get('/picture/{server}-{world}-village-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
