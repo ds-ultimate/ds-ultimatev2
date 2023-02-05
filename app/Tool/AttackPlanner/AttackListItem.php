@@ -316,11 +316,17 @@ class AttackListItem extends CustomModel
     }
 
     public function verifyTime() {
+        if($this->send_time == null) {
+            return [ __('tool.attackPlanner.sendtimeToSoon') ];
+        }
         if($this->send_time->year <= 1970) {
             return [ __('tool.attackPlanner.sendtimeToSoon') ];
         }
         if($this->send_time->year > 2037) {
             return [ __('tool.attackPlanner.sendtimeToLate') ];
+        }
+        if($this->arrival_time == null) {
+            return [ __('tool.attackPlanner.arrivetimeToSoon') ];
         }
         if($this->arrival_time->year <= 1970) {
             return [ __('tool.attackPlanner.arrivetimeToSoon') ];

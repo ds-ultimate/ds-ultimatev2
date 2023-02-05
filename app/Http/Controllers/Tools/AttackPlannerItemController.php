@@ -151,14 +151,14 @@ class AttackPlannerItemController extends BaseController
             })
             ->editColumn('start_village_id', function (AttackListItem $attackListItem) {
                 $village = $attackListItem->start_village;
-                if($village == null) {
+                if($village == null || $attackListItem->list == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
             })
             ->editColumn('target_village_id', function (AttackListItem $attackListItem) {
                 $village = $attackListItem->target_village;
-                if($village == null) {
+                if($village == null || $attackListItem->list == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
                 return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
@@ -170,9 +170,15 @@ class AttackPlannerItemController extends BaseController
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->unitIDToNameOutput().'">';
             })
             ->addColumn('attacker', function (AttackListItem $attackListItem) {
+                if($attackListItem->list == null) {
+                    return "";
+                }
                 return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->attackerID(), $attackListItem->attackerName(), null, null, true);
             })
             ->addColumn('defender', function (AttackListItem $attackListItem) {
+                if($attackListItem->list == null) {
+                    return "";
+                }
                 return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->defenderID(), $attackListItem->defenderName(), null, null, true);
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
@@ -223,6 +229,9 @@ class AttackPlannerItemController extends BaseController
                 return '<h4 class="mb-0"><i class="fas fa-info-circle '.$color.'"'.$popoverData.'></i></h4>';
             })
             ->addColumn('action', function (AttackListItem $attackListItem){
+                if($attackListItem->list == null) {
+                    return "";
+                }
                 $uv = "";
                 if($attackListItem->list->uvMode) {
                     $uv = "t={$attackListItem->start_village->owner}&";
@@ -245,6 +254,7 @@ class AttackPlannerItemController extends BaseController
         $req = $request->validate([
             'key' => 'required|string',
         ]);
+        abort_if($attackListItem->list == null, 404);
         if ($attackListItem->list->edit_key === $req['key']){
             $attackListItem->delete();
             return ['success' => true, 'message' => 'destroy !!'];
@@ -254,6 +264,7 @@ class AttackPlannerItemController extends BaseController
     public function update(Request $request, AttackListItem $attackListItem){
         $req = $request->validate(static::generateEditValidation());
         $attackplaner = $attackListItem->list;
+        abort_if($attackplaner->list == null, 404);
         abort_unless($req['key'] == $attackplaner->edit_key, 403);
         abort_if($attackplaner->world->maintananceMode, 503);
 
