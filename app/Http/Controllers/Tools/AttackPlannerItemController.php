@@ -264,7 +264,7 @@ class AttackPlannerItemController extends BaseController
     public function update(Request $request, AttackListItem $attackListItem){
         $req = $request->validate(static::generateEditValidation());
         $attackplaner = $attackListItem->list;
-        abort_if($attackplaner->list == null, 404);
+        abort_if($attackplaner == null, 404);
         abort_unless($req['key'] == $attackplaner->edit_key, 403);
         abort_if($attackplaner->world->maintananceMode, 503);
 
