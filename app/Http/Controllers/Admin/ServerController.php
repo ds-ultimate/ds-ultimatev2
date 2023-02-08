@@ -142,7 +142,7 @@ class ServerController extends Controller
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('admin.server.url'), 'url', '', false, true),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.server.active'), 'active', '', false, false),
-            BasicFunctions::formEntryEdit($values, 'chcek', __('admin.server.speed_active'), 'speed_active', '', false, false),
+            BasicFunctions::formEntryEdit($values, 'check', __('admin.server.speed_active'), 'speed_active', '', false, false),
             BasicFunctions::formEntryEdit($values, 'check', __('admin.server.classic_active'), 'classic_active', '', false, false),
         ];
     }
