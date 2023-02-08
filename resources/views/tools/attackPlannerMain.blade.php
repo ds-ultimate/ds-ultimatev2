@@ -635,6 +635,7 @@ $tabList = [
 
         function update_allCountdowns() {
             var days, hours, minutes, seconds;
+            let mostRecent = 999999999;
             countdownUpdateElements.forEach(function(elm) {
                 duration = elm.arrive - new Date().getTime() / 1000 - timeDiff;
                 days = Math.floor(duration / 86400);
@@ -647,6 +648,11 @@ $tabList = [
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
                 elm.display.html(days + hours + ":" + minutes + ":" + seconds);
+
+                if(mostRecent>duration){
+                    mostRecent=duration;
+                    document.title = days + hours + ":" + minutes + ":" + seconds;
+                }
 
                 if (Math.floor(duration) <= 0) {
                     elm.display.html("00:00:00");
