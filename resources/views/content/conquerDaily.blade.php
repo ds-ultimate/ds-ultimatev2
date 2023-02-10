@@ -137,7 +137,7 @@
                 language: 'all',
                 format:'yyyy-mm-dd',
                 endDate:'{{ \Illuminate\Support\Carbon::now()->toDateString() }}',
-                startDate:'{{ $fistconquer != null ? $fistconquer->created_at->toDateString() : \Illuminate\Support\Carbon::now()->toDateString() }}',
+                startDate:'{{ $fistconquer != null ? \Carbon\Carbon::createFromTimestamp($fistconquer->timestamp)->toDateString() : \Illuminate\Support\Carbon::now()->toDateString() }}',
                 weekStart:1,
             })
 
