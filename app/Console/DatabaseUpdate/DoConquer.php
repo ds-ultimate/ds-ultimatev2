@@ -30,13 +30,15 @@ class DoConquer
         if(time() - $latest > 60 * 60 * 23) {
             $lines = DoWorldData::loadGzippedFile($world, "conquer_extended.txt.gz", $minTime);
             if($lines === false) return false;
+            $from = null;
         } else {
             $lines = DoWorldData::loadUncompressedFile($world, "/interface.php?func=get_conquer_extended&since=" . ($latest - 1), "interface.php?func=get_conquer_extended");
             if($lines === false) return false;
+            $from = $latest - 2;
         }
 
         $array = array();
-        $databaseConquer = static::prepareConquerDupCheck($world);
+        $databaseConquer = static::prepareConquerDupCheck($world, $from);
         $insertTime = Carbon::now();
 
         foreach ($lines as $line) {
@@ -112,11 +114,15 @@ class DoConquer
             $insert->insert($t);
         }
     }
-    private static function prepareConquerDupCheck(World $world) {
+
+    private static function prepareConquerDupCheck(World $world, $from) {
         $conquerModel = new Conquer($world);
+        if($from !== null) {
+            $conquerModel = $conquerModel->where('timestamp', '>', (int) $from);
+        }
 
         $arrCon = array();
-        foreach ($conquerModel->get() as $conquer) {
+        foreach ($conquerModel->orderBy('timestamp', 'DESC')->get() as $conquer) {
             if(!isset($arrCon[$conquer->timestamp]))
                 $arrCon[$conquer->timestamp] = array();
 
