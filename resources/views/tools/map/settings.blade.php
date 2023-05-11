@@ -99,6 +99,9 @@
 <script>
     $(function () {
         @if($wantedMap->quickChangesAllowed())
+            $('#map-zoom-value').change(function() {
+                $('#map-zoom-auto')[0].checked = false
+            });
             $('#checkbox-show-player').change(store);
             $('#checkbox-show-barbarian').change(store);
             $('#checkbox-continent-numbers').change(store);
