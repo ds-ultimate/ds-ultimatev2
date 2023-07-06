@@ -67,7 +67,6 @@ class AnimatedHistoryMapController extends BaseController
         $world = $wantedMap->world;
         abort_unless(static::isAvailable($world), 404, __("ui.errors.404.toolNotAvail.animHistMap"));
         abort_if($world->maintananceMode, 503);
-        $histIdx = (int) $histIdx;
 
         $dim = array(
             'width' => 1000,
@@ -75,6 +74,7 @@ class AnimatedHistoryMapController extends BaseController
         );
 
         $histModel = HistoryIndex::find($world, $histIdx);
+        abort_if($histModel == null, 404);
 
         $skin = new \App\Util\Map\SkinSymbols();
         $map = new HistoryMapGenerator($world, $histModel, $skin, $dim, $this->debug);
