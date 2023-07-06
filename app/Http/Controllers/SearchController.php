@@ -17,8 +17,8 @@ class SearchController extends Controller
     {
         if ($request->search != null) {
             $search = $request->validate([
-                "search" => "string",
-                "submit" => "string",
+                "search" => "string|required",
+                "submit" => "string|required",
             ]);
             return redirect()->route('search', [$server, rawurlencode($search['submit']), rawurlencode($search['search'])]);
         } else{
