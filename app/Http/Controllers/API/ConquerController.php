@@ -186,7 +186,7 @@ class ConquerController extends Controller
     public function getConquerDaily(World $world, $type, $day=false) {
         switch ($type) {
             case 'player':
-                $wl = ['DT_RowIndex', 'name', 'ally', 'total'];
+                $wl = ['name'];
                 DatatablesController::limitResults(200, $wl);
                 return $this->getConquerDailyPlayer($world, $day, $wl);
                 break;
