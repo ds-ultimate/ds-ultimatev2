@@ -151,6 +151,7 @@ class Navigation
             ['n' => 'Deutsch', 's' => 'de', 'f' => 'flag-icon-de'],
             ['n' => 'English', 's' => 'en', 'f' => 'flag-icon-gb'],
             ['n' => 'Czech', 's' => 'cz', 'f' => 'flag-icon-cz'],
+            ['n' => 'Magyar', 's' => 'hu', 'f' => 'flag-icon-hu'],
         ];
         if(config('app.debug')) {
             $trans[] = ['n' => 'Empty', 's'=> 'empty', 'f' => ''];
@@ -160,7 +161,7 @@ class Navigation
     }
     
     public static function getAvailableLocales() {
-        $loc = ['de', 'en', 'cz'];
+        $loc = ['de', 'en', 'cz', 'hu'];
         if(config('app.debug')) {
             $loc[] = 'empty';
         }
