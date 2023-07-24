@@ -97,6 +97,9 @@ class AnimHistMapJob extends AnimHistMapMap
      * returns preview route for this map
      */
     public function preview() {
+        if($this->srcMap == null) {
+            return "";
+        }
         return $this->srcMap->preview();
     }
 }
