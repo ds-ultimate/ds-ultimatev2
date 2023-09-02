@@ -318,6 +318,10 @@ Bitte die Zeichenoberfläche öffnen und schließen.
 Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
     'autoZoom' => 'Automatischer Zoom',
     'resetDefault' => 'Reset',
+    'confirm' => 
+    array (
+      'drawingDelete' => 'Alles gezeichnete wird vollständig gelöscht',
+    ),
   ),
   'pointCalc' => 
   array (

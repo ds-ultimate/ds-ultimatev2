@@ -318,6 +318,10 @@ Please close and open the Drawing area
 If that problem persists please create a bug-report',
     'autoZoom' => 'automatic zoom',
     'resetDefault' => 'reset',
+    'confirm' => 
+    array (
+      'drawingDelete' => 'All drawings will be deleted',
+    ),
   ),
   'pointCalc' => 
   array (

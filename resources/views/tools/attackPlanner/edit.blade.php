@@ -13,7 +13,7 @@
                         <div class="col-md-4">
                             <div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">Type</span>
+                                    <span class="input-group-text">{{ __('tool.attackPlanner.type') }}</span>
                                     <span class="input-group-text"><img class="type-img" src="{{ \App\Util\Icon::icons(8) }}"></span>
                                 </div>
                                 <select name="type" class="custom-select attack-type" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.type_helper') }}">

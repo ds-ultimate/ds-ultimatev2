@@ -61,7 +61,7 @@ return array (
       'workbenchImport' => 
       array (
         'title' => 'Támadások importálása a DS-Munkapadból',
-        'desc' => 'Nyisd meg a támadások áttekintését, és másold ki az összes importálandó támadást az alábbi billentyűkombinációval:<span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">c</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">c</div >]</span>. Ezt követően használja az import beviteli mezőt az Import/Export lapon belül.<span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">v< /div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">v</div>] </span>.',
+        'desc' => 'Nyisd meg a támadások áttekintését, és másold ki az összes importálandó támadást az alábbi billentyűkombinációval:<span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">c</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">c</div >]</span>. Ezt követően használd az import beviteli mezőt az Import/Export lapon belül.<span class="truncate"><div class="badge badge-primary">ctrl</div> + <div class="badge badge-primary">v</div></span> <span class="truncate">[<div class="badge badge-primary">⌘</div> + <div class="badge badge-primary">v</div>]</span>.',
       ),
     ),
     'icons' => 
@@ -119,7 +119,7 @@ return array (
     'time_helper' => 'A támadás érkezési ideje',
     'type' => 'Típus',
     'type_helper' => 'Támadás típusa',
-    'type_support_boost' => 'Erősítés növelése',
+    'type_support_boost' => 'Vészjelzőgomb(raktár boost)',
     'type_tribe_boost' => 'Barátság(klán boost)',
     'unit_helper' => 'Leglassabb egység',
     'updateError' => 'A szerkesztést nem sikerült végrehajtani.',
@@ -170,7 +170,7 @@ Létrehozva: %CREATE_AT%-kor a [url=%CREATE_WITHL%]%CREATE_WITH%[/url] használa
     'exportWBDesc' => 'Exportálás a DS Munkapadra.',
     'exportWB' => 'DS Munkapad exportálása',
     'exportIGM' => 'Exportálás játékon belüli üzenetben.',
-    'exportIGMDesc' => 'Exportálás játéküzenethez. Mivel a játékon belüli levelezések nem tudnak táblázatokat és képeket megjeleníteni, tiszta szöveg kerül megjelenítésre.',
+    'exportIGMDesc' => 'Exportálás játéküzenethez. Mivel a játékon belüli levelezések nem tudnak táblázatokat és képeket megjeleníteni, csak szöveg kerül megjelenítésre.',
   ),
   'map' => 
   array (
@@ -298,7 +298,7 @@ Létrehozva: %CREATE_AT%-kor a [url=%CREATE_WITHL%]%CREATE_WITH%[/url] használa
     'show' => 'Mutasd a térképet',
     'showAllText' => 'Minden jelölés',
     'settings' => 'Általános beállítások',
-    'resetDefault' => 'reset',
+    'resetDefault' => 'Reset',
     'playerSelectPlaceholder' => 'Játékos kiválasztása',
     'player' => 'Játékos jelölése',
     'markerFactor' => 'Falu távolság',

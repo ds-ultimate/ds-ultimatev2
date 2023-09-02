@@ -57,4 +57,5 @@ return array (
     'overview' => 'Áttekintés',
   ),
   'toogleNav' => 'Kapcsold be a navigációt',
+  'dashboard' => 'Irányítópult',
 );

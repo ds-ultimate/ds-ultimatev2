@@ -1,7 +1,7 @@
 <div class="tab-pane fade {{ ($active)? 'show active':'' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
     <div class="row pt-3">
         <div class="form-group float-left" style="margin-left: calc(50% - 500px);">
-            <button type="button" class="btn btn-sm btn-danger" onclick="deleteDrawing()">{{ ucfirst(__('tool.map.deleteDrawing')) }}</button>
+            <button type="button" class="btn btn-sm btn-danger confirm-deleteDrawn" data-toggle="confirmation" data-content="{{ __('tool.map.confirm.drawingDelete') }}">{{ ucfirst(__('tool.map.deleteDrawing')) }}</button>
         </div>
         <div class="col-12 text-center">
             <img id="canvas-bg-img" src="">
@@ -17,6 +17,7 @@
 @endpush
 
 @push('js')
+<script src="{{ \App\Util\BasicFunctions::asset('plugin/bootstrap-confirmation/bootstrap-confirmation.min.js') }}"></script>
 <script src="{{ \App\Util\BasicFunctions::asset('plugin/drawerJS/drawerJs.standalone.min.js') }}"></script>
 <script>
     var drawerPlugins = [
@@ -192,6 +193,16 @@
             .catch((error) => {
             });
 
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
+            popout: true,
+            title: "{{ __('user.confirm.destroy.title') }}",
+            btnOkLabel: "{{ __('user.confirm.destroy.ok') }}",
+            btnOkClass: 'btn btn-danger',
+            btnCancelLabel: "{{ __('user.confirm.destroy.cancel') }}",
+            btnCancelClass: 'btn btn-info',
+        });
+        $('.confirm-deleteDrawn').on('confirmed.bs.confirmation', deleteDrawing);
     });
     var canvasDataObject = "";
 
