@@ -26,6 +26,9 @@
             <li class="list-inline-item mr-0">
                 <small><a href="{{ route('form.bugreport') }}">{{ __('user.bugreport.title') }}</a></small>
             </li>
+            <li class="list-inline-item mr-0">
+                <small>-</small>
+            </li>
             <li class="list-inline-item">
                 <div class="dropup">
                     <a href="https://discord.gg/g3AqvaWhkg"><small>Discord</small></a>
