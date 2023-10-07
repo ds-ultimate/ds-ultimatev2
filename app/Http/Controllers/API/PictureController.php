@@ -175,10 +175,10 @@ class PictureController extends Controller
     }
     
     public static function fixWorldName(&$server, &$world) {
-        if(strlen($server) == 3 && strlen($world) == 2) {
+        if(strlen($server) > 2) {
             $serWorld = $server . $world;
             $server = substr($serWorld, 0, 2);
-            $world = substr($serWorld, 2, 3);
+            $world = substr($serWorld, 2);
         }
         
         if(World::isSpecialServerName($world)) {
