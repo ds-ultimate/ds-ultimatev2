@@ -27,6 +27,9 @@ class ContentController extends Controller
     public function server($server){
         $server = Server::getAndCheckServerByCode($server);
         $worldsArray = World::worldsCollection($server, ['speed' => 'special', 'casual' => 'special', 'classic' => 'special']);
+        if(!isset($worldsArray['world'])) {
+            $worldsArray['world'] = [];
+        }
         usort($worldsArray['world'], function($a, $b) {
             return -1*strcmp($a->name, $b->name);
         });
