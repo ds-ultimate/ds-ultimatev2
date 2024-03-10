@@ -44,6 +44,13 @@ class HistoryMapGenerator extends AbstractMapGenerator {
                 }
                 gzclose($file);
             }
+
+            foreach($ids as $allyId) {
+                if(!isset($this->dataAlly[$allyId]['name']) || !isset($this->dataAlly[$allyId]['tag'])) {
+                    $this->dataAlly[$allyId]['name'] = "";
+                    $this->dataAlly[$allyId]['tag'] = "";
+                }
+            }
         }
         
         
@@ -102,6 +109,13 @@ class HistoryMapGenerator extends AbstractMapGenerator {
                     }
                 }
                 gzclose($file);
+
+                foreach($ids as $playerId) {
+                    if(!isset($this->dataPlayer[$playerId]['name'])) {
+                        // just because a village has somebody as the owner doesn't mean that the owner is part of the player.txt
+                        $this->dataPlayer[$playerId]['name'] = "";
+                    }
+                }
             }
         }
     }
