@@ -148,8 +148,13 @@
                         @endif
                         <tr>
                             <td><img src="{{ \App\Util\Icon::icons(11) }}">{{ __('ui.unit.snob') }}</td>
-                            <td id="snobTime">
-                                {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->snob->speed)*60)*1000) }}
+                            <td class="d-flex align-content-start flex-wrap">
+                                <span class="mr-2" id="snobTime">
+                                    {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->snob->speed)*60)*1000) }}
+                                </span>
+                                <span>
+                                    (max. {{ \App\Util\BasicFunctions::convertTime(round(floatval($unitConfig->snob->speed)*60)*1000*$config->snob->max_dist) }})
+                                </span>
                             </td>
                         </tr>
                     </table>
