@@ -57,7 +57,8 @@ class NewsController extends Controller
             'content_de' => 'required',
             'content_en' => 'required',
         ]);
-        $news = News::create($request->all());
+        $news = new News();
+        $news->fill($request->all());
 
         $news->order = (new News())->count() - 1;
         $news->save();
