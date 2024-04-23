@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /*index.php*
 Disallow: /api/
 Disallow: /tools/create/
+Crawl-delay: 3
 Sitemap: https://ds-ultimate.de/sitemap.xml
 
 User-agent: AhrefsBot
