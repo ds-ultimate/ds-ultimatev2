@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', [\App\Http\Controllers\ContentController::class, 'index'])->name('index');
+Route::get('/', [\App\Http\Controllers\ContentController::class, 'index'])->name('index')->middleware("throttle:10,0.2");
 
 Auth::routes(['verify' => true]);
 
@@ -91,12 +91,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
     });
 });
 
-Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web']], function () {
+Route::group(['prefix' => 'form', 'as' => 'form.', 'middleware' => ['web', 'throttle:10,0.2']], function () {
     Route::get('/bugreport', [\App\Http\Controllers\FormController::class, 'bugreport'])->name('bugreport');
-    Route::post('/bugreport/store', [\App\Http\Controllers\FormController::class, 'bugreportStore'])->name('bugreport.store');
+    Route::post('/bugreport/store', [\App\Http\Controllers\FormController::class, 'bugreportStore'])->name('bugreport.store')->middleware("throttle:2,1");
 });
 
-Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['verified']], function () {
+Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['verified', 'throttle:10,0.2']], function () {
     Route::get('overview/{page}', [\App\Http\Controllers\User\HomeController::class, 'overview'])->name('overview');
     Route::get('settings/{page}', [\App\Http\Controllers\User\HomeController::class, 'settings'])->name('settings');
     Route::post('addConnection', [\App\Http\Controllers\User\SettingsController::class, 'addConnection'])->name('addConnection');
@@ -118,36 +118,37 @@ Route::get('/impressum', function () {
     return view("content.legalPage");
 })->name('legalPage');
 
-Route::get('/changelog', [\App\Http\Controllers\ContentController::class, 'changelog'])->name('changelog');
+Route::group(['middleware' => ['throttle:10,0.2']], function () {
+    Route::get('/changelog', [\App\Http\Controllers\ContentController::class, 'changelog'])->name('changelog');
 
-Route::view('/team', 'content.team')->name('team');
+    Route::view('/team', 'content.team')->name('team');
 
-Route::post('/follow', [\App\Http\Controllers\FollowController::class, 'createFollow'])->name('web.follow');
+    Route::post('/follow', [\App\Http\Controllers\FollowController::class, 'createFollow'])->name('web.follow');
 
-Route::post('/search/{server}', [\App\Http\Controllers\SearchController::class, 'searchForm'])->name('searchForm');
-Route::get('/search/{server}/{type}/{search}', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
+    Route::post('/search/{server}', [\App\Http\Controllers\SearchController::class, 'searchForm'])->name('searchForm');
+    Route::get('/search/{server}/{type}/{search}', [\App\Http\Controllers\SearchController::class, 'search'])->name('search');
 
-Route::get('/{server}', [\App\Http\Controllers\ContentController::class, 'server'])->name('server');
+    Route::get('/{server}', [\App\Http\Controllers\ContentController::class, 'server'])->name('server');
 
-Route::get('/{server}/{world}', [\App\Http\Controllers\ContentController::class, 'world'])->name('world');
+    Route::get('/{server}/{world}', [\App\Http\Controllers\ContentController::class, 'world'])->name('world');
 
-Route::get('/{server}/{world}/allys', [\App\Http\Controllers\ContentController::class, 'allys'])->name('worldAlly');
-Route::get('/{server}/{world}/allys/ranks', [\App\Http\Controllers\AllyController::class, 'rank'])->name('rankAlly');
-Route::get('/{server}/{world}/players', [\App\Http\Controllers\ContentController::class, 'players'])->name('worldPlayer');
-Route::get('/{server}/{world}/players/ranks', [\App\Http\Controllers\PlayerController::class, 'rank'])->name('rankPlayer');
-Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\AllyController::class, 'ally'])->name('ally');
-Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
-Route::get('/{server}/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\AllyController::class, 'allyBashRanking'])->name('allyBashRanking');
-Route::get('/{server}/{world}/village/{village}', [\App\Http\Controllers\VillageController::class, 'village'])->name('village');
+    Route::get('/{server}/{world}/allys', [\App\Http\Controllers\ContentController::class, 'allys'])->name('worldAlly');
+    Route::get('/{server}/{world}/allys/ranks', [\App\Http\Controllers\AllyController::class, 'rank'])->name('rankAlly');
+    Route::get('/{server}/{world}/players', [\App\Http\Controllers\ContentController::class, 'players'])->name('worldPlayer');
+    Route::get('/{server}/{world}/players/ranks', [\App\Http\Controllers\PlayerController::class, 'rank'])->name('rankPlayer');
+    Route::get('/{server}/{world}/ally/{ally}', [\App\Http\Controllers\AllyController::class, 'ally'])->name('ally');
+    Route::get('/{server}/{world}/player/{player}', [\App\Http\Controllers\PlayerController::class, 'player'])->name('player');
+    Route::get('/{server}/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\AllyController::class, 'allyBashRanking'])->name('allyBashRanking');
+    Route::get('/{server}/{world}/village/{village}', [\App\Http\Controllers\VillageController::class, 'village'])->name('village');
 
-Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'allyChanges'])->name('allyAllyChanges');
-Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'allyChanges'])->name('playerAllyChanges');
+    Route::get('/{server}/{world}/ally/allyChanges/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'allyChanges'])->name('allyAllyChanges');
+    Route::get('/{server}/{world}/player/allyChanges/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'allyChanges'])->name('playerAllyChanges');
 
-Route::get('/{server}/{world}/conquer/{type}', [\App\Http\Controllers\ContentController::class, 'conquer'])->name('worldConquer');
-Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'conquer'])->name('allyConquer');
-Route::get('/{server}/{world}/player/conquer/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'conquer'])->name('playerConquer');
-Route::get('/{server}/{world}/village/conquer/{type}/{village}', [\App\Http\Controllers\VillageController::class, 'conquer'])->name('villageConquer');
-Route::get('/{server}/{world}/conquerDaily', [\App\Http\Controllers\ContentController::class, 'conquereDaily'])->name('conquerDaily');
-
+    Route::get('/{server}/{world}/conquer/{type}', [\App\Http\Controllers\ContentController::class, 'conquer'])->name('worldConquer');
+    Route::get('/{server}/{world}/ally/conquer/{type}/{ally}', [\App\Http\Controllers\AllyController::class, 'conquer'])->name('allyConquer');
+    Route::get('/{server}/{world}/player/conquer/{type}/{player}', [\App\Http\Controllers\PlayerController::class, 'conquer'])->name('playerConquer');
+    Route::get('/{server}/{world}/village/conquer/{type}/{village}', [\App\Http\Controllers\VillageController::class, 'conquer'])->name('villageConquer');
+    Route::get('/{server}/{world}/conquerDaily', [\App\Http\Controllers\ContentController::class, 'conquereDaily'])->name('conquerDaily');
+});
 
 Route::get('api/{server}/{world}/signature/{type}/{player}', [\App\Http\Controllers\API\SignatureController::class, 'signature'])->name('api.signature');

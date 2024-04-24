@@ -18,7 +18,7 @@ Route::group(['middleware' => 'throttle:10,1'], function() {
 });
 
 Route::get('/worldPopup/{world}/{playerId}', [\App\Http\Controllers\API\FindModelController::class, 'getWorldPopup'])->name('worldPopup');
-Route::middleware(['throttle:240,1'])->group(function() {
+Route::middleware(['throttle:24,0.1'])->group(function() {
     Route::get('/{server}/activeWorlds', [\App\Http\Controllers\API\FindModelController::class, 'getActiveWorldByServer'])->name('activeWorldByServer');
 
     Route::middleware(['worldMaintenance'])->group(function() {
@@ -32,7 +32,7 @@ Route::middleware(['throttle:240,1'])->group(function() {
     });
 });
 
-Route::middleware(['throttle:120,1', 'worldMaintenance'])->group(function() {
+Route::middleware(['throttle:12,0.2', 'worldMaintenance'])->group(function() {
     Route::get('/{world}/players', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayers'])->name('worldPlayer');
     Route::get('/{world}/players/{days}', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayersHistory'])->name('worldPlayerHistory');
     Route::get('/{world}/allys', [\App\Http\Controllers\API\DatatablesController::class, 'getAllys'])->name('worldAlly');
@@ -66,23 +66,25 @@ Route::get('/map/{wantedMap}/{token}/{option}-{width}-{height}.{ext}', [\App\Htt
 Route::get('/map/{wantedMap}/{token}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedMapByID'])->name('map.show.sized');
 Route::get('/map/{wantedMap}/{token}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getMapByID'])->name('map.show');
 
-Route::group(['middleware' => 'throttle:60,1'], function() {
+Route::group(['middleware' => 'throttle:6,0.1'], function() {
     Route::get('/map/overview/{server}/{world}/{type}/{id}/{width}-{height}.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getSizedOverviewMap'])->name('map.overview.sized');
     Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOverviewMap'])->name('map.overview');
 });
 
-Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
-Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
-Route::get('/picture/{server}-{world}-v-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
+Route::group(['middleware' => 'throttle:5,0.4'], function() {
+    Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
+    Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
+    Route::get('/picture/{server}-{world}-v-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
 
-Route::get('/picture/{server}-{world}-ally-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
-Route::get('/picture/{server}-{world}-player-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
-Route::get('/picture/{server}-{world}-village-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
+    Route::get('/picture/{server}-{world}-ally-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
+    Route::get('/picture/{server}-{world}-player-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
+    Route::get('/picture/{server}-{world}-village-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
 
-Route::get('/picture/{server}-{world}-a-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
-Route::get('/picture/{server}-{world}-p-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
-Route::get('/picture/{server}-{world}-v-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
+    Route::get('/picture/{server}-{world}-a-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
+    Route::get('/picture/{server}-{world}-p-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
+    Route::get('/picture/{server}-{world}-v-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
 
-Route::get('/picture/{server}-{world}-ally-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
-Route::get('/picture/{server}-{world}-player-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
-Route::get('/picture/{server}-{world}-village-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
+    Route::get('/picture/{server}-{world}-ally-{allyID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllyPic'])->name('picture.ally');
+    Route::get('/picture/{server}-{world}-player-{playerID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerPic'])->name('picture.player');
+    Route::get('/picture/{server}-{world}-village-{villageID}-{type}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillagePic'])->name('picture.village');
+});
