@@ -71,7 +71,7 @@ Route::group(['middleware' => 'throttle:6,0.1'], function() {
     Route::get('/map/overview/{server}/{world}/{type}/{id}/map.{ext}', [\App\Http\Controllers\Tools\MapController::class, 'getOverviewMap'])->name('map.overview');
 });
 
-Route::group(['middleware' => 'throttle:5,0.4'], function() {
+Route::group(['middleware' => 'throttle:24,0.1'], function() {
     Route::get('/picture/{server}-{world}-a-{allyID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getAllySizedPic'])->name('picture.ally.dimension');
     Route::get('/picture/{server}-{world}-p-{playerID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getPlayerSizedPic'])->name('picture.player.dimension');
     Route::get('/picture/{server}-{world}-v-{villageID}-{type}-{width}-{height}.{ext}', [\App\Http\Controllers\API\PictureController::class, 'getVillageSizedPic'])->name('picture.village.dimension');
