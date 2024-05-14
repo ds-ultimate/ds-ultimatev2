@@ -534,7 +534,7 @@ $tabList = [
                 'key': '{{$attackList->show_key}}',
             })
                 .then((response) => {
-                    reloadData(false);
+                    reloadData(true);
                 })
                 .catch((error) => {
                 });
