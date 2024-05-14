@@ -178,8 +178,9 @@ class AttackPlannerController extends BaseController
         $exportWB = "";
         foreach ($items as $item){
             $arrTimestamp = (strtotime($item->arrival_time)*1000) + $item->ms;
+            $isSent = ($item->send == 0)?"false":"true";
             $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName().
-                    "&$arrTimestamp&".$item->type."&false&true&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword).
+                    "&$arrTimestamp&".$item->type."&false&".$isSent."&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword).
                     "/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy).
                     "/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy).
                     "/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight).
