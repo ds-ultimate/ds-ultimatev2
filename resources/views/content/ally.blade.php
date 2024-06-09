@@ -55,7 +55,7 @@
                     <div class="tab-pane fade" id="hist" role="tabpanel" aria-labelledby="hist-tab">
                         <div class="row">
                             <div class="col-12 col-md-6">
-                                <h4 class="card-title">{{ucfirst(__('ui.tabletitel.playerHist'))}}</h4>
+                                <h4 class="card-title">{{ucfirst(__('ui.tabletitel.allyHist'))}}</h4>
                             </div>
                             <div class="col-12 col-md-6">
                                 <span class="float-right">

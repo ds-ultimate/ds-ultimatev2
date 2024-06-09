@@ -73,6 +73,7 @@ return array (
     'allys' => 'Stämme',
     'allyRanking' => 'Stammes-Rangliste',
     'playerHist' => 'Spieler Verlauf',
+    'allyHist' => 'Stammes Verlauf',
   ),
   'table' => 
   array (

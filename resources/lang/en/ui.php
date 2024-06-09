@@ -113,6 +113,7 @@ return array (
     'allys' => 'tribe',
     'allyRanking' => 'tribe ranking',
     'playerHist' => 'player history',
+    'allyHist' => 'ally history',
   ),
   'titel' => 
   array (
