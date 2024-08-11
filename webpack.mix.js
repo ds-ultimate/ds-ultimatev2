@@ -35,6 +35,7 @@ let safelist =
     "pull-left",
     "dataTables_wrapper",
     "selectAll",
+    /.*modal.*/,
 ];
 mix.js('resources/js/app.js', 'public/js');
 mix.js('resources/js/customCode.js', 'public/js');

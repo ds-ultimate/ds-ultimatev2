@@ -127,79 +127,79 @@
                         <!--/span-->
                         <div class="col-12">
                             <div class="form-inline row">
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(0) }}"></span>
                                     </div>
                                     <input name="spear" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(1) }}"></span>
                                     </div>
                                     <input name="sword" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(2) }}"></span>
                                     </div>
                                     <input name="axe" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
                                 @if ($config->game->archer == 1)
-                                    <div class="input-group col-2 input-group-sm mb-3">
+                                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(3) }}"></span>
                                         </div>
                                         <input name="archer" class="form-control form-control-sm col-9" placeholder="0">
                                     </div>
                                 @endif
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(4) }}"></span>
                                     </div>
                                     <input name="spy" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(5) }}"></span>
                                     </div>
                                     <input name="light" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
                                 @if ($config->game->archer == 1)
-                                    <div class="input-group col-2 input-group-sm mb-3">
+                                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(6) }}"></span>
                                         </div>
                                         <input name="marcher" class="form-control form-control-sm col-9" placeholder="0">
                                     </div>
                                 @endif
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(7) }}"></span>
                                     </div>
                                     <input name="heavy" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(8) }}"></span>
                                     </div>
                                     <input name="ram" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(9) }}"></span>
                                     </div>
                                     <input name="catapult" class="form-control form-control-sm col-9" placeholder="0">
                                 </div>
                                 @if ($config->game->knight > 0)
-                                    <div class="input-group col-2 input-group-sm mb-3">
+                                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(10) }}"></span>
                                         </div>
                                         <input name="knight" class="form-control form-control-sm col-9" placeholder="0">
                                     </div>
                                 @endif
-                                <div class="input-group col-2 input-group-sm mb-3">
+                                <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text inputGroup-sizing-sm"><img class="pr-2" src="{{ \App\Util\Icon::icons(11) }}"></span>
                                     </div>
@@ -283,6 +283,7 @@
     $(document).on('submit', '#editItemForm', function (e) {
         e.preventDefault();
         if (validatePreSend(this)) {
+            $(".edit-modal").modal('hide')
             var id = $('input[name="attack_list_item"', this).val();
             axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), @isIos ios_time_prepare($('#editItemForm').serialize()) @else $('#editItemForm').serialize() @endif )
                 .then((response) => {

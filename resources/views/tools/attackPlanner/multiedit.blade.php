@@ -136,7 +136,7 @@
             <!--/span-->
             <div class="col-12">
                 <div class="form-inline row">
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[spear]" type="checkbox">
@@ -145,7 +145,7 @@
                         </div>
                         <input name="spear" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[sword]" type="checkbox">
@@ -154,7 +154,7 @@
                         </div>
                         <input name="sword" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[axe]" type="checkbox">
@@ -164,7 +164,7 @@
                         <input name="axe" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
                     @if ($config->game->archer == 1)
-                        <div class="input-group col-2 input-group-sm mb-3">
+                        <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
                                     <input name="checkboxes[archer]" type="checkbox">
@@ -174,7 +174,7 @@
                             <input name="archer" class="form-control form-control-sm col-9" placeholder="0">
                         </div>
                     @endif
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[spy]" type="checkbox">
@@ -183,7 +183,7 @@
                         </div>
                         <input name="spy" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[light]" type="checkbox">
@@ -193,7 +193,7 @@
                         <input name="light" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
                     @if ($config->game->archer == 1)
-                        <div class="input-group col-2 input-group-sm mb-3">
+                        <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
                                     <input name="checkboxes[marcher]" type="checkbox">
@@ -203,7 +203,7 @@
                             <input name="marcher" class="form-control form-control-sm col-9" placeholder="0">
                         </div>
                     @endif
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[heavy]" type="checkbox">
@@ -212,7 +212,7 @@
                         </div>
                         <input name="heavy" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[ram]" type="checkbox">
@@ -221,7 +221,7 @@
                         </div>
                         <input name="ram" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[catapult]" type="checkbox">
@@ -231,7 +231,7 @@
                         <input name="catapult" class="form-control form-control-sm col-9" placeholder="0">
                     </div>
                     @if ($config->game->knight > 0)
-                        <div class="input-group col-2 input-group-sm mb-3">
+                        <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
                                     <input name="checkboxes[knight]" type="checkbox">
@@ -241,7 +241,7 @@
                             <input name="knight" class="form-control form-control-sm col-9" placeholder="0">
                         </div>
                     @endif
-                    <div class="input-group col-2 input-group-sm mb-3">
+                    <div class="input-group col-lg-2 col-md-3 col-6 input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <input name="checkboxes[snob]" type="checkbox">
