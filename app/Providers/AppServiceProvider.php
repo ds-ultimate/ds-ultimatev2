@@ -95,5 +95,8 @@ class AppServiceProvider extends ServiceProvider
             }
             return "<?php if(session('darkmode', false)) {echo e(\"$asDark\");} else {echo e(\"$class\");} ?>";
         });
+        Blade::directive('isIos', function() {
+            return '<?php if(strpos($_SERVER["HTTP_USER_AGENT"], "iPhone") !== false || (isset($_GET["ios"]) && $_GET["ios"] === "True")): ?>';
+        });
     }
 }

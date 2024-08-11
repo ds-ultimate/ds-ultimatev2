@@ -82,7 +82,23 @@
                         </div>
                         <input name="time_type" type="hidden" class="time-type" value="0">
                     </div>
-                    <input name="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
+                    @isIos
+                    <input name="ios_time_hour" type="number" value="{{ date('H', time()+3600) }}" min="0" max="24" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">:</span>
+                    </div>
+                    <input name="ios_time_minute" type="number" value="{{ date('i', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">:</span>
+                    </div>
+                    <input name="ios_time_second" type="number" value="{{ date('s', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">.</span>
+                    </div>
+                    <input name="ios_time_millisecond" type="number" value="0" min="0" max="1000" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    @else
+                    <input name="time" type="time" step=".001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}"/>
+                    @endif
                 </div>
             </div>
             <!--/span-->
@@ -328,7 +344,7 @@
             e.preventDefault();
             if (multieditValidatePreSend(this)) {
                 var select = table.rows('.selected').data();
-                var postData = $('#multieditItemForm').serialize();
+                var postData = @isIos ios_time_prepare($('#multieditItemForm').serialize()) @else $('#multieditItemForm').serialize() @endif;
                 var i = 0;
                 select.each(function(e){
                     postData += "&" + encodeURIComponent("items[" + i + "]") + "=" + encodeURIComponent(e.id);

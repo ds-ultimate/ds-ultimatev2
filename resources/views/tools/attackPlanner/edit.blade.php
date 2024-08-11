@@ -76,7 +76,23 @@
                                     </div>
                                     <input name="time_type" type="hidden" class="time-type" value="0">
                                 </div>
-                                <input name="time" type="time" step="0.001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.date_helper') }}" />
+                                @isIos
+                                <input name="ios_time_hour" type="number" value="{{ date('H', time()+3600) }}" min="0" max="24" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                                <div class="input-group-append input-group-prepend">
+                                    <span class="input-group-text">:</span>
+                                </div>
+                                <input name="ios_time_minute" type="number" value="{{ date('i', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                                <div class="input-group-append input-group-prepend">
+                                    <span class="input-group-text">:</span>
+                                </div>
+                                <input name="ios_time_second" type="number" value="{{ date('s', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                                <div class="input-group-append input-group-prepend">
+                                    <span class="input-group-text">.</span>
+                                </div>
+                                <input name="ios_time_millisecond" type="number" value="0" min="0" max="1000" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                                @else
+                                <input name="time" type="time" step=".001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}"/>
+                                @endif
                             </div>
                         </div>
                         <!--/span-->
@@ -268,7 +284,7 @@
         e.preventDefault();
         if (validatePreSend(this)) {
             var id = $('input[name="attack_list_item"', this).val();
-            axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), $('#editItemForm').serialize())
+            axios.patch('{{ route("tools.attackListItem.update", ["itemId"]) }}'.replaceAll("itemId", id), @isIos ios_time_prepare($('#editItemForm').serialize()) @else $('#editItemForm').serialize() @endif )
                 .then((response) => {
                     var data = response.data;
                     reloadData(true);
@@ -281,7 +297,9 @@
     })
     
     var autoFilledTime = true;
-    $(document).on('change', '#editItemForm input[name="day"], #editItemForm input[name="time"]', () => {
+    $(document).on('change', '#editItemForm input[name="day"], #editItemForm input[name="time"], ' +
+            '#editItemForm input[name="ios_time_hour"], #editItemForm input[name="ios_time_minute"], ' +
+            '#editItemForm input[name="ios_time_second"], #editItemForm input[name="ios_time_millisecond"]', () => {
         autoFilledTime = false;
     })
     
@@ -289,7 +307,16 @@
         if(! autoFilledTime) return;
         var context = $('#editItemForm');
         $('input[name="day"]', context).val(day);
+        @isIos
+        var split = time.split(":")
+        var ms_split = split[2].split(".")
+        $('input[name="ios_time_hour"]', context).val(split[0]);
+        $('input[name="ios_time_minute"]', context).val(split[1]);
+        $('input[name="ios_time_second"]', context).val(ms_split[0]);
+        $('input[name="ios_time_millisecond"]', context).val(ms_split[1]);
+        @else
         $('input[name="time"]', context).val(time);
+        @endif
     }
     
     function editSetAutoTime() {

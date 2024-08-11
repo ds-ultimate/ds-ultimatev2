@@ -419,8 +419,6 @@ $tabList = [
             $('input[name="yStart"]', context).val(rowData.yStart);
             $('input[name="xTarget"]', context).val(rowData.xTarget);
             $('input[name="yTarget"]', context).val(rowData.yTarget);
-            $('input[name="day"]', context).val(rowData.day);
-            $('input[name="time"]', context).val(rowData.time);
             $('select[name="slowest_unit"]', context).val(rowData.slowest_unit);
             $('input[name="spear"]', context).val(data.spear);
             $('input[name="sword"]', context).val(data.sword);
@@ -446,6 +444,9 @@ $tabList = [
             
             if(typeof editSetAutoTime !== 'undefined'){
                 editSetAutoTime();
+            }
+            if(typeof editUpdateTime !== 'undefined'){
+                editUpdateTime(rowData.day, rowData.time);
             }
         }
         
@@ -489,6 +490,25 @@ $tabList = [
             }
             return error == 0;
         }
+
+        @isIos
+        function ios_time_prepare(raw_data) {
+            var splitted = raw_data.split("&")
+            var filtered_data = splitted.filter(d => !d.startsWith("ios_time"))
+            var ios_data = splitted.filter(d => d.startsWith("ios_time"))
+            var h = 0, m = 0, s = 0, ms = 0
+            ios_data.forEach(d => {
+                var tmp = d.split("=")
+                if(tmp[0] == "ios_time_hour") h = +tmp[1]
+                if(tmp[0] == "ios_time_minute") m = +tmp[1]
+                if(tmp[0] == "ios_time_second") s = +tmp[1]
+                if(tmp[0] == "ios_time_millisecond") ms = +tmp[1]
+            })
+            var time_str = "time=" + (h<10?"0"+h:""+h) + ":" + (m<10?"0"+m:""+m) + ":" + (s<10?"0"+s:""+s) + "." + (ms<100?(ms<10?"00"+ms:"0"+ms):""+ms)
+            filtered_data.push(time_str)
+            return filtered_data.join("&");
+        }
+        @endif
         @endif
 
         @auth

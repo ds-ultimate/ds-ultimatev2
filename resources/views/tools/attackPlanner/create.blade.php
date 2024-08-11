@@ -69,7 +69,23 @@
                         </div>
                         <input name="time_type" type="hidden" class="time-type" value="0">
                     </div>
+                    @isIos
+                    <input name="ios_time_hour" type="number" value="{{ date('H', time()+3600) }}" min="0" max="24" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">:</span>
+                    </div>
+                    <input name="ios_time_minute" type="number" value="{{ date('i', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">:</span>
+                    </div>
+                    <input name="ios_time_second" type="number" value="{{ date('s', time()+3600) }}" min="0" max="60" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    <div class="input-group-append input-group-prepend">
+                        <span class="input-group-text">.</span>
+                    </div>
+                    <input name="ios_time_millisecond" type="number" value="0" min="0" max="1000" class="form-control form-control-sm time" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}" />
+                    @else
                     <input name="time" type="time" step=".001" class="form-control form-control-sm time" value="{{ date('H:i:s', time()+3600) }}" data-toggle="tooltip" data-placement="top" title="{{ __('tool.attackPlanner.time_helper') }}"/>
+                    @endif
                 </div>
             </div>
             <div class="col-md-4">
@@ -284,7 +300,7 @@
         $(document).on('submit', '#createItemForm', function (e) {
             e.preventDefault();
             if (validatePreSend(this)) {
-                axios.post('{{ route('tools.attackListItem.store') }}', $('#createItemForm').serialize())
+                axios.post('{{ route('tools.attackListItem.store') }}', @isIos ios_time_prepare($('#createItemForm').serialize()) @else $('#createItemForm').serialize() @endif)
                     .then((response) => {
                         var data = response.data;
                         reloadData(true);
