@@ -2,7 +2,16 @@
 
 namespace App\Console\Commands\MigrationHelper;
 
+use App\DsConnection;
+use App\Signature;
+use App\SpeedWorld;
 use App\World;
+use App\WorldStatistic;
+use App\Tool\AnimHistMap\AnimHistMapJob;
+use App\Tool\AnimHistMap\AnimHistMapMap;
+use App\Tool\AttackPlanner\AttackList;
+use App\Tool\AttackPlanner\AttackListItem;
+use App\Tool\Map\Map;
 use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +54,7 @@ class DeleteWorld extends Command
         if($worldModel->deleted_at != null) {
             return 1;
         }
+        static::removeOtherworldReferences([$worldModel], true);
         static::deleteWorld($worldModel);
         return 0;
     }
@@ -65,7 +75,124 @@ class DeleteWorld extends Command
             $tblDel = BasicFunctions::getWorldDataTable($worldModel, $tbl);
             DB::statement("DROP TABLE $tblDel");
         }
+        
+        static::removeUserData($worldModel);
+        static::removeSignatures($worldModel);
+        static::removeSpeedWorldRef($worldModel);
+        static::removeWorldStatistics($worldModel);
+        
         $worldModel->delete();
+    }
+    
+    public static function removeOtherworldReferences($worlds, $progress=true){
+        $servers = [];
+        foreach($worlds as $model) {
+            if(! isset($servers[$model->server->code])) {
+                $servers[$model->server->code] = [
+                    "m" => $model->server,
+                    "w" => [],
+                ];
+            }
+            
+            $servers[$model->server->code]['w'][] = $model;
+        }
+        
+        foreach($servers as $entry) {
+            static::runRemoveOtherworldReferecnesInternally($entry['m'], $entry['w'], $progress);
+        }
+    }
+    
+    private static function runRemoveOtherworldReferecnesInternally($server, $worlds, $progress=true){
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2000M');
+        
+        $toUpdate = [];
+        foreach(PlayerOtherServers::prepareModel($server)->get() as $model) {
+            foreach($worlds as $world) {
+                $model->removeWorld($world->id);
+            }
+            
+            if($model->isDirty()) {
+                $toUpdate[$model->playerID] = $model;
+            }
+        }
+        
+        $i = 0;
+        $cnt = count($toUpdate);
+        foreach($toUpdate as $model) {
+            $i++;
+            if($progress && $i % 100 == 0) {
+                echo "\rWriting player: $i / $cnt      ";
+            }
+            $model->save();
+        }
+        
+        if($progress) {
+            echo "\n";
+        }
+    }
+    
+    private static function removeUserData(World $worldModel) {
+        // -> AnimHistMapMap + rendered map (if rendered)
+        foreach((new AnimHistMapMap())->where("world_id", $worldModel->id)->get() as $model) {
+            if($model->finished_at != null) {
+                $baseFName = storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}");
+                $fName = $baseFName . "/render.mp4";
+                if(is_file($fName)) {
+                    unlink($fName);
+                }
+                $fName = $baseFName . "/src.zip";
+                if(is_file($fName)) {
+                    unlink($fName);
+                }
+                $fName = $baseFName . "/animated.gif";
+                if(is_file($fName)) {
+                    unlink($fName);
+                }
+                if(is_dir($baseFName)) {
+                    rmdir($baseFName);
+                }
+            }
+            $model->forceDelete();
+        }
+        // -> AnimHistMapJob
+        (new AnimHistMapJob())->where("world_id", $worldModel->id)->forceDelete();
+        // -> AttackLists -> AttackListItems
+        foreach((new AttackList())->where("world_id", $worldModel->id)->get() as $m) {
+            (new AttackListItem())->where('attack_list_id', $m->id)->forceDelete();
+            $m->forceDelete();
+        }
+        // -> ds_connections
+        (new DsConnection())->where("world_id", $worldModel->id)->forceDelete();
+        // -> map
+        foreach((new Map())->where("world_id", $worldModel->id)->get() as $model) {
+            $fName = storage_path(config('tools.map.cacheDir') . $wantedMap->id);
+            if(is_file($fName)) {
+                unlink($fName);
+            }
+            $model->forceDelete();
+        }
+    }
+    
+    private static function removeSignatures(World $worldModel) {
+        // -> signature
+        foreach((new Signature())->where("world_id", $worldModel->id)->get() as $model) {
+            $fName = $model->getCacheFile();
+            if(is_file($fName)) {
+                unlink($fName);
+            }
+            $model->forceDelete();
+        }
+    }
+    
+    private static function removeSpeedWorldRef(World $worldModel) {
+        // -> speed_worlds
+        (new SpeedWorld())->where("world_id", $worldModel->id)->forceDelete();
+    }
+    
+    private static function removeWorldStatistics(World $worldModel) {
+        // -> world_statistics
+        (new WorldStatistic())->where("world_id", $worldModel->id)->delete();
     }
     
     private static function deleteWorldHistory(World $worldModel) {

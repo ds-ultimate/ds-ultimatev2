@@ -43,6 +43,7 @@ class MassDeleteWorlds extends Command
         $worldLike = $this->argument('name_expression');
         $serverModel = Server::getAndCheckServerByCode($serverStr);
         $worldModels = (new World())->where("server_id", $serverModel->id)->where("name", "LIKE", $worldLike)->get();
+        static::removeOtherworldReferences($worldModels, true);
         foreach($worldModels as $wModel) {
             if($wModel->deleted_at != null) {
                 return 1;
