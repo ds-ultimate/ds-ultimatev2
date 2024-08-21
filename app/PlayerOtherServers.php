@@ -60,6 +60,22 @@ class PlayerOtherServers extends Model
         }
     }
     
+    public function removeWorld($worldID) {
+        if(! $this->isWorldActive($worldID)) return;
+        
+        $curWorlds = $this->getWorldIds();
+        $this->worlds = null;
+        $first = true;
+        foreach($curWorlds as $w) {
+            if($w == $worldID) {
+                continue;
+            }
+            if(!$first) $this->worlds .= ";";
+            $this->worlds .= $w;
+            $first = false;
+        }
+    }
+    
     public function getWorlds() {
         $worldIds = $this->getWorldIds();
         return (new World())->query()->whereIn("id", $worldIds)->get();
