@@ -75,6 +75,15 @@ class PlayerOtherServers extends Model
             $first = false;
         }
     }
+
+    public function massRemoveWorlds($worlds) {
+        $curWorlds = $this->getWorldIds();
+        $filtered = array_diff($curWorlds, $worlds);
+        $this->worlds = null;
+        if(count($filtered) > 0) {
+            $this->worlds = implode(";", $filtered);
+        }
+    }
     
     public function getWorlds() {
         $worldIds = $this->getWorldIds();

@@ -3,6 +3,7 @@
 namespace App\Console\Commands\MigrationHelper;
 
 use App\DsConnection;
+use App\PlayerOtherServers;
 use App\Signature;
 use App\SpeedWorld;
 use App\World;
@@ -94,7 +95,7 @@ class DeleteWorld extends Command
                 ];
             }
             
-            $servers[$model->server->code]['w'][] = $model;
+            $servers[$model->server->code]['w'][] = $model->id;
         }
         
         foreach($servers as $entry) {
@@ -106,14 +107,18 @@ class DeleteWorld extends Command
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2000M');
         
+        $i = 0;
         $toUpdate = [];
         foreach(PlayerOtherServers::prepareModel($server)->get() as $model) {
-            foreach($worlds as $world) {
-                $model->removeWorld($world->id);
-            }
+            $model->massRemoveWorlds($worlds);
             
             if($model->isDirty()) {
                 $toUpdate[$model->playerID] = $model;
+            }
+            
+            $i++;
+            if($progress && $i % 100 == 0) {
+                echo "\rReading player: $i             ";
             }
         }
         
@@ -124,7 +129,11 @@ class DeleteWorld extends Command
             if($progress && $i % 100 == 0) {
                 echo "\rWriting player: $i / $cnt      ";
             }
-            $model->save();
+            if($model->worlds == null) {
+                $model->delete();
+            } else {
+                $model->save();
+            }
         }
         
         if($progress) {
@@ -134,9 +143,9 @@ class DeleteWorld extends Command
     
     private static function removeUserData(World $worldModel) {
         // -> AnimHistMapMap + rendered map (if rendered)
-        foreach((new AnimHistMapMap())->where("world_id", $worldModel->id)->get() as $model) {
+        foreach((new AnimHistMapJob())->where("world_id", $worldModel->id)->get() as $model) {
             if($model->finished_at != null) {
-                $baseFName = storage_path(config('tools.animHistMap.renderDir') . "{$wantedJob->id}");
+                $baseFName = storage_path(config('tools.animHistMap.renderDir') . "{$model->id}");
                 $fName = $baseFName . "/render.mp4";
                 if(is_file($fName)) {
                     unlink($fName);
@@ -156,7 +165,7 @@ class DeleteWorld extends Command
             $model->forceDelete();
         }
         // -> AnimHistMapJob
-        (new AnimHistMapJob())->where("world_id", $worldModel->id)->forceDelete();
+        (new AnimHistMapMap())->where("world_id", $worldModel->id)->forceDelete();
         // -> AttackLists -> AttackListItems
         foreach((new AttackList())->where("world_id", $worldModel->id)->get() as $m) {
             (new AttackListItem())->where('attack_list_id', $m->id)->forceDelete();
@@ -166,7 +175,7 @@ class DeleteWorld extends Command
         (new DsConnection())->where("world_id", $worldModel->id)->forceDelete();
         // -> map
         foreach((new Map())->where("world_id", $worldModel->id)->get() as $model) {
-            $fName = storage_path(config('tools.map.cacheDir') . $wantedMap->id);
+            $fName = storage_path(config('tools.map.cacheDir') . $model->id);
             if(is_file($fName)) {
                 unlink($fName);
             }
@@ -196,13 +205,13 @@ class DeleteWorld extends Command
     }
     
     private static function deleteWorldHistory(World $worldModel) {
-        $tblName = BasicFunctions::getWorldDataTable($worldModel, "index");
-        $data = DB::select("SELECT * FROM $tblName");
         $fromBase = storage_path(config('dsUltimate.history_directory') . $worldModel->serName());
-        foreach($data as $d) {
-            unlink($fromBase . "/village_{$d->date}.gz");
-            unlink($fromBase . "/player_{$d->date}.gz");
-            unlink($fromBase . "/ally_{$d->date}.gz");
+        if(!is_dir($fromBase)) {
+            return;
+        }
+        $files = array_diff(scandir($fromBase), array('.','..'));
+        foreach($files as $f) {
+            unlink($fromBase . "/" . $f);
         }
         rmdir($fromBase);
     }

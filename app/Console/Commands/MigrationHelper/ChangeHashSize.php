@@ -45,7 +45,7 @@ class ChangeHashSize extends Command
      */
     public function handle()
     {
-        ini_set('memory_limit', '5000M');
+        ini_set('memory_limit', '20000M');
         $worlds = $this->option('world');
         $hash = $this->option('hash');
         $diff = 0;

@@ -347,6 +347,10 @@ class ExportWorld extends Command
         }
         gzwrite($file, implode(",", $field_names) . "\n");
         foreach($tables as $tbl) {
+            if(!BasicFunctions::hasWorldDataTable($worldModel, $tbl)) {
+                continue;
+            }
+
             $tblName = BasicFunctions::getWorldDataTable($worldModel, $tbl);
             $data = DB::select("SELECT * FROM $tblName");
             foreach($data as $d) {
