@@ -177,8 +177,8 @@ class AttackPlannerAPIController extends BaseController
             'edit_key' => 'required_without:show_key',
             'show_key' => 'required_without:edit_key',
             'API_KEY' => 'required',
-            'length' => 'integer',
-            'start' => 'integer',
+            'length' => 'integer|min:1',
+            'start' => 'integer|min:0',
         ]);
         
         if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
