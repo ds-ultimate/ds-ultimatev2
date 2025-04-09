@@ -20,12 +20,12 @@ class Bugreport extends Model
         'status',
     ];
     
-    protected $dates = [
-        'firstSeen',
-        'delivery',
-        'updated_at',
-        'created_at',
-        'deleted_at',
+    protected $casts = [
+        'firstSeen' => 'datetime',
+        'delivery' => 'datetime',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function comments(){

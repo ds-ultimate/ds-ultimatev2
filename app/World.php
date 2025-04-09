@@ -12,13 +12,13 @@ class World extends CustomModel
     protected $connection = 'mysql';
     protected $table = 'worlds';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'worldTop_at',
-        'worldUpdated_at',
-        'worldCleaned_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'worldTop_at' => 'datetime',
+        'worldUpdated_at' => 'datetime',
+        'worldCleaned_at' => 'datetime',
     ];
 
     protected $fillable = [

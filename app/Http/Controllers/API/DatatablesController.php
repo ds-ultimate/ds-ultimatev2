@@ -177,7 +177,7 @@ class DatatablesController extends Controller
         $player = validator(['p' => $player], [
             'p' => 'required|numeric|integer',
         ])->validate()['p'];
-        
+
         $tableNr = $player % $world->hash_player;
         
         $playerModel = new Player($world, "player_$tableNr");
@@ -195,7 +195,7 @@ class DatatablesController extends Controller
                 $lData = $d;
             }
         }
-
+        
         return DataTables::of($newData)
             ->editColumn('name', function ($player){
                 return BasicFunctions::decodeName($player->name);

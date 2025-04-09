@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-    protected $dates = [
-        'updated_at',
-        'created_at',
-        'last_seen_changelog',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'last_seen_changelog' => 'datetime',
     ];
 
     protected $fillable = [

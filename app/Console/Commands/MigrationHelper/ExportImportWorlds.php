@@ -124,9 +124,9 @@ class ExportImportWorlds extends Command
         echo "Inserting {$data[0]} / {$data[1]} / {$s->id} \n";
         $world->server_id = $s->id;
         $world->name = $data[1];
-        $world->ally_count = $data[2];
-        $world->player_count = $data[3];
-        $world->village_count = $data[4];
+        $world->ally_count = ($data[2] !== "")?$data[2]:null;
+        $world->player_count = ($data[3] !== "")?$data[3]:null;
+        $world->village_count = ($data[4] !== "")?$data[4]:null;
         $world->url = $data[5];
         $world->config = base64_decode($data[6]);
         $world->units = base64_decode($data[7]);
@@ -135,7 +135,7 @@ class ExportImportWorlds extends Command
         $world->worldCheck_at = $data[9];
         $world->worldCleaned_at = $data[10];
         if($data[11] != "") {
-            $world->worldTop_at = $data[11];
+//            $world->worldTop_at = $data[11];
         }
         $world->display_name = base64_decode($data[12]);
         $world->hash_ally = $data[13];

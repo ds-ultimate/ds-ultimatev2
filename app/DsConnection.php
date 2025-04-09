@@ -8,9 +8,9 @@ class DsConnection extends CustomModel
         'user_id', 'world_id', 'player_id', 'key',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
     
     protected $cache = [

@@ -22,12 +22,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
-    protected $dates = [
-        'last_seen',
-        'updated_at',
-        'created_at',
-        'deleted_at',
-        'email_verified_at',
+    protected $casts = [
+        'last_seen' => 'datetime',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
 
     protected $fillable = [

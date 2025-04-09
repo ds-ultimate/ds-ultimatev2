@@ -31,19 +31,19 @@ class AllyTop extends CustomModel
         'gesBashRank_date',
     ];
 
-    protected $dates = [
-        'member_count_date',
-        'village_count_date',
-        'points_date',
-        'rank_date',
-        'offBash_date',
-        'offBashRank_date',
-        'defBash_date',
-        'defBashRank_date',
-        'gesBash_date',
-        'gesBashRank_date',
-        'updated_at',
-        'created_at',
+    protected $casts = [
+        'member_count_date' => 'datetime',
+        'village_count_date' => 'datetime',
+        'points_date' => 'datetime',
+        'rank_date' => 'datetime',
+        'offBash_date' => 'datetime',
+        'offBashRank_date' => 'datetime',
+        'defBash_date' => 'datetime',
+        'defBashRank_date' => 'datetime',
+        'gesBash_date' => 'datetime',
+        'gesBashRank_date' => 'datetime',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
     
     protected $defaultTableName = "ally_top";

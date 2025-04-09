@@ -433,6 +433,38 @@ class MapController extends BaseController
         }
     }
 
+    public function mapTop10Tmp($server, $world){
+        $worldData = World::getAndCheckWorld($server, $world);
+        
+        $allyModel = new \App\Ally($worldData);
+        $allies = $allyModel->orderBy('rank')->limit(15)->get();
+
+        $color = [
+            [255, 25, 25], [250, 255, 0], [0, 0, 128], [19, 244, 239], [255, 170, 0], [255, 255, 255], [0, 0, 0], [104, 255, 0],
+            [128, 0, 0], [189, 183, 107], [32, 178, 170], [30, 144, 255], [170, 110, 40], [255, 20, 147], [145, 30, 180],
+        ];
+        $skin = new \App\Util\Map\SkinBot($color);
+        $map = new SQLMapGenerator($worldData, $skin, $this->decodeDimensions(800, 800), $this->debug);
+        $map->setLegend(new \App\Util\Map\BasicLegend());
+
+        $i = 0;
+        foreach ($allies as $ally){
+            $map->markAlly($ally->allyID, $color[$i], true, true);
+            $i++;
+        }
+        $map->setLayerOrder([AbstractMapGenerator::$LAYER_GRID, AbstractMapGenerator::$LAYER_MARK]);
+        $map->setMapDimensions([
+            'xs' => 0,
+            'ys' => 0,
+            'xe' => 1000,
+            'ye' => 1000,
+        ]);
+        $map->setOpaque(100);
+        $map->setAutoResize(true);
+        $map->renderAtNative();
+        return $map->output('png');
+    }
+
     public function mapTop10P($server, $world){
         $worldData = World::getAndCheckWorld($server, $world);
         

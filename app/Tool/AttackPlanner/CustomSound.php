@@ -22,9 +22,9 @@ class CustomSound extends Model
         'internal_id',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function generateUUID() {

@@ -27,9 +27,9 @@ class Player extends CustomModel
         'gesBashRank',
     ];
 
-    protected $dates = [
-        'updated_at',
-        'created_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
     
     public $timestamps = true;

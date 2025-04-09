@@ -139,10 +139,13 @@ class HistoryMapGenerator extends AbstractMapGenerator {
             if($lineOrig === false) continue;
             $line = explode(";", str_replace("\n", "", $lineOrig));
             
-            if($line[2] < $realSize['xs']) $realSize['xs'] = $line[2];
-            if($line[2] > $realSize['xe']) $realSize['xe'] = $line[2];
-            if($line[3] < $realSize['ys']) $realSize['ys'] = $line[3];
-            if($line[3] > $realSize['ye']) $realSize['ye'] = $line[3];
+            if($line[6] < 22 || $line[6] > 32) {
+                // Ignore Strongholds because players like to be funny and place them at absurd places
+                if($line[2] < $realSize['xs']) $realSize['xs'] = $line[2];
+                if($line[2] > $realSize['xe']) $realSize['xe'] = $line[2];
+                if($line[3] < $realSize['ys']) $realSize['ys'] = $line[3];
+                if($line[3] > $realSize['ye']) $realSize['ye'] = $line[3];
+            }
             
             if(isset($tmpVillage[$line[0]])) {
                 $this->dataVillage['mark'][$line[0]] = $tmpVillage[$line[0]];

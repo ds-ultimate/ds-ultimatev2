@@ -11,10 +11,10 @@ class Permission extends Model
 
     public $table = 'permissions';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     protected $fillable = [

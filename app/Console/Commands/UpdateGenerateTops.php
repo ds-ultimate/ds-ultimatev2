@@ -55,8 +55,10 @@ class UpdateGenerateTops extends Command
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             $now = Carbon::now()->subMinutes(5);
             $worldMod = World::getWorld($server, $world);
-            DoGenerateTops::run($worldMod, 'p', $progress);
-            DoGenerateTops::run($worldMod, 'a', $progress);
+            if(config('app.debug') === false || $worldMod->server->code == "yy") {
+                DoGenerateTops::run($worldMod, 'p', $progress);
+                DoGenerateTops::run($worldMod, 'a', $progress);
+            }
             $worldMod->worldTop_at = $now;
             $worldMod->save();
 
@@ -66,8 +68,11 @@ class UpdateGenerateTops extends Command
 
             foreach ($worlds as $world){
                 $now = Carbon::now()->subMinutes(5);
-                DoGenerateTops::run($world, 'p', $progress);
-                DoGenerateTops::run($world, 'a', $progress);
+                if(config('app.debug') === false || $world->server->code == "yy") {
+                    DoGenerateTops::run($world, 'p', $progress);
+                    DoGenerateTops::run($world, 'a', $progress);
+                }
+
                 $world->worldTop_at = $now;
                 $world->save();
             }

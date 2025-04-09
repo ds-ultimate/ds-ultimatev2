@@ -7,9 +7,9 @@ class BuildTimeRaw extends CustomModel
     protected $connection = 'mysql';
     protected $table = 'buildtimesraw';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = [

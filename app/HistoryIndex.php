@@ -8,9 +8,9 @@ class HistoryIndex extends CustomModel
     protected $connection = 'mysql';
     protected $table = 'index';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = [

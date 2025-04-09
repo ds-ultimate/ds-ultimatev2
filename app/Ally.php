@@ -25,9 +25,9 @@ class Ally extends CustomModel
         'gesBashRank',
     ];
 
-    protected $dates = [
-        'updated_at',
-        'created_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
     
     protected $defaultTableName = "ally_latest";

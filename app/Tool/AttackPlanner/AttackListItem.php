@@ -41,12 +41,12 @@ class AttackListItem extends CustomModel
         'snob',
     ];
 
-    protected $dates = [
-        'send_time',
-        'arrival_time',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+    protected $casts = [
+        'send_time' => 'datetime',
+        'arrival_time' => 'datetime',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     protected $cache = [

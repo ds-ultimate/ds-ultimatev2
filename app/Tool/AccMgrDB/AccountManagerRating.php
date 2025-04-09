@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class AccountManagerRating extends Model
 {
     protected $table = "accMgrDB_Ratings";
-    
-    protected $dates = [
-        'created_at',
-        'updated_at',
+
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     protected $hidden = [

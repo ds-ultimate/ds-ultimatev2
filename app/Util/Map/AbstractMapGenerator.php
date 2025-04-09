@@ -12,6 +12,7 @@ abstract class AbstractMapGenerator extends PictureRender {
     protected $player;
     protected $village;
     private $skin;
+    private $legend = null;
     private $opaque;
     
     protected $playerColour;
@@ -48,11 +49,15 @@ abstract class AbstractMapGenerator extends PictureRender {
     
     private $showContinentNumbers = true;
     
-    public static $ANCHOR_TOP_LEFT = 1;
-    public static $ANCHOR_TOP_RIGHT = 2;
-    public static $ANCHOR_BOTTOM_LEFT = 3;
-    public static $ANCHOR_BOTTOM_RIGHT = 4;
-    public static $ANCHOR_MID_MID = 5;
+    public static $ANCHOR_BOTTOM_LEFT = 1;
+    public static $ANCHOR_BOTTOM_RIGHT = 2;
+    public static $ANCHOR_TOP_RIGHT = 3;
+    public static $ANCHOR_TOP_LEFT = 4;
+    public static $ANCHOR_MID_LEFT = 5;
+    public static $ANCHOR_MID_RIGHT = 6;
+    public static $ANCHOR_TOP_MID = 7;
+    public static $ANCHOR_BOTTOM_MID = 8;
+    public static $ANCHOR_MID_MID = 9;
     
     /*
      * Variables that are holding Data got from Database
@@ -162,6 +167,27 @@ abstract class AbstractMapGenerator extends PictureRender {
             gCol: $this->gridColour,
         );
         $this->image = $this->skin->render();
+        
+        if($this->legend !== null) {
+            $this->legend->render_init(
+                datVil: $this->dataVillage,
+                datAlly: $this->dataAlly,
+                datPlayer: $this->dataPlayer,
+                font: $this->font,
+            );
+            
+            $legendImg = $this->legend->render(imagesy($this->image));
+            $basemapImage = $this->image;
+            
+            $this->image = imagecreatetruecolor(imagesx($basemapImage) + imagesx($legendImg), imagesy($basemapImage));
+            imagealphablending($this->image, true); //needed to work with alpha values
+            imagesavealpha($this->image, true);
+            imagecopy($this->image, $basemapImage, 0, 0, 0, 0, imagesx($basemapImage), imagesy($basemapImage));
+            imagecopy($this->image, $legendImg, imagesx($basemapImage), 0, 0, 0, imagesx($legendImg), imagesy($legendImg));
+            imagedestroy($basemapImage);
+            imagedestroy($legendImg);
+        }
+        
         $this->width= imagesx($this->image);
         $this->height = imagesy($this->image);
     }
@@ -173,41 +199,65 @@ abstract class AbstractMapGenerator extends PictureRender {
      * 0, 0 will always be displayed top left
      */
     public function renderAlignedText($anchor, $relX, $relY, $size, $text, $color) {
+        static::staticRenderAlignedText($this->image, $this->font, $anchor, $relX, $relY, $size, $text, $color);
+    }
+    
+    public static function staticRenderAlignedText($image, $font, $anchor, $relX, $relY, $size, $text, $color) {
         if($color[0] > 255 || $color[0] < 0 ||
                 $color[1] > 255 || $color[1] < 0 ||
                 $color[2] > 255 || $color[2] < 0) {
             throw new \InvalidArgumentException("Invalid color given");
         }
         
-        $col = imagecolorallocate($this->image, (int) $color[0], (int) $color[1], (int) $color[2]);
-        $box = imagettfbbox($size, 0, $this->font, $text);
+        $col = imagecolorallocate($image, (int) $color[0], (int) $color[1], (int) $color[2]);
+        $box = imagettfbbox($size, 0, $font, $text);
+        $xMin = min($box[0], $box[2], $box[4], $box[6]);
+        $yMin = min($box[1], $box[3], $box[5], $box[7]);
+        $xMax = max($box[0], $box[2], $box[4], $box[6]);
+        $yMax = max($box[1], $box[3], $box[5], $box[7]);
         
         switch ($anchor) {
             case AbstractMapGenerator::$ANCHOR_BOTTOM_LEFT:
-                $x = ((int) $relX) - $box[0];
-                $y = ((int) $relY) - $box[1];
+                $x = ((int) $relX) - $xMin;
+                $y = ((int) $relY) - $yMax;
                 break;
             case AbstractMapGenerator::$ANCHOR_BOTTOM_RIGHT:
-                $x = ((int) $relX) - $box[2];
-                $y = ((int) $relY) - $box[3];
+                $x = ((int) $relX) - $xMax;
+                $y = ((int) $relY) - $yMax;
                 break;
             case AbstractMapGenerator::$ANCHOR_TOP_RIGHT:
-                $x = ((int) $relX) - $box[4];
-                $y = ((int) $relY) - $box[5];
+                $x = ((int) $relX) - $xMax;
+                $y = ((int) $relY) - $yMin;
                 break;
             case AbstractMapGenerator::$ANCHOR_TOP_LEFT:
-                $x = ((int) $relX) - $box[6];
-                $y = ((int) $relY) - $box[7];
+                $x = ((int) $relX) - $xMin;
+                $y = ((int) $relY) - $yMin;
+                break;
+            case AbstractMapGenerator::$ANCHOR_MID_LEFT:
+                $x = ((int) $relX) - $xMin;
+                $y = ((int) $relY) - ($yMin + $yMax) / 2;
+                break;
+            case AbstractMapGenerator::$ANCHOR_MID_RIGHT:
+                $x = ((int) $relX) - $xMax;
+                $y = ((int) $relY) - ($yMin + $yMax) / 2;
+                break;
+            case AbstractMapGenerator::$ANCHOR_TOP_MID:
+                $x = ((int) $relX) - ($xMin + $xMax) / 2;
+                $y = ((int) $relY) - $yMin;
+                break;
+            case AbstractMapGenerator::$ANCHOR_BOTTOM_MID:
+                $x = ((int) $relX) - ($xMin + $xMax) / 2;
+                $y = ((int) $relY) - $yMax;
                 break;
             case AbstractMapGenerator::$ANCHOR_MID_MID:
-                $x = ((int) $relX) - ($box[0] + $box[4]) / 2;
-                $y = ((int) $relY) - ($box[1] + $box[5]) / 2;
+                $x = ((int) $relX) - ($xMin + $xMax) / 2;
+                $y = ((int) $relY) - ($yMin + $yMax) / 2;
                 break;
             default:
                 throw new \InvalidArgumentException("Invalid anchor given");
         }
         
-        imagettftext($this->image, $size, 0, $x, $y, $col, $this->font, $text);
+        imagettftext($image, $size, 0, $x, $y, $col, $font, $text);
     }
     
     private function grabInformation() {
@@ -421,6 +471,10 @@ abstract class AbstractMapGenerator extends PictureRender {
         
         $this->markerFactor = $factor;
         return $this;
+    }
+    
+    public function setLegend(AbstractMapLegend $legend) {
+        $this->legend = $legend;
     }
     
     public function setShowContinentNumbers($showContinentNumbers) {

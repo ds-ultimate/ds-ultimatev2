@@ -19,11 +19,11 @@ class Map extends CustomModel
     protected $table = 'map';
     protected $connection = 'mysql';
 
-    protected $dates = [
-        'cached_at',
-        'created_at',
-        'updated_at',
-        'deleted_at',
+    protected $casts = [
+        'cached_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     protected $hidden = [

@@ -26,10 +26,10 @@ class Conquer extends CustomModel
         'created_at',
         'updated_at',
     ];
-    
-    protected $dates = [
-        'updated_at',
-        'created_at',
+
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
     
     protected $defaultTableName = "conquer";

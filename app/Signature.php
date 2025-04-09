@@ -10,10 +10,10 @@ class Signature extends Model
     protected $connection = 'mysql';
     protected $table = 'signature';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'cached',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'cached' => 'datetime',
     ];
 
     protected $fillable = [

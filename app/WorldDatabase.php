@@ -9,9 +9,9 @@ class WorldDatabase extends Model
 {
     protected $table = 'world_databases';
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = [

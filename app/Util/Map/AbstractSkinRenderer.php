@@ -92,40 +92,6 @@ abstract class AbstractSkinRenderer {
      * 0, 0 will always be displayed top left
      */
     public function renderAlignedText($anchor, $relX, $relY, $size, $text, $color) {
-        if($color[0] > 255 || $color[0] < 0 ||
-                $color[1] > 255 || $color[1] < 0 ||
-                $color[2] > 255 || $color[2] < 0) {
-            throw new \InvalidArgumentException("Invalid color given");
-        }
-        
-        $col = imagecolorallocate($this->image, (int) $color[0], (int) $color[1], (int) $color[2]);
-        $box = imagettfbbox($size, 0, $this->font, $text);
-        
-        switch ($anchor) {
-            case AbstractMapGenerator::$ANCHOR_BOTTOM_LEFT:
-                $x = ((int) $relX) - $box[0];
-                $y = ((int) $relY) - $box[1];
-                break;
-            case AbstractMapGenerator::$ANCHOR_BOTTOM_RIGHT:
-                $x = ((int) $relX) - $box[2];
-                $y = ((int) $relY) - $box[3];
-                break;
-            case AbstractMapGenerator::$ANCHOR_TOP_RIGHT:
-                $x = ((int) $relX) - $box[4];
-                $y = ((int) $relY) - $box[5];
-                break;
-            case AbstractMapGenerator::$ANCHOR_TOP_LEFT:
-                $x = ((int) $relX) - $box[6];
-                $y = ((int) $relY) - $box[7];
-                break;
-            case AbstractMapGenerator::$ANCHOR_MID_MID:
-                $x = ((int) $relX) - ($box[0] + $box[4]) / 2;
-                $y = ((int) $relY) - ($box[1] + $box[5]) / 2;
-                break;
-            default:
-                throw new \InvalidArgumentException("Invalid anchor given");
-        }
-        
-        imagettftext($this->image, $size, 0, $x, $y, $col, $this->font, $text);
+        AbstractMapGenerator::staticRenderAlignedText($this->image, $this->font, $anchor, $relX, $relY, $size, $text, $color);
     }
 }

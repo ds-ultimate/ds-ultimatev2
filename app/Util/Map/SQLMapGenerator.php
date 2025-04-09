@@ -105,10 +105,13 @@ class SQLMapGenerator extends AbstractMapGenerator {
             'ye' => 550,
         ];
         foreach($res as $village) {
-            if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
-            if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
-            if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
-            if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
+            if($village->bonus_id < 22 || $village->bonus_id > 32) {
+                // Ignore Strongholds because players like to be funny and place them at absurd places
+                if($village->x < $realSize['xs']) $realSize['xs'] = $village->x;
+                if($village->x > $realSize['xe']) $realSize['xe'] = $village->x;
+                if($village->y < $realSize['ys']) $realSize['ys'] = $village->y;
+                if($village->y > $realSize['ye']) $realSize['ye'] = $village->y;
+            }
             
             if(isset($tmpVillage[$village->villageID])) {
                 $this->dataVillage['mark'][$village->villageID] = $tmpVillage[$village->villageID];

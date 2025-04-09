@@ -100,10 +100,10 @@ class DoWorldData
         $tmpTbl = preg_replace("/[^a-zA-Z0-9\\_\\.]/", "", $tmpTbl);
         $liveTbl = preg_replace("/[^a-zA-Z0-9\\_\\.]/", "", $liveTbl);
         
-        DB::statement("LOCK TABLES $liveTbl WRITE, $tmpTbl READ;"
-                . "TRUNCATE TABLE $liveTbl;"
-                . "INSERT INTO $liveTbl SELECT * FROM $tmpTbl;"
-                . "UNLOCK TABLES;");
+        DB::statement("LOCK TABLES $liveTbl WRITE, $tmpTbl READ");
+        DB::statement("TRUNCATE TABLE $liveTbl");
+        DB::statement("INSERT INTO $liveTbl SELECT * FROM $tmpTbl");
+        DB::statement("UNLOCK TABLES");
         
         Schema::dropIfExists($tmpTbl);
     }

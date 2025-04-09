@@ -52,6 +52,7 @@ Route::post('/tools/map/{wantedMap}/{action}/{key}', [\App\Http\Controllers\Tool
 Route::delete('/tools/map/{wantedMap}/{key}', [\App\Http\Controllers\Tools\MapController::class, 'destroy'])->name('mapDestroy');
 
 Route::get('/{server}/{world}/maptop10', [\App\Http\Controllers\Tools\MapController::class, 'mapTop10'])->name('top10');
+Route::get('/{server}/{world}/mapTop10Tmp', [\App\Http\Controllers\Tools\MapController::class, 'mapTop10Tmp']);
 Route::get('/{server}/{world}/maptop10p', [\App\Http\Controllers\Tools\MapController::class, 'mapTop10P'])->name('top10p');
 
 
