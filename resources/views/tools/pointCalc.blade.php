@@ -105,24 +105,24 @@ $(function () {
 function recalculate() {
     var gesPoints = 0;
     var gesFarm = 0;
-    
+
     $.each(buildConf, function(index, data) {
         /*var buildTime = calculateTimeLevel(data['build_time'],
                 data['build_time_factor'], $('#' + index + '-level').val());
         $('#' + index + '-time').text(toTime(buildTime));*/
-        
+
         var farmSpace = calculateExponentialLevel(data['pop'], data['pop_factor'],
                 $('#' + index + '-level').val());
         $('#' + index + '-farm').text(farmSpace);
-        
+
         var points = calculateExponentialLevel(data['points'], data['points_factor'],
                 $('#' + index + '-level').val());
         $('#' + index + '-points').text(points);
-        
+
         gesPoints += points;
         gesFarm += farmSpace;
     });
-    
+
     $('#ges-farm').text(gesFarm);
     $('#ges-points').text(gesPoints);
 }
@@ -130,16 +130,16 @@ function recalculate() {
 function calculateTimeLevel(baseVal, factor, level) {
     if(level < 1) return 0;
     if(level < 3)
-        return Math.round(baseVal*1.18*Math.pow(factor, -13) * 
+        return Math.round(baseVal*1.18*Math.pow(factor, -13) *
                 Math.pow(mainFactor, -$('#main-level').val()) / worldSpeed);
-    
+
     return Math.round(baseVal*1.18*Math.pow(factor, level - 1 - 14/(level-1) ) *
             Math.pow(mainFactor, -$('#main-level').val()) / worldSpeed);
 }
 
 function calculateExponentialLevel(baseVal, factor, level) {
     if(level < 1) return 0;
-    
+
     return Math.round(Math.pow(factor, level-1) * baseVal);
 }
 
@@ -147,11 +147,11 @@ function toTime(seconds) {
     var h = Math.floor(seconds / 3600);
     var m = Math.floor((seconds - 3600*h) / 60);
     var s = Math.floor(seconds - 3600*h - 60*m);
-    
+
     if(h < 10) h = "0" + h;
     if(m < 10) m = "0" + m;
     if(s < 10) s = "0" + s;
-    
+
     return h + ":" + m + ":" + s
 }
 </script>

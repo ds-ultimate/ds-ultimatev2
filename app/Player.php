@@ -31,9 +31,9 @@ class Player extends CustomModel
         'updated_at' => 'datetime',
         'created_at' => 'datetime',
     ];
-    
+
     public $timestamps = true;
-    
+
     protected $defaultTableName = "player_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
@@ -103,11 +103,11 @@ class Player extends CustomModel
         if(count($playerDataArray) < 1) {
             return $playerDatas;
         }
-        
+
         $earliestDate = $playerDataArray[count($playerDataArray) - 1]->updated_at->subDays($dayDelta);
         foreach ($playerDataArray as $player){
             if($player->updated_at->lt($earliestDate)) continue;
-            
+
             $playerDatas[] = [
                 'timestamp' => (int)$player->updated_at->timestamp,
                 'points' => $player->points,
@@ -141,7 +141,7 @@ class Player extends CustomModel
     public function playerHistory($days, World $world){
         if(! isset($this->playerHistCache[$days])) {
             $tableNr = $this->playerID % $world->hash_player;
-            
+
             $playerModel = new Player($world, "player_$tableNr");
             $timestamp = Carbon::now()->subDays($days);
             $this->playerHistCache[$days] =  $playerModel->where('playerID', $this->playerID)

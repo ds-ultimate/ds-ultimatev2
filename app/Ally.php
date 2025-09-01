@@ -29,7 +29,7 @@ class Ally extends CustomModel
         'updated_at' => 'datetime',
         'created_at' => 'datetime',
     ];
-    
+
     protected $defaultTableName = "ally_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
