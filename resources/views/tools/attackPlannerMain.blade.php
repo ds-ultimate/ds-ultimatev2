@@ -230,9 +230,9 @@ $tabList = [
                 {
                     'orderable': false,
                     @if($mode == 'edit')
-                    'targets': [2,4,10,11,12]
+                    'targets': [10,11,12]
                     @else
-                    'targets': [1,3,9,10]
+                    'targets': [9,10]
                     @endif
                 },
                 @if($mode == 'edit')
@@ -263,7 +263,7 @@ $tabList = [
                     $('#audioTypeSelection').on('input', saveAudioUIState)
                     $('#audioTiming').on('input', saveAudioUIState)
                     $('#audioTimingInput').on('keyup', saveAudioUIState)
-                    
+
                     $('#checkAsUV').on('change', function() {
                         axios.post("{{ route('tools.attackPlannerModePost', [$attackList->id, 'saveAsUV', $attackList->show_key]) }}", {
                             'value': $('#checkAsUV').is(':checked'),
@@ -279,7 +279,7 @@ $tabList = [
             customName: "attackListItemData",
             {!! \App\Util\Datatable::language() !!}
         });
-        
+
         @if($mode == 'edit')
             $("#data1 .selectAll").on("click", function() {
                 if ($(this).prop('checked')) {
@@ -297,7 +297,7 @@ $tabList = [
                     ids.push(e.id)
                 })
                 if(ids.length < 1) return
-                
+
                 axios.delete("{{ route('tools.attackListItem.massDestroy') }}", {
                     data: {
                         "id": "{{ $attackList->id }}",
@@ -404,7 +404,7 @@ $tabList = [
             }
             $(this).val(output).attr('type', 'time')
         });
-        
+
         var editData = null
         function edit(id) {
             var context = $('#editItemForm');
@@ -441,7 +441,7 @@ $tabList = [
             $('.time-switcher[value=0]', context).click();
             checkVillage(rowData.xStart, rowData.yStart, $('input[name="xStart"]', context).parent());
             checkVillage(rowData.xTarget, rowData.yTarget, $('input[name="xTarget"]', context).parent());
-            
+
             if(typeof editSetAutoTime !== 'undefined'){
                 editSetAutoTime();
             }
@@ -449,7 +449,7 @@ $tabList = [
                 editUpdateTime(rowData.day, rowData.time);
             }
         }
-        
+
         $(document).on('hidden.bs.modal', '.edit-modal', function() {
             editData = null;
         })
@@ -576,7 +576,7 @@ $tabList = [
             updateAudioUI()
             saveAudioUIState();
         }
-        
+
         function updateAudioUI() {
             if(muteaudio){
                 $('#audioMuteIcon').removeClass('fa-volume-up').addClass('fa-volume-mute')
@@ -586,7 +586,7 @@ $tabList = [
                 $('.audioVolumeContainer .tooltip-audio').removeClass("d-none")
             }
         }
-        
+
         function saveAudioUIState() {
             var data = {
                 delay: $('#audioTiming').val(),
@@ -596,7 +596,7 @@ $tabList = [
             }
             localStorage.setItem('attackPlannerSound', JSON.stringify(data))
         }
-        
+
         function loadAudioUIState() {
             var data = JSON.parse(localStorage.getItem('attackPlannerSound'))
             if(data) {
@@ -757,7 +757,7 @@ $tabList = [
                 var time_id = $(this).attr("value");
                 $(".time-title", $(this).parent().parent()).html($(this).html());
                 $(".time-type", $(this).parent().parent()).val(time_id);
-                
+
                 if($(this).parents('#editItemForm').length > 0 && editData != null && typeof editUpdateTime !== 'undefined'){
                     if(time_id == 0) {
                         editUpdateTime(editData.DT_RowData.day, editData.DT_RowData.time);

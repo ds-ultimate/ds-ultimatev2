@@ -15,6 +15,7 @@ use App\World;
 use App\Tool\AttackPlanner\AttackList as AttackList;
 use App\Util\BasicFunctions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AttackListItem extends CustomModel
 {
@@ -50,11 +51,10 @@ class AttackListItem extends CustomModel
     ];
 
     protected $cache = [
-        'attack_list_id',
+        'list',
     ];
 
     public static $units = ['spear', 'sword', 'axe', 'archer', 'spy', 'light', 'marcher', 'heavy', 'ram', 'catapult', 'knight', 'snob'];
-
 
     /**
      * @return AttackList
@@ -189,31 +189,27 @@ class AttackListItem extends CustomModel
     }
 
     public function attackerName(){
-        if($this->start_village == null) return ucfirst(__('ui.player.deleted'));
-        if($this->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-        if($this->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-        return BasicFunctions::decodeName($this->start_village->playerLatest->name);
+        if($this->start_village__owner == null) return ucfirst(__('ui.player.deleted'));
+        if($this->start_village__owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->start_village__playerLatest__name == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->start_village__playerLatest__name);
     }
 
     public function attackerID(){
-        if($this->start_village == null) return ucfirst(__('ui.player.deleted'));
-        if($this->start_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-        if($this->start_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-        return BasicFunctions::decodeName($this->start_village->playerLatest->playerID);
+        if($this->start_village__owner == null) return 0;
+        return $this->start_village__owner;
     }
 
     public function defenderName(){
-        if($this->target_village == null) return ucfirst(__('ui.player.deleted'));
-        if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-        if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-        return BasicFunctions::decodeName($this->target_village->playerLatest->name);
+        if($this->target_village__owner == null) return ucfirst(__('ui.player.deleted'));
+        if($this->target_village__owner == 0) return ucfirst(__('ui.player.barbarian'));
+        if($this->target_village__playerLatest__name == null) return ucfirst(__('ui.player.deleted'));
+        return BasicFunctions::decodeName($this->target_village__playerLatest__name);
     }
 
     public function defenderID(){
-        if($this->target_village == null) return ucfirst(__('ui.player.deleted'));
-        if($this->target_village->owner == 0) return ucfirst(__('ui.player.barbarian'));
-        if($this->target_village->playerLatest == null) return ucfirst(__('ui.player.deleted'));
-        return BasicFunctions::decodeName($this->target_village->playerLatest->playerID);
+        if($this->target_village__owner == null) return 0;
+        return $this->target_village__owner;
     }
 
     public function calcSend(){
@@ -335,6 +331,40 @@ class AttackListItem extends CustomModel
             return [ __('tool.attackPlanner.arrivetimeToLate') ];
         }
         return [];
+    }
+
+    /**
+     * Returns a query that automatically contains all stuff to be eager loaded
+     * @param World $world
+     * @return type
+     */
+    public static function getJoinedQuery(World $world) {
+        $villageTbl = BasicFunctions::getWorldDataTable($world, 'village_latest');
+        $playerTbl = BasicFunctions::getWorldDataTable($world, 'player_latest');
+
+        $a = new AttackListItem();
+
+        $selectRows = [
+            "attack_list_items.*",
+            "start_village.x as start_village__x",
+            "start_village.y as start_village__y",
+            "start_village.owner as start_village__owner",
+            "start_village.name as start_village__name",
+            "start_village__owner.name as start_village__playerLatest__name",
+
+            "target_village.x as target_village__x",
+            "target_village.y as target_village__y",
+            "target_village.owner as target_village__owner",
+            "target_village.name as target_village__name",
+            "target_village__owner.name as target_village__playerLatest__name",
+        ];
+
+        return $a->select($selectRows)
+                ->from($a->getTable(), "attack_list_items")
+                ->leftjoin(DB::raw($villageTbl . " as start_village"), 'attack_list_items.start_village_id', '=', 'start_village.villageID')
+                ->leftjoin(DB::raw($villageTbl . " as target_village"), 'attack_list_items.target_village_id', '=', 'target_village.villageID')
+                ->leftjoin(DB::raw($playerTbl . " as start_village__owner"), 'start_village.owner', '=', 'start_village__owner.playerID')
+                ->leftjoin(DB::raw($playerTbl . " as target_village__owner"), 'target_village.owner', '=', 'target_village__owner.playerID');
     }
 
     public static function errJsonReturn($err) {

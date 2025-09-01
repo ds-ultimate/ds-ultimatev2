@@ -85,37 +85,40 @@ class AttackPlannerItemController extends BaseController
         DatatablesController::limitResults(200, $whitelist);
         abort_if($attackList->world->maintananceMode, 503);
 
-        $query = AttackListItem::query()->where('attack_list_id', $attackList->id);
+        $query = AttackListItem::getJoinedQuery($attackList->world)
+            ->where('attack_list_id', $attackList->id);
 
         return DataTables::of($query)
+            ->orderColumn('attacker', 'start_village__playerLatest__name $1')
+            ->orderColumn('defender', 'target_village__playerLatest__name $1')
             ->orderColumns(['send_time', 'arrival_time'], '-:column $1')
             ->setRowId(function (AttackListItem $attackListItem) {
                 return $attackListItem->id;
             })
             ->setRowData([
                 'xStart' => function(AttackListItem $attackListItem) {
-                    if($attackListItem->start_village == null) {
+                    if($attackListItem->start_village__x == null) {
                         return '???';
                     }
-                    return $attackListItem->start_village->x;
+                    return $attackListItem->start_village__x;
                 },
                 'yStart' => function(AttackListItem $attackListItem) {
-                    if($attackListItem->start_village == null) {
+                    if($attackListItem->start_village__y == null) {
                         return '???';
                     }
-                    return $attackListItem->start_village->y;
+                    return $attackListItem->start_village__y;
                 },
                 'xTarget' => function(AttackListItem $attackListItem) {
-                    if($attackListItem->target_village == null) {
+                    if($attackListItem->target_village__x == null) {
                         return '???';
                     }
-                    return $attackListItem->target_village->x;
+                    return $attackListItem->target_village__x;
                 },
                 'yTarget' => function(AttackListItem $attackListItem) {
-                    if($attackListItem->target_village == null) {
+                    if($attackListItem->target_village__y == null) {
                         return '???';
                     }
-                    return $attackListItem->target_village->y;
+                    return $attackListItem->target_village__y;
                 },
                 'day' => function(AttackListItem $attackListItem) {
                     return $attackListItem->arrival_time->format('Y-m-d');
@@ -150,18 +153,18 @@ class AttackPlannerItemController extends BaseController
                 return '';
             })
             ->editColumn('start_village_id', function (AttackListItem $attackListItem) {
-                $village = $attackListItem->start_village;
-                if($village == null || $attackListItem->list == null) {
+                if($attackListItem->start_village__name == null || $attackListItem->list == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
-                return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
+                return BasicFunctions::linkVillage($attackListItem->list->world, $attackListItem->start_village_id,
+                        '['.$attackListItem->start_village__x.'|'.$attackListItem->start_village__y.'] '.BasicFunctions::decodeName($attackListItem->start_village__name), null, null, true);
             })
             ->editColumn('target_village_id', function (AttackListItem $attackListItem) {
-                $village = $attackListItem->target_village;
-                if($village == null || $attackListItem->list == null) {
+                if($attackListItem->target_village__name == null || $attackListItem->list == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
-                return BasicFunctions::linkVillage($attackListItem->list->world, $village->villageID, '['.$village->x.'|'.$village->y.'] '.BasicFunctions::decodeName($village->name), null, null, true);
+                return BasicFunctions::linkVillage($attackListItem->list->world, $attackListItem->target_village_id,
+                        '['.$attackListItem->target_village__x.'|'.$attackListItem->target_village__y.'] '.BasicFunctions::decodeName($attackListItem->target_village__name), null, null, true);
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->typeIDToName().'">';
@@ -313,7 +316,7 @@ class AttackPlannerItemController extends BaseController
             ));
         }
     }
-    
+
     private static function generateEditValidation() {
         return array_merge([
             'key' => 'required|string',
@@ -326,7 +329,7 @@ class AttackPlannerItemController extends BaseController
             'note' => '',
             'support_boost' => 'required|numeric',
             'tribe_skill' => 'required|numeric',
-            
+
             'time_type' => 'required|integer',
             'day' => 'required|string',
             'time' => 'required|string',
@@ -445,7 +448,7 @@ class AttackPlannerItemController extends BaseController
         $attackplaner = AttackList::findorfail($request->id);
         abort_unless($request->key == $attackplaner->edit_key, 403);
         abort_if($attackplaner->world->maintananceMode, 503);
-        
+
         $request->validate([
             'ids' => 'required|array',
             'ids.*' => 'exists:attack_list_items,id',

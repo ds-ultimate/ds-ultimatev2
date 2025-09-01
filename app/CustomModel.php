@@ -93,4 +93,53 @@ class CustomModel extends Model
             }
         }
     }
+
+    /**
+     * Get an attribute from the model.
+     * Copied from Illuminate\Database\Eloquent\Concerns\HasAttributes
+     * Special cas for fake eager loading using custom joined queries
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getAttribute($key)
+    {
+        if (! $key) {
+            return;
+        }
+
+        // If the attribute exists in the attribute array or has a "get" mutator we will
+        // get the attribute's value. Otherwise, we will proceed as if the developers
+        // are asking for a relationship's value. This covers both types of values.
+        if (array_key_exists($key, $this->attributes) ||
+            array_key_exists($key, $this->casts) ||
+            $this->hasGetMutator($key) ||
+            $this->hasAttributeMutator($key) ||
+            $this->isClassCastable($key)) {
+            return $this->getAttributeValue($key);
+        }
+
+        $relPos = strpos($key, "__");
+        if($relPos !== false) {
+            $mKey = substr($key, 0, $relPos);
+            $parm = substr($key, $relPos + 2);
+
+            $rMod = $this->$mKey;
+            if($rMod === null) {
+                return null;
+            }
+            return $rMod->$parm;
+        }
+
+        // Here we will determine if the model base class itself contains this given key
+        // since we don't want to treat any of those methods as relationships because
+        // they are all intended as helper methods and none of these are relations.
+        if (method_exists(self::class, $key)) {
+            return $this->throwMissingAttributeExceptionIfApplicable($key);
+        }
+
+        return $this->isRelation($key) || $this->relationLoaded($key)
+                    ? $this->getRelationValue($key)
+                    : $this->throwMissingAttributeExceptionIfApplicable($key);
+    }
 }
