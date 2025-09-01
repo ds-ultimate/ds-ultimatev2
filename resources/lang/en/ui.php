@@ -48,6 +48,7 @@ return array (
     'bashAllS' => 'OD',
     'bashAttS' => 'ODA',
     'bashDefS' => 'ODD',
+    'bashSupS' => 'ODS',
   ),
   'allyChanges' => 
   array (

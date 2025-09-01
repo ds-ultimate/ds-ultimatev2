@@ -85,11 +85,11 @@ class DatatablesController extends Controller
         validator(request()->except('_'), [
             '*' => 'prohibited',
         ])->validate();
-        
+
         $ally = validator(['a' => $ally], [
             'a' => 'required|numeric|integer',
         ])->validate()['a'];
-        
+
         $playerModel = new Player($world);
         $querry = $playerModel->newQuery();
         $querry->where('ally_id', $ally);
@@ -144,7 +144,7 @@ class DatatablesController extends Controller
     public function getPlayerVillage(World $world, $player) {
         $whitelist = ['villageID', 'name', 'points', 'coordinates', 'continent', 'bonus_id'];
         static::limitResults(200, $whitelist);
-        
+
         $villageModel = new Village($world);
         $query = $villageModel->newQuery();
         $query->where('owner', $player);
@@ -173,16 +173,16 @@ class DatatablesController extends Controller
         validator(request()->except('_'), [
             '*' => 'prohibited',
         ])->validate();
-        
+
         $player = validator(['p' => $player], [
             'p' => 'required|numeric|integer',
         ])->validate()['p'];
 
         $tableNr = $player % $world->hash_player;
-        
+
         $playerModel = new Player($world, "player_$tableNr");
         $data = $playerModel->where('playerID', $player)->get();
-        
+
         $newData = [];
         $dates = [];
         $lData = null;
@@ -195,7 +195,7 @@ class DatatablesController extends Controller
                 $lData = $d;
             }
         }
-        
+
         return DataTables::of($newData)
             ->editColumn('name', function ($player){
                 return BasicFunctions::decodeName($player->name);
@@ -224,8 +224,11 @@ class DatatablesController extends Controller
             ->addColumn('gesBash', function ($player){
                 return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "gesBash");
             })
-            ->removeColumn("last", "offBashRank", "defBashRank", "supBash", "supBashRank", "gesBashRank", "updated_at")
-            ->rawColumns(["rank", "points", "village_count", "offBash", "defBash", "gesBash"])
+            ->addColumn('supBash', function ($player){
+                return BasicFunctions::modelHistoryCalcPopupless($player, $player->last, "supBash");
+            })
+            ->removeColumn("last", "offBashRank", "defBashRank", "supBashRank", "gesBashRank", "updated_at")
+            ->rawColumns(["rank", "points", "village_count", "offBash", "defBash", "gesBash", "supBash"])
             ->toJson();
     }
 
@@ -233,16 +236,16 @@ class DatatablesController extends Controller
         validator(request()->except('_'), [
             '*' => 'prohibited',
         ])->validate();
-        
+
         $ally = validator(['a' => $ally], [
             'a' => 'required|numeric|integer',
         ])->validate()['a'];
-        
+
         $tableNr = $ally % $world->hash_ally;
-        
+
         $allyModel = new Ally($world, "ally_$tableNr");
         $data = $allyModel->where('allyID', $ally)->get();
-        
+
         $newData = [];
         $dates = [];
         $lData = null;
@@ -295,7 +298,7 @@ class DatatablesController extends Controller
         ]);
         $whitelist = ['rank', 'name', 'ally', 'ally_id', 'points', 'village_count', 'village_points', 'gesBash', 'offBash', 'defBash', 'supBash'];
         static::limitResults(110, $whitelist);
-        
+
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $playerModel = new Player($world);
         $datas = $playerModel->newQuery();
@@ -384,7 +387,7 @@ class DatatablesController extends Controller
         ]);
         $whitelist = ['rank', 'name', 'tag', 'points', 'member_count', 'village_count', 'player_points', 'gesBash', 'offBash', 'defBash'];
         static::limitResults(110, $whitelist);
-        
+
         $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
         $allyModel = new Ally($world);
         $datas = $allyModel->newQuery();
@@ -468,10 +471,10 @@ class DatatablesController extends Controller
             ->whitelist($whitelist)
             ->toJson();
     }
-    
+
     /**
      * This function performs a basic validation of the parameters given to the Datatables Plugin
-     * 
+     *
      * @param type $amount The maximum amount of rows that can be fetched at once
      * @param type $whitelistColumns what columns might be used by front-end
      *                               (dynamic columns will be filtered by plugin)
@@ -493,11 +496,11 @@ class DatatablesController extends Controller
             'search.value' => 'string|nullable',
             'search.regex' => [new \App\Rules\BooleanText],
         ]);
-        
+
         $colKeys = validator(array_keys($dat['columns']), [
             '*' => 'numeric|integer',
         ])->validate();
-        
+
         request()->validate([
             'order.*.column' => ['required', 'integer', \Illuminate\Validation\Rule::in($colKeys)]
         ]);

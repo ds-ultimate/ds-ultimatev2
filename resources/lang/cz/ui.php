@@ -246,6 +246,7 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'villageName' => 'Název vesnice',
     'villages' => 'Vesnice',
     'world' => 'Svět',
+    'bashSupS' => 'Podpora',
   ),
   'tabletitel' => 
   array (

@@ -115,6 +115,7 @@ return array (
     'bashAllS' => 'BG',
     'bashAttS' => 'BGA',
     'bashDefS' => 'BGD',
+    'bashSupS' => 'BGU',
   ),
   'server' => 
   array (

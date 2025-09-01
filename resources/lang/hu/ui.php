@@ -208,6 +208,7 @@ További funkciók lesznek az oldalon, amelyeket tartalmaz a bot.',
     'bashAllS' => 'LE',
     'bashPointsRatio' => 'Legyőzött ellenfél/Pont',
     'playerPointPercent' => 'Legyőzött ellenfél/Pont',
+    'bashSupS' => 'LES',
   ),
   'tabletitel' => 
   array (

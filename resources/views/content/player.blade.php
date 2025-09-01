@@ -42,13 +42,12 @@
                     <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
                         <x-record.stat_elm_player :data='$playerData' :worldData='$worldData' :conquer='$conquer' :allyChanges='$allyChanges' :playerOtherServers='$playerOtherServers'/>
                     </div>
-                    
                     @isset($playerTopData)
                     <div class="tab-pane fade" id="tops" role="tabpanel" aria-labelledby="tops-tab">
                         <x-record.stat_elm_player_top :data='$playerTopData' :worldData='$worldData' :conquer='$conquer' :allyChanges='$allyChanges' :playerOtherServers='$playerOtherServers' exists="true"/>
                     </div>
                     @endisset
-                    
+
                     <!-- BEGIN HIST Table -->
                     <div class="tab-pane fade" id="hist" role="tabpanel" aria-labelledby="hist-tab">
                         <div class="row">
@@ -74,6 +73,7 @@
                                         <th class="all">{{ ucfirst(__('ui.table.bashAllS')) }}</th>
                                         <th class="all">{{ ucfirst(__('ui.table.bashAttS')) }}</th>
                                         <th class="all">{{ ucfirst(__('ui.table.bashDefS')) }}</th>
+                                        <th class="all">{{ ucfirst(__('ui.table.bashSupS')) }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -166,7 +166,7 @@
                 $('#map').html('<img id="map-img" class="container-fluid p-0" src="' + data + '" />'); },
             });
         });
-        
+
         var initializedHistTable = false
         $('#hist-tab').on('click', function() {
             if(initializedHistTable) return
@@ -192,6 +192,7 @@
                     { "data": "gesBash"},
                     { "data": "offBash"},
                     { "data": "defBash"},
+                    { "data": "supBash"},
                 ],
                 responsive: true,
                 stateSave: true,
@@ -199,7 +200,6 @@
                 {!! \App\Util\Datatable::language() !!}
             });
         });
-
         function copy(type) {
             /* Get the text field */
             var copyText = $("#" + type);
@@ -256,7 +256,7 @@
                 {!! \App\Util\Datatable::language() !!}
             });
         });
-        
+
         @isset($playerOtherServers)
             $(".otherworld").hover(function(e) {
                 if(e.type == "mouseenter") {
