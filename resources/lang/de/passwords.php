@@ -6,4 +6,5 @@ return array (
   'sent' => 'Passwortwiederherstellung wurde gesendet!',
   'token' => 'Der Passwort-Wiederherstellungs-Schlüssel ist ungültig oder abgelaufen.',
   'user' => 'Es konnte leider kein Nutzer mit dieser E-Mail-Adresse gefunden werden.',
+  'throttled' => 'Bitte warte bevor du es noch einmal versuchst',
 );
