@@ -48,7 +48,9 @@
                     <thead><tr>
                         <th>{{ ucfirst(__('ui.table.villageName')) }}</th>
                         <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.owner')) }}</th>
+                        <th>{{ ucfirst(__('ui.table.old').' '.__('ui.table.ally')) }}</th>
                         <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.owner')) }}</th>
+                        <th>{{ ucfirst(__('ui.table.new').' '.__('ui.table.ally')) }}</th>
                         <th>{{ ucfirst(__('ui.table.points')) }}</th>
                         <th>{{ ucfirst(__('ui.table.date')) }}</th>
                     </tr></thead>
@@ -68,19 +70,17 @@
         dataTable = $('#table_id').DataTable({
             "processing": true,
             "serverSide": true,
-            "order": [[ 4, "desc" ]],
+            "order": [[ 6, "desc" ]],
             "searching": true,
             "ajax": "{{ $routeDatatableAPI }}",
             "columns": [
                 { "data": "village", "orderable": false, "searchable": false},
                 { "data": "old_owner_name", "name": "old_owner_name"},
+                { "data": "old_ally_tag", "name": "old_ally_tag"},
                 { "data": "new_owner_name", "name": "new_owner_name"},
+                { "data": "new_ally_tag", "name": "new_ally_tag"},
                 { "data": "points", "searchable": false},
                 { "data": "timestamp", "searchable": false},
-                { "data": "old_ally_name", visible: false},
-                { "data": "new_ally_name", visible: false},
-                { "data": "old_ally_tag", visible: false},
-                { "data": "new_ally_tag", visible: false},
             ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian
@@ -99,7 +99,7 @@
             customName: "{{ $tableStateName }}",
             {!! \App\Util\Datatable::language() !!}
         });
-        
+
         $('#dropdownSettingsWrapper').children().appendTo("#table_id_filter");
         $('.conquer-highlight').click(function (e) {
             e.stopPropagation();
@@ -118,7 +118,7 @@
             @endauth
         });
     });
-    
+
     @auth
     function storeHighlighting() {
         axios.post('{{ $routeHighlightSaving }}', {

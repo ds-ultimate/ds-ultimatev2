@@ -13,10 +13,10 @@ use Yajra\DataTables\Facades\DataTables;
 class ConquerController extends Controller
 {
     private static $whitelist = ['village', 'old_owner_name', 'new_owner_name', 'points', 'timestamp', 'old_ally_name', 'new_ally_name', 'old_ally_tag', 'new_ally_tag'];
-    
+
     public function getAllyConquer(World $world, $type, $allyID) {
         DatatablesController::limitResults(200, static::$whitelist);
-        
+
         $conquerModel = new Conquer($world);
         $playerModel = new Player($world);
 
@@ -24,10 +24,10 @@ class ConquerController extends Controller
         foreach ($playerModel->newQuery()->where('ally_id', $allyID)->get() as $player) {
             $allyPlayers[] = $player->playerID;
         }
-        
+
         $query = $conquerModel->newQuery();
         $filt = null;
-        
+
         switch($type) {
             case "all":
                 $filt = function($query) use($allyPlayers) {
@@ -66,7 +66,7 @@ class ConquerController extends Controller
 
     public function getPlayerConquer(World $world, $type, $playerID) {
         DatatablesController::limitResults(200, static::$whitelist);
-        
+
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
         $filt = null;
@@ -103,18 +103,18 @@ class ConquerController extends Controller
             default:
                 abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
-        
+
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_PLAYER, $playerID, $filt);
     }
 
     public function getVillageConquer(World $world, $type, $villageID) {
         DatatablesController::limitResults(200, static::$whitelist);
-        
+
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
         $filt = null;
 
-        switch($type) { 
+        switch($type) {
            case "all":
                 $filt = function($query) use($villageID) {
                     $query->where(function($query) use($villageID) {
@@ -125,13 +125,13 @@ class ConquerController extends Controller
             default:
                 abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
-        
+
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, $villageID, $filt);
     }
 
     public function getWorldConquer(World $world, $type) {
         DatatablesController::limitResults(200, static::$whitelist);
-        
+
         $conquerModel = new Conquer($world);
         $query = $conquerModel->newQuery();
 
@@ -141,10 +141,10 @@ class ConquerController extends Controller
             default:
                 abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
-        
+
         return $this->doConquerReturn($query, $world, Conquer::$REFERTO_VILLAGE, 0);
     }
-    
+
     private function doConquerReturn($query, $world, $referTO, $id, $filter=null) {
         $data = DataTables::eloquent($query);
         if($filter !== null) {
@@ -159,10 +159,16 @@ class ConquerController extends Controller
                 return $this->multilineResponsiveTableCell($conquer->linkVillageCoords($world), $conquer->linkVillageName($world), dT: true);
             })
             ->editColumn('old_owner_name', function (Conquer $conquer) use($world) {
-                return $this->multilineResponsiveTableCell($conquer->linkOldPlayer($world), "[" . $conquer->linkOldAlly($world) . "]", uT: true);
+                return "<div class='d-md-inline-block mr-1 conquer-truncate'>".$conquer->linkOldPlayer($world)."</div>";
             })
             ->editColumn('new_owner_name', function (Conquer $conquer) use($world) {
-                return $this->multilineResponsiveTableCell($conquer->linkNewPlayer($world), "[" . $conquer->linkNewAlly($world) . "]", uT: true);
+                return "<div class='d-md-inline-block mr-1 conquer-truncate'>".$conquer->linkNewPlayer($world)."</div>";
+            })
+            ->editColumn('old_ally_tag', function (Conquer $conquer) use($world) {
+                return $conquer->linkOldAlly($world);
+            })
+            ->editColumn('new_ally_tag', function (Conquer $conquer) use($world) {
+                return $conquer->linkNewAlly($world);
             })
             ->addColumn('type', function (Conquer $conquer) {
                 return $conquer->getConquerType();
@@ -170,13 +176,13 @@ class ConquerController extends Controller
             ->addColumn('winLoose', function (Conquer $conquer) use($referTO, $id) {
                 return $conquer->getWinLoose($referTO, $id);
             })
-            ->rawColumns(['timestamp', 'village', 'old_owner_name', 'new_owner_name'])
+            ->rawColumns(['timestamp', 'village', 'old_owner_name', 'new_owner_name', 'old_ally_tag', 'new_ally_tag'])
             ->removeColumn(['created_at', 'updated_at', 'old_owner', 'new_owner',
                 'old_ally', 'new_ally'])
             ->whitelist(static::$whitelist)
             ->toJson();
     }
-    
+
     private function multilineResponsiveTableCell($up, $down, $uT=false, $dT=false) {
         $ret = "<div class='d-md-inline-block mr-1".($uT?' conquer-truncate':'')."'>$up</div>";
         $ret.= "<div class='d-md-inline-block".($dT?' conquer-truncate':'')."'>$down</div>";
@@ -191,23 +197,23 @@ class ConquerController extends Controller
                 DatatablesController::limitResults(200, $wl);
                 return $this->getConquerDailyPlayer($world, $day, $wl_search);
                 break;
-            
+
             case 'ally':
                 $wl = ['DT_RowIndex', 'name', 'tag', 'total'];
                 $wl_search = ['name'];
                 DatatablesController::limitResults(200, $wl);
                 return $this->getConquerDailyAlly($world, $day, $wl_search);
                 break;
-            
+
             default:
                 abort(404, __("ui.errors.404.unknownType", ["type" => $type]));
         }
     }
-    
+
     private function getConquerDailyPlayer(World $worldData, $day, $wl) {
         $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
-        
+
         $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
 
         return DataTables::eloquent($datas)
@@ -225,7 +231,7 @@ class ConquerController extends Controller
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
-                
+
                 return $referConquer->linkNewPlayer($worldData);
             })
             ->addColumn('ally', function ($conquer) use ($worldData, $conquerModel, $date){
@@ -233,7 +239,7 @@ class ConquerController extends Controller
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
-                
+
                 return $referConquer->linkNewAlly($worldData);
             })
             ->addColumn('total', function ($conquer){
@@ -243,11 +249,11 @@ class ConquerController extends Controller
             ->whitelist($wl)
             ->toJson();
     }
-    
+
     private function getConquerDailyAlly(World $worldData, $day, $wl) {
         $conquerModel = new Conquer($worldData);
         $datas = $conquerModel->newQuery();
-        
+
         $date = Carbon::createFromFormat('Y-m-d', $day ?? Carbon::now());;
 
         return DataTables::eloquent($datas)
@@ -266,7 +272,7 @@ class ConquerController extends Controller
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
-                
+
                 return $referConquer->linkNewAlly($worldData, false);
             })
             ->addColumn('tag', function ($conquer) use ($worldData, $conquerModel, $date){
@@ -274,7 +280,7 @@ class ConquerController extends Controller
                     ->where('timestamp', '>', $date->startOfDay()->getTimestamp())
                     ->where('timestamp', '<', $date->endOfDay()->getTimestamp())
                     ->first();
-                
+
                 return $referConquer->linkNewAlly($worldData, true);
             })
             ->addColumn('total', function ($conquer){
