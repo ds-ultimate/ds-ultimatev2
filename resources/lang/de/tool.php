@@ -432,4 +432,25 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
   array (
     'title' => 'Belagerungsrechner',
   ),
+  'coinCalc' => 
+  array (
+    'title' => 'Münzenrechner',
+    'agLimit' => 'Ag Limit',
+    'desiredAgLimit' => 'gewünschtes Ag-Limit',
+    'coinFlag' => 'Münzflagge',
+    'flagBooster' => 'Flaggenbooster',
+    'nobleDecree' => 'Erlass des Adels',
+    'insert' => 'Einfügen',
+    'error' => 'Bitte gültige Werte eingeben.',
+    'result' => 
+    array (
+      'coins' => 'Münzen',
+      'agLimit' => 'AG Limit',
+      'wood' => 'Holz',
+      'clay' => 'Lehm',
+      'iron' => 'Eisen',
+    ),
+    'currentAgLimit' => 'aktuelles Ag Limit',
+    'runenFactor' => 'Runenfaktor',
+  ),
 );

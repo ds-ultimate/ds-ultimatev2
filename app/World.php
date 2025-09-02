@@ -255,12 +255,21 @@ class World extends CustomModel
     }
 
     private $unitConfCache = null;
+    private $configCache = null;
     public function unitConfig(){
         if($this->unitConfCache == null) {
             $this->unitConfCache = simplexml_load_string($this->units);
         }
         return $this->unitConfCache;
     }
+
+    public function configData(){
+        if($this->configCache === null) {
+            $this->configCache = $this->config ? simplexml_load_string($this->config) : null;
+        }
+        return $this->configCache;
+    }
+
 
     public function save(array $options = []) {
         if($this->config == null) {

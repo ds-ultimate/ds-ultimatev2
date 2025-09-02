@@ -59,6 +59,9 @@ Route::get('/{server}/{world}/maptop10p', [\App\Http\Controllers\Tools\MapContro
 //Point calculator
 Route::get('/{server}/{world}/tools/pointCalc', [\App\Http\Controllers\Tools\PointCalcController::class, 'index'])->name('pointCalc');
 
+//Coin calculator
+Route::get('/{server}/{world}/tools/coinCalc', [\App\Http\Controllers\Tools\CoinCalcController::class, 'index'])->name('coinCalc');
+
 
 //TableGenerator
 Route::get('/{server}/{world}/tools/tableGenerator', [\App\Http\Controllers\Tools\TableGeneratorController::class, 'index'])->name('tableGenerator');

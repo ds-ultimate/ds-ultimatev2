@@ -317,6 +317,7 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
         'attackPlanner' => 'Plánovač útoku není pro tento svět k dispozici.',
         'distCalc' => 'Kalkulačka vzdálenosti není pro tento svět k dispozici.',
         'pointCalc' => 'Kalkulačka skóre není v tomto světě k dispozici.',
+        'coinCalc' => 'Kalkulačka mincí není pro tento svět k dispozici.',
       ),
     ),
   ),

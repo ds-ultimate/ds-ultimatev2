@@ -426,4 +426,23 @@ Ha a hiba továbbra is fennáll, hozz létre hibajelentést.',
   array (
     'title' => 'Nagy csata kalkulátor',
   ),
+  'coinCalc' => 
+  array (
+    'title' => 'Érme kalkulátor',
+    'agLimit' => 'AG határ',
+    'desiredAgLimit' => 'Kívánt AG határ',
+    'coinFlag' => 'Érmezászló',
+    'flagBooster' => 'Zászlóerősítő',
+    'nobleDecree' => 'Nemesi rendelet',
+    'insert' => 'Számítás',
+    'error' => 'Kérjük érvényes értékeket adjon meg.',
+    'result' => 
+    array (
+      'coins' => 'Érmék',
+      'agLimit' => 'AG határ',
+      'wood' => 'Fa',
+      'clay' => 'Agyag',
+      'iron' => 'Vas',
+    ),
+  ),
 );

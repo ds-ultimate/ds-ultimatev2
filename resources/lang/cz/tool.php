@@ -371,4 +371,23 @@ Pokud chyba přetrvává, vytvořte hlášení o chybě.',
     'villageByAlly' => 'Všechny vesnice kmene',
     'villageByPlayer' => 'Všechny vesnice hráče',
   ),
+  'coinCalc' => 
+  array (
+    'title' => 'Počítadlo mincí',
+    'agLimit' => 'Ag Limit',
+    'desiredAgLimit' => 'Požadovaný AG limit',
+    'coinFlag' => 'Vlajka mincí',
+    'flagBooster' => 'Posilovač vlajky',
+    'nobleDecree' => 'Šlechtický edikt',
+    'insert' => 'Vypočítat',
+    'error' => 'Zadejte platné hodnoty.',
+    'result' => 
+    array (
+      'coins' => 'Mince',
+      'agLimit' => 'AG limit',
+      'wood' => 'Dřevo',
+      'clay' => 'Hlína',
+      'iron' => 'Železo',
+    ),
+  ),
 );

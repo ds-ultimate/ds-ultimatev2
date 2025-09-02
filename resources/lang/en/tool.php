@@ -432,4 +432,25 @@ If that problem persists please create a bug-report',
   array (
     'title' => 'Great siege calculator',
   ),
+  'coinCalc' => 
+  array (
+    'title' => 'Coin calculator',
+    'agLimit' => 'snob limit',
+    'desiredAgLimit' => 'desired snob limit',
+    'coinFlag' => 'coin flag',
+    'flagBooster' => 'Flag booster',
+    'nobleDecree' => 'Noble decree',
+    'insert' => 'Calculate',
+    'error' => 'Please enter valid values.',
+    'result' => 
+    array (
+      'coins' => 'Coins',
+      'agLimit' => 'AG limit',
+      'wood' => 'Wood',
+      'clay' => 'Clay',
+      'iron' => 'Iron',
+    ),
+    'currentAgLimit' => 'current snob limit',
+    'runenFactor' => 'rune factor',
+  ),
 );

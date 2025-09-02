@@ -350,6 +350,7 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
         'animHistMap' => 'Die Animierten Weltkarten sind auf dieser Welt nicht verfügbar',
         'pointCalc' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
         'distCalc' => 'Der Laufzeitrechner ist auf dieser Welt nicht verfügbar.',
+        'coinCalc' => 'Der Münzenrechner ist auf dieser Welt nicht verfügbar.',
       ),
     ),
     403 => 

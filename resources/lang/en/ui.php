@@ -350,6 +350,7 @@ It is not specified which village you have to give the name to, but it must belo
         'animHistMap' => 'The animated maps are not available at that world',
         'pointCalc' => 'The point calculator is not available for this world',
         'distCalc' => 'The distance calculator is not available for this world',
+        'coinCalc' => 'The coin calculator is not available for this world',
       ),
     ),
     403 => 
