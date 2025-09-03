@@ -34,11 +34,11 @@ class AttackList extends CustomModel
         'created_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
-    
+
     protected $cache = [
         'world',
     ];
-    
+
 
     /**
      * @return World
@@ -73,7 +73,7 @@ class AttackList extends CustomModel
     public function attackCount(){
         return $this->items->where('send_time', '>', Carbon::now())->count();
     }
-    
+
     public function getTitle() {
         if($this->title == null || $this->title == "") {
             return __('tool.attackPlanner.title');

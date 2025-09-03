@@ -152,19 +152,33 @@ class AttackPlannerItemController extends BaseController
             ->addColumn('select', function (){
                 return '';
             })
-            ->editColumn('start_village_id', function (AttackListItem $attackListItem) {
-                if($attackListItem->start_village__name == null || $attackListItem->list == null) {
+            ->editColumn('start_village_id', function (AttackListItem $attackListItem) use ($attackList) {
+                if($attackListItem->start_village__name == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
-                return BasicFunctions::linkVillage($attackListItem->list->world, $attackListItem->start_village_id,
-                        '['.$attackListItem->start_village__x.'|'.$attackListItem->start_village__y.'] '.BasicFunctions::decodeName($attackListItem->start_village__name), null, null, true);
+                return BasicFunctions::linkVillage(
+                    $attackList->world,
+                    $attackListItem->start_village_id,
+                    '['.$attackListItem->start_village__x.'|'.$attackListItem->start_village__y.'] '.
+                    BasicFunctions::decodeName($attackListItem->start_village__name),
+                    null,
+                    null,
+                    true
+                );
             })
-            ->editColumn('target_village_id', function (AttackListItem $attackListItem) {
-                if($attackListItem->target_village__name == null || $attackListItem->list == null) {
+            ->editColumn('target_village_id', function (AttackListItem $attackListItem) use ($attackList) {
+                if($attackListItem->target_village__name == null) {
                     return __('tool.attackPlanner.villageNotExist');
                 }
-                return BasicFunctions::linkVillage($attackListItem->list->world, $attackListItem->target_village_id,
-                        '['.$attackListItem->target_village__x.'|'.$attackListItem->target_village__y.'] '.BasicFunctions::decodeName($attackListItem->target_village__name), null, null, true);
+                return BasicFunctions::linkVillage(
+                    $attackList->world,
+                    $attackListItem->target_village_id,
+                    '['.$attackListItem->target_village__x.'|'.$attackListItem->target_village__y.'] '.
+                    BasicFunctions::decodeName($attackListItem->target_village__name),
+                    null,
+                    null,
+                    true
+                );
             })
             ->editColumn('type', function (AttackListItem $attackListItem) {
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->type).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->typeIDToName().'">';
@@ -172,17 +186,25 @@ class AttackPlannerItemController extends BaseController
             ->editColumn('slowest_unit', function (AttackListItem $attackListItem) {
                 return '<img id="type_img" src="'.Icon::icons($attackListItem->slowest_unit).'" data-toggle="popover" data-trigger="hover" data-content="'.$attackListItem->unitIDToNameOutput().'">';
             })
-            ->addColumn('attacker', function (AttackListItem $attackListItem) {
-                if($attackListItem->list == null) {
-                    return "";
-                }
-                return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->attackerID(), $attackListItem->attackerName(), null, null, true);
+            ->addColumn('attacker', function (AttackListItem $attackListItem) use ($attackList) {
+                return BasicFunctions::linkPlayer(
+                    $attackList->world,
+                    $attackListItem->attackerID(),
+                    $attackListItem->attackerName(),
+                    null,
+                    null,
+                    true
+                );
             })
-            ->addColumn('defender', function (AttackListItem $attackListItem) {
-                if($attackListItem->list == null) {
-                    return "";
-                }
-                return BasicFunctions::linkPlayer($attackListItem->list->world, $attackListItem->defenderID(), $attackListItem->defenderName(), null, null, true);
+            ->addColumn('defender', function (AttackListItem $attackListItem) use ($attackList) {
+                return BasicFunctions::linkPlayer(
+                    $attackList->world,
+                    $attackListItem->defenderID(),
+                    $attackListItem->defenderName(),
+                    null,
+                    null,
+                    true
+                );
             })
             ->addColumn('send_time', function (AttackListItem $attackListItem) {
                 return $attackListItem->send_time->format('d.m.Y H:i:s');
@@ -231,21 +253,31 @@ class AttackPlannerItemController extends BaseController
                 }
                 return '<h4 class="mb-0"><i class="fas fa-info-circle '.$color.'"'.$popoverData.'></i></h4>';
             })
-            ->addColumn('action', function (AttackListItem $attackListItem){
-                if($attackListItem->list == null) {
-                    return "";
-                }
+            ->addColumn('action', function (AttackListItem $attackListItem) use ($attackList) {
                 $uv = "";
-                if($attackListItem->list->uvMode) {
-                    $uv = "t={$attackListItem->start_village->owner}&";
+                if($attackList->uvMode && $attackListItem->start_village__owner !== null) {
+                    $uv = "t={$attackListItem->start_village__owner}&";
                 }
-                $href = "{$attackListItem->list->world->url}/game.php?{$uv}village={$attackListItem->start_village_id}&screen=place&target={$attackListItem->target_village_id}";
-                $href .= '&spear='.$attackListItem->spear.'&sword='.$attackListItem->sword.'&axe='.$attackListItem->axe.'&archer='.$attackListItem->archer.'&spy='.$attackListItem->spy.'&light='.$attackListItem->light.'&marcher='.$attackListItem->marcher.'&heavy='.$attackListItem->heavy.'&ram='.$attackListItem->ram.'&catapult='.$attackListItem->catapult.'&knight='.$attackListItem->knight.'&snob='.$attackListItem->snob;
-                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$href.'"><i class="'.(($attackListItem->send == 0)? 'fas fa-play-circle' : 'fas fa-redo').'" onclick="'.(($attackListItem->send == 0)? 'sendattack('.$attackListItem->id.')' : '').'"></i></a></h4>';
+                $href = "{$attackList->world->url}/game.php?{$uv}village={$attackListItem->start_village_id}&screen=place&target={$attackListItem->target_village_id}";
+                $href .= '&spear='.$attackListItem->spear
+                    .'&sword='.$attackListItem->sword
+                    .'&axe='.$attackListItem->axe
+                    .'&archer='.$attackListItem->archer
+                    .'&spy='.$attackListItem->spy
+                    .'&light='.$attackListItem->light
+                    .'&marcher='.$attackListItem->marcher
+                    .'&heavy='.$attackListItem->heavy
+                    .'&ram='.$attackListItem->ram
+                    .'&catapult='.$attackListItem->catapult
+                    .'&knight='.$attackListItem->knight
+                    .'&snob='.$attackListItem->snob;
+                $icon = ($attackListItem->send == 0) ? 'fas fa-play-circle' : 'fas fa-redo';
+                $onclick = ($attackListItem->send == 0) ? 'sendattack('.$attackListItem->id.')' : '';
+                return '<h4 class="mb-0"><a class="text-success" target="_blank" href="'.$href.'"><i class="'.$icon.'" onclick="'.$onclick.'"></i></a></h4>';
             })
             ->addColumn('delete', function (AttackListItem $attackListItem){
                 return '<h4 class="mb-0"><a class="text-primary" onclick="edit('.$attackListItem->id.')" style="cursor: pointer;" data-toggle="modal" data-target=".edit-modal"><i class="fas fa-edit"></i></a>' .
-                        '<a class="text-danger" onclick="destroy('.$attackListItem->id.')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
+                    '<a class="text-danger" onclick="destroy('.$attackListItem->id.')" style="cursor: pointer;"><i class="fas fa-times"></i></a></h4>';
             })
             ->rawColumns(['type', 'start_village_id', 'target_village_id', 'attacker', 'defender', 'arrival_time', 'slowest_unit', 'time', 'info', 'action', 'delete'])
             ->whitelist($whitelist)

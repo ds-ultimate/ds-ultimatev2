@@ -211,7 +211,20 @@ class AttackPlannerAPIController extends BaseController
             abort(404, "Edit and show key are not present");
         }
         
-        $items = $list->items();
+        $selectCols = array_merge([
+            'id',
+            'start_village_id',
+            'target_village_id',
+            'slowest_unit',
+            'send_time',
+            'arrival_time',
+            'type',
+            'support_boost',
+            'tribe_skill',
+            'ms',
+            'send'
+        ], AttackListItem::$units);
+        $items = $list->items()->select($selectCols);
         if(isset($req['start'])) {
             if($req['start'] < 0) abort(422, "Start must be at least 0");
             $items = $items->skip($req['start']);

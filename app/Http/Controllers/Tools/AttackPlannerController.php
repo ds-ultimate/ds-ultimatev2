@@ -125,27 +125,35 @@ class AttackPlannerController extends BaseController
         $mode = 'edit';
         $now = Carbon::now();
 
-        $allAtts = $attackList->items()->get();
-        $stats['total'] = $allAtts->count();
-        $stats['start_village'] = $allAtts->groupBy('start_village_id')->count();
-        $stats['target_village'] = $allAtts->groupBy('target_village_id')->count();
+        // calculate stats directly in the database to avoid loading all items
+        $stats['total'] = $attackList->items()->count();
+        $stats['start_village'] = $attackList->items()->distinct('start_village_id')->count('start_village_id');
+        $stats['target_village'] = $attackList->items()->distinct('target_village_id')->count('target_village_id');
 
-        foreach ($allAtts->groupBy('type') as $type){
-            $stats['type'][$type[0]->type]['id'] = $type[0]->type;
-            $stats['type'][$type[0]->type]['count'] = $type->count();
+        $statsType = $attackList->items()
+            ->select('type', DB::raw('count(*) as count'))
+            ->groupBy('type')
+            ->orderBy('type')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [$row->type => ['id' => $row->type, 'count' => $row->count]];
+            })->toArray();
+
+        if (!empty($statsType)) {
+            $stats['type'] = $statsType;
         }
 
-        foreach ($allAtts->groupBy('slowest_unit') as $slowest_unit){
-            $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['id'] = $slowest_unit[0]->slowest_unit;
-            $stats['slowest_unit'][$slowest_unit[0]->slowest_unit]['count'] = $slowest_unit->count();
-        }
+        $statsSlowest = $attackList->items()
+            ->select('slowest_unit', DB::raw('count(*) as count'))
+            ->groupBy('slowest_unit')
+            ->orderBy('slowest_unit')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [$row->slowest_unit => ['id' => $row->slowest_unit, 'count' => $row->count]];
+            })->toArray();
 
-        if (isset($stats['type'])){
-            ksort($stats['type']);
-        }
-
-        if (isset($stats['slowest_unit'])){
-            ksort($stats['slowest_unit']);
+        if (!empty($statsSlowest)) {
+            $stats['slowest_unit'] = $statsSlowest;
         }
 
         $ownPlanners = array();
@@ -170,52 +178,52 @@ class AttackPlannerController extends BaseController
         }
         return view('tools.attackPlannerMain', compact('worldData', 'unitConfig', 'config', 'attackList', 'mode', 'now', 'server', 'ownPlanners'));
     }
-    
+
     private function exportWB(AttackList $attackList){
         $items = $attackList->items()->get();
-        
+
         // Workbench
         $exportWB = "";
         foreach ($items as $item){
             $arrTimestamp = (strtotime($item->arrival_time)*1000) + $item->ms;
             $isSent = ($item->send == 0)?"false":"true";
             $exportWB .= $item->start_village_id."&".$item->target_village_id."&".$item->unitIDToName().
-                    "&$arrTimestamp&".$item->type."&false&".$isSent."&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword).
-                    "/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy).
-                    "/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy).
-                    "/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight).
-                    "/snob=".base64_encode($item->snob)."/militia=MA==\n";
+                "&$arrTimestamp&".$item->type."&false&".$isSent."&spear=".base64_encode($item->spear)."/sword=".base64_encode($item->sword).
+                "/axe=".base64_encode($item->axe)."/archer=".base64_encode($item->archer)."/spy=".base64_encode($item->spy).
+                "/light=".base64_encode($item->light)."/marcher=".base64_encode($item->marcher)."/heavy=".base64_encode($item->heavy).
+                "/ram=".base64_encode($item->ram)."/catapult=".base64_encode($item->catapult)."/knight=".base64_encode($item->knight).
+                "/snob=".base64_encode($item->snob)."/militia=MA==\n";
         }
-        
+
         return response()->json([
             "data" => $exportWB,
         ]);
     }
-    
+
     private function exportBB(AttackList $attackList){
         $items = $attackList->items()->take(400)->get();
-        
+
         //BB-Code
         $exportBB = $this->exportTemplated($attackList, $items,
-                __('tool.attackPlanner.export.BB.default.row'), __('tool.attackPlanner.export.BB.default.body'));
-        
+            __('tool.attackPlanner.export.BB.default.row'), __('tool.attackPlanner.export.BB.default.body'));
+
         return response()->json([
             "data" => $exportBB,
         ]);
     }
-    
+
     private function exportIGM(AttackList $attackList){
         $items = $attackList->items()->take(400)->get();
-        
+
         //IGM-BB-Code
         $exportIGM = $this->exportTemplated($attackList, $items,
-                __('tool.attackPlanner.export.IGM.default.row'), __('tool.attackPlanner.export.IGM.default.body'));
-        
+            __('tool.attackPlanner.export.IGM.default.row'), __('tool.attackPlanner.export.IGM.default.body'));
+
         return response()->json([
             "data" => $exportIGM,
         ]);
     }
-    
+
     private function exportTemplated($attackList, $items, $rowTemplate, $bodyTemplate) {
         $count = count($items);
         $i = 1;
@@ -224,7 +232,7 @@ class AttackPlannerController extends BaseController
         foreach ($items as $item){
             $dateSend = Carbon::parse($item->send_time)->locale(App::getLocale());
             $dateArrival = Carbon::parse($item->arrival_time)->locale(App::getLocale());
-            
+
             $uv = "";
             if($item->list->uvMode) {
                 $uv = "t={$item->start_village->owner}&";
@@ -257,14 +265,14 @@ class AttackPlannerController extends BaseController
             '%CREATE_WITHL%' => route('index'),
             '%CREATE_WITH%' => "DS-Ultimate",
         );
-        
+
         return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
     }
 
     public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
         abort_unless($attackList->edit_key == $request->get('key'), 403);
         $imports = explode(PHP_EOL, $request->import);
-        
+
         $err = [];
         $all = [];
         foreach ($imports as $import){
@@ -290,9 +298,9 @@ class AttackPlannerController extends BaseController
                 }
             }
             $it = self::newItem($err, $attackList, $list[0], $list[1], AttackListItem::unitNameToID($list[2]),
-                    date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], AttackListItem::attackPlannerTypeIcons()))?$list[4]: -1,
-                    $unitArray, ms: $arrival%1000);
-            
+                date('Y-m-d H:i:s' , $arrival/1000), (in_array($list[4], AttackListItem::attackPlannerTypeIcons()))?$list[4]: -1,
+                $unitArray, ms: $arrival%1000);
+
             if($it != null) {
                 $all[] = $it;
             }
@@ -303,11 +311,11 @@ class AttackPlannerController extends BaseController
         foreach (array_chunk($all,3000) as $t){
             $allOk &= $insert->insert($t);
         }
-        
+
         if(! $allOk) {
             $err[] = "Error during insert";
         }
-        
+
         if(count($err) > 0) {
             return AttackListItem::errJsonReturn($err);
         }
@@ -343,7 +351,7 @@ class AttackPlannerController extends BaseController
 
     public static $villageCache = null;
     public static function newItem(&$err, AttackList $parList, $start_village_id, $target_village_id, $slowest_unit, $arrival_time,
-            $type, $units, $support_boost=0.0, $tribe_skill=0.0, $ms=0){
+                                   $type, $units, $support_boost=0.0, $tribe_skill=0.0, $ms=0){
         if(static::$villageCache == null) {
             $tableName = BasicFunctions::getWorldDataTable($parList->world, 'village_latest');
             self::$villageCache = [];
@@ -351,11 +359,11 @@ class AttackPlannerController extends BaseController
                 self::$villageCache[$v->villageID] = $v;
             }
         }
-        
+
         $curErr = [];
         $item = new AttackListItem();
         $item->attack_list_id = $parList->id;
-        
+
         if(isset(self::$villageCache[$start_village_id])) {
             $item->start_village_id = $start_village_id;
             $sVillage = self::$villageCache[$start_village_id];
@@ -368,18 +376,18 @@ class AttackPlannerController extends BaseController
         } else {
             $curErr[] = __('tool.attackPlanner.villageNotExistTarget');
         }
-        
+
         $item->type = $type;
         $item->slowest_unit = $slowest_unit;
         $item->support_boost = $support_boost;
         $item->tribe_skill = $tribe_skill;
-        
+
         $item->arrival_time = $arrival_time;
         $item->ms = $ms;
         if(count($curErr) == 0) {
             $unitConfig = $parList->world->unitConfig();
             $dist = sqrt(pow($sVillage->x - $tVillage->x, 2) + pow($sVillage->y - $tVillage->y, 2));
-            
+
             if($tVillage->bonus_id >= 11 && $tVillage->bonus_id <= 21) {
                 //great siege village always same distance
                 if($item->slowest_unit == 4) {
@@ -388,13 +396,13 @@ class AttackPlannerController extends BaseController
                     $dist = 15;
                 }
             }
-            
+
             $unit = AttackListItem::$units[$item->slowest_unit];
             $boost = 1 + ($item->support_boost ?? 0.0) + ($item->tribe_skill ?? 0.0);
             $runningTime = round(((float)$unitConfig->$unit->speed * 60) * $dist / $boost);
             $item->send_time = $item->arrival_time->copy()->subSeconds($runningTime);
         }
-        
+
         if ($units != null) {
             if(is_array($units)) {
                 $curErr = array_merge($curErr, $item->setUnitsArr($units));
@@ -404,10 +412,10 @@ class AttackPlannerController extends BaseController
         } else {
             $item->setEmptyUnits();
         }
-        
+
         if(count($curErr) == 0) $curErr = array_merge($curErr, $item->verifyTime());
         $err = array_merge($err, $curErr);
-        
+
         if(count($curErr) > 0) {
             return null;
         }

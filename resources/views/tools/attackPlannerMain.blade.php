@@ -13,14 +13,14 @@
 @endpush
 
 @php
-$tabList = [
-    'create' => ['name' => __('global.create'), 'active' => true],
-    'multiedit' => ['name' => __('tool.attackPlanner.multiedit'), 'active' => false],
-    'link' => ['name' => __('tool.attackPlanner.links'), 'active' => false],
-    'import' => ['name' => __('tool.attackPlanner.importExport'), 'active' => false],
-    'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false],
-    'tips' => ['name' => __('tool.attackPlanner.tips'), 'active' => false]
-    ];
+    $tabList = [
+        'create' => ['name' => __('global.create'), 'active' => true],
+        'multiedit' => ['name' => __('tool.attackPlanner.multiedit'), 'active' => false],
+        'link' => ['name' => __('tool.attackPlanner.links'), 'active' => false],
+        'import' => ['name' => __('tool.attackPlanner.importExport'), 'active' => false],
+        'stats' => ['name' => __('tool.attackPlanner.statistics'), 'active' => false],
+        'tips' => ['name' => __('tool.attackPlanner.tips'), 'active' => false]
+        ];
 @endphp
 
 @section('content')
@@ -28,18 +28,18 @@ $tabList = [
         <!-- Titel für Tablet | PC -->
         <div class="col-12 p-lg-5 mx-auto my-1 text-center d-none d-lg-block">
             @auth
-            <div class="col-2 position-absolute dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="ownedPlanners" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('tool.attackPlanner.fastSwitch') }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="ownedPlanners">
-                    @foreach($ownPlanners as $planner)
-                        <a class="dropdown-item" href="{{
+                <div class="col-2 position-absolute dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="ownedPlanners" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('tool.attackPlanner.fastSwitch') }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="ownedPlanners">
+                        @foreach($ownPlanners as $planner)
+                            <a class="dropdown-item" href="{{
                             route('tools.attackPlannerMode', [$planner->id, 'edit', $planner->edit_key])
                             }}">{{ $planner->getTitle().' ['.$planner->world->getDistplayName().']' }}</a>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
             @endauth
             <h1 class="font-weight-normal">{{ $attackList->getTitle().' ['.$worldData->getDistplayName().']' }}</h1>
         </div>
@@ -55,29 +55,29 @@ $tabList = [
         </div>
         <!-- ENDE Titel für Mobile Geräte -->
         @if($mode == 'edit')
-        <!-- Village Card -->
-        <div class="col-12 d-print-none">
-            @if($attackList->title === null)
-            <div class="card mt-2 p-3">
-                {{ __('tool.attackPlanner.withoutTitle') }}
-            </div>
-            @endif
-            <div class="card mt-2">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    @foreach($tabList as $key => $tab)
-                        <li class="nav-item">
-                            <a class="nav-link {{ ($tab['active'])?'active':'' }}" id="{{ $key }}-tab" data-toggle="tab" href="#{{ $key }}" role="tab" aria-controls="{{ $key }}" aria-selected="true">{{ $tab['name'] }}</a>
-                        </li>
-                    @endforeach
-                </ul>
-                <div class="card-body tab-content">
-                    @foreach($tabList as $key => $tab)
-                        @include('tools.attackPlanner.'.$key, ['active' => $tab['active']])
-                    @endforeach
+            <!-- Village Card -->
+            <div class="col-12 d-print-none">
+                @if($attackList->title === null)
+                    <div class="card mt-2 p-3">
+                        {{ __('tool.attackPlanner.withoutTitle') }}
+                    </div>
+                @endif
+                <div class="card mt-2">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        @foreach($tabList as $key => $tab)
+                            <li class="nav-item">
+                                <a class="nav-link {{ ($tab['active'])?'active':'' }}" id="{{ $key }}-tab" data-toggle="tab" href="#{{ $key }}" role="tab" aria-controls="{{ $key }}" aria-selected="true">{{ $tab['name'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <div class="card-body tab-content">
+                        @foreach($tabList as $key => $tab)
+                            @include('tools.attackPlanner.'.$key, ['active' => $tab['active']])
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- ENDE Village Card -->
+            <!-- ENDE Village Card -->
         @endif
         <!-- Unit Card -->
         <div class="col-12 mt-2">
@@ -93,15 +93,15 @@ $tabList = [
                         </div>
                         <div class="pl-3">
                             <select id="audioTypeSelection">
-                            @foreach(App\Http\Controllers\Tools\AttackPlannerSoundController::getAlarmData() as $name => $url)
-                                <option value="{{ asset($url) }}">{{ $name }}</option>
-                            @endforeach
+                                @foreach(App\Http\Controllers\Tools\AttackPlannerSoundController::getAlarmData() as $name => $url)
+                                    <option value="{{ asset($url) }}">{{ $name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="audioVolumeContainer pl-3 position-relative">
                             <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="muteAudio()" role="button">
-                                <i id="audioMuteIcon" class="fas fa-volume-up"></i>
-                            </a></h5>
+                                    <i id="audioMuteIcon" class="fas fa-volume-up"></i>
+                                </a></h5>
                             <div class="tooltip-audio popover fade bs-popover-right nowrap show" style="left: 100%">
                                 <div class="arrow" style="top: 5px;"></div>
                                 <h3 class="popover-header"></h3>
@@ -114,26 +114,26 @@ $tabList = [
                         <style>.tooltip-audio {display: none}.audioVolumeContainer:hover .tooltip-audio {display: block}</style>
                         <div class="pl-3">
                             <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" onclick="audio()" role="button">
-                                <i id="audioPlayIcon" class="fas fa-play"></i>
-                            </a></h5>
+                                    <i id="audioPlayIcon" class="fas fa-play"></i>
+                                </a></h5>
                         </div>
                         @auth
-                        <div class="pl-3">
-                            <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" href="{{ route("user.settings", ["settings-attplanner-upload"]) }}" target="_blank" role="button">
-                                <i class="fas fa-upload"></i>
-                            </a></h5>
-                        </div>
-                        @if($attackList->user_id != Auth::user()->id)
-                            @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
-                                <div class="col-1">
-                                    <h5><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i></h5>
-                                </div>
-                            @else
-                                <div class="col-1">
-                                    <h5><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star h4 text-muted mt-2"></i></h5>
-                                </div>
+                            <div class="pl-3">
+                                <h5><a class="btn @toDarkmode(btn-outline-dark) float-right" href="{{ route("user.settings", ["settings-attplanner-upload"]) }}" target="_blank" role="button">
+                                        <i class="fas fa-upload"></i>
+                                    </a></h5>
+                            </div>
+                            @if($attackList->user_id != Auth::user()->id)
+                                @if($attackList->follows()->where('user_id', Auth::user()->id)->count() > 0)
+                                    <div class="col-1">
+                                        <h5><i id="follow-icon" style="cursor:pointer; text-shadow: 0 0 15px #000;" onclick="changeFollow()" class="fas fa-star h4 text-warning mt-2"></i></h5>
+                                    </div>
+                                @else
+                                    <div class="col-1">
+                                        <h5><i id="follow-icon" style="cursor:pointer" onclick="changeFollow()" class="far fa-star h4 text-muted mt-2"></i></h5>
+                                    </div>
+                                @endif
                             @endif
-                        @endif
                         @endauth
                     </div>
                     <div id="datatablesHeader2" data-toggle="hover" title="{{ __('tool.attackPlanner.uvModeDesc') }}">
@@ -144,29 +144,29 @@ $tabList = [
                 <div class="card-body table-responsive">
                     <table id="data1" class="table table-bordered table-striped nowrap w-100">
                         <thead>
-                            <tr>
-                                @if($mode == 'edit')
+                        <tr>
+                            @if($mode == 'edit')
                                 <th style="min-width: 25px"><input type="checkbox" class="selectAll"/></th>
-                                @endif
-                                <th>{{ __('tool.attackPlanner.startVillage') }}</th>
-                                <th>{{ __('tool.attackPlanner.attacker') }}</th>
-                                <th>{{ __('tool.attackPlanner.targetVillage') }}</th>
-                                <th>{{ __('tool.attackPlanner.defender') }}</th>
-                                <th>{{ __('global.unit') }}</th>
-                                <th>{{ __('tool.attackPlanner.type') }}</th>
-                                <th>{{ __('tool.attackPlanner.sendTime') }}</th>
-                                <th>{{ __('tool.attackPlanner.arrivalTime') }}</th>
-                                <th width="95px">{{ __('tool.attackPlanner.countdown') }}</th>
-                                <th style="min-width: 25px">&nbsp;</th>
-                                <th style="min-width: 25px">&nbsp;</th>
-                                @if($mode == 'edit')
+                            @endif
+                            <th>{{ __('tool.attackPlanner.startVillage') }}</th>
+                            <th>{{ __('tool.attackPlanner.attacker') }}</th>
+                            <th>{{ __('tool.attackPlanner.targetVillage') }}</th>
+                            <th>{{ __('tool.attackPlanner.defender') }}</th>
+                            <th>{{ __('global.unit') }}</th>
+                            <th>{{ __('tool.attackPlanner.type') }}</th>
+                            <th>{{ __('tool.attackPlanner.sendTime') }}</th>
+                            <th>{{ __('tool.attackPlanner.arrivalTime') }}</th>
+                            <th width="95px">{{ __('tool.attackPlanner.countdown') }}</th>
+                            <th style="min-width: 25px">&nbsp;</th>
+                            <th style="min-width: 25px">&nbsp;</th>
+                            @if($mode == 'edit')
                                 <th style="min-width: 50px">
                                     <h4 class="mb-0 text-center" style="line-height: 1;">
                                         <a class="text-danger confirm-massDestroy" data-toggle="confirmation" data-content="{{ __('tool.attackPlanner.confirm.massDelete') }}" style="cursor: pointer"><i class="fas fa-times"></i></a>
                                     </h4>
                                 </th>
-                                @endif
-                            </tr>
+                            @endif
+                        </tr>
                         </thead>
                         <tbody class="small">
                         </tbody>
@@ -198,6 +198,7 @@ $tabList = [
             ordering: true,
             processing: true,
             serverSide: true,
+            deferRender: true,
             pageLength: 25,
             searching: false,
             @if($mode == 'edit')
@@ -208,9 +209,9 @@ $tabList = [
             order:[[{{ ($mode == 'edit')?'7':'6' }}, 'desc']],
             ajax: '{!! route('tools.attackListItem.data', [ $attackList->id , $attackList->show_key]) !!}',
             columns: [
-                @if($mode == 'edit')
+                    @if($mode == 'edit')
                 { data: 'select', name: 'select'},
-                @endif
+                    @endif
                 { data: 'start_village_id', name: 'start_village_id'},
                 { data: 'attacker', name: 'attacker'},
                 { data: 'target_village_id', name: 'target_village_id'},
@@ -222,7 +223,7 @@ $tabList = [
                 { data: 'time', name: 'send_time', orderSequence:["desc", "asc"]},
                 { data: 'info', name: 'info'},
                 { data: 'action', name: 'action'},
-                @if($mode == 'edit')
+                    @if($mode == 'edit')
                 { data: 'delete', name: 'delete' },
                 @endif
             ],
@@ -235,7 +236,7 @@ $tabList = [
                     'targets': [9,10]
                     @endif
                 },
-                @if($mode == 'edit')
+                    @if($mode == 'edit')
                 {
                     orderable: false,
                     className: 'select-checkbox',
@@ -281,34 +282,34 @@ $tabList = [
         });
 
         @if($mode == 'edit')
-            $("#data1 .selectAll").on("click", function() {
-                if ($(this).prop('checked')) {
-                    table.rows().select()
-                }
-                else {
-                    table.rows().deselect()
+        $("#data1 .selectAll").on("click", function() {
+            if ($(this).prop('checked')) {
+                table.rows().select()
+            }
+            else {
+                table.rows().deselect()
+            }
+        })
+        $("#data1 .selectAll").prop('checked', false)
+
+        $("#data1 .confirm-massDestroy").on('confirmed.bs.confirmation', function() {
+            var ids = []
+            table.rows({ selected: true }).data().each(function(e) {
+                ids.push(e.id)
+            })
+            if(ids.length < 1) return
+
+            axios.delete("{{ route('tools.attackListItem.massDestroy') }}", {
+                data: {
+                    "id": "{{ $attackList->id }}",
+                    "key": "{{ $attackList->edit_key }}",
+                    "ids": ids,
                 }
             })
-            $("#data1 .selectAll").prop('checked', false)
-
-            $("#data1 .confirm-massDestroy").on('confirmed.bs.confirmation', function() {
-                var ids = []
-                table.rows({ selected: true }).data().each(function(e) {
-                    ids.push(e.id)
+                .then((response) => {
+                    reloadData(true)
                 })
-                if(ids.length < 1) return
-
-                axios.delete("{{ route('tools.attackListItem.massDestroy') }}", {
-                    data: {
-                        "id": "{{ $attackList->id }}",
-                        "key": "{{ $attackList->edit_key }}",
-                        "ids": ids,
-                    }
-                })
-                    .then((response) => {
-                        reloadData(true)
-                    })
-            })
+        })
         @endif
 
         function reloadData(upExp) {
@@ -512,25 +513,25 @@ $tabList = [
         @endif
 
         @auth
-            @if($attackList->user_id != Auth::user()->id)
-                function changeFollow() {
-                    var icon = $('#follow-icon');
-                    axios.post('{{ route('tools.follow') }}',{
-                        model: 'AttackPlanner_AttackList',
-                        id: '{{ $attackList->id }}'
-                    })
-                        .then((response) => {
-                            if(icon.hasClass('far')){
-                                icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
-                            }else {
-                                icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
-                            }
-                        })
-                        .catch((error) => {
+        @if($attackList->user_id != Auth::user()->id)
+        function changeFollow() {
+            var icon = $('#follow-icon');
+            axios.post('{{ route('tools.follow') }}',{
+                model: 'AttackPlanner_AttackList',
+                id: '{{ $attackList->id }}'
+            })
+                .then((response) => {
+                    if(icon.hasClass('far')){
+                        icon.removeClass('far text-muted').addClass('fas text-warning').attr('style','cursor:pointer; text-shadow: 0 0 15px #000;');
+                    }else {
+                        icon.removeClass('fas text-warning').addClass('far text-muted').attr('style', 'cursor:pointer;');
+                    }
+                })
+                .catch((error) => {
 
-                        });
-                }
-            @endif
+                });
+        }
+        @endif
         @endauth
 
         $(document).on('click', 'input[type="checkbox"][data-group]', function(event) {
@@ -730,9 +731,9 @@ $tabList = [
 
         function typ_img(input){
             switch (input) {
-            @foreach(\App\Tool\AttackPlanner\AttackListItem::attackPlannerTypeIcons() as $idx)
+                @foreach(\App\Tool\AttackPlanner\AttackListItem::attackPlannerTypeIcons() as $idx)
                 case '{{ $idx }}': return '{{ \App\Util\Icon::icons($idx) }}';
-            @endforeach
+                @endforeach
             }
         }
 
