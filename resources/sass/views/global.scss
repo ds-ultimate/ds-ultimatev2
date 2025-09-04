@@ -107,3 +107,11 @@ table.dataTable > thead .sorting_desc_disabled:after {
         overflow-x: hidden
     }
 }
+
+
+/* Select 2 clear fix */
+.select2-selection__clear {
+  position: absolute !important;
+  right: 20px !important;
+  background-color: #c8c8c8 !important;
+}

@@ -57,7 +57,7 @@ abstract class AbstractSkinRenderer {
         if($opacity === null) {
             return imagecolorallocate($this->image, $color[0], $color[1], $color[2]);
         }
-        return imagecolorallocatealpha($this->image, $color[0], $color[1], $color[2], 127-($opacity)*127/100);
+        return imagecolorallocatealpha($this->image, (int) $color[0], (int) $color[1], (int) $color[2], (int) (127-($opacity)*127/100));
     }
     
     /*
@@ -76,12 +76,12 @@ abstract class AbstractSkinRenderer {
      */
     protected function renderCenteredText($x, $y, $text, $color, $size=null) {
         if($size == null) {
-            $size = $this->imgW / 50 + $this->fieldWidth * 4;
+            $size = (int) ($this->imgW / 50 + $this->fieldWidth * 4);
         }
         $box = imagettfbbox($size, 0, $this->font, $text);
 
-        $drawX = $x - ($box[6] + $box[2]) / 2;
-        $drawY = $y - ($box[7] + $box[3]) / 2;
+        $drawX = (int) ($x - ($box[6] + $box[2]) / 2);
+        $drawY = (int) ($y - ($box[7] + $box[3]) / 2);
         imagettftext($this->image, $size, 0, $drawX, $drawY, $color, $this->font, $text);
     }
     
