@@ -99,6 +99,9 @@
                     { "data": "ally"},
                     { "data": "total"},
                 ],
+                "columnDefs": [
+                    {"targets": [0, 1, 2, 3], "className": 'dt-left'},
+                ],
                 stateSave: true,
                 customName: "conquerDailyPlayer",
                 {!! \App\Util\Datatable::language() !!}
@@ -116,6 +119,9 @@
                     { "data": "name"},
                     { "data": "tag"},
                     { "data": "total"},
+                ],
+                "columnDefs": [
+                    {"targets": [0, 1, 2, 3], "className": 'dt-left'},
                 ],
                 stateSave: true,
                 customName: "conquerDailyAlly",

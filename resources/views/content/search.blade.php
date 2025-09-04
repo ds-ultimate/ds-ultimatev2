@@ -93,6 +93,15 @@
     <script>
         $(document).ready( function () {
             $('#table_id').DataTable({
+                "columnDefs": [
+                    @if ($type == 'player')
+                        {"targets": [0, 1, 2, 3], "className": 'dt-left'},
+                    @elseif ($type == 'ally')
+                        {"targets": [0, 1, 2, 3, 4], "className": 'dt-left'},
+                    @else
+                        {"targets": [0, 1, 2, 3, 4, 5], "className": 'dt-left'},
+                    @endif
+                ],
                 ordering: false,
                 {!! \App\Util\Datatable::language() !!}
             });

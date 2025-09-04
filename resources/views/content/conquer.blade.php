@@ -82,6 +82,9 @@
                 { "data": "points", "searchable": false},
                 { "data": "timestamp", "searchable": false},
             ],
+            "columnDefs": [
+                {"targets": [0, 1, 2, 3, 4, 5, 6], "className": 'dt-left'},
+            ],
             "fnRowCallback": function(row, data) {
                 if(data.type == 3 && $('#conquer-highlight-barbarian').hasClass('active')) {//barbarian
                     $('td', row).css('background-color', '{{ \App\Profile::$CONQUER_HIGHLIGHT_MAPPING_COLORS['b'][1] }}'); //gray
@@ -100,7 +103,7 @@
             {!! \App\Util\Datatable::language() !!}
         });
 
-        $('#dropdownSettingsWrapper').children().appendTo("#table_id_filter");
+        $('#dropdownSettingsWrapper').children().appendTo("#table_id_wrapper .row:first-child");
         $('.conquer-highlight').click(function (e) {
             e.stopPropagation();
             $(this).toggleClass('active');

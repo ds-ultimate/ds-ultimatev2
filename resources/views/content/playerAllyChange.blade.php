@@ -48,7 +48,8 @@
         $(document).ready( function () {
             $('#table_id').DataTable({
                 "columnDefs": [
-                    {"targets": 4, "className": 'text-right'},
+                    {"targets": [0, 1, 2, 3], "className": 'dt-left'},
+                    {"targets": [4], "className": 'dt-right'},
                 ],
                 "processing": true,
                 "serverSide": true,

@@ -84,6 +84,12 @@
                 "paging": false,
                 "ordering": false,
                 "info": false,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'dt-left'
+                    }
+                ],
             });
 
             $('#t10Ally').DataTable({
@@ -92,6 +98,12 @@
                 "paging": false,
                 "ordering": false,
                 "info": false,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'dt-left'
+                    }
+                ],
             });
         } );
     </script>

@@ -33,10 +33,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/ds-ultimate/click-captcha-laravel.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/ds-ultimate/dbal.git"
         }
     ],
     "config": {

@@ -83,8 +83,9 @@ mix.copyDirectory('node_modules/tinymce/icons', 'public/plugin/tinymce/icons');
 mix.copyDirectory('node_modules/tinymce/plugins', 'public/plugin/tinymce/plugins');
 mix.copyDirectory('node_modules/tinymce/skins', 'public/plugin/tinymce/skins');
 mix.copyDirectory('node_modules/tinymce/themes', 'public/plugin/tinymce/themes');
-mix.copy('node_modules/tinymce/jquery.tinymce.min.js', 'public/plugin/tinymce/jquery.tinymce.min.js');
 mix.copy('node_modules/tinymce/tinymce.min.js', 'public/plugin/tinymce/tinymce.min.js');
+mix.copy('node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js', 'public/plugin/tinymce/jquery.tinymce.min.js');
+
 
 
 /*
@@ -121,7 +122,7 @@ mix.copy('node_modules/select2/dist/js/select2.full.min.js', 'public/plugin/sele
  */
 
 mix.scripts([
-    'node_modules/datatables.net/js/jquery.dataTables.js',
+    'node_modules/datatables.net/js/dataTables.js',
     'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
     'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
     'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.js',

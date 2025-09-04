@@ -123,10 +123,10 @@
         $(document).ready( function () {
             $('#datahist').DataTable({
                 columnDefs: [
-                    {"targets": 0, "className": 'text-right'},
-                    {"targets": 1, "className": 'text-center'},
-                    {"targets": 2, "className": 'text-center'},
-                    {"targets": 3, "className": 'text-center', "orderable": false},
+                    {"targets": 0, "className": 'dt-left text-right'},
+                    {"targets": 1, "className": 'dt-center'},
+                    {"targets": 2, "className": 'dt-center'},
+                    {"targets": 3, "className": 'dt-center', "orderable": false},
                 ],
                 dom: 't',
                 ordering: true,

@@ -45,7 +45,8 @@
         $(document).ready( function () {
             $('#table_id').DataTable({
                 "columnDefs": [
-                    {"targets": [3, 4, 6, 7, 8, 9], "className": 'text-right'},
+                    {"targets": [0, 1, 2, 5], "className": 'dt-left'},
+                    {"targets": [3, 4, 6, 7, 8, 9], "className": 'dt-right'},
                     {"targets": [3, 4, 6, 7, 8, 9], "orderSequence": ["desc", "asc"]},
                 ],
                 "processing": true,

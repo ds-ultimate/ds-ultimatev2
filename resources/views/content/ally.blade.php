@@ -201,6 +201,9 @@
                     { "data": "offBash"},
                     { "data": "defBash"},
                 ],
+                "columnDefs": [
+                    {"targets": [0, 1, 2, 3, 4, 5, 6, 7, 8], "className": 'dt-left'},
+                ],
                 responsive: true,
                 stateSave: true,
                 customName: "allyHistory",
@@ -231,13 +234,8 @@
         $(document).ready( function () {
             var tbl = $('#table_id').DataTable({
                 "columnDefs": [
-                    {"targets": 2, "className": 'text-right'},
-                    {"targets": 3, "className": 'text-right'},
-                    {"targets": 4, "className": 'text-right'},
-                    {"targets": 5, "className": 'text-right'},
-                    {"targets": 6, "className": 'text-right'},
-                    {"targets": 7, "className": 'text-right'},
-                    {"targets": 8, "className": 'text-right'},
+                    {"targets": [0, 1], "className": 'dt-left'},
+                    {"targets": [2, 3, 4, 5, 6, 7, 8], "className": 'dt-right'},
                 ],
                 "processing": true,
                 "serverSide": true,

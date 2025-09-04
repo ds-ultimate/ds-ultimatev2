@@ -51,12 +51,10 @@
         $(document).ready( function () {
             $('#table_id').DataTable({
                 "columnDefs": [
-		    {"targets": 0, 'searchable': false, 'orderable': false},
-                    {"targets": 3, "className": 'text-right'},
-                    {"targets": 4, "className": 'text-right'},
-                    {"targets": 5, "className": 'text-right'},
-                    {"targets": 6, "className": 'text-right', 'orderable': false},
-                    {"targets": 7, "className": 'text-right', 'orderable': false},
+                    {"targets": [0, 1, 2], "className": 'dt-left'},
+                    {"targets": [4, 5, 6, 7], "className": 'dt-right'},
+		    {"targets": 0, 'searchable': false},
+		    {"targets": [0, 6, 7], 'orderable': false},
                 ],
                 dom: "<'row'<'col-sm-12 col-md-6'<'d-inline-flex mr-2'B><'d-inline-flex'l>><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                 buttons: [
