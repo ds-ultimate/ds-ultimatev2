@@ -7,7 +7,7 @@
             <p class="grey-text text-center w-responsive mx-auto mb-5">
                 DS-Ultimate ist ein Projekt das von uns in der Freizeit weiter entwickelt und verbessert wird.
             </p>
-            
+
             <div class="col-12 row">
                 <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
                     <div class="card-team">
@@ -48,6 +48,20 @@
                             <h4 class="font-weight-bold mt-1 mb-3">Marc 'skatecram'</h4>
                             <p class="font-weight-bold dark-grey-text h5 mb-4">Front-/Back-end Developer</p>
                             <span class="flag-icon flag-icon-ch rounded" style="width: 2.666666em; line-height: 2em;"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
+                    <div class="card-team">
+                        <img class="card-img-top" height="200px" src="{{ asset('images/team/background/dev1.jpg') }}">
+                        <div class="avatar mx-auto white">
+                            <img src="{{ asset('images/team/avatar/osse.png') }}" class="rounded-circle img-fluid">
+                        </div>
+                        <!-- Content -->
+                        <div class="card-body">
+                            <h4 class="font-weight-bold mt-1 mb-3">John 'Osse'</h4>
+                            <p class="font-weight-bold dark-grey-text h5 mb-4">Front-/Back-end Developer</p>
+                            <span class="flag-icon flag-icon-de rounded" style="width: 2.666666em; line-height: 2em;"></span>
                         </div>
                     </div>
                 </div>

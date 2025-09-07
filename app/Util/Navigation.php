@@ -9,7 +9,7 @@ use App\Tool\CoinCalculator\CoinCalcRes;
 
 class Navigation
 {
-    public static function generateNavArray($serModel, World | null $worldArg)
+    public static function generateNavArray($serModel, World|null $worldArg)
     {
         $retArray = [];
         if ($worldArg !== null) {
@@ -80,6 +80,7 @@ class Navigation
                 $tools[] = self::navElementDisabled('tool.distCalc.title', 'ui.nav.disabled.missingConfig');
                 $tools[] = self::navElementDisabled('tool.attackPlanner.title', 'ui.nav.disabled.missingConfig');
             }
+
             $tools[] = self::navElement('tool.map.title', 'tools.mapNew', routeArgs: $serverCodeName, nofollow: true);
 
             if ($worldArg->config != null && $worldArg->buildings != null) {
@@ -87,11 +88,25 @@ class Navigation
             } else {
                 $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.missingConfig');
             }
+
             $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', routeArgs: $serverCodeName);
+
             if ($worldArg->config != null && (int)$worldArg->configData()->snob->gold === 1) {
                 $tools[] = self::navElement('tool.coinCalc.title', 'tools.coinCalc', routeArgs: $serverCodeName);
             } else {
                 $tools[] = self::navElementDisabled('tool.coinCalc.title', 'ui.nav.disabled.missingConfig');
+            }
+
+            if ($worldArg->config != null && (int)$worldArg->configData()->game->scavenging === 1) {
+                $tools[] = self::navElement('tool.scavengerCalc.title', 'tools.scavengerCalc', routeArgs: $serverCodeName);
+            } else {
+                $tools[] = self::navElementDisabled('tool.scavengerCalc.title', 'ui.nav.disabled.missingConfig');
+            }
+
+            if ($worldArg->config != null && (int)$worldArg->configData()->game->watchtower === 1) {
+                $tools[] = self::navElement('tool.watchtowerPlanner.title', 'tools.watchtowerPlanner', routeArgs: $serverCodeName);
+            } else {
+                $tools[] = self::navElementDisabled('tool.watchtowerPlanner.title', 'ui.nav.disabled.missingConfig');
             }
 
             if ($worldArg->config != null && $worldArg->units != null) {
@@ -112,6 +127,8 @@ class Navigation
             $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.tableGenerator.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.coinCalc.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.scavengerCalc.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.watchtowerPlanner.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElement('tool.accMgrDB.title', 'tools.accMgrDB.index');
 
             $tools[] = self::navElementDisabled('tool.animHistMap.title', 'ui.nav.disabled.noWorld');

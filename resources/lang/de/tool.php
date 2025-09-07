@@ -453,4 +453,71 @@ Sollte der Fehler bestehen bleiben, bitte einen Bug-Report erstellen.',
     'currentAgLimit' => 'aktuelles Ag Limit',
     'runenFactor' => 'Runenfaktor',
   ),
+  'scavengerCalc' => 
+  array (
+    'title' => 'Raubzug Rechner',
+    'maxAway' => 'maximal abwesend',
+    'hours' => 'Stunden',
+    'minutes' => 'Minuten',
+    'opt_perRun' => 'Optimiere Ressourcen pro Lauf',
+    'opt_perHour' => 'Optimiere Ressourcen pro Stunde',
+    'opt_equal' => 'Alle Raubzüge gleich lang',
+    'available' => 'verfügbar',
+    'ff' => 'Faule Sammler',
+    'bb' => 'Bescheidene Sammler',
+    'ss' => 'Kluge Sammler',
+    'rr' => 'Großartige Sammler',
+    'idealCap' => 'ideale Kapazität',
+    'lootPerRun' => 'Beute pro Lauf',
+    'lootPerHour' => 'Beute pro Stunde',
+    'duration' => 'Dauer',
+    'limitActive' => 'Limit aktiv',
+  ),
+  'watchtowerPlanner' => 
+  array (
+    'title' => 'Wachturmplaner',
+    'textareaHelp' => 'Geben Sie die Koordinaten von Angreifern, Verteidigern und Wachtürmen ein. Anschließend berechnet das Tool alle Angriffe, die keinen Wachturmradius berühren.',
+    'attackersLabel' => 'Angreiferkoordinaten:',
+    'textareaPlaceholder' => '500|501 500|500',
+    'defendersLabel' => 'Verteidigerkoordinaten:',
+    'towers' => 
+    array (
+      'header' => 
+      array (
+        'x' => 'Wachturm X Koordinate',
+        'y' => 'Wachturm Y Koordinate',
+        'level' => 'Wachturmlevel',
+        'radius' => 'Wachturmradius',
+      ),
+    ),
+    'placeholder' => 
+    array (
+      'x' => 'X',
+      'y' => 'Y',
+    ),
+    'actions' => 
+    array (
+      'addTower' => 'Wachturm hinzufügen',
+      'removeRow' => 'Wachturm entfernen',
+    ),
+    'buttons' => 
+    array (
+      'calculate' => 'Berechnen',
+      'clear' => 'Löschen',
+    ),
+    'results' => 
+    array (
+      'title' => 'Ergebnisse',
+      'noAllowedWarn' => 'Keine zulässigen Angreifer. Zeige bis zu 5 Dörfer, die am spätesten in einen Wachturm laufen würden:',
+      'suggestionsLabel' => 'Vorschläge:',
+    ),
+    'defenderVillage' => 'Verteidigerdorf',
+    'attackerVillage' => 'Angreiferdörfer',
+    'warnings' => 
+    array (
+      'noAttackers' => 'Bitte Angreiferkoordinaten einfügen',
+      'noDefenders' => 'Bitte Verteidigerkoordinaten einfügen',
+      'noTowers' => 'Bitte Wachturmkoordinaten einfügen',
+    ),
+  ),
 );

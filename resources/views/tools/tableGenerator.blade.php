@@ -106,6 +106,12 @@
                                             {{__('ui.showPointDiff')}}
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="showVillageCount" id="showVillageCount" value="showVillageCount">
+                                        <label class="form-check-label" for="showVillageCount">
+                                            {{__('ui.showVillageCount')}}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -165,7 +171,7 @@
         $(document).on("change", 'input[type=radio]', function (e) {
             var data = $(this).data('input');
             var select = $("select[name='selectType']");
-            
+
             if($(this).val() == 'villageByAlly'){
                 $('#sorting').prop("disabled", true)
             }else{
@@ -173,15 +179,17 @@
             }
             if($(this).val() == 'playerByAlly'){
                 $('#showPointDiff').prop("disabled", false)
+                $('#showVillageCount').prop("disabled", false)
             }else{
                 $('#showPointDiff').prop("disabled", true)
+                $('#showVillageCount').prop("disabled", true)
             }
             select.attr('id', data).val(null);
             $('#tableOutput').val('');
             if (select.hasClass("select2-hidden-accessible")) {
                 select.select2("destroy");
             }
-            
+
             var dataUrl
             if(data == "ally") {
                 dataUrl = "{{ route('api.select2Ally', [$worldData->id]) }}";
@@ -206,7 +214,7 @@
                 theme: "bootstrap4"
             });
         });
-        
+
         $('input[type=radio]:checked').trigger('change')
 
         $(document).on('submit', '#table-form', function (e) {
@@ -220,6 +228,7 @@
                     'name': $('#name').is(":checked")? true : false,
                     'points': $('#points').is(":checked")? true : false,
                     'history': $('#history').is(":checked")? true : false,
+                    'showVillageCount': $('#showVillageCount').is(":checked")? true : false,
                     'showPointDiff': $('#showPointDiff').is(":checked")? true : false,
                     'columns': $('#columns').val(),
                     'selectType': $('select[name=selectType]').val(),

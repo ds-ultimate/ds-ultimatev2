@@ -44,10 +44,12 @@ class TableGeneratorController extends BaseController
         $world = World::find($request->get('world'));
         $playerModel = new Player($world);
         $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
+        $villageModel = new Village($world);
         $start = "[quote][table]\n[**]".
             (($request->get('number'))? 'Nr.[||]':'').
             __('ui.table.player').
             (($request->get('points'))? '[||]'.__('ui.table.points'):'').
+            (($request->get('showVillageCount'))? '[||]'.__('ui.table.villages'):'').
             (($request->get('showPointDiff'))? '[||]&darr;120&darr;[||]&uarr;120&uarr;':'').
             str_repeat('[||]', $request->get('columns')).
             "[/**]\n";
@@ -68,6 +70,7 @@ class TableGeneratorController extends BaseController
                 (($request->get('number'))? $number++.'.[|]':'').
                 '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
                 (($request->get('points'))? '[|]'. BasicFunctions::numberConv($player->points):'').
+                (($request->get('showVillageCount'))? '[|]'. BasicFunctions::numberConv($villageModel->where('owner', $player->playerID)->count()):'').
                 (($request->get('showPointDiff'))? '[|]'.BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2):'').
                 str_repeat('[|]', $request->get('columns')) .
                 "\n";

@@ -453,4 +453,71 @@ If that problem persists please create a bug-report',
     'currentAgLimit' => 'current snob limit',
     'runenFactor' => 'rune factor',
   ),
+  'scavengerCalc' => 
+  array (
+    'available' => 'available',
+    'bb' => 'humble haulers',
+    'duration' => 'duration',
+    'ff' => 'lackadaisical looters',
+    'hours' => 'hours',
+    'idealCap' => 'ideal capacity',
+    'limitActive' => 'limit active',
+    'lootPerHour' => 'loot per hour',
+    'lootPerRun' => 'loot per run',
+    'maxAway' => 'maximal away',
+    'minutes' => 'minutes',
+    'opt_equal' => 'Make all scavenges take equally long',
+    'opt_perHour' => 'Optimize for resources per hour',
+    'opt_perRun' => 'Optimize for resources per run',
+    'rr' => 'great gatherers',
+    'ss' => 'clever collectors',
+    'title' => 'scavenger calculator',
+  ),
+  'watchtowerPlanner' => 
+  array (
+    'placeholder' => 
+    array (
+      'x' => 'X',
+      'y' => 'Y',
+    ),
+    'results' => 
+    array (
+      'noAllowedWarn' => 'No eligible attackers. Showing up to 5 villages that would enter a watchtower latest:',
+      'suggestionsLabel' => 'Suggestions:',
+      'title' => 'Results',
+    ),
+    'textareaHelp' => 'Enter the coordinates of attackers, defenders, and watchtowers. The tool then calculates all attacks that do not touch any watchtower radius.',
+    'textareaPlaceholder' => '500|501 500|500',
+    'warnings' => 
+    array (
+      'noAttackers' => 'Please paste attacker coordinates.',
+      'noDefenders' => 'Please paste defender coordinates.',
+      'noTowers' => 'Please paste watchtower coordinates.',
+    ),
+    'towers' => 
+    array (
+      'header' => 
+      array (
+        'x' => 'Watchtower X coordinate',
+        'y' => 'Watchtower Y coordinate',
+        'radius' => 'Watchtowerradius',
+        'level' => 'Watchtowerlevel',
+      ),
+    ),
+    'title' => 'Watchtower Planner',
+    'actions' => 
+    array (
+      'addTower' => 'add watchtower',
+      'removeRow' => 'remove watchtower',
+    ),
+    'attackersLabel' => 'Attacker coordinates:',
+    'attackerVillage' => 'Attacker villages',
+    'buttons' => 
+    array (
+      'calculate' => 'Calculate',
+      'clear' => 'Clear',
+    ),
+    'defendersLabel' => 'Defender coordinates:',
+    'defenderVillage' => 'Defender village',
+  ),
 );
