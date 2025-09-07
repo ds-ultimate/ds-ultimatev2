@@ -13,6 +13,12 @@ Route::post('/tools/follow', [\App\Http\Controllers\FollowController::class, 'cr
 //Distance calculator
 Route::get('/{server}/{world}/tools/distanceCalc', [\App\Http\Controllers\Tools\DistanceCalcController::class, 'index'])->name('distanceCalc');
 
+//Scavanger calculator
+Route::get('/{server}/{world}/tools/scavengerCalc', [\App\Http\Controllers\Tools\ScavengerController::class, 'index'])->name('scavengerCalc');
+
+//watchtower
+Route::get('/{server}/{world}/tools/watchtowerPlanner', [\App\Http\Controllers\Tools\WatchtowerPlannerController::class, 'index'])->name('watchtowerPlanner');
+
 
 //Attack planner
 Route::get('/tools/create/attackPlanner/{server}/{world}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
