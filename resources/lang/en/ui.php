@@ -351,6 +351,7 @@ It is not specified which village you have to give the name to, but it must belo
         'pointCalc' => 'The point calculator is not available for this world',
         'distCalc' => 'The distance calculator is not available for this world',
         'coinCalc' => 'The coin calculator is not available for this world',
+        'scavengerCalc' => 'The scavenge calculator is not available for this world',
       ),
     ),
     403 => 
@@ -362,4 +363,5 @@ It is not specified which village you have to give the name to, but it must belo
       'accMgrDB_illegalBuildingName' => 'Illegal building name given \':building\'',
     ),
   ),
+  'showVillageCount' => 'show villagecount per player',
 );

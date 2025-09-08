@@ -351,6 +351,7 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
         'pointCalc' => 'Der Punkterechner ist auf dieser Welt nicht verfügbar',
         'distCalc' => 'Der Laufzeitrechner ist auf dieser Welt nicht verfügbar.',
         'coinCalc' => 'Der Münzenrechner ist auf dieser Welt nicht verfügbar.',
+        'scavengerCalc' => 'Der Raubzugrechner ist auf dieser Welt nicht verfügbar',
       ),
     ),
     403 => 
@@ -362,4 +363,5 @@ Es wird nicht vorgegeben, welchem Dorf man den Namen geben muss, aber es muss zu
       'accMgrDB_illegalBuildingName' => 'Fehlerhafter Gebäudename: \':building\'',
     ),
   ),
+  'showVillageCount' => 'Dorfanzahl des Spieler anzeigen',
 );
