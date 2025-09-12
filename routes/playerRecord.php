@@ -38,7 +38,7 @@ Route::get('/{server}/playerConquer/{playerID}', function ($server, $playerID) {
     $serCode = substr($server, 0, 2);
     $world = substr($server, 2);
     \App\Http\Controllers\API\PictureController::fixWorldName($serCode, $world);
-    return redirect(route("playerConquer", [$serCode, $world, $playerID]), 302);
+    return redirect(route("playerConquer", [$serCode, $world, "all", $playerID]), 302);
 });
 
 // http://ds-ultimate.de/in/des1/ally/%s
@@ -46,7 +46,7 @@ Route::get('/{server}/allyConquer/{tribeID}', function ($server, $tribeID) {
     $serCode = substr($server, 0, 2);
     $world = substr($server, 2);
     \App\Http\Controllers\API\PictureController::fixWorldName($serCode, $world);
-    return redirect(route("allyConquer", [$serCode, $world, $tribeID]), 302);
+    return redirect(route("allyConquer", [$serCode, $world, "all", $tribeID]), 302);
 });
 
 // http://ds-ultimate.de/in/des1/village/%s
@@ -54,5 +54,5 @@ Route::get('/{server}/villageConquer/{villageID}', function ($server, $villageID
     $serCode = substr($server, 0, 2);
     $world = substr($server, 2);
     \App\Http\Controllers\API\PictureController::fixWorldName($serCode, $world);
-    return redirect(route("villageConquer", [$serCode, $world, $villageID]), 302);
+    return redirect(route("villageConquer", [$serCode, $world, "all", $villageID]), 302);
 });
