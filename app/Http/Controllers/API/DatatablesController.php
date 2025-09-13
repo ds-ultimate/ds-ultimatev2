@@ -486,7 +486,7 @@ class DatatablesController extends Controller
             'columns' => 'required|array',
             'columns.*.searchable' => ['required', new \App\Rules\BooleanText],
             'columns.*.orderable' => ['required', new \App\Rules\BooleanText],
-            'columns.*.search.value' => '', //string ??
+            'columns.*.search.value' => 'string|nullable',
             'columns.*.search.regex' => ['required', new \App\Rules\BooleanText],
             'columns.*.name' => ['nullable', \Illuminate\Validation\Rule::in($whitelistColumns)],
             'columns.*.data' => ['required', \Illuminate\Validation\Rule::in($whitelistColumns)],
