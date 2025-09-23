@@ -307,7 +307,7 @@ class AttackPlannerItemController extends BaseController
         $err = array_merge($err, $attackListItem->setVillageID($req['xStart'], $req['yStart'], $req['xTarget'], $req['yTarget']));
         $attackListItem->type = $req['type'];
         $attackListItem->slowest_unit = $req['slowest_unit'];
-        $attackListItem->note = $req['note'];
+        $attackListItem->note = $req['note'] ?? "";
         $attackListItem->support_boost = floatval($req['support_boost']);
         $attackListItem->tribe_skill = floatval($req['tribe_skill']);
 
@@ -358,7 +358,7 @@ class AttackPlannerItemController extends BaseController
             'yTarget' => 'required|integer',
             'type' => 'required|integer',
             'slowest_unit' => 'required|integer',
-            'note' => '',
+            'note' => 'string',
             'support_boost' => 'required|numeric',
             'tribe_skill' => 'required|numeric',
 
