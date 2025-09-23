@@ -358,7 +358,7 @@ class AttackPlannerItemController extends BaseController
             'yTarget' => 'required|integer',
             'type' => 'required|integer',
             'slowest_unit' => 'required|integer',
-            'note' => 'string|null',
+            'note' => 'string|nullable',
             'support_boost' => 'required|numeric',
             'tribe_skill' => 'required|numeric',
 
