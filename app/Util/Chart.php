@@ -101,11 +101,11 @@ class Chart
             return;
         }
         $entryDiff = 4*60*60;
-        
+
         $format = \Lava::DateFormat([
             'pattern' => 'dd.MM.yyyy HH:mm'
         ]);
-        
+
         $chart = \Lava::DataTable();
         $chart->addDateTimeColumn(label: 'Tag', format: $format)
             ->addNumberColumn(Chart::chartLabel($chartType));
@@ -113,7 +113,7 @@ class Chart
         $old = [
             't' => null, 'd' => null, 'l' => -1,
         ];
-        
+
         foreach ($rawData as $data){
             if($old['t'] != null && $old['t'] != $old['l']) {
                 $oldDiff = abs($old['t'] - $old['l'] - $entryDiff);
@@ -123,23 +123,23 @@ class Chart
                     $old['l'] = $old['t'];
                 }
             }
-            
+
             if($gapFill && $old['t'] != null) {
                 while($old['t'] + $entryDiff + 300 < $data['timestamp']) {
                     $old['t'] += $entryDiff;
                     static::customAdd($chart, $old['t'], $old['d']);
                 }
             }
-            
+
             $old['t'] = $data['timestamp'];
             $old['d'] = $data[$chartType];
-            
+
             if($old['l'] + $entryDiff - 300 < $data['timestamp']) {
                 static::customAdd($chart, $data['timestamp'], $data[$chartType]);
                 $old['l'] = $data['timestamp'];
             }
         }
-        
+
         if ($chart->getRowCount() < 2){
             static::customAdd($chart, $data['timestamp'] - $entryDiff, $data[$chartType]);
         }
@@ -170,7 +170,7 @@ class Chart
 
         return \Lava::render('LineChart', $chartType, 'chart-'.$chartType);
     }
-    
+
     private static function customAdd($chart, $date, $val) {
         $chart->addRow([date('Y-m-d H:i:s', $date), $val]);
     }
