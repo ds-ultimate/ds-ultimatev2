@@ -18,3 +18,5 @@ _ide_helper.php
 workspace.xml
 /storage/app
 /storage/customLog
+nbproject
+.vscode
