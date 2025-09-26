@@ -91,8 +91,10 @@ class OptimizeTable extends Command
                 break;
             
             case "village":
-                for ($num = 0; $num < $world->hash_village; $num++){
-                    $tables[] = BasicFunctions::getWorldDataTable($world, "village_{$num}");
+                if(! $world->village_hisory_on_disk) {
+                    for ($num = 0; $num < $world->hash_village; $num++){
+                        $tables[] = BasicFunctions::getWorldDataTable($world, "village_{$num}");
+                    }
                 }
                 break;
             

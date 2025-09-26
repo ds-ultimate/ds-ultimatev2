@@ -5,12 +5,12 @@ namespace App;
 class Village extends CustomModel
 {
     protected $primaryKey = 'villageID';
-    protected $fillable =[
-        'id', 'name', 'x', 'y', 'points', 'owner', 'bonus_id',
+    protected $fillable = [
+        'id', 'name', 'x', 'y', 'points', 'owner', 'bonus_id', 'created_at', 'updated_at',
     ];
-    
+
     public $timestamps = true;
-    
+
     protected $defaultTableName = "village_latest";
 
     public function __construct($arg1 = [], $arg2 = null)
@@ -69,14 +69,54 @@ class Village extends CustomModel
 
         return $villageDatas;
     }
-    
+
     public function getHistoryData(World $world) {
+        $worldName = $world->serName();
         $villageID = (int) $this->villageID;
         $tableNr = $villageID % $world->hash_village;
-        $villageModel = new Village($world, "village_$tableNr");
-        
-        $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
-        return $villageDataArray;
+
+        if($world->village_hisory_on_disk) {
+            $tarPath = storage_path("app/village_history/{$worldName}/{$tableNr}.csv.gz");
+
+            if (!file_exists($tarPath)) {
+                throw new \RuntimeException("Tar file not found: {$tarPath}");
+            }
+
+            $gz = gzopen($tarPath, "r");
+            $collection = collect();
+
+            while(!gzeof($gz)) {
+                $line = gzgets($gz);
+                if (empty($line)) continue;
+
+                [$vilID, $name, $x, $y, $points, $owner, $bonusId, $createdAt] = explode(';', $line);
+                if(((int) $vilID) != $villageID) {
+                    continue;
+                }
+
+                $carbonTs = \Carbon\Carbon::createFromTimestamp($createdAt);
+                $collection->push(new Village([
+                    'villageID'  => $villageID,
+                    'name'       => $name,
+                    'x'          => (int)$x,
+                    'y'          => (int)$y,
+                    'points'     => (int)$points,
+                    'owner'      => (int)$owner,
+                    'bonus_id'   => (int)$bonusId,
+                    'created_at' => $carbonTs,
+                    'updated_at' => $carbonTs,
+                ]));
+            }
+
+            gzclose($gz);
+
+            return $collection;
+        } else {
+            $villageModel = new Village($world, "village_$tableNr");
+
+            $villageDataArray = $villageModel->where('villageID', $villageID)->orderBy('updated_at', 'ASC')->get();
+            return $villageDataArray;
+        }
     }
 
     /**
@@ -85,7 +125,7 @@ class Village extends CustomModel
     public function bonusText() {
         return static::bonusTextStat($this->bonus_id);
     }
-    
+
     /**
      * @return string
      */
@@ -153,7 +193,7 @@ class Village extends CustomModel
         $imgName = Village::getSkinImageName($this->owner, $this->points, $this->bonus_id);
         return Village::getSkinImagePath($skin, $imgName);
     }
-    
+
     public static function getSkinImagePath($skin, $imgName) {
         $skins = array("dark", "default", "old", "symbol", "winter");
         $index = array_search($skin, $skins);
@@ -163,7 +203,7 @@ class Village extends CustomModel
         
         return "ds_images/skins/{$skins[$index]}/$imgName.png";
     }
-    
+
     public static function getSkinImageName($owner, $points, $bonus_id) {
         $left = "";
         if($owner == 0) {
@@ -190,7 +230,7 @@ class Village extends CustomModel
         }
         return "$bonus$lv$left";
     }
-    
+
     public function linkIngame(World $world, $guest=false) {
         $guestPart = "game";
         if($guest) {

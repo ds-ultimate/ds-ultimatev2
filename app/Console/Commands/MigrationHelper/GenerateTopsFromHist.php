@@ -49,7 +49,7 @@ class GenerateTopsFromHist extends Command
         static::generateTopsFromHist($this->argument('server'), $this->argument('world'), $this->output);
         return 0;
     }
-    
+
     public static function generateTopsFromHist($server, $world, $output) {
         if ($server != null && $world != null && $server != "null" && $world != "null") {
             $worldMod = World::getWorld($server, $world);
@@ -57,18 +57,18 @@ class GenerateTopsFromHist extends Command
             static::internalGenerateTops($worldMod, 'a');
         } else {
             $worlds = BasicFunctions::getWorldQuery()->get();
-            
+
             foreach ($worlds as $world){
                 static::internalGenerateTops($world, 'p');
                 static::internalGenerateTops($world, 'a');
             }
         }
     }
-    
+
     public static function internalGenerateTops($world, $type) {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2000M');
-        
+
         switch ($type) {
             case 'a':
                 $model = new AllyTop($world);
@@ -121,20 +121,20 @@ class GenerateTopsFromHist extends Command
             default:
                 return;
         }
-        
+
         //load all current top data into memory
         $curData = [];
         $idCol = $typeN . "ID";
         foreach($model->get() as $elm) {
             $curData[$elm->$idCol] = $elm;
         }
-        
+
         $hist = new HistoryIndex($world);
-        
+
         foreach($hist->get() as $history) {
             $fileName = storage_path(config('dsUltimate.history_directory') . $world->serName() . "/{$typeN}_{$history->date}.gz");
             $file = gzopen($fileName, "r");
-            
+
             $i = 0;
             if(! $world->isSpeed()) {
                 $date = Carbon::parse($history->date);
@@ -164,7 +164,7 @@ class GenerateTopsFromHist extends Command
                     $curData[$elm[0]] = $curModel;
                     continue;
                 }
-                
+
                 foreach($values as $val) {
                     if($elm[$val[4]] == "") continue;
                     if( ($val[3] > 0 && $curModel->{$val[1]} < $elm[$val[4]]) ||
@@ -181,7 +181,7 @@ class GenerateTopsFromHist extends Command
             gzclose($file);
         }
         echo "\n";
-        
+
         $changed = 0;
         foreach($curData as $entry) {
             if(count($entry->getDirty()) > 0) {

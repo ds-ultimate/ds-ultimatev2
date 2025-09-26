@@ -41,6 +41,8 @@ class ExportWorld extends Command
      */
     public function handle()
     {
+        throw new \RuntimeException("This script has not been updated for support of village history on disk");
+
         $worldStr = $this->argument('world');
         $exportDir = $this->argument('directory');
         $worldModel = World::getAndCheckWorld(substr($worldStr, 0, 2), substr($worldStr, 2));
@@ -50,7 +52,7 @@ class ExportWorld extends Command
         static::generateWorldExport($exportDir, $worldModel);
         return 0;
     }
-    
+
     public static function generateWorldExport($exportDir, World $worldModel) {
         if(!is_dir($exportDir)) {
             mkdir($exportDir, recursive: true);
@@ -367,7 +369,7 @@ class ExportWorld extends Command
         }
         gzclose($file);
     }
-    
+
     private static function delTree($dir) {
         $files = array_diff(scandir($dir), array('.','..'));
         foreach ($files as $file) {

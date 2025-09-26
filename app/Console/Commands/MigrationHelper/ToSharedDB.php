@@ -23,7 +23,7 @@ class ToSharedDB extends Command
      * @var string
      */
     protected $description = 'Spaart datenbanken durch gemeinsam genutzte Datenbanken';
-    
+
     /**
      * Create a new command instance.
      *
@@ -43,7 +43,7 @@ class ToSharedDB extends Command
     {
         $worlds = $this->option('world');
         $dbName = $this->option('database');
-        
+
         $sharedDB = null;
         if($dbName != null) {
             $sharedDB = (new WorldDatabase())->where("name", $dbName)->first();
@@ -53,7 +53,7 @@ class ToSharedDB extends Command
                 $sharedDB->save();
             }
         }
-        
+
         foreach($worlds as $w) {
             $world = World::getWorld(substr($w, 0, 2), substr($w, 2));
             if($world != null) {
@@ -66,20 +66,20 @@ class ToSharedDB extends Command
                 echo "World $w not found\n";
             }
         }
-        
+
         return 0;
     }
-    
+
     public static function moveToSharedDB(World $worldModel, ?WorldDatabase $sharedDB) {
         echo "Doing {$worldModel->serName()}\n";
-        
+
         $worldModel->maintananceMode = true;
         $worldModel->save();
-        
+
         $tablesToMove = static::generateTablesToMove($worldModel);
         $oldSharedId = $worldModel->database_id;
         $newSharedId = ($sharedDB == null)?(null):($sharedDB->id);
-        
+
         $worldModel->database_id = $newSharedId;
         $dbRaw = BasicFunctions::getWorldDataDatabase($worldModel);
         $worldModel->database_id = $oldSharedId;
@@ -87,7 +87,7 @@ class ToSharedDB extends Command
             //create needed
             DB::statement('CREATE DATABASE ' . $dbRaw);
         }
-        
+
         foreach($tablesToMove as $tbl) {
             if(!BasicFunctions::hasWorldDataTable($worldModel, $tbl)) {
                 continue;
@@ -100,18 +100,18 @@ class ToSharedDB extends Command
             $worldModel->database_id = $oldSharedId;
             DB::statement("ALTER TABLE $tblOld RENAME TO $tblNew");
         }
-        
+
         if($oldSharedId == null && $newSharedId != null) {
             //delete needed
             $dbRaw = BasicFunctions::getWorldDataDatabase($worldModel);
             DB::statement('DROP DATABASE ' . $dbRaw);
         }
-        
+
         $worldModel->database_id = $newSharedId;
         $worldModel->maintananceMode = false;
         $worldModel->save();
     }
-    
+
     private static function generateTablesToMove(World $worldModel) {
         $result = [];
         for($i = 0; $i < $worldModel->hash_ally; $i++) {
@@ -127,8 +127,11 @@ class ToSharedDB extends Command
         }
         $result[] = "player_latest";
         $result[] = "player_top";
-        for($i = 0; $i < $worldModel->hash_village; $i++) {
-            $result[] = "village_$i";
+
+        if(!$worldModel->village_hisory_on_disk) {
+            for($i = 0; $i < $worldModel->hash_village; $i++) {
+                $result[] = "village_$i";
+            }
         }
         $result[] = "village_latest";
         return $result;

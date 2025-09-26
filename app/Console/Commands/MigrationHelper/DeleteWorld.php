@@ -16,6 +16,7 @@ use App\Tool\Map\Map;
 use App\Util\BasicFunctions;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DeleteWorld extends Command
 {
@@ -32,7 +33,7 @@ class DeleteWorld extends Command
      * @var string
      */
     protected $description = 'Delete a specific world and all associated data';
-    
+
     /**
      * Create a new command instance.
      *
@@ -59,16 +60,16 @@ class DeleteWorld extends Command
         static::deleteWorld($worldModel);
         return 0;
     }
-    
+
     public static function deleteWorld(World $worldModel) {
         echo "Doing {$worldModel->serName()}\n";
         
         $worldModel->maintananceMode = true;
         $worldModel->save();
         static::deleteWorldHistory($worldModel);
-        
+
         $tablesToMove = static::generateTablesToDelete($worldModel);
-        
+
         foreach($tablesToMove as $tbl) {
             if(!BasicFunctions::hasWorldDataTable($worldModel, $tbl)) {
                 continue;
@@ -76,12 +77,16 @@ class DeleteWorld extends Command
             $tblDel = BasicFunctions::getWorldDataTable($worldModel, $tbl);
             DB::statement("DROP TABLE $tblDel");
         }
-        
+
         static::removeUserData($worldModel);
         static::removeSignatures($worldModel);
         static::removeSpeedWorldRef($worldModel);
         static::removeWorldStatistics($worldModel);
-        
+
+        if($worldModel->village_hisory_on_disk) {
+            Storage::deleteDirectory('village_history/' . $worldModel->serName());
+        }
+
         $worldModel->delete();
     }
     
@@ -94,34 +99,34 @@ class DeleteWorld extends Command
                     "w" => [],
                 ];
             }
-            
+
             $servers[$model->server->code]['w'][] = $model->id;
         }
-        
+
         foreach($servers as $entry) {
             static::runRemoveOtherworldReferecnesInternally($entry['m'], $entry['w'], $progress);
         }
     }
-    
+
     private static function runRemoveOtherworldReferecnesInternally($server, $worlds, $progress=true){
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2000M');
-        
+
         $i = 0;
         $toUpdate = [];
         foreach(PlayerOtherServers::prepareModel($server)->get() as $model) {
             $model->massRemoveWorlds($worlds);
-            
+
             if($model->isDirty()) {
                 $toUpdate[$model->playerID] = $model;
             }
-            
+
             $i++;
             if($progress && $i % 100 == 0) {
                 echo "\rReading player: $i             ";
             }
         }
-        
+
         $i = 0;
         $cnt = count($toUpdate);
         foreach($toUpdate as $model) {
@@ -135,12 +140,12 @@ class DeleteWorld extends Command
                 $model->save();
             }
         }
-        
+
         if($progress) {
             echo "\n";
         }
     }
-    
+
     private static function removeUserData(World $worldModel) {
         // -> AnimHistMapMap + rendered map (if rendered)
         foreach((new AnimHistMapJob())->where("world_id", $worldModel->id)->get() as $model) {
@@ -182,7 +187,7 @@ class DeleteWorld extends Command
             $model->forceDelete();
         }
     }
-    
+
     private static function removeSignatures(World $worldModel) {
         // -> signature
         foreach((new Signature())->where("world_id", $worldModel->id)->get() as $model) {
@@ -193,17 +198,17 @@ class DeleteWorld extends Command
             $model->forceDelete();
         }
     }
-    
+
     private static function removeSpeedWorldRef(World $worldModel) {
         // -> speed_worlds
         (new SpeedWorld())->where("world_id", $worldModel->id)->forceDelete();
     }
-    
+
     private static function removeWorldStatistics(World $worldModel) {
         // -> world_statistics
         (new WorldStatistic())->where("world_id", $worldModel->id)->delete();
     }
-    
+
     private static function deleteWorldHistory(World $worldModel) {
         $fromBase = storage_path(config('dsUltimate.history_directory') . $worldModel->serName());
         if(!is_dir($fromBase)) {
@@ -231,8 +236,11 @@ class DeleteWorld extends Command
         }
         $result[] = "player_latest";
         $result[] = "player_top";
-        for($i = 0; $i < $worldModel->hash_village; $i++) {
-            $result[] = "village_$i";
+
+        if(! $worldModel->village_hisory_on_disk) {
+            for($i = 0; $i < $worldModel->hash_village; $i++) {
+                $result[] = "village_$i";
+            }
         }
         $result[] = "village_latest";
         return $result;

@@ -53,7 +53,7 @@ class ExportImportWorlds extends Command
         }
         return 0;
     }
-    
+
     private function export($fName) {
         $file = fopen($fName, "w");
         $worlds = (new World())->get();
@@ -83,12 +83,13 @@ class ExportImportWorlds extends Command
             } else {
                 $wData.= "|" . "-";
             }
+            $wData.= "|" . ($world->village_hisory_on_disk?"y":"n");
             $wData.= "\n";
             fwrite($file, $wData);
         }
         fclose($file);
     }
-    
+
     private function import($fName) {
         $worlds = (new World())->get();
         $found = [];
@@ -101,7 +102,7 @@ class ExportImportWorlds extends Command
             }
             $found[$world->server->code][$world->name] = $world;
         }
-        
+
         foreach(file($fName) as $line) {
             $w = explode("|", trim($line));
             
@@ -110,11 +111,11 @@ class ExportImportWorlds extends Command
             } else {
                 $model = new World();
             }
-            
+
             $this->insertWorld($w, $model);
         }
     }
-    
+
     private function insertWorld($data, World $world) {
         $s = Server::getServerByCode($data[0]);
         if($s == null) {
@@ -141,11 +142,11 @@ class ExportImportWorlds extends Command
         $world->hash_ally = $data[13];
         $world->hash_player = $data[14];
         $world->hash_village = $data[15];
-        
+
         if($world->display_name == "") {
             $world->display_name = null;
         }
-        
+
         if($data[17] == "-") {
             $world->database_id = null;
         } else {
@@ -157,17 +158,19 @@ class ExportImportWorlds extends Command
             }
             $world->database_id = $sharedDB->id;
         }
-        
+
+        $world->village_hisory_on_disk = $data[18] == "y";
+
         $world->save();
     }
-    
+
     private function autoremove() {
         $data = \DB::select('SHOW DATABASES');
         $all = [];
         foreach($data as $d) {
             $all[] = $d->Database;
         }
-        
+
         $worlds = (new World())->get();
         foreach ($worlds as $world){
             $name = BasicFunctions::getWorldDataTable($world, "");

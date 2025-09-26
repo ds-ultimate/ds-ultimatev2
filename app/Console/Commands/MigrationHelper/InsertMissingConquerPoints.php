@@ -67,10 +67,13 @@ class InsertMissingConquerPoints extends Command
         
         return 0;
     }
-    
+
     private function insertMissing(World $worldModel) {
         echo "Doing {$worldModel->serName()}\n";
-        
+        if($worldModel->village_hisory_on_disk) {
+            throw new \RuntimeException("Village history on disk not supported");
+        }
+
         $conquerModel = new Conquer($worldModel);
         $todo = $conquerModel->where('points', -1)->get();
         $curConq = 0;
@@ -96,7 +99,6 @@ class InsertMissingConquerPoints extends Command
             $curConq++;
             
             if($curConq % 10 == 0) {
-                
                 echo "\r" . $worldModel->serName() . " at: $curConq / $allConq      ";
             }
         }
