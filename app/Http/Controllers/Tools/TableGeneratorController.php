@@ -31,27 +31,43 @@ class TableGeneratorController extends BaseController
         "villageByAlly",
         "villageAndPlayerByAlly",
     ];
+
     public function data(Request $request){
         $function = $request->get('type');
         if(!in_array($function, static::$alowedFunctions)) {
             return \Response::json("Invalid type");
         }
-        $output = $this->$function($request);
+        
+        $validated = $request->validate([
+            "world" => "required|numeric|integer",
+            "selectType" => "required|numeric|integer",
+            "sorting" => "required|string|in:name,points",
+            "number" => "required|boolean:strict",
+            "points" => "required|boolean:strict",
+            "showVillageCount" => "required|boolean:strict",
+            "showPointDiff" => "required|boolean:strict",
+            "columns" => "required|numeric|integer",
+        ]);
+        
+        $output = $this->$function($validated);
         return \Response::json($output);
     }
 
-    public function playerByAlly(Request $request){
-        $world = World::find($request->get('world'));
+    public function playerByAlly(array $validated){
+        $world = World::find($validated['world']);
+        abort_if($world == null, 404, __("ui.errors.404.noWorld", ["world" => "" . $validated['world']]));
+
         $playerModel = new Player($world);
-        $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
+        $players = $playerModel->where('ally_id', $validated["selectType"])->orderBy($validated["sorting"], ($validated["sorting"] == 'points')?'desc':'asc')->get();
+
         $villageModel = new Village($world);
         $start = "[quote][table]\n[**]".
-            (($request->get('number'))? 'Nr.[||]':'').
+            (($validated['number'])? 'Nr.[||]':'').
             __('ui.table.player').
-            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
-            (($request->get('showVillageCount'))? '[||]'.__('ui.table.villages'):'').
-            (($request->get('showPointDiff'))? '[||]&darr;120&darr;[||]&uarr;120&uarr;':'').
-            str_repeat('[||]', $request->get('columns')).
+            (($validated['points'])? '[||]'.__('ui.table.points'):'').
+            (($validated['showVillageCount'])? '[||]'.__('ui.table.villages'):'').
+            (($validated['showPointDiff'])? '[||]&darr;120&darr;[||]&uarr;120&uarr;':'').
+            str_repeat('[||]', (int) $validated['columns']).
             "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
@@ -67,12 +83,12 @@ class TableGeneratorController extends BaseController
             }
 
             $output .= '[*]'.
-                (($request->get('number'))? $number++.'.[|]':'').
+                (($validated['number'])? $number++.'.[|]':'').
                 '[player]'. BasicFunctions::decodeName($player->name) .'[/player]'.
-                (($request->get('points'))? '[|]'. BasicFunctions::numberConv($player->points):'').
-                (($request->get('showVillageCount'))? '[|]'. BasicFunctions::numberConv($villageModel->where('owner', $player->playerID)->count()):'').
-                (($request->get('showPointDiff'))? '[|]'.BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2):'').
-                str_repeat('[|]', $request->get('columns')) .
+                (($validated['points'])? '[|]'. BasicFunctions::numberConv($player->points):'').
+                (($validated['showVillageCount'])? '[|]'. BasicFunctions::numberConv($villageModel->where('owner', $player->playerID)->count()):'').
+                (($validated['showPointDiff'])? '[|]'.BasicFunctions::numberConv($player->points/1.2).'[|]'.BasicFunctions::numberConv($player->points*1.2):'').
+                str_repeat('[|]', $validated['columns']) .
                 "\n";
         }
 
@@ -83,15 +99,15 @@ class TableGeneratorController extends BaseController
         return $outputArray;
     }
 
-    public function villageByPlayer(Request $request){
-        $world = World::find($request->get('world'));
+    public function villageByPlayer(array $validated){
+        $world = World::find($validated['world']);
         $villageModel = new Village($world);
-        $villages = $villageModel->where('owner', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
+        $villages = $villageModel->where('owner', $validated['selectType'])->orderBy($validated['sorting'], ($validated['sorting'] == 'points')?'desc':'asc')->get();
         $start = "[quote][table]\n[**]".
-            (($request->get('number'))? 'Nr.[||]':'') .
+            (($validated['number'])? 'Nr.[||]':'') .
             __('ui.table.village').
-            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
-            str_repeat('[||]', $request->get('columns')) . "[/**]\n";
+            (($validated['points'])? '[||]'.__('ui.table.points'):'').
+            str_repeat('[||]', $validated['columns']) . "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
         $number = 1;
@@ -106,9 +122,9 @@ class TableGeneratorController extends BaseController
             }
 
             $output .= '[*]'.
-                (($request->get('number'))? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'.
-                (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):'').
-                str_repeat('[|]', $request->get('columns'))."\n";
+                (($validated['number'])? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'.
+                (($validated['points'])? '[|]'. BasicFunctions::numberConv($village->points):'').
+                str_repeat('[|]', $validated['columns'])."\n";
         }
 
         $output .= $end;
@@ -118,55 +134,15 @@ class TableGeneratorController extends BaseController
         return $outputArray;
     }
 
-    public function villageByAlly(Request $request){
-        $world = World::find($request->get('world'));
+    public function villageByAlly(array $validated){
+        $world = World::find($validated['world']);
         $playerModel = new Player($world);
-        $players = $playerModel->where('ally_id', $request->get('selectType'))->get();
+        $players = $playerModel->where('ally_id', $validated['selectType'])->get();
         $start = "[quote][table]\n[**]".
-            (($request->get('number'))? 'Nr.[||]':'').
+            (($validated['number'])? 'Nr.[||]':'').
             __('ui.table.village').
-            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
-            str_repeat('[||]', $request->get('columns')).
-            "[/**]\n";
-        $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
-        $output = $start;
-        $number = 1;
-        $outputArray = array();
-
-        foreach ($players as $player){
-            $villageModel = new Village($world);
-            $villages = $villageModel->where('owner', $player->playerID)->orderBy('points', 'desc')->get();
-
-            foreach ($villages as $village){
-                $count = substr_count($output, '[');
-                if ($count > 900){
-                    $output .= $end;
-                    $outputArray[] .= $output;
-                    $output = $start;
-                }
-
-                $output .= '[*]'. (($request->get('number'))? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'. (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):''). str_repeat('[|]', $request->get('columns')) . "\n";
-
-            }
-        }
-
-        $output .= $end;
-
-        $outputArray[] .= $output;
-
-        return $outputArray;
-    }
-
-    public function villageAndPlayerByAlly(Request $request){
-        $world = World::find($request->get('world'));
-        $playerModel = new Player($world);
-        $players = $playerModel->where('ally_id', $request->get('selectType'))->orderBy($request->get('sorting'), ($request->get('sorting') == 'points')?'desc':'asc')->get();
-        $start = "[quote][table]\n[**]".
-            (($request->get('number'))? 'Nr.[||]':'').
-            __('ui.table.player').'[||]'.
-            __('ui.table.village').
-            (($request->get('points'))? '[||]'.__('ui.table.points'):'').
-            str_repeat('[||]', $request->get('columns')).
+            (($validated['points'])? '[||]'.__('ui.table.points'):'').
+            str_repeat('[||]', $validated['columns']).
             "[/**]\n";
         $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
         $output = $start;
@@ -186,11 +162,54 @@ class TableGeneratorController extends BaseController
                 }
 
                 $output .= '[*]'.
-                    (($request->get('number'))? $number++.'.[|]':'').
+                        (($validated['number'])? $number++.'.[|]':'') .'[coord]'. $village->coordinates() .'[/coord]'.
+                        (($validated['points'])? '[|]'. BasicFunctions::numberConv($village->points):'').
+                        str_repeat('[|]', $validated['columns']) . "\n";
+
+            }
+        }
+
+        $output .= $end;
+
+        $outputArray[] .= $output;
+
+        return $outputArray;
+    }
+
+    public function villageAndPlayerByAlly(array $validated){
+        $world = World::find($validated['world']);
+        $playerModel = new Player($world);
+        $players = $playerModel->where('ally_id', $validated['selectType'])->orderBy($validated['sorting'], ($validated['sorting'] == 'points')?'desc':'asc')->get();
+        $start = "[quote][table]\n[**]".
+            (($validated['number'])? 'Nr.[||]':'').
+            __('ui.table.player').'[||]'.
+            __('ui.table.village').
+            (($validated['points'])? '[||]'.__('ui.table.points'):'').
+            str_repeat('[||]', $validated['columns']).
+            "[/**]\n";
+        $end = "[/table]\n[i][b]Stand[/b]: ". Carbon::now()->format('d.m.Y H:i:s') ."[/i] || Generiert mit [url=https://ds-ultimate.de]DS-Ultimate[/url][/quote]";
+        $output = $start;
+        $number = 1;
+        $outputArray = array();
+
+        foreach ($players as $player){
+            $villageModel = new Village($world);
+            $villages = $villageModel->where('owner', $player->playerID)->orderBy('points', 'desc')->get();
+
+            foreach ($villages as $village){
+                $count = substr_count($output, '[');
+                if ($count > 900){
+                    $output .= $end;
+                    $outputArray[] .= $output;
+                    $output = $start;
+                }
+
+                $output .= '[*]'.
+                    (($validated['number'])? $number++.'.[|]':'').
                     '[player]'. BasicFunctions::decodeName($player->name) .'[/player][|]'.
                     '[coord]'. $village->coordinates() .'[/coord]'.
-                    (($request->get('points'))? '[|]'. BasicFunctions::numberConv($village->points):'').
-                    str_repeat('[|]', $request->get('columns')) . "\n";
+                    (($validated['points'])? '[|]'. BasicFunctions::numberConv($village->points):'').
+                    str_repeat('[|]', $validated['columns']) . "\n";
             }
         }
 
