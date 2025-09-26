@@ -17,7 +17,7 @@ class ExportVillageHistoryToDisk extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:saveVillageHistoryToDisk {--world=*}';
+    protected $signature = 'migrate:saveVillageHistoryToDisk {--world=*} {--max-worlds=10}';
 
     /**
      * The console command description.
@@ -45,6 +45,7 @@ class ExportVillageHistoryToDisk extends Command
     {
         ini_set('memory_limit', '5000M');
         $worlds = $this->option('world');
+        $maxWorlds = $this->option("max-worlds");
 
         if(count($worlds) == 1 && $worlds[0] == "*") {
             echo "Exporting village history of worlds\n";
@@ -53,10 +54,16 @@ class ExportVillageHistoryToDisk extends Command
                     ->whereNotNull('world_finalized_at')
                     ->where('village_hisory_on_disk', false)
                     ->get();
+
+            $worldsDone = 0;
             foreach ($world as $wInner) {
                 $this->exportVillageHistory($wInner);
-                $wInner->world_finalized_at = Carbon::now();
                 $wInner->save();
+
+                $worldsDone++;
+                if($maxWorlds > 0 && $worldsDone > $maxWorlds) {
+                    return 0;
+                }
             }
             return 0;
         }
