@@ -76,13 +76,13 @@ class Village extends CustomModel
         $tableNr = $villageID % $world->hash_village;
 
         if($world->village_hisory_on_disk) {
-            $tarPath = storage_path("app/village_history/{$worldName}/{$tableNr}.csv.gz");
+            $gzPath = storage_path("app/village_history/{$worldName}/{$tableNr}.csv.gz");
 
-            if (!file_exists($tarPath)) {
-                throw new \RuntimeException("Tar file not found: {$tarPath}");
+            if (!file_exists($gzPath)) {
+                return collect();
             }
 
-            $gz = gzopen($tarPath, "r");
+            $gz = gzopen($gzPath, "r");
             $collection = collect();
 
             while(!gzeof($gz)) {
