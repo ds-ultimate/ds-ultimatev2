@@ -61,7 +61,7 @@ class ExportVillageHistoryToDisk extends Command
                 $wInner->save();
 
                 $worldsDone++;
-                if($maxWorlds > 0 && $worldsDone > $maxWorlds) {
+                if($maxWorlds > 0 && $worldsDone >= $maxWorlds) {
                     return 0;
                 }
             }
@@ -117,7 +117,7 @@ class ExportVillageHistoryToDisk extends Command
 
         for ($num = 0; $num < $hashCount; $num++) {
             if (BasicFunctions::hasWorldDataTable($worldModel, "village_{$num}") === false) {
-                continue;
+                throw new \RuntimeException("missing table: {$worldName}: {$num}");
             }
             $table = BasicFunctions::getWorldDataTable($worldModel, 'village_' . $num);
 

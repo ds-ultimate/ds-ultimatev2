@@ -79,7 +79,7 @@ class Village extends CustomModel
             $gzPath = storage_path("app/village_history/{$worldName}/{$tableNr}.csv.gz");
 
             if (!file_exists($gzPath)) {
-                return collect();
+                throw new \RuntimeException("gz file not found: {$tarPath}");
             }
 
             $gz = gzopen($gzPath, "r");
