@@ -115,7 +115,7 @@ class ExportVillageHistoryToDisk extends Command
             mkdir($basePath, 0755, true);
         }
 
-        for ($num = 1; $num < $hashCount; $num++) {
+        for ($num = 0; $num < $hashCount; $num++) {
             if (BasicFunctions::hasWorldDataTable($worldModel, "village_{$num}") === false) {
                 continue;
             }
