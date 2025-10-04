@@ -213,7 +213,7 @@
             @endif
 
             if (hasDecree) {
-                modifier *= 0.1;
+                modifier *= 0.9;
             }
 
             if (modifier < 0) modifier = 0;
