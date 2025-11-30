@@ -159,4 +159,22 @@ class Icon
                 return ['color' => null, 'icon' => null];
         }
     }
+    
+    public static function unitIconFromName($unitName) {
+        switch($unitName) {
+            case 'spear': return asset(static::$UNIT_SPEAR);
+            case 'sword': return asset(static::$UNIT_SWORD);
+            case 'axe': return asset(static::$UNIT_AXE);
+            case 'archer': return asset(static::$UNIT_ARCHER);
+            case 'spy': return asset(static::$UNIT_SPY);
+            case 'light': return asset(static::$UNIT_LIGHT);
+            case 'marcher': return asset(static::$UNIT_MARCHER);
+            case 'heavy': return asset(static::$UNIT_HEAVY);
+            case 'ram': return asset(static::$UNIT_RAM);
+            case 'catapult': return asset(static::$UNIT_CATAPULT);
+            case 'knight': return asset(static::$UNIT_KNIGHT);
+            case 'snob': return asset(static::$UNIT_SNOB);
+            default: return asset(static::$WB_REMOVE);
+        }
+    }
 }

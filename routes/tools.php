@@ -22,6 +22,9 @@ Route::get('/{server}/{world}/tools/scavengerCalc', [\App\Http\Controllers\Tools
 // Watchtower
 Route::get('/{server}/{world}/tools/watchtowerPlanner', [\App\Http\Controllers\Tools\WatchtowerPlannerController::class, 'index'])->name('watchtowerPlanner');
 
+// FightSimulator
+Route::get('/{server}/{world}/tools/fightSimulator', [\App\Http\Controllers\Tools\FightSimulatorController::class, 'index'])->name('fightSimulator');
+
 // Attack planner
 Route::get('/tools/create/attackPlanner/{server}/{world}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
 
