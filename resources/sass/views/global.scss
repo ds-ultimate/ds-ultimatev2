@@ -82,7 +82,8 @@ table.dataTable > thead .sorting_desc_disabled:after {
     bottom: 0 !important;
 }
 
-.cust-responsive > .dataTables_wrapper > .row:nth-child(2) {
+.cust-responsive > .dt-container > .row:nth-child(2) {
+    /*! purgecss ignore current */
     display: block;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
