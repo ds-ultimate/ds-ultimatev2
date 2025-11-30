@@ -87,6 +87,7 @@ return array (
       'noWorld' => 'A funkció használatához ki kell választania egy világot',
     ),
     'tops' => 'Legjobb eredmények',
+    'co' => 'Csapattársak',
   ),
   'footer' => 
   array (
@@ -208,6 +209,8 @@ További funkciók lesznek az oldalon, amelyeket tartalmaz a bot.',
     'bashAllS' => 'LE',
     'bashPointsRatio' => 'Legyőzött ellenfél/Pont',
     'playerPointPercent' => 'Legyőzött ellenfél/Pont',
+    'from' => 'ettől',
+    'to' => 'eddig',
     'bashSupS' => 'LES',
   ),
   'tabletitel' => 

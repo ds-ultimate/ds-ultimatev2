@@ -115,6 +115,8 @@ return array (
     'bashAllS' => 'BG',
     'bashAttS' => 'BGA',
     'bashDefS' => 'BGD',
+    'from' => 'von',
+    'to' => 'bis',
     'bashSupS' => 'BGU',
   ),
   'server' => 
@@ -151,7 +153,7 @@ return array (
     'axe' => 'Axtkämpfer',
     'archer' => 'Bogenschütze',
     'spy' => 'Späher',
-    'light' => 'Leiche Kavallerie',
+    'light' => 'Leichte Kavallerie',
     'marcher' => 'Berittener Bogenschütze',
     'heavy' => 'Schwere Kavallerie',
     'ram' => 'Rammbock',
@@ -173,6 +175,7 @@ return array (
       'noWorld' => 'Um dieses Feature nutzen zu können, muss eine Welt ausgewählt werden',
     ),
     'tops' => 'Bestwerte',
+    'co' => 'Mitspieler',
   ),
   'ingame' => 
   array (

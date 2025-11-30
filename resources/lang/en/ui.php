@@ -48,6 +48,8 @@ return array (
     'bashAllS' => 'OD',
     'bashAttS' => 'ODA',
     'bashDefS' => 'ODD',
+    'from' => 'from',
+    'to' => 'to',
     'bashSupS' => 'ODS',
   ),
   'allyChanges' => 
@@ -173,6 +175,7 @@ return array (
       'noWorld' => 'In order to use this feature you must select a world',
     ),
     'tops' => 'Top values',
+    'co' => 'Co-Players',
   ),
   'ingame' => 
   array (

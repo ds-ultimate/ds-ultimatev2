@@ -94,6 +94,7 @@ return array (
     'stats' => 'Statistika',
     'toggle' => 'Přepnutí',
     'tops' => 'Nejlepší hodnoty',
+    'co' => 'Spoluhráči',
   ),
   'news' => 
   array (
@@ -247,6 +248,8 @@ Není určeno, které vesnici máte dát jméno, ale musí patřit přidanému h
     'villages' => 'Vesnice',
     'world' => 'Svět',
     'bashSupS' => 'Podpora',
+    'from' => 'od',
+    'to' => 'do',
   ),
   'tabletitel' => 
   array (
