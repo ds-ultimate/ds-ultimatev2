@@ -90,6 +90,7 @@ class Navigation
             }
 
             $tools[] = self::navElement('tool.tableGenerator.title', 'tools.tableGenerator', routeArgs: $serverCodeName);
+            $tools[] = self::navElement('tool.warStats.title', 'tools.warStats', routeArgs: $serverCodeName);
 
             if ($worldArg->config != null && (int)$worldArg->configData()->snob->gold === 1) {
                 $tools[] = self::navElement('tool.coinCalc.title', 'tools.coinCalc', routeArgs: $serverCodeName);
@@ -126,6 +127,7 @@ class Navigation
             $tools[] = self::navElementDisabled('tool.map.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.pointCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.tableGenerator.title', 'ui.nav.disabled.noWorld');
+            $tools[] = self::navElementDisabled('tool.warStats.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.coinCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.scavengerCalc.title', 'ui.nav.disabled.noWorld');
             $tools[] = self::navElementDisabled('tool.watchtowerPlanner.title', 'ui.nav.disabled.noWorld');

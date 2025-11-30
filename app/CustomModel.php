@@ -85,6 +85,7 @@ class CustomModel extends Model
             "player_",
             "village_",
             "conquer",
+            "co_memberships",
         ];
         foreach($tableNames as $tblName) {
             $p = strrpos($this->table, $tblName);

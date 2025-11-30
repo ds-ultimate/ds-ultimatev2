@@ -42,6 +42,7 @@ Route::middleware(['throttle:12,0.2', 'worldMaintenance'])->group(function() {
     Route::get('/{world}/ally/{ally}/bashRanking', [\App\Http\Controllers\API\DatatablesController::class, 'getAllyPlayerBashRanking'])->name('allyPlayerBashRanking');
     Route::get('/{world}/player/{player}/villages', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerVillage'])->name('playerVillage');
     Route::get('/{world}/player/{player}/history', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerHistory'])->name('playerHistory');
+    Route::get('/{world}/player/{player}/coplayers', [\App\Http\Controllers\API\DatatablesController::class, 'getPlayerCoPlayers'])->name('playerCoPlayers');
 
     Route::get('/{world}/allyAllyChanges/{type}/{ally}', [\App\Http\Controllers\API\AllyChangeController::class, 'getAllyAllyChanges'])->name('allyAllyChanges');
     Route::get('/{world}/playerAllyChanges/{type}/{player}', [\App\Http\Controllers\API\AllyChangeController::class, 'getPlayerAllyChanges'])->name('playerAllyChanges');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Ally;
 use App\Player;
+use App\CoMembership;
 use App\Village;
 use App\World;
 use App\Http\Controllers\Controller;
@@ -229,6 +230,40 @@ class DatatablesController extends Controller
             })
             ->removeColumn("last", "offBashRank", "defBashRank", "supBashRank", "gesBashRank", "updated_at")
             ->rawColumns(["rank", "points", "village_count", "offBash", "defBash", "gesBash", "supBash"])
+            ->toJson();
+    }
+
+    public function getPlayerCoPlayers(World $world, $player) {
+        $whitelist = ['player', 'ally', 'valid_from', 'valid_to'];
+        static::limitResults(200, $whitelist);
+
+        $model = new CoMembership($world);
+        $query = $model->newQuery()
+            ->select(['player_1_id', 'player_2_id', 'ally_id', 'valid_from', 'valid_to'])
+            ->where('player_1_id', $player)
+            ->orWhere('player_2_id', $player);
+
+        return DataTables::eloquent($query)
+            ->addColumn('player', function ($co) use($player, $world) {
+                $other = ($co->player_1_id == $player) ? $co->player2 : $co->player1;
+                if($other == null) return '-';
+                return BasicFunctions::linkPlayer($world, $other->playerID, BasicFunctions::decodeName($other->name));
+            })
+            ->addColumn('ally', function ($co) use($world) {
+                if($co->ally != null) {
+                    return BasicFunctions::linkAlly($world, $co->ally->allyID, BasicFunctions::decodeName($co->ally->tag));
+                }
+                return '-';
+            })
+            ->editColumn('valid_from', function ($co) {
+                return $co->valid_from;
+            })
+            ->editColumn('valid_to', function ($co) {
+                return $co->valid_to;
+            })
+            ->removeColumn('player_1_id', 'player_2_id', 'ally_id')
+            ->rawColumns(['player', 'ally'])
+            ->whitelist($whitelist)
             ->toJson();
     }
 
