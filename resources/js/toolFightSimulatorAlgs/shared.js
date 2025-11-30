@@ -1,4 +1,11 @@
 
+const WALL_BASIC_DEFENSE = [
+    20, 97, 194, 272, 340, 402, // 0 - 5
+    459, 512, 562, 610, 656, // 6 - 10
+    699, 742, 783, 822, 861, // 11 - 15
+    898, 935, 971, 1006, 1040 // 16 - 20
+]
+
 
 export function getEffectiveWallLevel(data) {
     const ramCount = data.attacker.ram
@@ -98,29 +105,7 @@ export function calculateDefStrenghts(data, serverUnits, offStrengths, wallAtFig
     }
 
     const defFactor = believeFactor * farmFactor * nightBonus * Math.pow(1.037, wallAtFight)
-    const basicDefense = useBasicDefense ? (20 + wallAtFight*50) : 0
-    /*
-    -> LV 1: 97
-    -> LV 2: 194
-    -> LV 3: 272
-    -> LV 4: 340
-    -> LV 5: 402
-    -> LV 6: 459
-    -> LV 7: 512
-    -> LV 8: 562
-    -> LV 9: 610
-    -> LV 10: 656
-    -> LV 11: 699
-    -> LV 12: 742
-    -> LV 13: 783
-    -> LV 14: 822
-    -> LV 15: 861
-    -> LV 16: 898
-    -> LV 17: 935
-    -> LV 18: 971
-    -> LV 19: 1006
-    -> LV 20: 1040
-    */
+    const basicDefense = useBasicDefense ? WALL_BASIC_DEFENSE[wallAtFight] : 0
 
     return {
         infantry: inantryMult * (basicDefense + defFactor * amounts.map((amount, idx) => amount*serverUnits[idx].defense).reduce((prev, cur) => prev + cur, 0)),
