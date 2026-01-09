@@ -25,6 +25,9 @@ Route::get('/{server}/{world}/tools/watchtowerPlanner', [\App\Http\Controllers\T
 // FightSimulator
 Route::get('/{server}/{world}/tools/fightSimulator', [\App\Http\Controllers\Tools\FightSimulatorController::class, 'index'])->name('fightSimulator');
 
+// ScriptEscape
+Route::get('/tools/scripts/escapeTool', [\App\Http\Controllers\Tools\ScriptEscapeController::class, 'index'])->name('scriptEscape');
+
 // Attack planner
 Route::get('/tools/create/attackPlanner/{server}/{world}', [\App\Http\Controllers\Tools\AttackPlannerController::class, 'index'])->name('attackPlannerNew');
 
