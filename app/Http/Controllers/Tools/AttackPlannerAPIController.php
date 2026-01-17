@@ -123,10 +123,6 @@ class AttackPlannerAPIController extends BaseController
             $err[] = "Error during insert";
         }
         
-        if(count($err) > 0) {
-            return AttackListItem::errJsonReturn($err);
-        }
-        
         return \Response::json(array(
             'id' => $list->id,
             'edit' => route('tools.attackPlannerMode', [$list->id, "edit", $list->edit_key]),
