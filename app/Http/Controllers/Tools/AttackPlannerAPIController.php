@@ -76,7 +76,7 @@ class AttackPlannerAPIController extends BaseController
             $troopVerify["items.*.$unit"] = 'integer';
         }
         return array_merge([
-            'items' => 'array',
+            'items' => 'array|max:1200',
             'items.*' => 'array',
             'items.*.source' => 'required|integer',
             'items.*.destination' => 'required|integer',
@@ -90,6 +90,12 @@ class AttackPlannerAPIController extends BaseController
     }
     
     private static function apiInternalCreateItems($req, AttackList $list) {
+        $path = storage_path("customLog");
+        if(!file_exists($path)) mkdir($path, 0777, true);
+        $target = $path . "/attack_plan_api.log";
+        $logData = substr($req["API_KEY"], 0, 10) . ";" . count($req["items"]) . "\n";
+        file_put_contents($target, $logData . "\n", FILE_APPEND | LOCK_EX);
+
         if(! isset($req['items'])) {
             return \Response::json(array(
                 'id' => $list->id,
