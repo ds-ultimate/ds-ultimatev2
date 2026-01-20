@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 8.0.2 (2025-08-14)
+ * TinyMCE version 8.3.2 (2026-01-14)
  */
 
 (function () {
@@ -99,10 +99,10 @@
 
     const register$1 = (editor) => {
         editor.addCommand('mceInsertDate', (_ui, value) => {
-            insertDateTime(editor, value !== null && value !== void 0 ? value : getDateFormat(editor));
+            insertDateTime(editor, value ?? getDateFormat(editor));
         });
         editor.addCommand('mceInsertTime', (_ui, value) => {
-            insertDateTime(editor, value !== null && value !== void 0 ? value : getTimeFormat(editor));
+            insertDateTime(editor, value ?? getTimeFormat(editor));
         });
     };
 
