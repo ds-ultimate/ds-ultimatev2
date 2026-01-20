@@ -13,15 +13,15 @@
         "barryvdh/laravel-translation-manager": "^0.6.1",
         "dsultimate/click-captcha-laravel": "@dev",
         "guzzlehttp/guzzle": "^7.4",
-        "khill/lavacharts": "3.1.*",
+        "hypoid/lavacharts": "^3.2",
         "laravel-notification-channels/discord": "^1.1",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0",
         "laravel/socialite": "^5.0",
         "laravel/ui": "^4.0",
         "rap2hpoutre/laravel-log-viewer": "^2.0",
         "socialiteproviders/discord": "^4.0",
         "spatie/laravel-cookie-consent": "^3.0",
-        "yajra/laravel-datatables-oracle": "~11.0"
+        "yajra/laravel-datatables-oracle": "~12.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
@@ -33,7 +33,11 @@
         {
             "type": "vcs",
             "url": "https://github.com/ds-ultimate/click-captcha-laravel.git"
-        }
+        },
+	{
+		"type": "vcs",
+		"url": "https://github.com/martialus87/lavacharts"
+	}
     ],
     "config": {
         "optimize-autoloader": true,
