@@ -328,7 +328,7 @@ class AttackPlannerController extends BaseController
 
     public static function destroyOutdated(AttackList $attackList){
         AttackListItem::where([
-            ['send_time', '<', Carbon::createFromTimestamp(time())],
+            ['send_time', '<', Carbon::now()],
             ['attack_list_id', $attackList->id]
         ])->delete();
         return ['success' => true, 'message' => 'destroy !!'];
