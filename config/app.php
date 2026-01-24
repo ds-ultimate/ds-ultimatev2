@@ -298,13 +298,4 @@ return [
         'Lava' => Hypoid\Lavacharts\Laravel\LavachartsFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],
-    
-    /*
-     * Allowed keys for access to internal APIs
-     * a part of the API is considered internal if it is designed for other other developers
-     *  (not used directly on our site) and one of the following is true:
-     * - the API has no rate limit
-     * - the API is very resource intensive (multiple DB Queryies / execution time > 500ms)
-     */
-    'API_KEYS' => env('API_KEYS', ""),
 ];

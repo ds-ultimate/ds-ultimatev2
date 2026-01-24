@@ -6,7 +6,6 @@ use App\News;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {

@@ -10,6 +10,7 @@ use App\Server;
 use App\SpeedWorld;
 use App\User;
 use App\World;
+use App\Tool\AttackPlanner\APIKey;
 use App\Http\Controllers\API\DatatablesController;
 use App\Http\Controllers\Controller;
 use App\Util\BasicFunctions;
@@ -458,5 +459,38 @@ class APIController extends Controller
         $tld        = substr($domain, $lastDotPos + 1);
 
         return $mask($local, keepStart: 0, keepEnd: 0) . '@' . $mask($domainName) . '.' . $tld;
+    }
+
+    public function attackplannerAPIKey()
+    {
+        abort_unless(\Gate::allows('attackplanner_api_access'), 403);
+        $whitelist = $this->getColumnNamesForIndex(AttackPlannerApiKeyController::getIndexColumns());
+        DatatablesController::limitResults(500, $whitelist);
+
+        $permissions = [
+            'show' => 'attackplanner_api_show',
+            'edit' => 'attackplanner_api_edit',
+            'delete' => 'attackplanner_api_delete',
+        ];
+        $routes = [
+            'show' => 'admin.attackplannerAPIKey.show',
+            'edit' => 'admin.attackplannerAPIKey.edit',
+            'delete' => 'admin.attackplannerAPIKey.destroy',
+        ];
+
+        $model = new APIKey();
+        return DataTables::eloquent($model->newQuery())
+            ->editColumn('key', function($data) {
+                return substr($data->key, 0, 10);
+            })
+            ->editColumn("created_at", function ($data) {
+                return $data->created_at->diffForHumans() . " (" . $data->created_at->format('Y-m-d H:i:s'). ")";
+            })
+            ->addColumn('actions', function ($data) use($permissions, $routes) {
+                return $this->generateActions($permissions, $routes, $data->id);
+            })
+            ->rawColumns(['actions'])
+            ->whitelist($whitelist)
+            ->toJson();
     }
 }

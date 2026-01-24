@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Tools;
 
 
+use App\Tool\AttackPlanner\APIKey;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\World;
@@ -19,19 +20,14 @@ use Illuminate\Http\Request;
 class AttackPlannerAPIController extends BaseController
 {
     public function create(Request $request) {
+        $apiKeyId = $this->validateAPIKey($request);
         $req = $request->validate(array_merge([
             'title' => '',
             'server' => 'required',
             'world' => 'required',
             'sitterMode' => 'string',
-            'API_KEY' => 'required',
         ], static::itemVerificationArray()));
-        
-        $apiKeyPos = array_search($req['API_KEY'], explode(";", config("app.API_KEYS")));
-        if($apiKeyPos === false) {
-            abort(403);
-        }
-        
+
         $server = $req['server'];
         $world = $req['world'];
         \App\Http\Controllers\API\PictureController::fixWorldName($server, $world);
@@ -48,26 +44,22 @@ class AttackPlannerAPIController extends BaseController
         $list->edit_key = Str::random(40);
         $list->show_key = Str::random(40);
         $list->api = true;
-        $list->apiKey = $apiKeyPos;
+        $list->apiKey = $apiKeyId;
         $list->save();
-        return self::apiInternalCreateItems($req, $list);
+        return self::apiInternalCreateItems($req, $list, $apiKeyId);
     }
     
     public function itemCreate(Request $request) {
+        $apiKeyId = $this->validateAPIKey($request);
         $req = $request->validate(array_merge([
             'id' => 'required',
             'edit_key' => 'required',
-            'API_KEY' => 'required',
         ], static::itemVerificationArray()));
-        
-        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
-            abort(403);
-        }
-        
+
         $list = AttackList::findOrFail($req['id']);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         abort_if($list->world->maintananceMode, 503);
-        return self::apiInternalCreateItems($req, $list);
+        return self::apiInternalCreateItems($req, $list, $apiKeyId);
     }
     
     private static function itemVerificationArray() {
@@ -76,7 +68,7 @@ class AttackPlannerAPIController extends BaseController
             $troopVerify["items.*.$unit"] = 'integer';
         }
         return array_merge([
-            'items' => 'array|max:2000',
+            'items' => 'array|max:1050',
             'items.*' => 'array',
             'items.*.source' => 'required|integer',
             'items.*.destination' => 'required|integer',
@@ -89,11 +81,11 @@ class AttackPlannerAPIController extends BaseController
         ], $troopVerify);
     }
     
-    private static function apiInternalCreateItems($req, AttackList $list) {
+    private static function apiInternalCreateItems($req, AttackList $list, $apiKeyId) {
         $path = storage_path("customLog");
         if(!file_exists($path)) mkdir($path, 0777, true);
         $target = $path . "/attack_plan_api.log";
-        $logData = substr($req["API_KEY"], 0, 10) . ";" . count($req["items"]);
+        $logData = Carbon::now()->format('Y-m-d H:i:s') . ";" . $apiKeyId . ";" . count($req["items"]);
         file_put_contents($target, $logData . "\n", FILE_APPEND | LOCK_EX);
 
         if(! isset($req['items'])) {
@@ -140,15 +132,13 @@ class AttackPlannerAPIController extends BaseController
     }
 
     public function destroyOutdated(Request $request) {
+        $this->validateAPIKey($request);
+
         $req = $request->validate([
             'id' => 'required|integer',
             'edit_key' => 'required',
-            'API_KEY' => 'required',
         ]);
-        
-        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
-            abort(403);
-        }
+
         $list = AttackList::findOrFail($req['id']);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         return \Response::json(array_merge(AttackPlannerController::destroyOutdated($list) ,[
@@ -157,15 +147,13 @@ class AttackPlannerAPIController extends BaseController
     }
 
     public function clear(Request $request) {
+        $this->validateAPIKey($request);
+
         $req = $request->validate([
             'id' => 'required|integer',
             'edit_key' => 'required',
-            'API_KEY' => 'required',
         ]);
-        
-        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
-            abort(403);
-        }
+
         $list = AttackList::findOrFail($req['id']);
         abort_unless($list->edit_key == $req['edit_key'], 403);
         return \Response::json(array_merge(AttackPlannerController::clear($list) ,[
@@ -174,18 +162,16 @@ class AttackPlannerAPIController extends BaseController
     }
 
     public function fetchItems(Request $request) {
+        $apiKeyId = $this->validateAPIKey($request);
+
         $req = $request->validate([
             'id' => 'required|integer',
             'edit_key' => 'required_without:show_key',
             'show_key' => 'required_without:edit_key',
-            'API_KEY' => 'required',
             'length' => 'integer|min:1',
             'start' => 'integer|min:0',
         ]);
-        
-        if(!in_array($req['API_KEY'], explode(";", config("app.API_KEYS")))) {
-            abort(403);
-        }
+
         $list = AttackList::findOrFail($req['id']);
         abort_if($list->world->maintananceMode, 503);
         
@@ -259,5 +245,20 @@ class AttackPlannerAPIController extends BaseController
         }
         
         return \Response::json($result);
+    }
+
+    private function validateAPIKey(Request $request) {
+        $reqKey = $request->validate([
+            'API_KEY' => 'required',
+        ]);
+
+        $apiKey = APIKey::where('key', $reqKey["API_KEY"])->first();
+
+        // Optional handling
+        if ($apiKey == null) {
+            abort(403, 'Invalid API key');
+        }
+
+        return $apiKey->id;
     }
 }

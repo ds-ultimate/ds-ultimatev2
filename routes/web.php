@@ -78,6 +78,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
     
     Route::get('/cacheStats', [\App\Http\Controllers\Admin\HomeController::class, 'cacheStats'])->name('cacheStats');
 
+    Route::resource('attackplannerAPIKey', \App\Http\Controllers\Admin\AttackPlannerApiKeyController::class);
+
     Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
         Route::get('/news', [\App\Http\Controllers\Admin\APIController::class, 'news'])->name('news');
         Route::post('/newsReorder', [\App\Http\Controllers\Admin\NewsController::class, 'reorder'])->name('news.reorder');
@@ -88,6 +90,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'Admin', 'middleware' => ['
         Route::get('/worlds', [\App\Http\Controllers\Admin\APIController::class, 'worlds'])->name('worlds');
         Route::get('/speedWorlds', [\App\Http\Controllers\Admin\APIController::class, 'speedWorlds'])->name('speedWorlds');
         Route::get('/bugreports', [\App\Http\Controllers\Admin\APIController::class, 'bugreports'])->name('bugreports');
+        Route::get('/attackplannerAPIKey', [\App\Http\Controllers\Admin\APIController::class, 'attackplannerAPIKey'])->name('attackplannerAPIKey');
     });
 });
 

@@ -11,6 +11,7 @@
         <x-admin.menue access="user_management_access" route="" icon="fa-users" dropdownId="drop_user" :name="__('admin.userManagement.title')">
             <x-admin.menue access="role_access" route="admin.roles.index" icon="fa-briefcase" :name="__('admin.roles.title')" />
             <x-admin.menue access="user_access" route="admin.users.index" icon="fa-user" :name="__('admin.users.title')" />
+            <x-admin.menue access="attackplanner_api_access" route="admin.attackplannerAPIKey.index" icon="fa-briefcase" :name="__('admin.attackplannerAPIKey.title')" />
         </x-admin.menue>
 
         <x-admin.menue access="server_management_access" route="" icon="fa-cloud" dropdownId="drop_server" :name="__('admin.serverManagement.title')">

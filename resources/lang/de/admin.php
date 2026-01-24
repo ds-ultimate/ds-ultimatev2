@@ -15,6 +15,7 @@ return array (
     'show' => 'Server anzeigen',
     'speed_active' => 'Speed-Welten aktiv',
     'classic_active' => 'Classic-Welten aktiv',
+    'locale' => 'Sprache',
   ),
   'news' => 
   array (
@@ -70,6 +71,8 @@ return array (
     'config' => 'Welteneinstellungen',
     'units' => 'Einheitenkonfiguration',
     'display_name' => 'Angezeigter name',
+    'maintananceMode' => 'Wartungsmodus',
+    'locale' => 'Sprache',
   ),
   'bugreport' => 
   array (
@@ -166,5 +169,18 @@ return array (
     'flag' => 'Sprachversion',
     'active' => 'Aktiv',
     'display_name' => 'Angezeigter name',
+  ),
+  'attackplannerAPIKey' => 
+  array (
+    'title' => 'API Key',
+    'create' => 'API Key erstellen',
+    'id' => 'ID',
+    'discord_name' => 'Discord Name',
+    'discord_id' => 'Discord ID',
+    'key' => 'Key',
+    'created' => 'Erstellt am',
+    'titleCreate' => 'API Key erstellen',
+    'update' => 'API Editieren',
+    'show' => 'API Key ansehen',
   ),
 );

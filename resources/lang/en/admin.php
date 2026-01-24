@@ -84,6 +84,7 @@ return array (
     'url' => 'Update url',
     'speed_active' => 'speed-worlds active',
     'classic_active' => 'classic-worlds active',
+    'locale' => 'Language',
   ),
   'serverManagement' => 
   array (
@@ -126,6 +127,8 @@ return array (
     'url' => 'update url',
     'village_count' => 'Villages',
     'display_name' => 'display name',
+    'maintananceMode' => 'Maintenance mode',
+    'locale' => 'Language',
   ),
   'dashboard' => 
   array (
@@ -166,5 +169,18 @@ return array (
     'titleCreate' => 'create a new special world',
     'update' => 'edit special world',
     'display_name' => 'display name',
+  ),
+  'attackplannerAPIKey' => 
+  array (
+    'create' => 'Create an api key',
+    'created' => 'Created at',
+    'discord_id' => 'discord id',
+    'discord_name' => 'discord name',
+    'id' => 'ID',
+    'key' => 'Key',
+    'show' => 'View api key',
+    'title' => 'API Key',
+    'titleCreate' => 'Create api key',
+    'update' => 'Edit api key',
   ),
 );
