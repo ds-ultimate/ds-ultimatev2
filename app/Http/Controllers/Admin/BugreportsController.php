@@ -70,7 +70,7 @@ class BugreportsController extends Controller
     {
         abort_unless(\Gate::allows('bugreport_create'), 403);
         
-        $formEntries = $this->generateEditFormConfig(null);
+        $formEntries = $this->generateEditFormConfig(null, true);
         $route = route("admin.bugreports.store");
         $header = __('user.bugreport.title');
         $method = "POST";
@@ -100,7 +100,7 @@ class BugreportsController extends Controller
     {
         abort_unless(\Gate::allows('bugreport_edit'), 403);
 
-        $formEntries = $this->generateEditFormConfig($bugreport);
+        $formEntries = $this->generateEditFormConfig($bugreport, false);
         $route = route("admin.bugreports.update", [$bugreport->id]);
         $header = __('admin.bugreports.update');
         $method = "PUT";
@@ -113,7 +113,6 @@ class BugreportsController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email',
             'title' => 'required',
             'priority' => 'required|integer',
             'description' => 'required',
@@ -164,10 +163,15 @@ class BugreportsController extends Controller
         return response(null, 204);
     }
     
-    private function generateEditFormConfig($values) {
-        return [
+    private function generateEditFormConfig($values, $withEmail) {
+        $arr = [
             BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.name'), 'name', Auth::user()->name, true, true),
-            BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.email'), 'email', Auth::user()->email, true, true),
+        ];
+        if($withEmail && $values == null) {
+            $arr[] = BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.email'), 'email', Auth::user()->email, true, true);
+        }
+
+        $arr = array_merge($arr, [
             BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.form_title'), 'title', null, false, true),
             BasicFunctions::formEntryEdit($values, 'select', __('user.bugreport.priority'), 'priority', 0, false, true, [
                 'options' => [
@@ -189,13 +193,15 @@ class BugreportsController extends Controller
             ]),
             BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.description'), 'description', null, false, true),
             BasicFunctions::formEntryEdit($values, 'text', __('user.bugreport.url'), 'url', null, false, false),
-        ];
+        ]);
+
+        return $arr;
     }
     
     private function generateShowFormConfig($values) {
         return [
             BasicFunctions::formEntryShow(__('user.bugreport.name'), $values->name),
-            BasicFunctions::formEntryShow(__('user.bugreport.email'), $values->email),
+            BasicFunctions::formEntryShow(__('user.bugreport.email'), APIController::anonymizeEmail($values->email)),
             BasicFunctions::formEntryShow(__('user.bugreport.priority'), $values->getPriorityBadge(), false),
             BasicFunctions::formEntryShow(__('admin.bugreport.status'), $values->getStatusBadge(), false),
             BasicFunctions::formEntryShow(__('admin.bugreport.created_at'),

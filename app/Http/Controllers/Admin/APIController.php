@@ -155,6 +155,9 @@ class APIController extends Controller
                 }
                 return $retval;
             })
+            ->editColumn('email', function($data) {
+                return static::anonymizeEmail($data->email);
+            })
             ->editColumn('email_verified_at', function($data) {
                 if($data->email_verified_at == null) return "-";
                 return $data->email_verified_at->format(config('panel.date_format') . " " . config('panel.time_format'));
@@ -421,5 +424,39 @@ class APIController extends Controller
             $names[] = $idxCol['data'];
         }
         return $names;
+    }
+
+    public static function anonymizeEmail(string $email): string {
+        [$local, $domain] = explode('@', $email, 2);
+
+        $mask = function (string $value, int $keepStart = 2, int $keepEnd = 2): string {
+            $length = strlen($value);
+
+            if ($length <= $keepStart + $keepEnd) {
+                return str_repeat('*', $length);
+            }
+
+            $result = "";
+            if($keepStart > 0) {
+                $result .= substr($value, 0, $keepStart);
+            }
+            $result .= str_repeat('*', $length - $keepStart - $keepEnd);
+            if($keepEnd > 0) {
+                $result .= substr($value, strlen($value) - $keepEnd);
+            }
+            return $result;
+        };
+
+        // Split domain by last dot only
+        $lastDotPos = strrpos($domain, '.');
+        if ($lastDotPos === false) {
+            // No dot in domain (edge case)
+            return $mask($local) . '@' . $mask($domain);
+        }
+
+        $domainName = substr($domain, 0, $lastDotPos); // may include subdomains
+        $tld        = substr($domain, $lastDotPos + 1);
+
+        return $mask($local, keepStart: 0, keepEnd: 0) . '@' . $mask($domainName) . '.' . $tld;
     }
 }

@@ -54,7 +54,6 @@ class UsersController extends Controller
         
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
             'password' => 'required',
             'roles' => 'array',
             'roles.*' => 'integer',
@@ -88,7 +87,6 @@ class UsersController extends Controller
         
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
             'roles' => 'array',
             'roles.*' => 'integer',
         ]);
@@ -138,7 +136,6 @@ class UsersController extends Controller
     private function generateEditFormConfig($values) {
         return [
             BasicFunctions::formEntryEdit($values, 'text', __('admin.users.name'), 'name', '', false, true),
-            BasicFunctions::formEntryEdit($values, 'text', __('admin.users.email'), 'email', '', false, true),
             BasicFunctions::formEntryEdit($values, 'password', __('admin.users.password'), 'password', '', false, false),
             BasicFunctions::formEntryEdit($values, 'select', __('admin.users.roles'), 'roles[]', collect(), false, false, [
                 'options' => Role::all()->pluck('title', 'id'),
@@ -157,7 +154,7 @@ class UsersController extends Controller
         }
         
         return [
-            BasicFunctions::formEntryShow(__('admin.users.email'), $values->email),
+            BasicFunctions::formEntryShow(__('admin.users.email'), APIController::anonymizeEmail($values->email)),
             BasicFunctions::formEntryShow(__('admin.users.verified'), $values->email_verified_at),
             BasicFunctions::formEntryShow(__('admin.roles.permissions'), $permissions, false),
         ];
