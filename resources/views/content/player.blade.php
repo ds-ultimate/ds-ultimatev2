@@ -114,7 +114,10 @@
         <div class="col-12 col-lg-6 mt-3">
             <div class="card" style="height: 320px">
                 <div class="card-body">
-                    <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:</h4>
+                    <h4 class="card-title">{{ __('ui.tabletitel.bashStats') }}:<div class="float-right">
+                            <a class="btn btn-primary mb-2" href="{{ route('player', [$worldData->server->code, $worldData->name, $playerData->playerID, ]) }}?diagramConquer={{ $showConquersInBash?"0":"1" }}">
+                                {{ $showConquersInBash?__('chart.bash.hideConquers'):__('chart.bash.showConquers') }}</a>
+                        </div></h4>
                     <select id="statsBash" class="form-control form-control-sm">
                         @for($i = 0; $i < count($statsBash); $i++)
                             <option value="{{ $statsBash[$i] }}" @selected(($i == 0)) >{{ __('chart.titel.'.$statsBash[$i]) }}</option>

@@ -27,4 +27,9 @@ return array (
     'defBash' => 'Verteidigerpunkte',
     'supBash' => 'Unterstützerpunkte',
   ),
+  'bash' => 
+  array (
+    'hideConquers' => 'Verstecke Eroberungen',
+    'showConquers' => 'Zeige Eroberungen',
+  ),
 );

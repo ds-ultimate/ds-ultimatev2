@@ -27,4 +27,9 @@ return array (
     'village' => 'Villages',
     'supBash' => 'Opponents defeated as supporter',
   ),
+  'bash' => 
+  array (
+    'hideConquers' => 'Hide conquers',
+    'showConquers' => 'Show conquers',
+  ),
 );

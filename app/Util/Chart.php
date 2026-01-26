@@ -96,7 +96,7 @@ class Chart
         }
     }
 
-    public static function generateChart($rawData, $chartType, $gapFill=false){
+    public static function generateChart($rawData, $chartType, $gapFill=false, $annotations=[]){
         if (!Chart::validType($chartType)) {
             return;
         }
@@ -106,9 +106,12 @@ class Chart
             'pattern' => 'dd.MM.yyyy HH:mm'
         ]);
 
+        $annotationIndex = 0;
         $chart = \Lava::DataTable();
         $chart->addDateTimeColumn(label: 'Tag', format: $format)
-            ->addNumberColumn(Chart::chartLabel($chartType));
+            ->addNumberColumn(Chart::chartLabel($chartType))
+            ->addRoleColumn('string', 'annotation')
+            ->addRoleColumn('string', 'annotationText');
 
         $old = [
             't' => null, 'd' => null, 'l' => -1,
@@ -119,7 +122,7 @@ class Chart
                 $oldDiff = abs($old['t'] - $old['l'] - $entryDiff);
                 $newDiff = abs($data['timestamp'] - $old['l'] - $entryDiff);
                 if($oldDiff < $newDiff) {
-                    static::customAdd($chart, $old['t'], $old['d']);
+                    $annotationIndex = static::customAdd($chart, $old['t'], $old['d'], $annotations, $annotationIndex);
                     $old['l'] = $old['t'];
                 }
             }
@@ -127,7 +130,7 @@ class Chart
             if($gapFill && $old['t'] != null) {
                 while($old['t'] + $entryDiff + 300 < $data['timestamp']) {
                     $old['t'] += $entryDiff;
-                    static::customAdd($chart, $old['t'], $old['d']);
+                    $annotationIndex = static::customAdd($chart, $old['t'], $old['d'], $annotations, $annotationIndex);
                 }
             }
 
@@ -135,13 +138,13 @@ class Chart
             $old['d'] = $data[$chartType];
 
             if($old['l'] + $entryDiff - 300 < $data['timestamp']) {
-                static::customAdd($chart, $data['timestamp'], $data[$chartType]);
+                $annotationIndex = static::customAdd($chart, $data['timestamp'], $data[$chartType], $annotations, $annotationIndex);
                 $old['l'] = $data['timestamp'];
             }
         }
 
         if ($chart->getRowCount() < 2){
-            static::customAdd($chart, $data['timestamp'] - $entryDiff, $data[$chartType]);
+            $annotationIndex = static::customAdd($chart, $data['timestamp'] - $entryDiff, $data[$chartType], $annotations, $annotationIndex);
         }
 
         \Lava::LineChart($chartType, $chart, [
@@ -165,13 +168,20 @@ class Chart
                 'textStyle' => [
                     'color' => (session('darkmode', false))?('#d3d3d3'):('#000000'),
                 ],
-            ]
+            ],
         ]);
 
         return \Lava::render('LineChart', $chartType, 'chart-'.$chartType);
     }
 
-    private static function customAdd($chart, $date, $val) {
-        $chart->addRow([date('Y-m-d H:i:s', $date), $val]);
+    private static function customAdd($chart, $date, $val, $annotations, $annotationIndex) {
+        if(isset($annotations[$annotationIndex]) && $annotations[$annotationIndex][0] < $date) {
+            $curAnnotation = $annotations[$annotationIndex];
+            $chart->addRow([date('Y-m-d H:i:s', $date), $val, $curAnnotation[1], $curAnnotation[2]]);
+            return $annotationIndex + 1;
+        } else {
+            $chart->addRow([date('Y-m-d H:i:s', $date), $val, null, null]);
+            return $annotationIndex;
+        }
     }
 }

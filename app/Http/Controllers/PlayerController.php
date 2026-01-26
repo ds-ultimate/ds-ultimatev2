@@ -11,12 +11,20 @@ use App\Util\Chart;
 use App\Server;
 use App\World;
 use App\AllyChanges;
+use Illuminate\Http\Request;
 
 class PlayerController extends Controller
 {
-    public function player($server, $world, $player){
+    public function player($server, $world, $player, Request $request){
         $server = Server::getAndCheckServerByCode($server);
         $worldData = World::getAndCheckWorld($server, $world);
+
+        $reqParams = $request->validate([
+            "diagramConquer" => "boolean"
+        ]);
+        if(isset($reqParams["diagramConquer"])) {
+            \Session::put("playerDiagramConquer", $reqParams["diagramConquer"]);
+        }
 
         $playerData = Player::player($worldData, $player);
         $playerTopData = PlayerTop::player($worldData, $player);
@@ -48,15 +56,52 @@ class PlayerController extends Controller
             ];
         }
 
+        $showConquersInBash = \Session::get("playerDiagramConquer") ?? false;
+        $conquerAnnotations = [];
+        if($showConquersInBash) {
+            $minTimestamp = $datas[0]["timestamp"];
+            $maxTimestamp = $datas[0]["timestamp"];
+            foreach($datas as $d) {
+                if($d["timestamp"] < $minTimestamp) {
+                    $minTimestamp = $d["timestamp"];
+                }
+                if($d["timestamp"] > $maxTimestamp) {
+                    $maxTimestamp = $d["timestamp"];
+                }
+            }
+
+            $conquerModel = new Conquer($worldData);
+            $conquers = $conquerModel->where(function($query) use ($player) {
+                return $query->where('new_owner', $player)->orWhere('old_owner', $player);
+            })->where("timestamp", ">", $minTimestamp)->where("timestamp", "<", $maxTimestamp)
+                    ->orderBy("timestamp", "asc")->get();
+
+            foreach($conquers as $c) {
+                if($c["new_owner"] == $player) {
+                    $conquerAnnotations[] = [
+                        $c["timestamp"],
+                        "win",
+                        $c["old_owner_name"] . " [" . $c["old_ally_tag"] . "]",
+                    ];
+                } else {
+                    $conquerAnnotations[] = [
+                        $c["timestamp"],
+                        "loose",
+                        $c["new_owner_name"] . " [" . $c["new_ally_tag"] . "]",
+                    ];
+                }
+            }
+        }
+
         $chartJS = "";
         for ($i = 0; $i < count($statsGeneral); $i++){
             $chartJS .= Chart::generateChart($datas, $statsGeneral[$i]);
         }
         for ($i = 0; $i < count($statsBash); $i++){
-            $chartJS .= Chart::generateChart($datas, $statsBash[$i]);
+            $chartJS .= Chart::generateChart($datas, $statsBash[$i], annotations: $conquerAnnotations);
         }
 
-        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers'));
+        return view('content.player', compact('statsGeneral', 'statsBash', 'playerData', 'playerTopData', 'conquer', 'worldData', 'chartJS', 'server', 'allyChanges', 'playerOtherServers', 'showConquersInBash'));
     }
 
     public function allyChanges($server, $world, $type, $playerID){
