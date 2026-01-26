@@ -162,6 +162,26 @@ class DatatablesController extends Controller
             ->addColumn('coordinates', function ($village){
                 return $village->coordinates();
             })
+            ->filterColumn('coordinates', function ($query, $keyword) {
+                // remove spaces just in case
+                $keyword = str_replace(' ', '', $keyword);
+
+                if (str_contains($keyword, '|')) {
+                    [$x, $y] = explode('|', $keyword, 2);
+                    $intX = $x == ""?"":(int) $x;
+                    $intY = $y == ""?"":(int) $y;
+
+                    $query->where('x', 'like', "%{$intX}%")
+                          ->where('y', 'like', "%{$intY}%");
+                } else {
+                    // fallback: search in either x or y
+                    $intKeyw = strlen($keyword) > 0?(int) $keyword:"";
+                    $query->where(function ($q) use ($intKeyw) {
+                        $q->where('x', 'like', "%{$intKeyw}%")
+                          ->orWhere('y', 'like', "%{$intKeyw}%");
+                    });
+                }
+            })
             ->addColumn('bonus', function ($village){
                 return $village->bonusText();
             })
@@ -486,7 +506,7 @@ class DatatablesController extends Controller
             'columns' => 'required|array',
             'columns.*.searchable' => ['required', new \App\Rules\BooleanText],
             'columns.*.orderable' => ['required', new \App\Rules\BooleanText],
-            'columns.*.search.value' => 'string|nullable',
+            'columns.*.search.value' => 'prohibited',
             'columns.*.search.regex' => ['required', new \App\Rules\BooleanText],
             'columns.*.name' => ['nullable', \Illuminate\Validation\Rule::in($whitelistColumns)],
             'columns.*.data' => ['required', \Illuminate\Validation\Rule::in($whitelistColumns)],
