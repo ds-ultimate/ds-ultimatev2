@@ -86,7 +86,11 @@ class AttackPlannerAPIController extends BaseController
         $path = storage_path("customLog");
         if(!file_exists($path)) mkdir($path, 0777, true);
         $target = $path . "/attack_plan_api.log";
-        $logData = Carbon::now()->format('Y-m-d H:i:s') . ";" . $apiKeyId . ";" . count($req["items"]);
+        $itemcnt = 0;
+        if isset($req["items"]) {
+            $itemcnt = count($req["items"]);
+        }
+        $logData = Carbon::now()->format('Y-m-d H:i:s') . ";$apiKeyId;$itemcnt";
         file_put_contents($target, $logData . "\n", FILE_APPEND | LOCK_EX);
 
         if(! isset($req['items'])) {
