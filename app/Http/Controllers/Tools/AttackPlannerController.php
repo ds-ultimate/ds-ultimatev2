@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Tools;
 
 
-use App\Http\Requests\ImportAttackPlannerItemRequest;
 use App\Tool\AttackPlanner\AttackList;
 use App\Tool\AttackPlanner\AttackListItem;
 use App\Util\BasicFunctions;
@@ -71,6 +70,10 @@ class AttackPlannerController extends BaseController
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
                 $attackList->touch();
                 return $this->exportWB($attackList);
+            case 'exportDSU':
+                abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
+                $attackList->touch();
+                return $this->exportDSU($attackList);
             case 'exportBB':
                 abort_unless($attackList->show_key == $key || $attackList->edit_key == $key, 403);
                 $attackList->touch();
@@ -111,6 +114,12 @@ class AttackPlannerController extends BaseController
                     $attackList->touch();
                 }
                 return ['success' => true, 'message' => 'saved'];
+            case 'importWB':
+                abort_unless($attackList->edit_key == $key, 403);
+                return $this->importWB($request, $attackList);
+            case 'importDSU':
+                abort_unless($attackList->edit_key == $key, 403);
+                return $this->importDSU($request, $attackList);
             default:
                 abort(404);
         }
@@ -200,6 +209,45 @@ class AttackPlannerController extends BaseController
         ]);
     }
 
+    private function exportDSU(AttackList $attackList){
+        $items = $attackList->items()->get();
+
+        // Export that can be used here again for importing
+        $exportItems = [];
+        foreach ($items as $item){
+            $newItem = [
+                'source'        => $item->start_village_id,
+                'destination'   => $item->target_village_id,
+                'slowest_unit'  => $item->slowest_unit, // same format as Workbench
+                'arrival_time'  => $item->arrival_time->timestamp, // seconds only
+                'type'          => $item->type,
+                'support_boost' => (float) ($item->support_boost ?? 0),
+                'tribe_skill'   => (float) ($item->tribe_skill ?? 0),
+                'ms'            => (int) ($item->ms ?? 0),
+            ];
+
+            foreach (AttackListItem::$units as $unit) {
+                if(isset($item->$unit)) {
+                    $newItem[$unit] = $item->$unit;
+                }
+            }
+            $exportItems[] = $newItem;
+        }
+
+        //Export methadata
+        $exportArray = [
+            'title' => $attackList->title,
+            'uvMode' => $attackList->uvMode,
+            'world' => $attackList->world->serName(),
+            'twWorld' => $attackList->world->twSerName(),
+            'items' => $exportItems,
+        ];
+
+        return response()->json([
+            "data" => json_encode($exportArray),
+        ]);
+    }
+
     private function exportBB(AttackList $attackList){
         $items = $attackList->items()->take(400)->get();
 
@@ -269,8 +317,7 @@ class AttackPlannerController extends BaseController
         return str_replace(array_keys($searchReplaceArrayBody),array_values($searchReplaceArrayBody), $bodyTemplate);
     }
 
-    public function importWB(ImportAttackPlannerItemRequest $request, AttackList $attackList){
-        abort_unless($attackList->edit_key == $request->get('key'), 403);
+    public function importWB(Request $request, AttackList $attackList){
         $imports = explode(PHP_EOL, $request->import);
 
         $err = [];
@@ -323,6 +370,78 @@ class AttackPlannerController extends BaseController
             'data' => 'success',
             'title' => __('tool.attackPlanner.importWBSuccessTitle'),
             'msg' => __('tool.attackPlanner.importWBSuccess'),
+        ));
+    }
+
+    public const MAX_IMPORT_ITEMS = 200;
+
+    public function importDSU(Request $request, AttackList $attackList){
+        if (count($request->input('items', [])) > static::MAX_IMPORT_ITEMS) {
+            abort(422, "Too many items");
+        }
+
+        $req = $request->validate(array_merge([
+            'title'   => ['sometimes', 'nullable', 'string'],
+            'uvMode'  => ['sometimes', 'integer', 'in:0,1'],
+            'world'   => ['sometimes', 'string'],
+            'twWorld' => ['required', 'string'],
+        ], AttackPlannerAPIController::itemVerificationArray(cnt: 200)));
+
+        if(array_key_exists("world", $req)) {
+            if($req["world"] != $attackList->world->serName()) {
+                return \Response::json(array(
+                    'data' => 'error',
+                    'title' => __('tool.attackPlanner.errorTitle'),
+                    'msg' => __('tool.attackPlanner.dsuImportWrongWorld'),
+                ));
+            }
+        } else {
+            if($req["twWorld"] != $attackList->world->twSerName()) {
+                return \Response::json(array(
+                    'data' => 'error',
+                    'title' => __('tool.attackPlanner.errorTitle'),
+                    'msg' => __('tool.attackPlanner.dsuImportWrongWorld'),
+                ));
+            }
+        }
+
+        if(array_key_exists("title", $req)) {
+            $attackList->title = $req["title"];
+        }
+        if(array_key_exists("uvMode", $req)) {
+            $attackList->uvMode = $req["uvMode"];
+        }
+        $attackList->save();
+
+        $err = [];
+        $all = [];
+        foreach($req['items'] as $it) {
+            $it = AttackPlannerController::newItem($err, $attackList, $it['source'], $it['destination'], $it['slowest_unit'],
+                $it['arrival_time'], (in_array($it['type'], AttackListItem::attackPlannerTypeIcons()))?$it['type']: -1, $it,
+                $it['support_boost']??0.0, $it['tribe_skill']??0.0,$it['ms']??0);
+
+            if($it != null) {
+                $all[] = $it;
+            }
+        }
+
+        $insert = new AttackListItem();
+        $allOk = true;
+        foreach (array_chunk($all,3000) as $t){
+            $allOk &= $insert->insert($t);
+        }
+
+        if(! $allOk) {
+            $err[] = "Error during insert";
+        }
+
+        if(count($err) > 0) {
+            return AttackListItem::errJsonReturn($err);
+        }
+        return \Response::json(array(
+            'data' => 'success',
+            'title' => __('tool.attackPlanner.importDSUSuccessTitle'),
+            'msg' => __('tool.attackPlanner.importDSUSuccess'),
         ));
     }
 

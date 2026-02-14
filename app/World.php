@@ -288,12 +288,28 @@ class World extends CustomModel
         }
         return parent::touch($attribute);
     }
-    
+
     public function serName() {
         BasicFunctions::ensureValidWorldName($this);
         return $this->server->code . $this->name;
     }
-    
+
+    public function twSerName() {
+        $modUrl = $this->url;
+        if(! BasicFunctions::startsWith($this->url, "https://")) {
+            return $modUrl;
+        }
+
+        $modUrl = substr($modUrl, 8);
+        $dotPos = strpos($modUrl, ".");
+
+        if($dotPos === false) {
+            return $modUrl;
+        }
+        $modUrl = substr($modUrl, 0, $dotPos);
+        return $modUrl;
+    }
+
     public function database() {
         return $this->hasOne('App\WorldDatabase', 'id', 'database_id');
     }

@@ -20,7 +20,13 @@ use Illuminate\Http\Request;
 
 class AttackPlannerAPIController extends BaseController
 {
+    private const MAX_IMPORT_ITEMS = 1050;
+
     public function create(Request $request) {
+        if (count($request->input('items', [])) > static::MAX_IMPORT_ITEMS) {
+            abort(422, "Too many items");
+        }
+
         $apiKeyId = $this->validateAPIKey($request);
         $req = $request->validate(array_merge([
             'title' => '',
@@ -51,6 +57,10 @@ class AttackPlannerAPIController extends BaseController
     }
     
     public function itemCreate(Request $request) {
+        if (count($request->input('items', [])) > static::MAX_IMPORT_ITEMS) {
+            abort(422, "Too many items");
+        }
+
         $apiKeyId = $this->validateAPIKey($request);
         $req = $request->validate(array_merge([
             'id' => 'required',
@@ -63,13 +73,13 @@ class AttackPlannerAPIController extends BaseController
         return self::apiInternalCreateItems($req, $list, $apiKeyId);
     }
     
-    private static function itemVerificationArray() {
+    public static function itemVerificationArray($cnt=1050) {
         $troopVerify = [];
         foreach(AttackListItem::$units as $unit) {
             $troopVerify["items.*.$unit"] = 'integer';
         }
         return array_merge([
-            'items' => 'array|max:1050',
+            'items' => "array|max:$cnt",
             'items.*' => 'array',
             'items.*.source' => 'required|integer',
             'items.*.destination' => 'required|integer',
