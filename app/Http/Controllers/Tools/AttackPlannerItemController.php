@@ -241,7 +241,8 @@ class AttackPlannerItemController extends BaseController
                 };
                 $popoverData = "";
                 if($unitCount != '' || $speedBoost != '' || ($attackListItem->note != null && strlen($attackListItem->note) > 0)) {
-                    $popoverData = ' data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').(($speedBoost == '')?'':$speedBoost.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$attackListItem->note.'</p></div>" data-placement="left"';
+                    $note = htmlspecialchars($attackListItem->note);
+                    $popoverData = ' data-toggle="popover" title="'.__('ui.tabletitel.info').'" data-trigger="hover" data-content="'.(($unitCount == '')?'':$unitCount.'<hr>').(($speedBoost == '')?'':$speedBoost.'<hr>').'<div class=\'row\'><u class=\'font-weight-bold px-3\'>'.__('global.note_text').':</u><br><p class=\'px-3\'>'.$note.'</p></div>" data-placement="left"';
                 }
 
                 if($attackListItem->note != null && strlen($attackListItem->note) > 0) {
