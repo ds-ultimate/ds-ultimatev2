@@ -319,7 +319,7 @@ class DatatablesController extends Controller
         $whitelist = ['rank', 'name', 'ally', 'ally_id', 'points', 'village_count', 'village_points', 'gesBash', 'offBash', 'defBash', 'supBash'];
         static::limitResults(110, $whitelist);
 
-        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
+        $days = abs(Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day'])));
         $playerModel = new Player($world);
         $datas = $playerModel->newQuery();
 
@@ -408,7 +408,7 @@ class DatatablesController extends Controller
         $whitelist = ['rank', 'name', 'tag', 'points', 'member_count', 'village_count', 'player_points', 'gesBash', 'offBash', 'defBash'];
         static::limitResults(110, $whitelist);
 
-        $days = Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day']));
+        $days = abs(Carbon::now()->diffInDays(Carbon::createFromFormat('Y-m-d', $datValid['day'])));
         $allyModel = new Ally($world);
         $datas = $allyModel->newQuery();
 

@@ -263,13 +263,13 @@ class APIController extends Controller
             })
             ->editColumn("worldUpdated_at", function ($data) use($now) {
                 $dateOld = $data->active != null &&
-                        $now->diffInSeconds($data->worldUpdated_at) >= ((60*60)*config('dsUltimate.db_update_every_hours'))*2;
+                        abs($now->diffInSeconds($data->worldUpdated_at)) >= ((60*60)*config('dsUltimate.db_update_every_hours'))*2;
                 $class = $dateOld?" class='bg-danger'":"";
                 return "<div$class>".$data->worldUpdated_at->diffForHumans()."</div>";
             })
             ->editColumn("worldCleaned_at", function ($data) use($now) {
                 $dateOld = $data->active != null &&
-                        $now->diffInSeconds($data->worldCleaned_at) >= ((60*60)*config('dsUltimate.db_clean_every_hours'))*2;
+                        abs($now->diffInSeconds($data->worldCleaned_at)) >= ((60*60)*config('dsUltimate.db_clean_every_hours'))*2;
                 $class = $dateOld?" class='bg-danger'":"";
                 return "<div$class>".$data->worldCleaned_at->diffForHumans()."</div>";
             })
