@@ -1,5 +1,2 @@
-ignoredBuiltDependencies:
-  - '@parcel/watcher'
+minimumReleaseAge: 10080
 
-onlyBuiltDependencies:
-  - '@fortawesome/fontawesome-free'
